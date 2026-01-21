@@ -21,7 +21,7 @@
       --white: #FFFFFF;
     }
     
-    body {
+    body, p, span, li, a, div, button, input, select, textarea {
       font-family: 'Montserrat', sans-serif !important;
     }
     
@@ -55,7 +55,10 @@
         font-size: 8.5rem;
       }
     }
-    
+    .scroll-reveal-scale, .event-card {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
     h3, h4, h5, h6 {
       font-weight: 700;
       font-family: 'Montserrat';
@@ -871,13 +874,16 @@
       document.documentElement.style.setProperty('--accent-color', accentColor);
 
       // Update font family
-      const fontFamily = config.font_family || defaultConfig.font_family;
-      document.body.style.fontFamily = `${fontFamily}, system-ui, sans-serif`;
+     const fontFamily = config.font_family || defaultConfig.font_family;
+      
+      // Aplicar a todo lo que no sea título
       document.querySelectorAll('*:not(h1):not(h2)').forEach(el => {
         el.style.setProperty('font-family', "'Montserrat', sans-serif", 'important');
       });
+
+      // Asegurar que los títulos mantengan Dancing Script
       document.querySelectorAll('h1, h2').forEach(el => {
-        el.style.fontFamily = 'Dancing Script, cursive';
+        el.style.setProperty('font-family', "'Dancing Script', cursive", 'important');
       });
 
       // Update font size
