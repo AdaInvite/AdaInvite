@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Shower - Bebé Matías</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Cormorant+Garamond:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .font-display {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .font-body {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    
+    .bg-overlay {
+      background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.45) 100%);
+    }
+    
+    .welcome-screen {
+      background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.55) 100%);
+    }
+    
+    .card-glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-primary {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(180, 130, 110, 0.3);
+    }
+    
+    .btn-secondary {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+    }
+    
+    .fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+    
+    .fade-in-delayed {
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.3s forwards;
+    }
+    
+    .fade-in-delayed-2 {
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.6s forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-up {
+      animation: slideUp 0.8s ease-out forwards;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(100%); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #b4826e;
+      box-shadow: 0 0 0 3px rgba(180, 130, 110, 0.15);
+    }
+    
+    .decorative-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #b4826e, transparent);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body">
+  <div id="app" class="h-full w-full overflow-auto" style="background-image: url('https://i.imgur.com/Ad5enf6.jpeg'); background-size: cover; background-position: center; background-attachment: fixed;"><!-- Welcome Screen -->
+   <div id="welcome-screen" class="h-full w-full flex items-center justify-center welcome-screen cursor-pointer">
+    <div class="text-center px-8 py-16">
+     <p class="font-body text-lg tracking-widest uppercase mb-6 fade-in" style="color: #9a7b6a;">Te invitamos al</p>
+     <h1 id="welcome-title" class="font-display text-4xl md:text-6xl font-medium mb-8 leading-tight fade-in-delayed" style="color: #5a4a42;">Baby Shower de<br>
+      bebé Matías</h1>
+     <div class="decorative-line mx-auto mb-8 fade-in-delayed"></div>
+     <p id="welcome-date" class="font-display text-2xl md:text-3xl mb-4 fade-in-delayed-2" style="color: #7a6a62;">15 de enero de 2026</p>
+     <p id="welcome-time" class="font-body text-xl tracking-wide fade-in-delayed-2" style="color: #9a7b6a;">4:00 PM</p>
+     <p class="mt-12 font-body text-sm tracking-widest uppercase fade-in-delayed-2" style="color: #b4826e;">Toca para continuar</p>
+    </div>
+   </div><!-- Main Content -->
+   <div id="main-content" class="hidden min-h-full w-full bg-overlay">
+    <div class="max-w-lg mx-auto px-6 py-12"><!-- Back Button --> <button id="back-btn" class="btn-secondary mb-6 flex items-center gap-2 px-4 py-2 rounded-lg card-glass border border-white/50">
+      <svg class="w-5 h-5" style="color: #b4826e;" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg><span class="font-body" style="color: #5a4a42;">Regresar</span> </button> <!-- Header -->
+     <header class="text-center mb-12 slide-up">
+      <p class="font-body text-sm tracking-widest uppercase mb-4" style="color: #9a7b6a;" id="header-welcome-msg">Acompáñanos a celebrar</p>
+      <h1 class="font-display text-3xl md:text-4xl font-medium mb-4" style="color: #5a4a42;" id="header-title">Baby Shower de<br>
+       bebé Matías</h1>
+      <div class="decorative-line mx-auto mb-4"></div>
+      <p class="font-display text-xl" style="color: #7a6a62;" id="header-date">15 de enero de 2026</p>
+      <p class="font-body text-lg" style="color: #9a7b6a;" id="header-time">4:00 PM</p>
+     </header><!-- Countdown Timer -->
+     <div class="card-glass rounded-2xl p-6 mb-8 border border-white/50 shadow-xl">
+      <p class="font-body text-sm tracking-widest uppercase text-center mb-4" style="color: #9a7b6a;">Faltan</p>
+      <div id="countdown" class="grid grid-cols-4 gap-3">
+       <div class="text-center">
+        <div class="rounded-lg p-3" style="background: rgba(180, 130, 110, 0.1);">
+         <p id="days" class="font-display text-3xl font-semibold" style="color: #5a4a42;">0</p>
+        </div>
+        <p class="font-body text-xs mt-2" style="color: #7a6a62;">Días</p>
+       </div>
+       <div class="text-center">
+        <div class="rounded-lg p-3" style="background: rgba(180, 130, 110, 0.1);">
+         <p id="hours" class="font-display text-3xl font-semibold" style="color: #5a4a42;">0</p>
+        </div>
+        <p class="font-body text-xs mt-2" style="color: #7a6a62;">Horas</p>
+       </div>
+       <div class="text-center">
+        <div class="rounded-lg p-3" style="background: rgba(180, 130, 110, 0.1);">
+         <p id="minutes" class="font-display text-3xl font-semibold" style="color: #5a4a42;">0</p>
+        </div>
+        <p class="font-body text-xs mt-2" style="color: #7a6a62;">Minutos</p>
+       </div>
+       <div class="text-center">
+        <div class="rounded-lg p-3" style="background: rgba(180, 130, 110, 0.1);">
+         <p id="seconds" class="font-display text-3xl font-semibold" style="color: #5a4a42;">0</p>
+        </div>
+        <p class="font-body text-xs mt-2" style="color: #7a6a62;">Segundos</p>
+       </div>
+      </div>
+     </div><!-- Action Buttons -->
+     <div class="space-y-4 mb-12"><!-- Location Button --> <a id="location-btn" href="https://maps.google.com/?q=ubicacion" target="_blank" rel="noopener noreferrer" class="btn-primary block w-full card-glass rounded-xl p-5 text-center border border-white/50 shadow-lg">
+       <div class="flex items-center justify-center gap-3">
+        <svg class="w-6 h-6" style="color: #b4826e;" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg><span class="font-display text-lg" style="color: #5a4a42;">Ver ubicación</span>
+       </div><p class="font-body text-sm mt-2" style="color: #9a7b6a;" id="location-address">Dirección del evento</p></a> <!-- Calendar Button --> <button id="calendar-btn" class="btn-primary block w-full card-glass rounded-xl p-5 text-center border border-white/50 shadow-lg">
+       <div class="flex items-center justify-center gap-3">
+        <svg class="w-6 h-6" style="color: #b4826e;" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg><span class="font-display text-lg" style="color: #5a4a42;">Agregar al calendario</span>
+       </div></button>
+     </div><!-- RSVP Form -->
+     <div class="card-glass rounded-2xl p-8 border border-white/50 shadow-xl mb-8">
+      <h2 class="font-display text-2xl text-center mb-6" style="color: #5a4a42;">Confirma tu asistencia</h2>
+      <form id="rsvp-form" class="space-y-5">
+       <div><label for="nombre" class="block font-body text-sm mb-2" style="color: #7a6a62;">Nombre completo</label> <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-3 rounded-lg border font-body text-lg" style="border-color: #e0d5cf; color: #5a4a42; background: rgba(255,255,255,0.7);" placeholder="Tu nombre">
+       </div>
+       <div><label for="asistentes" class="block font-body text-sm mb-2" style="color: #7a6a62;">Número de asistentes</label> <select id="asistentes" name="asistentes" required class="w-full px-4 py-3 rounded-lg border font-body text-lg" style="border-color: #e0d5cf; color: #5a4a42; background: rgba(255,255,255,0.7);"> <option value="">Selecciona</option> <option value="1">1 persona</option> <option value="2">2 personas</option> <option value="3">3 personas</option> <option value="4">4 personas</option> <option value="5">5 personas</option> </select>
+       </div>
+       <div><label for="mensaje" class="block font-body text-sm mb-2" style="color: #7a6a62;">Mensaje para los papás (opcional)</label> <textarea id="mensaje" name="mensaje" rows="3" class="w-full px-4 py-3 rounded-lg border font-body text-lg resize-none" style="border-color: #e0d5cf; color: #5a4a42; background: rgba(255,255,255,0.7);" placeholder="Escribe tu mensaje..."></textarea>
+       </div><button type="submit" id="submit-btn" class="btn-primary w-full py-4 rounded-xl font-display text-lg text-white shadow-lg" style="background: linear-gradient(135deg, #b4826e 0%, #9a6b58 100%);"> Confirmar asistencia </button>
+      </form><!-- Success Message -->
+      <div id="success-message" class="hidden text-center py-8">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: rgba(180, 130, 110, 0.15);">
+        <svg class="w-8 h-8" style="color: #b4826e;" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+       </div>
+       <h3 class="font-display text-xl mb-2" style="color: #5a4a42;">Confirmación registrada</h3>
+       <p class="font-body" style="color: #7a6a62;">Gracias por confirmar tu asistencia</p>
+      </div><!-- Error Message -->
+      <div id="error-message" class="hidden mt-4 p-4 rounded-lg text-center" style="background: rgba(220, 38, 38, 0.1);">
+       <p class="font-body" style="color: #dc2626;">Hubo un error. Por favor intenta de nuevo.</p>
+      </div><!-- Loading State -->
+      <div id="loading-state" class="hidden mt-4 text-center">
+       <div class="inline-block w-6 h-6 border-2 rounded-full animate-spin" style="border-color: #e0d5cf; border-top-color: #b4826e;"></div>
+       <p class="font-body mt-2" style="color: #7a6a62;">Enviando...</p>
+      </div><!-- Limit Warning -->
+      <div id="limit-warning" class="hidden mt-4 p-4 rounded-lg text-center" style="background: rgba(245, 158, 11, 0.1);">
+       <p class="font-body" style="color: #d97706;">Se ha alcanzado el límite de confirmaciones.</p>
+      </div>
+     </div><!-- Footer -->
+     <footer class="text-center pb-8">
+      <p class="font-body text-sm" style="color: #9a7b6a;">Te esperamos con mucha ilusión</p>
+     </footer>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      nombre_bebe: 'Matías',
+      fecha_evento: '15 de enero de 2026',
+      hora_evento: '4:00 PM',
+      direccion: 'Dirección del evento',
+      mensaje_bienvenida: 'Acompáñanos a celebrar',
+      primary_color: '#b4826e',
+      secondary_color: '#5a4a42',
+      text_color: '#7a6a62',
+      bg_color: '#fff8f5',
+      accent_color: '#9a7b6a',
+      font_family: 'Playfair Display',
+      font_size: 16
+    };
+    
+    let currentData = [];
+    let config = { ...defaultConfig };
+    
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        currentData = data;
+      }
+    };
+    
+    // Initialize Data SDK
+    async function initDataSdk() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+    }
+    
+    // Element SDK initialization
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          updateUI();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [
+            {
+              get: () => cfg.bg_color || defaultConfig.bg_color,
+              set: (value) => window.elementSdk.setConfig({ bg_color: value })
+            },
+            {
+              get: () => cfg.primary_color || defaultConfig.primary_color,
+              set: (value) => window.elementSdk.setConfig({ primary_color: value })
+            },
+            {
+              get: () => cfg.secondary_color || defaultConfig.secondary_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_color: value })
+            },
+            {
+              get: () => cfg.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => cfg.accent_color || defaultConfig.accent_color,
+              set: (value) => window.elementSdk.setConfig({ accent_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => cfg.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => cfg.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['nombre_bebe', cfg.nombre_bebe || defaultConfig.nombre_bebe],
+          ['fecha_evento', cfg.fecha_evento || defaultConfig.fecha_evento],
+          ['hora_evento', cfg.hora_evento || defaultConfig.hora_evento],
+          ['direccion', cfg.direccion || defaultConfig.direccion],
+          ['mensaje_bienvenida', cfg.mensaje_bienvenida || defaultConfig.mensaje_bienvenida]
+        ])
+      });
+    }
+    
+    function updateUI() {
+      const nombreBebe = config.nombre_bebe || defaultConfig.nombre_bebe;
+      const fechaEvento = config.fecha_evento || defaultConfig.fecha_evento;
+      const horaEvento = config.hora_evento || defaultConfig.hora_evento;
+      const direccion = config.direccion || defaultConfig.direccion;
+      const mensajeBienvenida = config.mensaje_bienvenida || defaultConfig.mensaje_bienvenida;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const bgColor = config.bg_color || defaultConfig.bg_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      
+      // Update welcome screen
+      document.getElementById('welcome-title').innerHTML = `Baby Shower de<br>bebé ${nombreBebe}`;
+      document.getElementById('welcome-date').textContent = fechaEvento;
+      document.getElementById('welcome-time').textContent = horaEvento;
+      
+      // Update header
+      document.getElementById('header-welcome-msg').textContent = mensajeBienvenida;
+      document.getElementById('header-title').innerHTML = `Baby Shower de<br>bebé ${nombreBebe}`;
+      document.getElementById('header-date').textContent = fechaEvento;
+      document.getElementById('header-time').textContent = horaEvento;
+      
+      // Update location
+      document.getElementById('location-address').textContent = direccion;
+      const locationBtn = document.getElementById('location-btn');
+      locationBtn.href = `https://maps.google.com/?q=${encodeURIComponent(direccion)}`;
+      
+      // Update colors
+      document.querySelectorAll('[style*="color: #5a4a42"]').forEach(el => {
+        el.style.color = secondaryColor;
+      });
+      document.querySelectorAll('[style*="color: #7a6a62"]').forEach(el => {
+        el.style.color = textColor;
+      });
+      document.querySelectorAll('[style*="color: #9a7b6a"]').forEach(el => {
+        el.style.color = accentColor;
+      });
+      document.querySelectorAll('[style*="color: #b4826e"]').forEach(el => {
+        el.style.color = primaryColor;
+      });
+      
+      // Update submit button
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${adjustColor(primaryColor, -20)} 100%)`;
+      
+      // Update fonts
+      document.querySelectorAll('.font-display').forEach(el => {
+        el.style.fontFamily = `${fontFamily}, serif`;
+      });
+      
+      // Update font sizes proportionally
+      const baseSize = fontSize;
+      document.querySelectorAll('.text-4xl, .text-3xl').forEach(el => {
+        if (el.classList.contains('text-4xl')) {
+          el.style.fontSize = `${baseSize * 2.25}px`;
+        } else {
+          el.style.fontSize = `${baseSize * 1.875}px`;
+        }
+      });
+    }
+    
+    function adjustColor(hex, amount) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+      const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+      const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+      return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+    }
+    
+    // Welcome screen click handler
+    document.getElementById('welcome-screen').addEventListener('click', () => {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+    });
+    
+    // Back button handler
+    document.getElementById('back-btn').addEventListener('click', () => {
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('welcome-screen').classList.remove('hidden');
+      
+      // Reset form if it was submitted
+      const form = document.getElementById('rsvp-form');
+      const successMessage = document.getElementById('success-message');
+      if (successMessage && !successMessage.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        form.reset();
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').style.opacity = '1';
+      }
+    });
+    
+    // Calendar button handler
+    document.getElementById('calendar-btn').addEventListener('click', () => {
+      const nombreBebe = config.nombre_bebe || defaultConfig.nombre_bebe;
+      const fechaEvento = config.fecha_evento || defaultConfig.fecha_evento;
+      const horaEvento = config.hora_evento || defaultConfig.hora_evento;
+      const direccion = config.direccion || defaultConfig.direccion;
+      
+      const title = `Baby Shower de bebé ${nombreBebe}`;
+      const startDate = '20260115T160000';
+      const endDate = '20260115T200000';
+      const details = `Baby Shower de bebé ${nombreBebe}`;
+      
+      const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(direccion)}`;
+      
+      window.open(googleCalendarUrl, '_blank', 'noopener,noreferrer');
+    });
+    
+    // Form submission handler
+    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (currentData.length >= 999) {
+        document.getElementById('limit-warning').classList.remove('hidden');
+        return;
+      }
+      
+      const form = e.target;
+      const submitBtn = document.getElementById('submit-btn');
+      const loadingState = document.getElementById('loading-state');
+      const successMessage = document.getElementById('success-message');
+      const errorMessage = document.getElementById('error-message');
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.6';
+      loadingState.classList.remove('hidden');
+      errorMessage.classList.add('hidden');
+      
+      const formData = {
+        nombre: document.getElementById('nombre').value,
+        asistentes: parseInt(document.getElementById('asistentes').value),
+        mensaje: document.getElementById('mensaje').value || '',
+        confirmado: true,
+        fecha_registro: new Date().toISOString()
+      };
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create(formData);
+        
+        loadingState.classList.add('hidden');
+        
+        if (result.isOk) {
+          form.classList.add('hidden');
+          successMessage.classList.remove('hidden');
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          errorMessage.classList.remove('hidden');
+        }
+      } else {
+        // Fallback for demo
+        loadingState.classList.add('hidden');
+        form.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+      }
+    });
+    
+    // Countdown Timer
+    function updateCountdown() {
+      const eventDate = new Date('2026-01-15T16:00:00').getTime();
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+      
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+      } else {
+        document.getElementById('days').textContent = '0';
+        document.getElementById('hours').textContent = '0';
+        document.getElementById('minutes').textContent = '0';
+        document.getElementById('seconds').textContent = '0';
+      }
+    }
+    
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+    
+    // Initialize
+    initDataSdk();
+    updateUI();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c19f5311242871e',t:'MTc2OTAzMTQ5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
