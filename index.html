@@ -55,9 +55,12 @@
         font-size: 8.5rem;
       }
     }
-    .scroll-reveal-scale, .event-card {
+    .scroll-reveal-scale, .event-card, .scroll-reveal, .scroll-reveal-left, .scroll-reveal-right {
       will-change: transform, opacity;
+      backface-visibility: hidden;
+      perspective: 1000px;
       transform: translateZ(0);
+      content-visibility: auto; 
     }
     h3, h4, h5, h6 {
       font-weight: 700;
@@ -744,34 +747,27 @@
     // Scroll reveal animation system
     let ticking = false;
     
-    function revealOnScroll() {
-      const reveals = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
-      const windowHeight = window.innerHeight;
-      const revealPoint = 80;
-
-      reveals.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-
-        if (elementTop < windowHeight - revealPoint) {
-          element.classList.add('revealed');
-        }
-      });
-      
-      ticking = false;
+    // Sistema ultra eficiente (Intersection Observer)
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      scrollObserver.unobserve(entry.target);
     }
-    
-    function requestReveal() {
-      if (!ticking) {
-        window.requestAnimationFrame(revealOnScroll);
-        ticking = true;
-      }
-    }
+  });
+}, { threshold: 0.1 });
+
+function initObserver() {
+  const elements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+  elements.forEach(el => scrollObserver.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded', initObserver);
 
     // Parallax effect for hero section with throttling
     const appWrapper = document.getElementById('app-wrapper');
     if (appWrapper) {
       appWrapper.addEventListener('scroll', function() {
-        requestReveal();
         
         if (currentPage === 'inicio') {
           const heroOverlay = document.getElementById('hero-overlay');
@@ -835,7 +831,7 @@
         document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach(el => {
           el.classList.remove('revealed');
         });
-        revealOnScroll();
+        initObserver();
       }, 50);
     }
 
