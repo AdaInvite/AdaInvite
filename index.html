@@ -95,9 +95,12 @@
     }
     
     .event-card {
-      transition: all 0.5s ease;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
     
     .event-card::before {
@@ -108,7 +111,7 @@
       right: 0;
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.4);
-      transition: background-color 0.5s ease;
+      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1;
     }
     
@@ -117,18 +120,17 @@
     }
     
     .event-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 25px 50px rgba(155, 138, 165, 0.3);
+      transform: scale(1.02) translateZ(0);
     }
     
     .event-card-content {
       position: relative;
       z-index: 2;
-      transition: transform 0.5s ease;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .event-card:hover .event-card-content {
-      transform: translateY(-10px);
+      transform: translateY(-4px);
     }
     
     .plan-card {
@@ -176,46 +178,50 @@
     
     .scroll-reveal {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateY(20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
     }
     
     .scroll-reveal.revealed {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) translateZ(0);
     }
     
     .scroll-reveal-left {
       opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateX(-20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
     }
     
     .scroll-reveal-left.revealed {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
     }
     
     .scroll-reveal-right {
       opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateX(20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
     }
     
     .scroll-reveal-right.revealed {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
     }
     
     .scroll-reveal-scale {
       opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: scale(0.98) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
     }
     
     .scroll-reveal-scale.revealed {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateZ(0);
     }
     
     .mobile-menu {
@@ -265,7 +271,7 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full font-sans" style="background-color: var(--white); color: var(--text-color);">
-  <div id="app-wrapper" class="w-full h-full overflow-auto"><!-- Navigation -->
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;"><!-- Navigation -->
    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
     <div class="w-full px-4 md:px-8 py-4 flex items-center justify-between">
      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToPage('inicio')"><img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" loading="lazy" class="h-10 md:h-16 w-auto" onerror="this.src=''; this.alt='AdaInvite'; this.style.display='none';">
@@ -365,19 +371,19 @@
       </div>
       <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
        <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg" style="will-change: auto;"><img src="https://i.imgur.com/Q5MxZxr.jpeg" alt="Diseño interactivo" loading="lazy" class="w-full h-full object-cover" style="transform: translateZ(0);" onerror="this.src=''; this.alt='Imagen no disponible'; this.style.display='none';">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0) scale(1); transition: transform 0.3s ease-out;"><img src="https://i.imgur.com/Q5MxZxr.jpeg" alt="Diseño interactivo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: transform; transform: translateZ(0); transition: transform 0.3s ease-out;" onerror="this.style.opacity='0';">
         </div>
         <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Diseño interactivo</h3>
         <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Entregamos invitaciones claras y profesionales, optimizadas para que la navegación de tus invitados sea sencilla y rápida.</p>
        </div>
        <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg" style="will-change: auto;"><img src="https://i.imgur.com/QJnv4F9.jpeg" alt="Proceso sencillo" loading="lazy" class="w-full h-full object-cover" style="transform: translateZ(0);" onerror="this.src=''; this.alt='Imagen no disponible'; this.style.display='none';">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/QJnv4F9.jpeg" alt="Proceso sencillo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
         </div>
         <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Proceso sencillo</h3>
         <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Nosotros hacemos el trabajo técnico por ti. Disfruta de un servicio directo, sin pasos complejos ni herramientas difíciles de usar.</p>
        </div>
        <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg" style="will-change: auto;"><img src="https://i.imgur.com/ARe1CKr.jpeg" alt="Atención personalizada" loading="lazy" class="w-full h-full object-cover" style="transform: translateZ(0);" onerror="this.src=''; this.alt='Imagen no disponible'; this.style.display='none';">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/ARe1CKr.jpeg" alt="Atención personalizada" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
         </div>
         <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Atención personalizada</h3>
         <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Validamos contigo que cada detalle sea correcto para asegurar que la información de tu evento sea precisa y luzca increíble.</p>
@@ -734,27 +740,36 @@
     let currentPage = 'inicio';
 
     // Scroll reveal animation system
+    let ticking = false;
+    
     function revealOnScroll() {
       const reveals = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
       const windowHeight = window.innerHeight;
-      const revealPoint = 100;
+      const revealPoint = 80;
 
       reveals.forEach(element => {
         const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = revealPoint;
 
-        if (elementTop < windowHeight - elementVisible) {
+        if (elementTop < windowHeight - revealPoint) {
           element.classList.add('revealed');
         }
       });
+      
+      ticking = false;
+    }
+    
+    function requestReveal() {
+      if (!ticking) {
+        window.requestAnimationFrame(revealOnScroll);
+        ticking = true;
+      }
     }
 
-    // Parallax effect for hero section
+    // Parallax effect for hero section with throttling
     const appWrapper = document.getElementById('app-wrapper');
     if (appWrapper) {
       appWrapper.addEventListener('scroll', function() {
-        // Reveal animations on scroll
-        revealOnScroll();
+        requestReveal();
         
         if (currentPage === 'inicio') {
           const heroOverlay = document.getElementById('hero-overlay');
@@ -768,7 +783,7 @@
             heroOverlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
           }
         }
-      });
+      }, { passive: true });
     }
     
     // Initial check for elements already in view
@@ -942,5 +957,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c12679122d63293',t:'MTc2ODk1MjI5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c1a184426904071',t:'MTc2OTAzMjkzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
