@@ -1,962 +1,966 @@
 <!doctype html>
 <html lang="es" class="h-full">
- <head> <link rel="icon" type="image/png" href="Logo AdaInvite.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AdaInvite</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;family=Dancing+Script:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <style>
-    body {
-      box-sizing: border-box;
-    }
-    
-    :root {
-      --primary-purple: #9B8AA5;
-      --surface-color: #FAF9FB;
-      --text-color: #3D3542;
-      --accent-color: #C4B5CE;
-      --white: #FFFFFF;
-    }
-    
-    body, p, span, li, a, div, button, input, select, textarea {
-      font-family: 'Montserrat', sans-serif !important;
-    }
-    
-    h1, h2 {
-      font-weight: 400 !important;
-      font-family: 'Dancing Script', cursive !important;
-    }
-    
-    h1 {
-      font-size: 6rem;
-    }
-    
-    h2 {
-      font-size: 5.5rem;
-    }
-    
-    @media (min-width: 768px) {
-      h1 {
-        font-size: 7.5rem;
-      }
-      h2 {
-        font-size: 7rem;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      h1 {
-        font-size: 9rem;
-      }
-      h2 {
-        font-size: 8.5rem;
-      }
-    }
-   .scroll-reveal-scale, .event-card, .scroll-reveal, .scroll-reveal-left, .scroll-reveal-right {
-      will-change: transform, opacity;
-      backface-visibility: hidden; /* Añade esta línea */
-      perspective: 1000px;
-      transform: translateZ(0);
-      content-visibility: auto; 
-    }
-    h3, h4, h5, h6 {
-      font-weight: 700;
-      font-family: 'Montserrat';
-    }
-    
-    .page-section {
-      display: none;
-    }
-    
-    .page-section.active {
-      display: block;
-    }
-    
-    .nav-link {
-      position: relative;
-      cursor: pointer;
-    }
-    
-    .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: var(--primary-purple);
-    }
-    
-    .gallery-item {
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-    
-    .gallery-item:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(155, 138, 165, 0.15);
-    }
-    
-    .event-card {
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      will-change: transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-    }
-    
-    .event-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.4);
-      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 1;
-    }
-    
-    .event-card:hover::before {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-    
-    .event-card:hover {
-      transform: scale(1.02) translateZ(0);
-    }
-    
-    .event-card-content {
-      position: relative;
-      z-index: 2;
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .event-card:hover .event-card-content {
-      transform: translateY(-4px);
-    }
-    
-    .plan-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .plan-card:hover {
-      transform: translateY(-4px);
-    }
-    
-    .btn-primary {
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(155, 138, 165, 0.3);
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.8s ease forwards;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .step-item {
-      transition: transform 0.3s ease;
-    }
-    
-    .step-item:hover {
-      transform: translateY(-8px);
-    }
-    
-    .step-number {
-      transition: all 0.4s ease;
-    }
-    
-    .step-item:hover .step-number {
-      transform: scale(1.15) rotate(5deg);
-      box-shadow: 0 12px 30px rgba(155, 138, 165, 0.4);
-    }
-    
-    .scroll-reveal {
-      opacity: 0;
-      transform: translateY(20px) translateZ(0);
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    
-    .scroll-reveal.revealed {
-      opacity: 1;
-      transform: translateY(0) translateZ(0);
-    }
-    
-    .scroll-reveal-left {
-      opacity: 0;
-      transform: translateX(-20px) translateZ(0);
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    
-    .scroll-reveal-left.revealed {
-      opacity: 1;
-      transform: translateX(0) translateZ(0);
-    }
-    
-    .scroll-reveal-right {
-      opacity: 0;
-      transform: translateX(20px) translateZ(0);
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    
-    .scroll-reveal-right.revealed {
-      opacity: 1;
-      transform: translateX(0) translateZ(0);
-    }
-    
-    .scroll-reveal-scale {
-      opacity: 0;
-      transform: scale(0.98) translateZ(0);
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    
-    .scroll-reveal-scale.revealed {
-      opacity: 1;
-      transform: scale(1) translateZ(0);
-    }
-    
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 80px;
-      left: 0;
-      right: 0;
-      background-color: var(--white);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      z-index: 40;
-      padding: 1.5rem;
-    }
-    
-    .mobile-menu.active {
-      display: block;
-    }
-    
-    .hamburger {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
-      padding: 8px;
-    }
-    
-    .hamburger span {
-      width: 24px;
-      height: 2px;
-      background-color: var(--primary-purple);
-      transition: all 0.3s ease;
-    }
-    
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(7px, -6px);
-    }
-  </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
- </head>
- <body class="h-full font-sans" style="background-color: var(--white); color: var(--text-color);">
-  <div id="app-wrapper" class="w-full h-full overflow-auto" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;"><!-- Navigation -->
-   <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <div class="w-full px-4 md:px-8 py-4 flex items-center justify-between">
-     <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToPage('inicio')"><img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" loading="lazy" class="h-10 md:h-16 w-auto" onerror="this.src=''; this.alt='AdaInvite'; this.style.display='none';">
-     </div>
-     <div class="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2"><span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity active" style="color: var(--primary-purple);" onclick="navigateToPage('inicio')">Inicio</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('planes')">Planes</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('portafolio')">Portafolio</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('faq')">Preguntas frecuentes</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('contacto')">Contacto</span>
-     </div>
-     <div class="md:hidden hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span> <span></span> <span></span>
-     </div>
-    </div>
-   </nav><!-- Mobile Menu -->
-   <div id="mobile-menu" class="mobile-menu">
-    <div class="flex flex-col gap-4"><span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer active" style="color: var(--primary-purple);" onclick="navigateToPage('inicio'); toggleMobileMenu();">Inicio</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('planes'); toggleMobileMenu();">Planes</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('portafolio'); toggleMobileMenu();">Portafolio</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('faq'); toggleMobileMenu();">Preguntas frecuentes</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('contacto'); toggleMobileMenu();">Contacto</span>
-    </div>
-   </div><!-- INICIO PAGE -->
-   <section id="page-inicio" class="page-section active" style="padding-top: 80px;"><!-- Hero Section -->
-    <div id="hero-section" class="min-h-screen flex items-center justify-center px-6 relative" style="background-color: var(--surface-color); background-image: url('https://i.imgur.com/GINOtSY.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
-     <div id="hero-overlay" class="absolute inset-0 transition-opacity duration-300" style="background-color: rgba(0, 0, 0, 0.6);"></div>
-     <div class="max-w-4xl mx-auto text-center fade-in relative z-10">
-      <h1 id="hero-title" class="font-serif text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6 text-white">Invitaciones digitales interactivas para tus eventos</h1>
-      <p id="hero-subtitle" class="text-sm md:text-lg lg:text-xl font-light max-w-2xl mx-auto mb-10 text-white opacity-90">Diseñamos tus invitaciones web personalizadas, fáciles de compartir y con confirmación de asistencia en un solo lugar.</p><button id="cta-button" onclick="navigateToPage('contacto')" class="btn-primary inline-block px-8 py-4 md:px-10 md:py-5 rounded-full text-sm md:text-base tracking-wide" style="background-color: var(--primary-purple); color: #000000; border: none; cursor: pointer;"> Comenzar </button>
-      <div class="mt-20 flex justify-center gap-2">
-       <div class="w-1 h-1 rounded-full opacity-20" style="background-color: var(--primary-purple);"></div>
-       <div class="w-1 h-1 rounded-full opacity-30" style="background-color: var(--primary-purple);"></div>
-       <div class="w-1 h-1 rounded-full opacity-40" style="background-color: var(--primary-purple);"></div>
-      </div>
-     </div>
-    </div><!-- What is AdaInvite Section -->
-    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
-     <div class="absolute top-20 right-10 w-32 h-32 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
-     <div class="absolute bottom-20 left-10 w-24 h-24 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
-     <div class="w-full max-w-7xl mx-auto relative z-10">
-      <div class="text-center mb-16 scroll-reveal">
-       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-8" style="color: var(--text-color);">¿Qué es AdaInvite?</h2>
-      </div>
-      <div class="grid md:grid-cols-2 gap-12 items-center">
-       <div class="space-y-6 scroll-reveal-left">
-        <p class="text-sm md:text-base leading-relaxed" style="color: var(--text-color);">AdaInvite es el servicio de invitaciones digitales que se encarga de crear y configurar el sitio web de tu evento. Nosotros transformamos tus datos en un enlace profesional para que compartas toda la información con tus invitados de manera moderna y eficiente.</p>
-        <ul class="space-y-4 text-sm md:text-base">
-         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
-          <div><strong>Nosotros realizamos el montaje:</strong> Tus invitados acceden desde cualquier dispositivo sin descargar aplicaciones.
-          </div></li>
-         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
-          <div><strong>Listas para enviar:</strong> Creamos el formato ideal para compartir por WhatsApp, redes sociales o correo electrónico.
-          </div></li>
-         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
-          <div><strong>Interactividad total:</strong> Incluimos botones de ubicación, mesa de regalos y confirmación directa.
-          </div></li>
-        </ul>
-       </div>
-       <div class="flex justify-center scroll-reveal-right">
-        <div class="relative">
-         <div class="absolute -inset-4 rounded-3xl opacity-20" style="background-color: var(--primary-purple);"></div><img src="https://i.imgur.com/6ehceHi.png" alt="Ejemplo de invitación AdaInvite" loading="lazy" class="relative w-full max-w-md rounded-2xl shadow-2xl" onerror="this.src=''; this.alt='Imagen no disponible'; this.style.display='none';">
-        </div>
-       </div>
-      </div>
-     </div>
-    </div><!-- How it Works Section -->
-    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
-     <div class="absolute top-10 left-20 w-40 h-40 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
-     <div class="w-full max-w-7xl mx-auto relative z-10">
-      <div class="text-center mb-20 scroll-reveal">
-       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Cómo funciona?</h2>
-      </div>
-      <div class="grid md:grid-cols-4 gap-12 lg:gap-16">
-       <div class="text-center step-item scroll-reveal">
-        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">1</span>
-        </div>
-        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Elige tu plan</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Selecciona el paquete que mejor se adapte a los requerimientos de tu evento.</p>
-       </div>
-       <div class="text-center step-item scroll-reveal">
-        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">2</span>
-        </div>
-        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Envía tu información</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nos proporcionas los datos y fotos; nosotros nos encargamos de cargar y configurar todo el contenido.</p>
-       </div>
-       <div class="text-center step-item scroll-reveal">
-        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">3</span>
-        </div>
-        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Diseño y revisión</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nuestro equipo monta tu invitación digital y realizamos los ajustes necesarios según las revisiones incluidas en tu plan.</p>
-       </div>
-       <div class="text-center step-item scroll-reveal">
-        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">4</span>
-        </div>
-        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Entrega final</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Te enviamos el enlace definitivo, totalmente funcional y listo para distribuir a tus contactos.</p>
-       </div>
-      </div>
-     </div>
-    </div><!-- Why Choose AdaInvite Section -->
-    <div class="py-16 md:py-20 lg:py-32 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
-     <div class="absolute top-1/4 right-10 w-36 h-36 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
-     <div class="w-full max-w-7xl mx-auto relative z-10">
-      <div class="text-center mb-20 scroll-reveal">
-       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Por qué elegir AdaInvite?</h2>
-      </div>
-      <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
-       <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0) scale(1); transition: transform 0.3s ease-out;"><img src="https://i.imgur.com/Q5MxZxr.jpeg" alt="Diseño interactivo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: transform; transform: translateZ(0); transition: transform 0.3s ease-out;" onerror="this.style.opacity='0';">
-        </div>
-        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Diseño interactivo</h3>
-        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Entregamos invitaciones claras y profesionales, optimizadas para que la navegación de tus invitados sea sencilla y rápida.</p>
-       </div>
-       <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/QJnv4F9.jpeg" alt="Proceso sencillo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
-        </div>
-        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Proceso sencillo</h3>
-        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Nosotros hacemos el trabajo técnico por ti. Disfruta de un servicio directo, sin pasos complejos ni herramientas difíciles de usar.</p>
-       </div>
-       <div class="text-center scroll-reveal-scale">
-        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/ARe1CKr.jpeg" alt="Atención personalizada" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
-        </div>
-        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Atención personalizada</h3>
-        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Validamos contigo que cada detalle sea correcto para asegurar que la información de tu evento sea precisa y luzca increíble.</p>
-       </div>
-      </div>
-     </div>
-    </div><!-- Event Types Section -->
-    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
-     <div class="absolute top-20 right-1/4 w-28 h-28 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
-     <div class="w-full max-w-7xl mx-auto relative z-10">
-      <div class="text-center mb-16 scroll-reveal">
-       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Para qué tipo de eventos funciona?</h2>
-       <p class="text-lg md:text-xl mt-6 font-light" style="color: var(--text-color);">Para cualquier evento</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/E3ouZct.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Bodas</p>
-        </div>
-       </div>
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/s5lagzl.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">XV años</p>
-        </div>
-       </div>
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/I6iQ3d6.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Cumpleaños</p>
-        </div>
-       </div>
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/za7T0Fl.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Baby showers</p>
-        </div>
-       </div>
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/POFLNeJ.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Eventos sociales</p>
-        </div>
-       </div>
-       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/hyvD6Bk.jpeg'); background-size: cover; background-position: center;">
-        <div class="event-card-content flex items-center justify-center w-full h-full">
-         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Eventos corporativos</p>
-        </div>
-       </div>
-      </div>
-      <div class="text-center mt-12 scroll-reveal">
-       <p class="text-2xl md:text-3xl font-light" style="color: var(--text-color);">Y más…</p>
-      </div>
-     </div>
-    </div><!-- Garantía de Satisfacción Section -->
-    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
-     <div class="absolute top-1/3 left-10 w-36 h-36 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
-     <div class="w-full max-w-6xl mx-auto text-center relative z-10 scroll-reveal-scale">
-      <div class="mb-8">
-       <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full" style="background-color: var(--primary-purple);">
-        <svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> <path d="M9 12l2 2 4-4" />
-        </svg>
-       </div>
-       <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl font-light mb-6" style="color: var(--text-color);">Garantía de Satisfacción</h2>
-      </div>
-      <p class="text-base md:text-lg leading-relaxed max-w-3xl mx-auto" style="color: var(--text-color);">En AdaInvite nos comprometemos con la calidad de tu evento. Si al recibir tu primer borrador el diseño no cumple con tus expectativas, trabajamos de la mano contigo en las revisiones de tu plan hasta que la invitación quede exactamente como la necesitas. Tu tranquilidad y la claridad de tu información son nuestra prioridad.</p>
-     </div>
-    </div>
-   </section><!-- PLANES PAGE -->
-   <section id="page-planes" class="page-section" style="padding-top: 80px;">
-    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--surface-color);">
-     <div class="max-w-6xl mx-auto w-full">
-      <div class="text-center mb-16">
-       <h2 id="plans-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Nuestros planes</h2>
-       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Elige el plan perfecto para tu evento especial</p>
-      </div>
-      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"><!-- Plan Esencial -->
-       <div class="plan-card bg-white p-8 rounded-2xl border border-gray-100">
-        <div class="text-center mb-6">
-         <h3 class="font-serif text-xl mb-2" style="color: var(--text-color);">Esencial</h3>
-         <p class="text-sm opacity-60 mb-4">Para eventos pequeños y celebraciones sencillas</p>
-         <div class="text-xs opacity-40 line-through mb-1">
-          $299
-         </div>
-         <div class="font-serif text-4xl" style="color: var(--primary-purple);">
-          $149
-         </div>
-        </div>
-        <ul class="space-y-3 text-sm mb-8">
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Invitación digital personalizada</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Contador de días</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Enlace a ubicación</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">2 revisiones incluidas</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Entrega en hasta 5 días</span></li>
-        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full border text-sm transition-all hover:opacity-80" style="border-color: var(--primary-purple); color: var(--primary-purple); background: transparent; cursor: pointer;"> Seleccionar </button>
-       </div><!-- Plan Premium (Featured) -->
-       <div class="plan-card p-8 rounded-2xl relative text-white" style="background-color: var(--primary-purple);">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 text-xs tracking-wider rounded-full" style="background-color: var(--accent-color); color: var(--text-color);">
-         MÁS POPULAR
-        </div>
-        <div class="text-center mb-6">
-         <h3 class="font-serif text-xl mb-2">Premium</h3>
-         <p class="text-sm opacity-80 mb-4">Para eventos especiales</p>
-         <div class="text-xs opacity-60 line-through mb-1">
-          $699
-         </div>
-         <div class="font-serif text-4xl">
-          $349
-         </div>
-        </div>
-        <ul class="space-y-3 text-sm mb-8">
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Todo lo incluido en Esencial</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Agregar evento al calendario</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Formulario de confirmación de asistencia</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Animaciones personalizadas</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Revisiones ilimitadas</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-90">Entrega en hasta 3 días</span></li>
-        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full text-sm transition-all hover:opacity-90" style="background-color: var(--white); color: var(--primary-purple); border: none; cursor: pointer;"> Seleccionar </button>
-       </div><!-- Plan Pro -->
-       <div class="plan-card bg-white p-8 rounded-2xl border border-gray-100">
-        <div class="text-center mb-6">
-         <h3 class="font-serif text-xl mb-2" style="color: var(--text-color);">Pro</h3>
-         <p class="text-sm opacity-60 mb-4">Para eventos especiales</p>
-         <div class="text-xs opacity-40 line-through mb-1">
-          $999
-         </div>
-         <div class="font-serif text-4xl" style="color: var(--primary-purple);">
-          $499
-         </div>
-        </div>
-        <ul class="space-y-3 text-sm mb-8">
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Todo lo incluido en Premium</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Galería de fotos interactiva</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Save the Date adicional</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Diseño avanzado personalizado</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Soporte prioritario</span></li>
-         <li class="flex items-center gap-3">
-          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
-           <path d="M20 6L9 17l-5-5" />
-          </svg><span class="opacity-70">Entrega en hasta 24 horas</span></li>
-        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full border text-sm transition-all hover:opacity-80" style="border-color: var(--primary-purple); color: var(--primary-purple); background: transparent; cursor: pointer;"> Seleccionar </button>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- PORTAFOLIO PAGE -->
-   <section id="page-portafolio" class="page-section" style="padding-top: 80px;">
-    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--white);">
-     <div class="w-full max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-       <h2 id="portfolio-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Portafolio</h2>
-       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Explora algunos de nuestros trabajos realizados</p>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"><!-- Gallery Items --> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20boda" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #E8E4EC 0%, #D4CCD9 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">Boda</p>
-         </div>
-        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20XV%20años" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #F5F0F7 0%, #E8E4EC 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">XV años</p>
-         </div>
-        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20evento%20corporativo" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #D4CCD9 0%, #C4B5CE 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">Evento corporativo</p>
-         </div>
-        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20cumpleaños" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #C4B5CE 0%, #9B8AA5 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">Cumpleaños</p>
-         </div>
-        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20baby%20shower" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #FAF9FB 0%, #F5F0F7 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">Baby shower</p>
-         </div>
-        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20evento%20social" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #E8E4EC 0%, #C4B5CE 100%);">
-        <div class="w-full h-full flex items-center justify-center p-6">
-         <div class="text-center">
-          <p class="text-lg md:text-xl tracking-wider text-black">Evento social</p>
-         </div>
-        </div></a>
-      </div>
-     </div>
-    </div>
-   </section><!-- FAQ PAGE -->
-   <section id="page-faq" class="page-section" style="padding-top: 80px;">
-    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--white);">
-     <div class="max-w-3xl mx-auto w-full">
-      <div class="text-center mb-16">
-       <h2 id="faq-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Preguntas frecuentes</h2>
-       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Resolvemos tus dudas sobre AdaInvite</p>
-      </div>
-      <div class="space-y-8">
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Qué es una invitación digital?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Es una plataforma web personalizada que nosotros diseñamos y configuramos para tu evento. A diferencia de una imagen estática o un PDF, es interactiva: permite a tus invitados usar botones de navegación, ver mapas en tiempo real (Google Maps/Waze), acceder a mesas de regalos y confirmar su asistencia con un clic.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cuánto tiempo tarda la entrega?</h3>
-        <p class="text-sm leading-relaxed mb-2" style="color: var(--text-color);">Nosotros gestionamos la creación de tu invitación para que esté lista en los siguientes plazos, según el plan seleccionado:</p>
-        <ul class="text-sm leading-relaxed space-y-1 ml-4" style="color: var(--text-color);">
-         <li>• Esencial: hasta 5 días.</li>
-         <li>• Premium: hasta 3 días.</li>
-         <li>• Pro: hasta 24 horas.</li>
-        </ul>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Puedo hacer cambios después de la entrega?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">¡Por supuesto! Nosotros nos encargamos de aplicar las modificaciones que necesites. Cada plan incluye un número de revisiones para ajustar detalles de diseño, fotos o textos, asegurando que el resultado final sea exactamente lo que buscas.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cómo funciona la confirmación de asistencia?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Configuramos un sistema automático dentro de tu invitación. Tus invitados completan un formulario sencillo y nosotros te enviamos los datos de forma organizada, permitiéndote gestionar tu lista de invitados sin esfuerzo y en tiempo real.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Por cuánto tiempo estará activo mi enlace?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nosotros mantenemos tu invitación activa desde el momento de la entrega hasta 15 días después de que finalice tu evento, asegurando que la información esté disponible para tus invitados hasta el último momento.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cómo comparto mi invitación?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Es muy sencillo. Una vez que nosotros te entregamos el enlace personalizado, solo tienes que copiarlo y pegarlo en tus chats de WhatsApp, enviarlo por mensaje de texto o publicarlo en tus redes sociales.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Puedo incluir el código de vestimenta o sugerencia de regalos?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Totalmente. Nosotros incluimos secciones específicas para el dress code y botones directos a tus mesas de regalos (Amazon, Liverpool, etc.) o datos bancarios para lluvia de sobres.</p>
-       </div>
-       <div class="bg-white p-6 rounded-xl border border-gray-100">
-        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Qué pasa si el lugar de mi evento cambia de último momento?</h3>
-        <p class="text-sm leading-relaxed" style="color: var(--text-color);">No te preocupes. Como es un sitio web, nosotros podemos actualizar la ubicación y los detalles en el mismo enlace de manera inmediata, así tus invitados siempre verán la información más reciente sin que tengas que enviar un link nuevo.</p>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- CONTACTO PAGE -->
-   <section id="page-contacto" class="page-section" style="padding-top: 80px;">
-    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
-     <div class="absolute top-1/3 left-10 w-40 h-40 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
-     <div class="absolute bottom-1/4 right-20 w-32 h-32 rotate-45 opacity-5" style="background-color: var(--primary-purple);"></div>
-     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <h2 id="contact-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-8" style="color: var(--text-color);">Comencemos</h2>
-      <p class="text-base md:text-lg font-light mb-12 max-w-2xl mx-auto" style="color: var(--text-color);">Cuéntanos sobre tu evento y crearemos una invitación digital clara, funcional y fácil de compartir.</p><a href="https://wa.me/524659559601?text=Hola,%20me%20interesa%20una%20invitación%20digital" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-3 px-10 py-5 text-white rounded-full text-base tracking-wide" style="background-color: var(--primary-purple);">
-       <svg width="24" height="24" viewbox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-       </svg> Escribir por WhatsApp </a>
-      <p class="mt-10 text-base opacity-50">Respondemos en menos de 24 horas</p>
-      <div class="mt-16 pt-16 border-t border-gray-200">
-       <h3 class="font-serif text-2xl mb-8" style="color: var(--text-color);">Información de contacto</h3>
-       <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto text-left">
-        <div class="flex items-start gap-4">
-         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple); flex-shrink: 0;"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-         </svg>
-         <div>
-          <p class="font-semibold mb-1" style="color: var(--text-color);">Email</p>
-          <p class="text-sm" style="color: var(--text-color);">adainviteoficial@gmail.com</p>
-         </div>
-        </div>
-        <div class="flex items-start gap-4">
-         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple); flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
-         </svg>
-         <div>
-          <p class="font-semibold mb-1" style="color: var(--text-color);">Teléfono</p>
-          <p class="text-sm" style="color: var(--text-color);">+52 465 955 9601</p>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- Footer -->
-   <footer class="py-12 px-6 border-t border-gray-100" style="background-color: var(--white);">
-    <div class="max-w-6xl mx-auto">
-     <div class="flex flex-col items-center gap-6">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToPage('inicio')"><img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" loading="lazy" class="h-8 w-auto" onerror="this.src=''; this.alt='AdaInvite'; this.style.display='none';">
-      </div>
-      <div class="flex items-center gap-6 text-sm"><a href="https://instagram.com/adainvite" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:opacity-70 transition-opacity" style="color: #000000;">
-        <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-        </svg> Instagram </a> <a href="https://www.facebook.com/share/184N7kKXbm/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:opacity-70 transition-opacity" style="color: #000000;">
-        <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-        </svg> Facebook </a>
-      </div>
-      <div class="max-w-3xl text-center space-y-3">
-       <div class="flex flex-wrap justify-center items-center gap-3 text-xs" style="color: #000000;"><span>Aviso de Privacidad</span> <span class="opacity-40">•</span> <span>Términos y Condiciones</span>
-       </div>
-       <p class="text-xs leading-relaxed px-6" style="color: #000000;">Las invitaciones digitales son un servicio personalizado. El cliente es responsable de la veracidad, exactitud y actualización de la información proporcionada para el diseño. Todos nuestros productos son digitales y se entregan mediante un enlace web.</p>
-      </div>
-      <p class="text-sm text-center" style="color: #000000;">© 2026 AdaInvite. Todos los derechos reservados.</p>
-     </div>
-    </div>
-   </footer>
-  </div>
-  <script>
-    const defaultConfig = {
-      hero_title: "Invitaciones digitales interactivas para tus eventos",
-      hero_subtitle: "Diseñamos tus invitaciones web personalizadas, fáciles de compartir y con confirmación de asistencia en un solo lugar.",
-      cta_button: "Comenzar",
-      plans_title: "Nuestros planes",
-      portfolio_title: "Portafolio",
-      faq_title: "Preguntas frecuentes",
-      contact_title: "Comencemos",
-      primary_color: "#9B8AA5",
-      surface_color: "#FAF9FB",
-      text_color: "#3D3542",
-      accent_color: "#C4B5CE",
-      font_family: "Montserrat",
-      font_size: 16
-    };
+ <head> <link rel="icon" type="image/png" href="Logo AdaInvite.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdaInvite | Invitaciones digitales interactivas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;family=Dancing+Script:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary-purple: #9B8AA5;
+      --surface-color: #FAF9FB;
+      --text-color: #3D3542;
+      --accent-color: #C4B5CE;
+      --white: #FFFFFF;
+    }
+    
+    body, p, span, li, a, div, button, input, select, textarea {
+      font-family: 'Montserrat', sans-serif !important;
+    }
+    
+    h1, h2 {
+      font-weight: 400 !important;
+      font-family: 'Dancing Script', cursive !important;
+    }
+    
+    h1 {
+      font-size: 6rem;
+    }
+    
+    h2 {
+      font-size: 5.5rem;
+    }
+    
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 7.5rem;
+      }
+      h2 {
+        font-size: 7rem;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      h1 {
+        font-size: 9rem;
+      }
+      h2 {
+        font-size: 8.5rem;
+      }
+    }
+    .scroll-reveal-scale, .event-card {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+    h3, h4, h5, h6 {
+      font-weight: 700;
+      font-family: 'Montserrat';
+    }
+    
+    .page-section {
+      display: none;
+    }
+    
+    .page-section.active {
+      display: block;
+    }
+    
+    .nav-link {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--primary-purple);
+    }
+    
+    .gallery-item {
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(155, 138, 165, 0.15);
+    }
+    
+    .event-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+    
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+    
+    .event-card:hover::before {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .event-card:hover {
+      transform: scale(1.02) translateZ(0);
+    }
+    
+    .event-card-content {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .event-card:hover .event-card-content {
+      transform: translateY(-4px);
+    }
+    
+    .plan-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .plan-card:hover {
+      transform: translateY(-4px);
+    }
+    
+    .btn-primary {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(155, 138, 165, 0.3);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .step-item {
+      transition: transform 0.3s ease;
+    }
+    
+    .step-item:hover {
+      transform: translateY(-8px);
+    }
+    
+    .step-number {
+      transition: all 0.4s ease;
+    }
+    
+    .step-item:hover .step-number {
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 12px 30px rgba(155, 138, 165, 0.4);
+    }
+    
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+    
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0) translateZ(0);
+    }
+    
+    .scroll-reveal-left {
+      opacity: 0;
+      transform: translateX(-20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+    
+    .scroll-reveal-left.revealed {
+      opacity: 1;
+      transform: translateX(0) translateZ(0);
+    }
+    
+    .scroll-reveal-right {
+      opacity: 0;
+      transform: translateX(20px) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+    
+    .scroll-reveal-right.revealed {
+      opacity: 1;
+      transform: translateX(0) translateZ(0);
+    }
+    
+    .scroll-reveal-scale {
+      opacity: 0;
+      transform: scale(0.98) translateZ(0);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
+    }
+    
+    .scroll-reveal-scale.revealed {
+      opacity: 1;
+      transform: scale(1) translateZ(0);
+    }
+    
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      background-color: var(--white);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 40;
+      padding: 1.5rem;
+    }
+    
+    .mobile-menu.active {
+      display: block;
+    }
+    
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px;
+    }
+    
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background-color: var(--primary-purple);
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-sans" style="background-color: var(--white); color: var(--text-color);">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;"><!-- Navigation -->
+   <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <div class="w-full px-4 md:px-8 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToPage('inicio')"><img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" loading="lazy" class="h-10 md:h-16 w-auto" onerror="this.src=''; this.alt='AdaInvite'; this.style.display='none';">
+     </div>
+     <div class="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2"><span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity active" style="color: var(--primary-purple);" onclick="navigateToPage('inicio')">Inicio</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('planes')">Planes</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('portafolio')">Portafolio</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('faq')">Preguntas frecuentes</span> <span class="nav-link text-sm tracking-wide hover:opacity-70 transition-opacity" style="color: var(--primary-purple);" onclick="navigateToPage('contacto')">Contacto</span>
+     </div>
+     <div class="md:hidden hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span> <span></span> <span></span>
+     </div>
+    </div>
+   </nav><!-- Mobile Menu -->
+   <div id="mobile-menu" class="mobile-menu">
+    <div class="flex flex-col gap-4"><span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer active" style="color: var(--primary-purple);" onclick="navigateToPage('inicio'); toggleMobileMenu();">Inicio</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('planes'); toggleMobileMenu();">Planes</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('portafolio'); toggleMobileMenu();">Portafolio</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('faq'); toggleMobileMenu();">Preguntas frecuentes</span> <span class="nav-link-mobile text-base tracking-wide py-2 cursor-pointer" style="color: var(--primary-purple);" onclick="navigateToPage('contacto'); toggleMobileMenu();">Contacto</span>
+    </div>
+   </div><!-- INICIO PAGE -->
+   <section id="page-inicio" class="page-section active" style="padding-top: 80px;"><!-- Hero Section -->
+    <div id="hero-section" class="min-h-screen flex items-center justify-center px-6 relative" style="background-color: var(--surface-color); background-image: url('https://i.imgur.com/GINOtSY.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+     <div id="hero-overlay" class="absolute inset-0 transition-opacity duration-300" style="background-color: rgba(0, 0, 0, 0.6);"></div>
+     <div class="max-w-4xl mx-auto text-center fade-in relative z-10">
+      <h1 id="hero-title" class="font-serif text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6 text-white">Invitaciones digitales interactivas para tus eventos</h1>
+      <p id="hero-subtitle" class="text-sm md:text-lg lg:text-xl font-light max-w-2xl mx-auto mb-10 text-white opacity-90">Diseñamos tus invitaciones web personalizadas, fáciles de compartir y con confirmación de asistencia en un solo lugar.</p><button id="cta-button" onclick="navigateToPage('contacto')" class="btn-primary inline-block px-8 py-4 md:px-10 md:py-5 rounded-full text-sm md:text-base tracking-wide" style="background-color: var(--primary-purple); color: #000000; border: none; cursor: pointer;"> Comenzar </button>
+      <div class="mt-20 flex justify-center gap-2">
+       <div class="w-1 h-1 rounded-full opacity-20" style="background-color: var(--primary-purple);"></div>
+       <div class="w-1 h-1 rounded-full opacity-30" style="background-color: var(--primary-purple);"></div>
+       <div class="w-1 h-1 rounded-full opacity-40" style="background-color: var(--primary-purple);"></div>
+      </div>
+     </div>
+    </div><!-- What is AdaInvite Section -->
+    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
+     <div class="absolute top-20 right-10 w-32 h-32 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
+     <div class="absolute bottom-20 left-10 w-24 h-24 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
+     <div class="w-full max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-16 scroll-reveal">
+       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-8" style="color: var(--text-color);">¿Qué es AdaInvite?</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+       <div class="space-y-6 scroll-reveal-left">
+        <p class="text-sm md:text-base leading-relaxed" style="color: var(--text-color);">AdaInvite es el servicio de invitaciones digitales que se encarga de crear y configurar el sitio web de tu evento. Nosotros transformamos tus datos en un enlace profesional para que compartas toda la información con tus invitados de manera moderna y eficiente.</p>
+        <ul class="space-y-4 text-sm md:text-base">
+         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
+          <div><strong>Nosotros realizamos el montaje:</strong> Tus invitados acceden desde cualquier dispositivo sin descargar aplicaciones.
+          </div></li>
+         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
+          <div><strong>Listas para enviar:</strong> Creamos el formato ideal para compartir por WhatsApp, redes sociales o correo electrónico.
+          </div></li>
+         <li class="flex items-start gap-3"><span class="text-lg" style="color: var(--primary-purple);">•</span>
+          <div><strong>Interactividad total:</strong> Incluimos botones de ubicación, mesa de regalos y confirmación directa.
+          </div></li>
+        </ul>
+       </div>
+       <div class="flex justify-center scroll-reveal-right">
+        <div class="relative">
+         <div class="absolute -inset-4 rounded-3xl opacity-20" style="background-color: var(--primary-purple);"></div><img src="https://i.imgur.com/6ehceHi.png" alt="Ejemplo de invitación AdaInvite" loading="lazy" class="relative w-full max-w-md rounded-2xl shadow-2xl" onerror="this.src=''; this.alt='Imagen no disponible'; this.style.display='none';">
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- How it Works Section -->
+    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
+     <div class="absolute top-10 left-20 w-40 h-40 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
+     <div class="w-full max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-20 scroll-reveal">
+       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Cómo funciona?</h2>
+      </div>
+      <div class="grid md:grid-cols-4 gap-12 lg:gap-16">
+       <div class="text-center step-item scroll-reveal">
+        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">1</span>
+        </div>
+        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Elige tu plan</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Selecciona el paquete que mejor se adapte a los requerimientos de tu evento.</p>
+       </div>
+       <div class="text-center step-item scroll-reveal">
+        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">2</span>
+        </div>
+        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Envía tu información</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nos proporcionas los datos y fotos; nosotros nos encargamos de cargar y configurar todo el contenido.</p>
+       </div>
+       <div class="text-center step-item scroll-reveal">
+        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">3</span>
+        </div>
+        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Diseño y revisión</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nuestro equipo monta tu invitación digital y realizamos los ajustes necesarios según las revisiones incluidas en tu plan.</p>
+       </div>
+       <div class="text-center step-item scroll-reveal">
+        <div class="step-number w-24 h-24 mx-auto mb-8 flex items-center justify-center text-5xl rotate-45" style="background-color: var(--primary-purple); color: white; font-family: 'Dancing Script', cursive;"><span class="-rotate-45">4</span>
+        </div>
+        <h3 class="font-serif text-xl mb-4" style="color: var(--text-color);">Entrega final</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Te enviamos el enlace definitivo, totalmente funcional y listo para distribuir a tus contactos.</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- Why Choose AdaInvite Section -->
+    <div class="py-16 md:py-20 lg:py-32 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
+     <div class="absolute top-1/4 right-10 w-36 h-36 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
+     <div class="w-full max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-20 scroll-reveal">
+       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Por qué elegir AdaInvite?</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+       <div class="text-center scroll-reveal-scale">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0) scale(1); transition: transform 0.3s ease-out;"><img src="https://i.imgur.com/Q5MxZxr.jpeg" alt="Diseño interactivo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: transform; transform: translateZ(0); transition: transform 0.3s ease-out;" onerror="this.style.opacity='0';">
+        </div>
+        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Diseño interactivo</h3>
+        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Entregamos invitaciones claras y profesionales, optimizadas para que la navegación de tus invitados sea sencilla y rápida.</p>
+       </div>
+       <div class="text-center scroll-reveal-scale">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/QJnv4F9.jpeg" alt="Proceso sencillo" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
+        </div>
+        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Proceso sencillo</h3>
+        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Nosotros hacemos el trabajo técnico por ti. Disfruta de un servicio directo, sin pasos complejos ni herramientas difíciles de usar.</p>
+       </div>
+       <div class="text-center scroll-reveal-scale">
+        <div class="w-48 h-48 lg:w-64 lg:h-64 mx-auto mb-8 rounded-full overflow-hidden shadow-lg will-change-transform" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-purple)); transform: translateZ(0);"><img src="https://i.imgur.com/ARe1CKr.jpeg" alt="Atención personalizada" loading="lazy" decoding="async" class="w-full h-full object-cover" style="content-visibility: auto; will-change: opacity; transform: translateZ(0);" onerror="this.style.opacity='0';">
+        </div>
+        <h3 class="font-serif text-xl lg:text-2xl mb-4" style="color: var(--text-color);">Atención personalizada</h3>
+        <p class="text-sm lg:text-base leading-relaxed px-4" style="color: var(--text-color);">Validamos contigo que cada detalle sea correcto para asegurar que la información de tu evento sea precisa y luzca increíble.</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- Event Types Section -->
+    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
+     <div class="absolute top-20 right-1/4 w-28 h-28 rounded-full opacity-5" style="background-color: var(--primary-purple);"></div>
+     <div class="w-full max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-16 scroll-reveal">
+       <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-light" style="color: var(--text-color);">¿Para qué tipo de eventos funciona?</h2>
+       <p class="text-lg md:text-xl mt-6 font-light" style="color: var(--text-color);">Para cualquier evento</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/E3ouZct.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Bodas</p>
+        </div>
+       </div>
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/s5lagzl.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">XV años</p>
+        </div>
+       </div>
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/I6iQ3d6.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Cumpleaños</p>
+        </div>
+       </div>
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/za7T0Fl.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Baby showers</p>
+        </div>
+       </div>
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/POFLNeJ.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Eventos sociales</p>
+        </div>
+       </div>
+       <div class="event-card p-8 lg:p-12 rounded-xl scroll-reveal flex items-center justify-center aspect-[3/4]" style="background-image: url('https://i.imgur.com/hyvD6Bk.jpeg'); background-size: cover; background-position: center;">
+        <div class="event-card-content flex items-center justify-center w-full h-full">
+         <p class="font-semibold text-2xl lg:text-xl text-center text-white">Eventos corporativos</p>
+        </div>
+       </div>
+      </div>
+      <div class="text-center mt-12 scroll-reveal">
+       <p class="text-2xl md:text-3xl font-light" style="color: var(--text-color);">Y más…</p>
+      </div>
+     </div>
+    </div><!-- Garantía de Satisfacción Section -->
+    <div class="py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--white);">
+     <div class="absolute top-1/3 left-10 w-36 h-36 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
+     <div class="w-full max-w-6xl mx-auto text-center relative z-10 scroll-reveal-scale">
+      <div class="mb-8">
+       <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full" style="background-color: var(--primary-purple);">
+        <svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> <path d="M9 12l2 2 4-4" />
+        </svg>
+       </div>
+       <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl font-light mb-6" style="color: var(--text-color);">Garantía de Satisfacción</h2>
+      </div>
+      <p class="text-base md:text-lg leading-relaxed max-w-3xl mx-auto" style="color: var(--text-color);">En AdaInvite nos comprometemos con la calidad de tu evento. Si al recibir tu primer borrador el diseño no cumple con tus expectativas, trabajamos de la mano contigo en las revisiones de tu plan hasta que la invitación quede exactamente como la necesitas. Tu tranquilidad y la claridad de tu información son nuestra prioridad.</p>
+     </div>
+    </div>
+   </section><!-- PLANES PAGE -->
+   <section id="page-planes" class="page-section" style="padding-top: 80px;">
+    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--surface-color);">
+     <div class="max-w-6xl mx-auto w-full">
+      <div class="text-center mb-16">
+       <h2 id="plans-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Nuestros planes</h2>
+       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Elige el plan perfecto para tu evento especial</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"><!-- Plan Esencial -->
+       <div class="plan-card bg-white p-8 rounded-2xl border border-gray-100">
+        <div class="text-center mb-6">
+         <h3 class="font-serif text-xl mb-2" style="color: var(--text-color);">Esencial</h3>
+         <p class="text-sm opacity-60 mb-4">Para eventos pequeños y celebraciones sencillas</p>
+         <div class="text-xs opacity-40 line-through mb-1">
+          $299
+         </div>
+         <div class="font-serif text-4xl" style="color: var(--primary-purple);">
+          $149
+         </div>
+        </div>
+        <ul class="space-y-3 text-sm mb-8">
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Invitación digital personalizada</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Contador de días</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Enlace a ubicación</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">2 revisiones incluidas</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Entrega en hasta 5 días</span></li>
+        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full border text-sm transition-all hover:opacity-80" style="border-color: var(--primary-purple); color: var(--primary-purple); background: transparent; cursor: pointer;"> Seleccionar </button>
+       </div><!-- Plan Premium (Featured) -->
+       <div class="plan-card p-8 rounded-2xl relative text-white" style="background-color: var(--primary-purple);">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 text-xs tracking-wider rounded-full" style="background-color: var(--accent-color); color: var(--text-color);">
+         MÁS POPULAR
+        </div>
+        <div class="text-center mb-6">
+         <h3 class="font-serif text-xl mb-2">Premium</h3>
+         <p class="text-sm opacity-80 mb-4">Para eventos especiales</p>
+         <div class="text-xs opacity-60 line-through mb-1">
+          $699
+         </div>
+         <div class="font-serif text-4xl">
+          $349
+         </div>
+        </div>
+        <ul class="space-y-3 text-sm mb-8">
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Todo lo incluido en Esencial</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Agregar evento al calendario</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Formulario de confirmación de asistencia</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Animaciones personalizadas</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Revisiones ilimitadas</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-90">Entrega en hasta 3 días</span></li>
+        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full text-sm transition-all hover:opacity-90" style="background-color: var(--white); color: var(--primary-purple); border: none; cursor: pointer;"> Seleccionar </button>
+       </div><!-- Plan Pro -->
+       <div class="plan-card bg-white p-8 rounded-2xl border border-gray-100">
+        <div class="text-center mb-6">
+         <h3 class="font-serif text-xl mb-2" style="color: var(--text-color);">Pro</h3>
+         <p class="text-sm opacity-60 mb-4">Para eventos especiales</p>
+         <div class="text-xs opacity-40 line-through mb-1">
+          $999
+         </div>
+         <div class="font-serif text-4xl" style="color: var(--primary-purple);">
+          $499
+         </div>
+        </div>
+        <ul class="space-y-3 text-sm mb-8">
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Todo lo incluido en Premium</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Galería de fotos interactiva</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Save the Date adicional</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Diseño avanzado personalizado</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Soporte prioritario</span></li>
+         <li class="flex items-center gap-3">
+          <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple);">
+           <path d="M20 6L9 17l-5-5" />
+          </svg><span class="opacity-70">Entrega en hasta 24 horas</span></li>
+        </ul><button onclick="navigateToPage('contacto')" class="w-full text-center py-3 rounded-full border text-sm transition-all hover:opacity-80" style="border-color: var(--primary-purple); color: var(--primary-purple); background: transparent; cursor: pointer;"> Seleccionar </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- PORTAFOLIO PAGE -->
+   <section id="page-portafolio" class="page-section" style="padding-top: 80px;">
+    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--white);">
+     <div class="w-full max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+       <h2 id="portfolio-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Portafolio</h2>
+       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Explora algunos de nuestros trabajos realizados</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"><!-- Gallery Items --> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20boda" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #E8E4EC 0%, #D4CCD9 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">Boda</p>
+         </div>
+        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20XV%20años" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #F5F0F7 0%, #E8E4EC 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">XV años</p>
+         </div>
+        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20evento%20corporativo" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #D4CCD9 0%, #C4B5CE 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">Evento corporativo</p>
+         </div>
+        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20cumpleaños" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #C4B5CE 0%, #9B8AA5 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">Cumpleaños</p>
+         </div>
+        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20baby%20shower" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #FAF9FB 0%, #F5F0F7 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">Baby shower</p>
+         </div>
+        </div></a> <a href="https://wa.me/524659559601?text=Hola,%20quiero%20ver%20el%20portafolio%20de%20invitaciones%20para%20evento%20social" target="_blank" rel="noopener noreferrer" class="gallery-item aspect-[3/4] rounded-lg overflow-hidden cursor-pointer" style="background: linear-gradient(135deg, #E8E4EC 0%, #C4B5CE 100%);">
+        <div class="w-full h-full flex items-center justify-center p-6">
+         <div class="text-center">
+          <p class="text-lg md:text-xl tracking-wider text-black">Evento social</p>
+         </div>
+        </div></a>
+      </div>
+     </div>
+    </div>
+   </section><!-- FAQ PAGE -->
+   <section id="page-faq" class="page-section" style="padding-top: 80px;">
+    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6" style="background-color: var(--white);">
+     <div class="max-w-3xl mx-auto w-full">
+      <div class="text-center mb-16">
+       <h2 id="faq-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6" style="color: var(--text-color);">Preguntas frecuentes</h2>
+       <p class="text-base max-w-2xl mx-auto" style="color: var(--text-color);">Resolvemos tus dudas sobre AdaInvite</p>
+      </div>
+      <div class="space-y-8">
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Qué es una invitación digital?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Es una plataforma web personalizada que nosotros diseñamos y configuramos para tu evento. A diferencia de una imagen estática o un PDF, es interactiva: permite a tus invitados usar botones de navegación, ver mapas en tiempo real (Google Maps/Waze), acceder a mesas de regalos y confirmar su asistencia con un clic.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cuánto tiempo tarda la entrega?</h3>
+        <p class="text-sm leading-relaxed mb-2" style="color: var(--text-color);">Nosotros gestionamos la creación de tu invitación para que esté lista en los siguientes plazos, según el plan seleccionado:</p>
+        <ul class="text-sm leading-relaxed space-y-1 ml-4" style="color: var(--text-color);">
+         <li>• Esencial: hasta 5 días.</li>
+         <li>• Premium: hasta 3 días.</li>
+         <li>• Pro: hasta 24 horas.</li>
+        </ul>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Puedo hacer cambios después de la entrega?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">¡Por supuesto! Nosotros nos encargamos de aplicar las modificaciones que necesites. Cada plan incluye un número de revisiones para ajustar detalles de diseño, fotos o textos, asegurando que el resultado final sea exactamente lo que buscas.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cómo funciona la confirmación de asistencia?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Configuramos un sistema automático dentro de tu invitación. Tus invitados completan un formulario sencillo y nosotros te enviamos los datos de forma organizada, permitiéndote gestionar tu lista de invitados sin esfuerzo y en tiempo real.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Por cuánto tiempo estará activo mi enlace?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Nosotros mantenemos tu invitación activa desde el momento de la entrega hasta 15 días después de que finalice tu evento, asegurando que la información esté disponible para tus invitados hasta el último momento.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Cómo comparto mi invitación?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Es muy sencillo. Una vez que nosotros te entregamos el enlace personalizado, solo tienes que copiarlo y pegarlo en tus chats de WhatsApp, enviarlo por mensaje de texto o publicarlo en tus redes sociales.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Puedo incluir el código de vestimenta o sugerencia de regalos?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">Totalmente. Nosotros incluimos secciones específicas para el dress code y botones directos a tus mesas de regalos (Amazon, Liverpool, etc.) o datos bancarios para lluvia de sobres.</p>
+       </div>
+       <div class="bg-white p-6 rounded-xl border border-gray-100">
+        <h3 class="font-serif text-lg mb-3" style="color: var(--text-color);">¿Qué pasa si el lugar de mi evento cambia de último momento?</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--text-color);">No te preocupes. Como es un sitio web, nosotros podemos actualizar la ubicación y los detalles en el mismo enlace de manera inmediata, así tus invitados siempre verán la información más reciente sin que tengas que enviar un link nuevo.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- CONTACTO PAGE -->
+   <section id="page-contacto" class="page-section" style="padding-top: 80px;">
+    <div class="min-h-screen py-16 md:py-20 flex items-center justify-center px-6 relative overflow-hidden" style="background-color: var(--surface-color);">
+     <div class="absolute top-1/3 left-10 w-40 h-40 rounded-full opacity-5" style="background-color: var(--accent-color);"></div>
+     <div class="absolute bottom-1/4 right-20 w-32 h-32 rotate-45 opacity-5" style="background-color: var(--primary-purple);"></div>
+     <div class="max-w-4xl mx-auto text-center relative z-10">
+      <h2 id="contact-title" class="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-8" style="color: var(--text-color);">Comencemos</h2>
+      <p class="text-base md:text-lg font-light mb-12 max-w-2xl mx-auto" style="color: var(--text-color);">Cuéntanos sobre tu evento y crearemos una invitación digital clara, funcional y fácil de compartir.</p><a href="https://wa.me/524659559601?text=Hola,%20me%20interesa%20una%20invitación%20digital" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-3 px-10 py-5 text-white rounded-full text-base tracking-wide" style="background-color: var(--primary-purple);">
+       <svg width="24" height="24" viewbox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+       </svg> Escribir por WhatsApp </a>
+      <p class="mt-10 text-base opacity-50">Respondemos en menos de 24 horas</p>
+      <div class="mt-16 pt-16 border-t border-gray-200">
+       <h3 class="font-serif text-2xl mb-8" style="color: var(--text-color);">Información de contacto</h3>
+       <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto text-left">
+        <div class="flex items-start gap-4">
+         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple); flex-shrink: 0;"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+         </svg>
+         <div>
+          <p class="font-semibold mb-1" style="color: var(--text-color);">Email</p>
+          <p class="text-sm" style="color: var(--text-color);">adainviteoficial@gmail.com</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4">
+         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-purple); flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+         </svg>
+         <div>
+          <p class="font-semibold mb-1" style="color: var(--text-color);">Teléfono</p>
+          <p class="text-sm" style="color: var(--text-color);">+52 465 955 9601</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-12 px-6 border-t border-gray-100" style="background-color: var(--white);">
+    <div class="max-w-6xl mx-auto">
+     <div class="flex flex-col items-center gap-6">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToPage('inicio')"><img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" loading="lazy" class="h-8 w-auto" onerror="this.src=''; this.alt='AdaInvite'; this.style.display='none';">
+      </div>
+      <div class="flex items-center gap-6 text-sm"><a href="https://instagram.com/adainvite" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:opacity-70 transition-opacity" style="color: #000000;">
+        <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+        </svg> Instagram </a> <a href="https://www.facebook.com/share/184N7kKXbm/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:opacity-70 transition-opacity" style="color: #000000;">
+        <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg> Facebook </a>
+      </div>
+      <div class="max-w-3xl text-center space-y-3">
+       <div class="flex flex-wrap justify-center items-center gap-3 text-xs" style="color: #000000;"><span>Aviso de Privacidad</span> <span class="opacity-40">•</span> <span>Términos y Condiciones</span>
+       </div>
+       <p class="text-xs leading-relaxed px-6" style="color: #000000;">Las invitaciones digitales son un servicio personalizado. El cliente es responsable de la veracidad, exactitud y actualización de la información proporcionada para el diseño. Todos nuestros productos son digitales y se entregan mediante un enlace web.</p>
+      </div>
+      <p class="text-sm text-center" style="color: #000000;">© 2026 AdaInvite. Todos los derechos reservados.</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      hero_title: "Invitaciones digitales interactivas para tus eventos",
+      hero_subtitle: "Diseñamos tus invitaciones web personalizadas, fáciles de compartir y con confirmación de asistencia en un solo lugar.",
+      cta_button: "Comenzar",
+      plans_title: "Nuestros planes",
+      portfolio_title: "Portafolio",
+      faq_title: "Preguntas frecuentes",
+      contact_title: "Comencemos",
+      primary_color: "#9B8AA5",
+      surface_color: "#FAF9FB",
+      text_color: "#3D3542",
+      accent_color: "#C4B5CE",
+      font_family: "Montserrat",
+      font_size: 16
+    };
 
-    let currentPage = 'inicio';
+    let currentPage = 'inicio';
 
-    // Scroll reveal animation system
-    let ticking = false;
-    
-    // Sistema ultra eficiente (Intersection Observer)
-const scrollObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('revealed');
-      scrollObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1 });
+    // Scroll reveal animation system
+    let ticking = false;
+    
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+      const windowHeight = window.innerHeight;
+      const revealPoint = 80;
 
-function initObserver() {
-  const elements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
-  elements.forEach(el => scrollObserver.observe(el));
-}
+      reveals.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
 
-document.addEventListener('DOMContentLoaded', initObserver);
+        if (elementTop < windowHeight - revealPoint) {
+          element.classList.add('revealed');
+        }
+      });
+      
+      ticking = false;
+    }
+    
+    function requestReveal() {
+      if (!ticking) {
+        window.requestAnimationFrame(revealOnScroll);
+        ticking = true;
+      }
+    }
 
-    // Parallax effect for hero section with throttling
-    const appWrapper = document.getElementById('app-wrapper');
-    if (appWrapper) {
-      appWrapper.addEventListener('scroll', function() {
-        
-        if (currentPage === 'inicio') {
-          const heroOverlay = document.getElementById('hero-overlay');
-          const scrollPosition = appWrapper.scrollTop;
-          const windowHeight = window.innerHeight;
-          
-          // Calculate opacity based on scroll (fades out as you scroll down)
-          const opacity = Math.min(0.6 + (scrollPosition / windowHeight) * 0.4, 1);
-          
-          if (heroOverlay) {
-            heroOverlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
-          }
-        }
-      }, { passive: true });
-    }
-    
-    // Initial check for elements already in view
-    document.addEventListener('DOMContentLoaded', initObserver);
+    // Parallax effect for hero section with throttling
+    const appWrapper = document.getElementById('app-wrapper');
+    if (appWrapper) {
+      appWrapper.addEventListener('scroll', function() {
+        requestReveal();
+        
+        if (currentPage === 'inicio') {
+          const heroOverlay = document.getElementById('hero-overlay');
+          const scrollPosition = appWrapper.scrollTop;
+          const windowHeight = window.innerHeight;
+          
+          // Calculate opacity based on scroll (fades out as you scroll down)
+          const opacity = Math.min(0.6 + (scrollPosition / windowHeight) * 0.4, 1);
+          
+          if (heroOverlay) {
+            heroOverlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+          }
+        }
+      }, { passive: true });
+    }
+    
+    // Initial check for elements already in view
+    document.addEventListener('DOMContentLoaded', revealOnScroll);
 
-    function toggleMobileMenu() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      const hamburger = document.getElementById('hamburger');
-      mobileMenu.classList.toggle('active');
-      hamburger.classList.toggle('active');
-    }
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      const hamburger = document.getElementById('hamburger');
+      mobileMenu.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    }
 
-    function navigateToPage(pageName) {
-      // Hide all pages
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Show selected page
-      document.getElementById('page-' + pageName).classList.add('active');
-      
-      // Update nav links (desktop)
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-      });
-      
-      // Update nav links (mobile)
-      document.querySelectorAll('.nav-link-mobile').forEach(link => {
-        link.classList.remove('active');
-      });
-      
-      // Add active class to current link
-      const clickedLinks = document.querySelectorAll(`[onclick*="'${pageName}'"]`);
-      clickedLinks.forEach(link => {
-        if (link.classList.contains('nav-link') || link.classList.contains('nav-link-mobile')) {
-          link.classList.add('active');
-        }
-      });
-      
-      // Scroll to top
-      document.getElementById('app-wrapper').scrollTop = 0;
-      
-      currentPage = pageName;
-      
-      // Reset scroll reveal animations for new page
-      setTimeout(() => {
-        document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach(el => {
-          el.classList.remove('revealed');
-        });
-        initObserver();
-      }, 50);
-    }
+    function navigateToPage(pageName) {
+      // Hide all pages
+      document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected page
+      document.getElementById('page-' + pageName).classList.add('active');
+      
+      // Update nav links (desktop)
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Update nav links (mobile)
+      document.querySelectorAll('.nav-link-mobile').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Add active class to current link
+      const clickedLinks = document.querySelectorAll(`[onclick*="'${pageName}'"]`);
+      clickedLinks.forEach(link => {
+        if (link.classList.contains('nav-link') || link.classList.contains('nav-link-mobile')) {
+          link.classList.add('active');
+        }
+      });
+      
+      // Scroll to top
+      document.getElementById('app-wrapper').scrollTop = 0;
+      
+      currentPage = pageName;
+      
+      // Reset scroll reveal animations for new page
+      setTimeout(() => {
+        document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach(el => {
+          el.classList.remove('revealed');
+        });
+        revealOnScroll();
+      }, 50);
+    }
 
-    async function onConfigChange(config) {
-      // Update text content
-      const heroTitle = document.getElementById('hero-title');
-      if (heroTitle) heroTitle.innerHTML = config.hero_title || defaultConfig.hero_title;
-      
-      const heroSubtitle = document.getElementById('hero-subtitle');
-      if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
-      
-      const ctaButton = document.getElementById('cta-button');
-      if (ctaButton) ctaButton.textContent = config.cta_button || defaultConfig.cta_button;
-      
-      const plansTitle = document.getElementById('plans-title');
-      if (plansTitle) plansTitle.textContent = config.plans_title || defaultConfig.plans_title;
-      
-      const portfolioTitle = document.getElementById('portfolio-title');
-      if (portfolioTitle) portfolioTitle.textContent = config.portfolio_title || defaultConfig.portfolio_title;
-      
-      const faqTitle = document.getElementById('faq-title');
-      if (faqTitle) faqTitle.textContent = config.faq_title || defaultConfig.faq_title;
-      
-      const contactTitle = document.getElementById('contact-title');
-      if (contactTitle) contactTitle.textContent = config.contact_title || defaultConfig.contact_title;
+    async function onConfigChange(config) {
+      // Update text content
+      const heroTitle = document.getElementById('hero-title');
+      if (heroTitle) heroTitle.innerHTML = config.hero_title || defaultConfig.hero_title;
+      
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      
+      const ctaButton = document.getElementById('cta-button');
+      if (ctaButton) ctaButton.textContent = config.cta_button || defaultConfig.cta_button;
+      
+      const plansTitle = document.getElementById('plans-title');
+      if (plansTitle) plansTitle.textContent = config.plans_title || defaultConfig.plans_title;
+      
+      const portfolioTitle = document.getElementById('portfolio-title');
+      if (portfolioTitle) portfolioTitle.textContent = config.portfolio_title || defaultConfig.portfolio_title;
+      
+      const faqTitle = document.getElementById('faq-title');
+      if (faqTitle) faqTitle.textContent = config.faq_title || defaultConfig.faq_title;
+      
+      const contactTitle = document.getElementById('contact-title');
+      if (contactTitle) contactTitle.textContent = config.contact_title || defaultConfig.contact_title;
 
-      // Update colors
-      const primaryColor = config.primary_color || defaultConfig.primary_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const accentColor = config.accent_color || defaultConfig.accent_color;
+      // Update colors
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
 
-      document.documentElement.style.setProperty('--primary-purple', primaryColor);
-      document.documentElement.style.setProperty('--surface-color', surfaceColor);
-      document.documentElement.style.setProperty('--text-color', textColor);
-      document.documentElement.style.setProperty('--accent-color', accentColor);
+      document.documentElement.style.setProperty('--primary-purple', primaryColor);
+      document.documentElement.style.setProperty('--surface-color', surfaceColor);
+      document.documentElement.style.setProperty('--text-color', textColor);
+      document.documentElement.style.setProperty('--accent-color', accentColor);
 
-      // Update font family
-     const fontFamily = config.font_family || defaultConfig.font_family;
-      
-      // Aplicar a todo lo que no sea título
-      document.querySelectorAll('*:not(h1):not(h2)').forEach(el => {
-        el.style.setProperty('font-family', "'Montserrat', sans-serif", 'important');
-      });
+      // Update font family
+     const fontFamily = config.font_family || defaultConfig.font_family;
+      
+      // Aplicar a todo lo que no sea título
+      document.querySelectorAll('*:not(h1):not(h2)').forEach(el => {
+        el.style.setProperty('font-family', "'Montserrat', sans-serif", 'important');
+      });
 
-      // Asegurar que los títulos mantengan Dancing Script
-      document.querySelectorAll('h1, h2').forEach(el => {
-        el.style.setProperty('font-family', "'Dancing Script', cursive", 'important');
-      });
+      // Asegurar que los títulos mantengan Dancing Script
+      document.querySelectorAll('h1, h2').forEach(el => {
+        el.style.setProperty('font-family', "'Dancing Script', cursive", 'important');
+      });
 
-      // Update font size
-      const fontSize = config.font_size || defaultConfig.font_size;
-      document.body.style.fontSize = `${fontSize}px`;
-    }
+      // Update font size
+      const fontSize = config.font_size || defaultConfig.font_size;
+      document.body.style.fontSize = `${fontSize}px`;
+    }
 
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.surface_color || defaultConfig.surface_color,
-            set: (value) => {
-              config.surface_color = value;
-              window.elementSdk.setConfig({ surface_color: value });
-            }
-          },
-          {
-            get: () => config.primary_color || defaultConfig.primary_color,
-            set: (value) => {
-              config.primary_color = value;
-              window.elementSdk.setConfig({ primary_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.accent_color || defaultConfig.accent_color,
-            set: (value) => {
-              config.accent_color = value;
-              window.elementSdk.setConfig({ accent_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => config.font_family || defaultConfig.font_family,
-          set: (value) => {
-            config.font_family = value;
-            window.elementSdk.setConfig({ font_family: value });
-          }
-        },
-        fontSizeable: {
-          get: () => config.font_size || defaultConfig.font_size,
-          set: (value) => {
-            config.font_size = value;
-            window.elementSdk.setConfig({ font_size: value });
-          }
-        }
-      };
-    }
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => {
+              config.primary_color = value;
+              window.elementSdk.setConfig({ primary_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
 
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ["hero_title", config.hero_title || defaultConfig.hero_title],
-        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
-        ["cta_button", config.cta_button || defaultConfig.cta_button],
-        ["plans_title", config.plans_title || defaultConfig.plans_title],
-        ["portfolio_title", config.portfolio_title || defaultConfig.portfolio_title],
-        ["faq_title", config.faq_title || defaultConfig.faq_title],
-        ["contact_title", config.contact_title || defaultConfig.contact_title]
-      ]);
-    }
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["hero_title", config.hero_title || defaultConfig.hero_title],
+        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+        ["cta_button", config.cta_button || defaultConfig.cta_button],
+        ["plans_title", config.plans_title || defaultConfig.plans_title],
+        ["portfolio_title", config.portfolio_title || defaultConfig.portfolio_title],
+        ["faq_title", config.faq_title || defaultConfig.faq_title],
+        ["contact_title", config.contact_title || defaultConfig.contact_title]
+      ]);
+    }
 
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c1a184426904071',t:'MTc2OTAzMjkzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c1a184426904071',t:'MTc2OTAzMjkzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
