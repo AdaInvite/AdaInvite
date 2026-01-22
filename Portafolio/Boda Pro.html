@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Susana & Alejandro | Nuestra Boda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --color-tinto: #4a0404;
+            --color-blanco: #ffffff;
+            --color-crema: #faf9f6;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-blanco);
+            color: var(--color-tinto);
+            overflow-x: hidden;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bg-tinto { background-color: var(--color-tinto); }
+        .text-tinto { color: var(--color-tinto); }
+        .border-tinto { border-color: var(--color-tinto); }
+        .text-blanco { color: var(--color-blanco); }
+
+        /* Animaciones */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 1s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 4, 4, 0.1);
+        }
+
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(74, 4, 4, 0.4) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+
+        #main-content { display: none; }
+
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-premium::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(74, 4, 4, 0.1);
+            transform: translate(-50%, -50%) rotate(45deg) scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-premium:hover::after {
+            transform: translate(-50%, -50%) rotate(45deg) scale(1);
+        }
+
+        /* Galería */
+        .gallery-item {
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(74, 4, 4, 0.05);
+        }
+        .gallery-item img {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Timeline */
+        .timeline-line {
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--color-tinto), transparent);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- PORTADA ANIMADA -->
+    <section id="hero" class="relative h-screen w-full flex flex-col items-center justify-center text-center px-4 transition-opacity duration-1000 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%202.jpg" alt="Portada Susana y Alejandro" class="w-full h-full object-cover">
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <h2 class="uppercase tracking-[0.4em] text-sm mb-6 text-tinto font-semibold">Nuestra Boda</h2>
+            <h1 class="font-serif text-5xl md:text-8xl mb-4 italic text-tinto">Susana <span class="text-3xl md:text-5xl font-light not-italic">&</span> Alejandro</h1>
+            <p class="text-lg md:text-xl tracking-widest mb-12 text-tinto opacity-80 font-medium">20 . 12 . 2026</p>
+            
+            <button onclick="revealContent()" class="btn-premium border border-tinto px-10 py-4 uppercase tracking-widest text-xs text-tinto hover:bg-tinto hover:text-white transition-all duration-500 group">
+                Toca para continuar
+                <i data-lucide="chevron-right" class="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="main-content" class="relative bg-white">
+        
+        <!-- INTRODUCCIÓN -->
+        <section class="pt-24 pb-12 px-6 max-w-4xl mx-auto text-center">
+            <div class="fade-in mb-8">
+                <i data-lucide="heart" class="mx-auto mb-8 text-tinto w-8 h-8 fill-tinto/10"></i>
+                <h3 class="font-serif text-4xl mb-6 italic text-tinto">"El amor no tiene límites"</h3>
+                <p class="text-tinto/70 leading-loose max-w-2xl mx-auto font-light italic">
+                    Nuestra historia comienza un nuevo capítulo y queremos escribirlo junto a ustedes.
+                </p>
+            </div>
+        </section>
+
+        <!-- GALERÍA -->
+        <section class="py-12 px-4 bg-crema/30">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12 fade-in">
+                    <h3 class="font-serif text-4xl italic text-tinto mb-4">Nuestros Momentos</h3>
+                    <div class="w-12 h-[1px] bg-tinto mx-auto opacity-30"></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div class="gallery-item h-64 md:h-80 fade-in">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%201.jpg" class="w-full h-full object-cover" alt="Novios 1">
+                    </div>
+                    <div class="gallery-item h-64 md:h-80 fade-in">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%203.jpg" class="w-full h-full object-cover" alt="Novios 2">
+                    </div>
+                    <div class="gallery-item h-64 md:h-80 fade-in col-span-2 md:col-span-1">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%204.jpg" class="w-full h-full object-cover" alt="Novios 3">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN -->
+        <section class="py-24 px-6 max-w-4xl mx-auto text-center">
+            <div class="fade-in mb-10">
+                <p class="font-serif text-2xl italic text-tinto opacity-80">Faltan solo...</p>
+            </div>
+            
+            <div id="countdown" class="grid grid-cols-4 gap-4 fade-in max-w-2xl mx-auto">
+                <div class="bg-tinto p-6 rounded-sm text-white shadow-lg">
+                    <span id="days" class="block text-3xl font-serif">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-80">Días</span>
+                </div>
+                <div class="bg-tinto p-6 rounded-sm text-white shadow-lg">
+                    <span id="hours" class="block text-3xl font-serif">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-80">Horas</span>
+                </div>
+                <div class="bg-tinto p-6 rounded-sm text-white shadow-lg">
+                    <span id="minutes" class="block text-3xl font-serif">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-80">Mins</span>
+                </div>
+                <div class="bg-tinto p-6 rounded-sm text-white shadow-lg">
+                    <span id="seconds" class="block text-3xl font-serif">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-80">Segs</span>
+                </div>
+            </div>
+            
+            <div class="mt-12 fade-in">
+                <button onclick="addToCalendar()" class="text-[10px] uppercase tracking-[0.2em] border-b border-tinto/30 pb-2 hover:border-tinto transition-colors text-tinto">
+                    Añadir al Calendario
+                </button>
+            </div>
+        </section>
+
+        <!-- ITINERARIO -->
+        <section class="py-24 px-6 bg-crema">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 fade-in">
+                    <h3 class="font-serif text-4xl italic text-tinto mb-4">Itinerario</h3>
+                    <div class="w-12 h-[1px] bg-tinto mx-auto"></div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute left-1/2 -translate-x-1/2 h-full timeline-line hidden md:block"></div>
+                    
+                    <div class="space-y-12">
+                        <!-- Evento 1 -->
+                        <div class="relative flex flex-col md:flex-row items-center md:justify-between fade-in">
+                            <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                                <span class="text-sm font-semibold text-tinto uppercase tracking-widest">18:00 hrs</span>
+                                <h4 class="font-serif text-xl text-tinto italic">Ceremonia Religiosa</h4>
+                                <p class="text-xs text-tinto/60 mt-2">Catedral Metropolitana</p>
+                            </div>
+                            <div class="z-10 w-3 h-3 bg-tinto rounded-full hidden md:block shadow-md"></div>
+                            <div class="md:w-5/12"></div>
+                        </div>
+
+                        <!-- Evento 2 -->
+                        <div class="relative flex flex-col md:flex-row items-center md:justify-between fade-in">
+                            <div class="md:w-5/12 order-2 md:order-1"></div>
+                            <div class="z-10 w-3 h-3 bg-tinto rounded-full hidden md:block order-1 md:order-2 shadow-md"></div>
+                            <div class="md:w-5/12 text-center md:text-left mb-4 md:mb-0 order-3">
+                                <span class="text-sm font-semibold text-tinto uppercase tracking-widest">19:30 hrs</span>
+                                <h4 class="font-serif text-xl text-tinto italic">Cóctel de Bienvenida</h4>
+                                <p class="text-xs text-tinto/60 mt-2">Jardín Principal de la Hacienda</p>
+                            </div>
+                        </div>
+
+                        <!-- Evento 3 -->
+                        <div class="relative flex flex-col md:flex-row items-center md:justify-between fade-in">
+                            <div class="md:w-5/12 text-center md:text-right mb-4 md:mb-0">
+                                <span class="text-sm font-semibold text-tinto uppercase tracking-widest">20:30 hrs</span>
+                                <h4 class="font-serif text-xl text-tinto italic">Cena y Recepción</h4>
+                                <p class="text-xs text-tinto/60 mt-2">Salón Imperial</p>
+                            </div>
+                            <div class="z-10 w-3 h-3 bg-tinto rounded-full hidden md:block shadow-md"></div>
+                            <div class="md:w-5/12"></div>
+                        </div>
+
+                        <!-- Evento 4 -->
+                        <div class="relative flex flex-col md:flex-row items-center md:justify-between fade-in">
+                            <div class="md:w-5/12"></div>
+                            <div class="z-10 w-3 h-3 bg-tinto rounded-full hidden md:block shadow-md"></div>
+                            <div class="md:w-5/12 text-center md:text-left mb-4 md:mb-0">
+                                <span class="text-sm font-semibold text-tinto uppercase tracking-widest">22:00 hrs</span>
+                                <h4 class="font-serif text-xl text-tinto italic">Apertura de Pista</h4>
+                                <p class="text-xs text-tinto/60 mt-2">Celebración y Brindis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UBICACIONES -->
+        <section class="py-24 px-6 border-y border-tinto/10">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+                <div class="fade-in p-10 text-center flex flex-col items-center border border-tinto/20">
+                    <i data-lucide="map-pin" class="w-8 h-8 mb-6 text-tinto"></i>
+                    <h4 class="font-serif text-2xl mb-4 italic text-tinto">La Ceremonia</h4>
+                    <p class="text-xs uppercase tracking-widest text-tinto font-semibold mb-2">Catedral Metropolitana</p>
+                    <p class="text-tinto/60 mb-8 font-light text-sm">Av. Central 123, Centro Histórico</p>
+                    <a href="https://maps.app.goo.gl" target="_blank" class="px-8 py-3 bg-tinto text-white text-[10px] uppercase tracking-widest hover:bg-white hover:text-tinto border border-tinto transition-all">
+                        Ver Mapa
+                    </a>
+                </div>
+
+                <div class="fade-in p-10 text-center flex flex-col items-center border border-tinto/20">
+                    <i data-lucide="castle" class="w-8 h-8 mb-6 text-tinto"></i>
+                    <h4 class="font-serif text-2xl mb-4 italic text-tinto">La Recepción</h4>
+                    <p class="text-xs uppercase tracking-widest text-tinto font-semibold mb-2">Hacienda Santa Rosa</p>
+                    <p class="text-tinto/60 mb-8 font-light text-sm">Km 15 Carr. Antigua, Valle de Oro</p>
+                    <a href="https://maps.app.goo.gl" target="_blank" class="px-8 py-3 bg-tinto text-white text-[10px] uppercase tracking-widest hover:bg-white hover:text-tinto border border-tinto transition-all">
+                        Ver Mapa
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- MESA DE REGALOS -->
+        <section class="py-24 px-6 bg-white">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="fade-in mb-16">
+                    <i data-lucide="gift" class="mx-auto mb-6 text-tinto w-8 h-8"></i>
+                    <h3 class="font-serif text-4xl italic text-tinto mb-4">Mesa de Regalos</h3>
+                    <p class="text-tinto/60 text-sm font-light max-w-lg mx-auto leading-relaxed">
+                        Su presencia es nuestro mejor regalo, pero si desean tener un detalle con nosotros, ponemos a su disposición nuestras mesas de regalos.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+                    <a href="#" class="p-8 border border-tinto/10 hover:border-tinto transition-all group">
+                        <h5 class="font-semibold text-tinto uppercase tracking-widest text-xs mb-2">Liverpool</h5>
+                        <p class="text-[10px] text-tinto/40 mb-4">Evento: 51234455</p>
+                        <span class="text-[9px] text-tinto border-b border-tinto/20 group-hover:border-tinto transition-all">Ir a la Mesa</span>
+                    </a>
+                    <a href="#" class="p-8 border border-tinto/10 hover:border-tinto transition-all group">
+                        <h5 class="font-semibold text-tinto uppercase tracking-widest text-xs mb-2">Amazon</h5>
+                        <p class="text-[10px] text-tinto/40 mb-4">Wishlist Susana & Ale</p>
+                        <span class="text-[9px] text-tinto border-b border-tinto/20 group-hover:border-tinto transition-all">Ir a la Mesa</span>
+                    </a>
+                    <div class="p-8 border border-tinto/10">
+                        <h5 class="font-semibold text-tinto uppercase tracking-widest text-xs mb-2">Sobre Efectivo</h5>
+                        <p class="text-[10px] text-tinto/40 mb-4">Habrá un cofre en la recepción</p>
+                        <i data-lucide="mail" class="w-4 h-4 mx-auto text-tinto/30"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section class="py-24 px-6 bg-tinto text-white">
+            <div class="max-w-xl mx-auto">
+                <div class="text-center mb-12 fade-in">
+                    <h3 class="font-serif text-4xl mb-4 italic">Confirmar Asistencia</h3>
+                    <p class="text-[10px] font-medium opacity-70 uppercase tracking-[0.3em]">Agradecemos confirmar antes del 01.12.26</p>
+                </div>
+
+                <form id="rsvpForm" class="space-y-8 fade-in">
+                    <div>
+                        <input type="text" placeholder="Nombre completo" required class="w-full bg-transparent border-b border-white/40 p-4 text-white focus:outline-none focus:border-white transition-all placeholder:text-white/40 font-light">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <select class="w-full bg-transparent border-b border-white/40 p-4 text-white focus:outline-none focus:border-white transition-all">
+                            <option value="" disabled selected class="text-tinto">¿Asistirás?</option>
+                            <option value="si" class="text-tinto">Confirmar Asistencia</option>
+                            <option value="no" class="text-tinto">No podré asistir</option>
+                        </select>
+                        <input type="number" placeholder="No. de Invitados" min="1" max="4" class="w-full bg-transparent border-b border-white/40 p-4 text-white focus:outline-none focus:border-white transition-all placeholder:text-white/40 font-light">
+                    </div>
+                    <button type="submit" class="w-full bg-white text-tinto py-5 uppercase tracking-[0.3em] text-[10px] font-bold hover:bg-crema transition-all shadow-xl">
+                        Enviar Confirmación
+                    </button>
+                </form>
+                <div id="rsvpMessage" class="hidden text-center p-12 border border-white/20">
+                    <i data-lucide="check-circle" class="w-12 h-12 mx-auto mb-6"></i>
+                    <p class="font-serif text-2xl italic">¡Muchas gracias!</p>
+                    <p class="text-sm font-light mt-4 opacity-80">Tu respuesta ha sido registrada con éxito.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-16 text-center bg-white border-t border-tinto/5">
+            <div class="fade-in">
+                <h2 class="font-serif text-3xl italic text-tinto mb-4">S <span class="text-xl not-italic">&</span> A</h2>
+                <button onclick="downloadSaveTheDate()" class="text-[9px] uppercase tracking-[0.4em] bg-tinto text-white px-10 py-4 mb-12 hover:bg-tinto/90 transition-all shadow-md">
+                    Descargar Recordatorio
+                </button>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-tinto opacity-40">Diseñado para Susana & Alejandro con amor • 2026</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- AUDIO TOGGLE -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="audioToggle" class="w-10 h-10 rounded-full border border-tinto/10 flex items-center justify-center bg-white shadow-lg text-tinto hover:scale-110 transition-all">
+            <i data-lucide="music" class="w-4 h-4"></i>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Revelar contenido principal
+        function revealContent() {
+            const hero = document.getElementById('hero');
+            const main = document.getElementById('main-content');
+            
+            hero.style.opacity = '0';
+            setTimeout(() => {
+                hero.style.display = 'none';
+                main.style.display = 'block';
+                window.scrollTo(0, 0);
+                checkScroll(); 
+            }, 800);
+        }
+
+        // Observer para animaciones
+        function checkScroll() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
+
+        // Countdown Logic
+        const targetDate = new Date("December 20, 2026 18:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const daysEl = document.getElementById("days");
+            const hoursEl = document.getElementById("hours");
+            const minutesEl = document.getElementById("minutes");
+            const secondsEl = document.getElementById("seconds");
+
+            if(daysEl) daysEl.innerText = d.toString().padStart(2, '0');
+            if(hoursEl) hoursEl.innerText = h.toString().padStart(2, '0');
+            if(minutesEl) minutesEl.innerText = m.toString().padStart(2, '0');
+            if(secondsEl) secondsEl.innerText = s.toString().padStart(2, '0');
+        }, 1000);
+
+        // RSVP Form
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.classList.add('hidden');
+            document.getElementById('rsvpMessage').classList.remove('hidden');
+        });
+
+        function addToCalendar() {
+            const url = "https://www.google.com/calendar/render?action=TEMPLATE&text=Boda+Susana+y+Alejandro&dates=20261220T180000Z/20261221T030000Z&details=Acompañanos+a+celebrar+nuestra+boda.&location=Hacienda+Santa+Rosa&sf=true&output=xml";
+            window.open(url, '_blank');
+        }
+
+        function downloadSaveTheDate() {
+            const btn = event.currentTarget;
+            const original = btn.innerText;
+            btn.innerText = "DESCARGANDO...";
+            setTimeout(() => {
+                btn.innerText = original;
+            }, 2000);
+        }
+
+        let isPlaying = false;
+        document.getElementById('audioToggle').addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            this.classList.toggle('bg-tinto', isPlaying);
+            this.classList.toggle('text-white', isPlaying);
+            this.innerHTML = isPlaying ? '<i data-lucide="volume-2" class="w-4 h-4"></i>' : '<i data-lucide="music" class="w-4 h-4"></i>';
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
