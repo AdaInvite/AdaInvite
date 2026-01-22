@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofía & Alejandro | Nuestra Boda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --coffee-light: #fdfaf7;
+            --coffee-soft: #e3d5ca;
+            --coffee-main: #74512D;
+            --coffee-dark: #4a3728;
+            --coffee-accent: #AF8F6F;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: var(--coffee-dark);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* Hero con la imagen solicitada y overlay café */
+        .hero-section {
+            background: linear-gradient(rgba(74, 55, 40, 0.6), rgba(253, 250, 247, 0.3)), 
+                        url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/young-wedding-couple-their-wedding.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Animaciones de Scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bg-cream-gradient {
+            background: linear-gradient(180deg, #ffffff 0%, var(--coffee-light) 100%);
+        }
+
+        .btn-elegant {
+            background-color: var(--coffee-dark);
+            color: white;
+            padding: 14px 35px;
+            transition: all 0.4s ease;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            border: 1px solid var(--coffee-dark);
+        }
+
+        .btn-elegant:hover {
+            background-color: transparent;
+            color: var(--coffee-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--coffee-accent);
+            color: var(--coffee-main);
+            padding: 10px 25px;
+            transition: all 0.3s;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--coffee-light);
+            border-color: var(--coffee-main);
+        }
+
+        input, select, textarea {
+            border: 1px solid var(--coffee-soft);
+            padding: 12px;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s;
+            background-color: #ffffff;
+        }
+
+        input:focus {
+            border-color: var(--coffee-main);
+            box-shadow: 0 0 0 2px rgba(175, 143, 111, 0.1);
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--coffee-light); }
+        ::-webkit-scrollbar-thumb { background: var(--coffee-accent); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Portada -->
+    <section class="relative min-h-screen hero-section flex flex-col items-center justify-center px-6 text-center text-white">
+        <div class="z-10 bg-white/5 backdrop-blur-[2px] p-8 md:p-16 border border-white/30 rounded-full w-[340px] h-[340px] md:w-[500px] md:h-[500px] flex flex-col items-center justify-center shadow-2xl">
+            <span class="text-[10px] tracking-[0.6em] uppercase font-light mb-6 opacity-80">Nuestra Boda</span>
+            <h1 class="text-5xl md:text-7xl mb-4 serif leading-tight">Sofía <br> <span class="cursive text-4xl md:text-6xl">&</span> <br> Alejandro</h1>
+            <div class="w-16 h-[1px] bg-white/40 my-6"></div>
+            <p class="text-lg md:text-xl font-light tracking-[0.3em] uppercase">24.10.2026</p>
+        </div>
+
+        <div class="absolute bottom-12 animate-bounce opacity-50">
+            <i data-lucide="chevron-down" class="w-8 h-8"></i>
+        </div>
+    </section>
+
+    <!-- Intro Mensaje -->
+    <section class="py-32 px-6 text-center max-w-3xl mx-auto reveal">
+        <i data-lucide="heart" class="mx-auto mb-8 text-coffee-accent opacity-40 w-10 h-10"></i>
+        <h2 class="text-4xl md:text-5xl serif italic text-coffee-main mb-8 font-light">Comienza nuestra aventura</h2>
+        <p class="text-gray-500 leading-loose text-lg font-light italic">
+            "En el viaje de la vida, lo importante no es a dónde vas, sino con quién caminas. Estamos felices de compartir el inicio de nuestro camino más importante con ustedes."
+        </p>
+        <div class="mt-12 flex justify-center gap-4">
+            <button onclick="addToCalendar()" class="btn-outline flex items-center">
+                <i data-lucide="calendar-plus" class="mr-2 w-4 h-4"></i>
+                Agendar Fecha
+            </button>
+        </div>
+    </section>
+
+    <!-- Contador -->
+    <section class="py-24 bg-cream-gradient px-6 text-center reveal">
+        <div class="max-w-5xl mx-auto">
+            <h3 class="text-[10px] uppercase tracking-[0.5em] mb-16 text-coffee-accent font-bold">La cuenta regresiva ha comenzado</h3>
+            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+                <div class="bg-white p-8 border border-coffee-soft/30 shadow-sm">
+                    <span id="days" class="text-5xl md:text-7xl font-light text-coffee-main">00</span>
+                    <span class="block text-[9px] uppercase tracking-[0.3em] mt-4 opacity-60">Días</span>
+                </div>
+                <div class="bg-white p-8 border border-coffee-soft/30 shadow-sm">
+                    <span id="hours" class="text-5xl md:text-7xl font-light text-coffee-main">00</span>
+                    <span class="block text-[9px] uppercase tracking-[0.3em] mt-4 opacity-60">Horas</span>
+                </div>
+                <div class="bg-white p-8 border border-coffee-soft/30 shadow-sm">
+                    <span id="minutes" class="text-5xl md:text-7xl font-light text-coffee-main">00</span>
+                    <span class="block text-[9px] uppercase tracking-[0.3em] mt-4 opacity-60">Minutos</span>
+                </div>
+                <div class="bg-white p-8 border border-coffee-soft/30 shadow-sm">
+                    <span id="seconds" class="text-5xl md:text-7xl font-light text-coffee-main">00</span>
+                    <span class="block text-[9px] uppercase tracking-[0.3em] mt-4 opacity-60">Segundos</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ubicación -->
+    <section class="py-32 px-6 reveal">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row items-stretch gap-0 bg-white shadow-xl border border-coffee-soft/20 overflow-hidden">
+                <div class="md:w-1/2 p-12 md:p-20 flex flex-col justify-center">
+                    <span class="text-[10px] uppercase tracking-[0.4em] text-coffee-accent font-bold mb-6 block">El Escenario</span>
+                    <h2 class="text-4xl md:text-5xl serif mb-8 text-coffee-dark">Hacienda San José</h2>
+                    <div class="space-y-6 text-gray-600 font-light text-lg border-l-2 border-coffee-soft pl-6">
+                        <p>Calle de la Paz 123, San Ángel</p>
+                        <p>Ciudad de México, CP 01000</p>
+                        <div class="pt-4">
+                            <p class="serif italic text-2xl text-coffee-main">17:00 hrs — Ceremonia</p>
+                            <p class="serif italic text-xl text-gray-400">18:30 hrs — Recepción</p>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <a href="https://maps.google.com" target="_blank" class="btn-elegant inline-block">
+                            Ver Mapa Interactivo
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 h-[450px] md:h-auto min-h-[400px]">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.447470685957!2d-99.1911!3d19.3467!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1fff3f3503f9b%3A0x6b26d36d89308d2!2sSan%20%C3%81ngel%2C%20Ciudad%20de%20M%C3%A9xico!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx" width="100%" height="100%" style="border:0; filter: grayscale(0.3) sepia(0.2);" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Form -->
+    <section class="py-32 bg-coffee-light px-6 reveal">
+        <div class="max-w-xl mx-auto bg-white p-10 md:p-16 shadow-2xl relative">
+            <div class="absolute top-0 left-0 w-full h-1 bg-coffee-accent"></div>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl serif mb-4 text-coffee-dark">Confirma tu Asistencia</h2>
+                <div class="w-12 h-[1px] bg-coffee-soft mx-auto mb-4"></div>
+                <p class="text-gray-400 font-light uppercase text-[10px] tracking-[0.3em]">Agradecemos tu respuesta antes del 1 de Octubre</p>
+            </div>
+            
+            <form id="rsvpForm" onsubmit="handleRSVP(event)" class="space-y-8">
+                <div>
+                    <label class="text-[9px] uppercase tracking-widest mb-3 block text-coffee-main font-bold">Nombre Completo</label>
+                    <input type="text" required placeholder="Escribe tu nombre">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="text-[9px] uppercase tracking-widest mb-3 block text-coffee-main font-bold">¿Nos acompañas?</label>
+                        <select required>
+                            <option value="">Seleccionar...</option>
+                            <option value="yes">Sí, asistiré</option>
+                            <option value="no">No podré asistir</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[9px] uppercase tracking-widest mb-3 block text-coffee-main font-bold">Acompañantes</label>
+                        <select>
+                            <option value="0">Sin acompañantes</option>
+                            <option value="1">1 Acompañante</option>
+                            <option value="2">2 Acompañantes</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[9px] uppercase tracking-widest mb-3 block text-coffee-main font-bold">Mensaje o Dieta Especial</label>
+                    <textarea rows="3" placeholder="Ej: Vegetariano, alergias, o un mensaje para nosotros..."></textarea>
+                </div>
+                <div class="pt-6">
+                    <button type="submit" class="btn-elegant w-full">Enviar Confirmación</button>
+                </div>
+            </form>
+            <div id="formFeedback" class="hidden text-center mt-8 py-4 border border-coffee-soft bg-coffee-light">
+                <p class="cursive text-3xl text-coffee-main">¡Gracias!</p>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mt-2">Tu respuesta ha sido recibida con cariño.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-32 bg-white text-center px-6">
+        <div class="flex items-center justify-center gap-6 mb-12 opacity-30">
+            <div class="w-16 h-[1px] bg-coffee-main"></div>
+            <i data-lucide="sparkles" class="w-5 h-5 text-coffee-main"></i>
+            <div class="w-16 h-[1px] bg-coffee-main"></div>
+        </div>
+        <p class="cursive text-5xl text-coffee-main mb-6">Te esperamos con amor</p>
+        <p class="text-[9px] uppercase tracking-[0.5em] text-gray-400 font-light">Sofía & Alejandro — 2026</p>
+    </footer>
+
+    <script>
+        // Inicializar iconos
+        lucide.createIcons();
+
+        // Animación al scroll (Reveal)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Inicial
+
+        // Contador 2026
+        const targetDate = new Date("October 24, 2026 17:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.getElementById("countdown").innerHTML = "<p class='text-3xl serif italic text-coffee-main col-span-4'>¡Es hoy!</p>";
+                return;
+            }
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Google Calendar
+        function addToCalendar() {
+            const event = {
+                title: "Boda de Sofía & Alejandro",
+                start: "20261024T170000Z",
+                end: "20261025T030000Z",
+                details: "Acompáñanos a celebrar nuestra unión matrimonial.",
+                location: "Hacienda San José, San Ángel, CDMX"
+            };
+            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
+            window.open(url, '_blank');
+        }
+
+        // RSVP Logic
+        function handleRSVP(e) {
+            e.preventDefault();
+            const form = document.getElementById('rsvpForm');
+            const feedback = document.getElementById('formFeedback');
+            form.style.opacity = '0.3';
+            form.style.pointerEvents = 'none';
+            setTimeout(() => {
+                form.classList.add('hidden');
+                feedback.classList.remove('hidden');
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 800);
+        }
+    </script>
+</body>
+</html>
