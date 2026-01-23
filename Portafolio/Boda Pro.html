@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S & A</title>
+    <!-- Favicon para la pestaña del navegador -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Logo%20AdaInvite.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,21 +25,16 @@
             scroll-behavior: smooth;
         }
 
-        .font-serif {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .font-cursive {
-            font-family: 'Pinyon Script', cursive;
-        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-cursive { font-family: 'Pinyon Script', cursive; }
 
         .bg-tinto { background-color: var(--color-tinto); }
         .text-tinto { color: var(--color-tinto); }
         .border-tinto { border-color: var(--color-tinto); }
         .text-blanco { color: var(--color-blanco); }
 
-        /* Animaciones */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        /* Animaciones Base */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
         .hero-overlay {
@@ -51,16 +49,47 @@
             background: none;
             border: none;
         }
-
         .btn-minimal:active { transform: scale(0.98); opacity: 0.7; }
 
         /* Galería */
         .gallery-item {
             overflow: hidden;
             border: 1px solid rgba(74, 4, 4, 0.05);
+            cursor: zoom-in;
+            position: relative;
+            background: #eee;
         }
+
         .gallery-item img {
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 1.5s cubic-bezier(0.2, 0, 0.2, 1), filter 1s ease;
+            filter: brightness(0.9);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+            filter: brightness(1.05);
+        }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 2, 2, 0.98);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            object-fit: contain;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* Itinerario Line */
@@ -75,18 +104,21 @@
         }
 
         @media (max-width: 768px) {
-            .timeline-vertical {
-                left: 32px;
-                transform: none;
-            }
+            .timeline-vertical { left: 32px; transform: none; }
         }
 
-        /* Espaciado Premium */
         .section-padding { padding: 8rem 2rem; }
+
+        .narrative-phrase {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            letter-spacing: 0.02em;
+            line-height: 1.6;
+        }
 
         @media (max-width: 640px) {
             .mobile-title { font-size: 3.2rem !important; line-height: 1; }
-            .section-padding { padding: 4.5rem 1.5rem; }
+            .section-padding { padding: 4rem 1.5rem; }
         }
 
         @media (min-width: 1024px) {
@@ -135,118 +167,114 @@
             </button>
         </div>
 
-        <!-- INTRODUCCIÓN -->
-        <section id="intro-section" class="min-h-[75vh] flex items-center justify-center px-6 text-center">
-            <div class="fade-in max-w-3xl mx-auto">
-                <i data-lucide="heart" class="mx-auto mb-8 text-tinto w-8 h-8 opacity-20"></i>
+        <!-- INTRODUCCIÓN (Pantalla Completa) -->
+        <section id="intro-section" class="h-screen flex flex-col items-center justify-center px-6 text-center">
+            <div class="fade-in max-w-3xl mx-auto flex flex-col items-center">
+                <i data-lucide="heart" class="mb-8 text-tinto w-8 h-8 opacity-20"></i>
                 <h3 class="font-cursive text-4xl md:text-6xl mb-8 text-tinto leading-tight lg:px-12">"Dos almas, un solo camino"</h3>
                 <p class="text-tinto/70 leading-relaxed text-xs md:text-base font-light italic lg:px-24">
                     Estamos emocionados de compartir con ustedes el inicio de nuestra vida juntos. Su presencia es el regalo más grande que podríamos recibir.
                 </p>
                 <div class="mt-16 animate-bounce opacity-20">
-                    <i data-lucide="chevron-down" class="mx-auto w-5 h-5 text-tinto"></i>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-tinto"></i>
                 </div>
             </div>
         </section>
 
+        <!-- NARRATIVA 1 -->
+        <div class="text-center px-6 fade-in max-w-lg mx-auto">
+            <p class="narrative-phrase text-lg md:text-xl text-tinto/50 italic">"Cada fotografía guarda un susurro de nuestra historia, instantes que se vuelven eternos."</p>
+        </div>
+
         <!-- GALERÍA -->
-        <section class="section-padding bg-crema/30 border-y border-tinto/5">
+        <section class="section-padding bg-crema/30 border-y border-tinto/5 mt-12">
             <div class="desktop-max-w">
                 <div class="text-center mb-16 fade-in">
                     <h3 class="font-cursive text-4xl md:text-6xl text-tinto mb-4">Nuestros Momentos</h3>
                     <div class="w-12 h-[1px] bg-tinto mx-auto opacity-20"></div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 px-4">
-                    <div class="gallery-item h-64 md:h-[450px] fade-in rounded-sm shadow-sm">
-                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%201.jpg" class="w-full h-full object-cover" alt="Pareja 1">
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 px-4" id="gallery-grid">
+                    <div class="gallery-item h-64 md:h-[450px] fade-in rounded-sm shadow-sm" onclick="openLightbox(this)">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%201.jpg" class="w-full h-full object-cover" alt="Novios 1">
                     </div>
-                    <div class="gallery-item h-64 md:h-[450px] fade-in rounded-sm shadow-sm lg:translate-y-12">
-                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%203.jpg" class="w-full h-full object-cover" alt="Pareja 2">
+                    <div class="gallery-item h-64 md:h-[450px] fade-in rounded-sm shadow-sm lg:translate-y-12" onclick="openLightbox(this)">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%203.jpg" class="w-full h-full object-cover" alt="Novios 2">
                     </div>
-                    <div class="gallery-item h-64 md:h-[450px] fade-in col-span-2 md:col-span-1 rounded-sm shadow-sm">
-                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%204.jpg" class="w-full h-full object-cover" alt="Pareja 3">
+                    <div class="gallery-item h-64 md:h-[450px] fade-in col-span-2 md:col-span-1 rounded-sm shadow-sm" onclick="openLightbox(this)">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Foto%204.jpg" class="w-full h-full object-cover" alt="Novios 3">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE PADRES Y PADRINOS -->
+        <!-- NARRATIVA 2 -->
+        <div class="text-center px-6 section-padding pb-0 fade-in max-w-lg mx-auto">
+            <p class="narrative-phrase text-lg md:text-xl text-tinto/50 italic">"Crecimos bajo el abrigo de quienes hoy nos entregan su bendición para formar nuestro propio hogar."</p>
+        </div>
+
+        <!-- FAMILIA -->
         <section class="section-padding bg-white">
             <div class="desktop-max-w text-center px-4">
                 <div class="fade-in mb-12">
                     <h3 class="font-cursive text-4xl md:text-6xl text-tinto mb-4">Nuestra Familia</h3>
                     <p class="text-[10px] md:text-xs uppercase tracking-[0.3em] text-tinto/40 font-bold mb-10 italic">Con la bendición de nuestros padres</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 text-tinto/80 font-medium">
                         <div class="space-y-4">
                             <h4 class="font-serif text-xs md:text-sm uppercase tracking-widest font-bold text-tinto/60">Padres de la Novia</h4>
-                            <p class="text-sm md:text-base font-medium">Nombre del Padre de Susana</p>
-                            <p class="text-sm md:text-base font-medium">Nombre de la Madre de Susana</p>
+                            <p class="text-sm md:text-base italic">Nombre del Padre</p>
+                            <p class="text-sm md:text-base italic">Nombre de la Madre</p>
                         </div>
                         <div class="space-y-4">
                             <h4 class="font-serif text-xs md:text-sm uppercase tracking-widest font-bold text-tinto/60">Padres del Novio</h4>
-                            <p class="text-sm md:text-base font-medium">Nombre del Padre de Alejandro</p>
-                            <p class="text-sm md:text-base font-medium">Nombre de la Madre de Alejandro</p>
+                            <p class="text-sm md:text-base italic">Nombre del Padre</p>
+                            <p class="text-sm md:text-base italic">Nombre de la Madre</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="fade-in mt-16 md:mt-24">
+                <div class="fade-in mt-16 md:mt-24 text-center">
                     <h4 class="font-cursive text-3xl md:text-5xl text-tinto mb-6">Nuestros Padrinos</h4>
                     <div class="max-w-md mx-auto space-y-3">
-                        <p class="text-sm md:text-base font-medium">Nombre de Padrino</p>
-                        <p class="text-sm md:text-base font-medium">Nombre de Madrina</p>
+                        <p class="text-sm md:text-base text-tinto/80 font-medium italic font-serif">Nombre de Padrino</p>
+                        <p class="text-sm md:text-base text-tinto/80 font-medium italic font-serif">Nombre de Madrina</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- NARRATIVA 3 -->
+        <div class="text-center px-6 section-padding py-0 fade-in max-w-lg mx-auto">
+            <p class="narrative-phrase text-lg md:text-xl text-tinto/50 italic">"Los hilos del destino se entrelazan en las horas de este gran día, marcando el inicio de nuestra promesa."</p>
+        </div>
+
         <!-- ITINERARIO -->
-        <section class="section-padding px-6 bg-crema">
+        <section class="section-padding px-6 bg-crema mt-12">
             <div class="desktop-max-w">
                 <div class="text-center mb-20 fade-in">
                     <h3 class="font-cursive text-4xl md:text-6xl text-tinto mb-4">El Gran Día</h3>
                     <div class="w-12 h-[1px] bg-tinto mx-auto opacity-20"></div>
                 </div>
-
                 <div class="relative max-w-4xl mx-auto">
                     <div class="timeline-vertical"></div>
-                    
                     <div class="space-y-20 md:space-y-32">
                         <div class="relative flex flex-col md:flex-row items-center fade-in">
-                            <div class="md:w-1/2 md:pr-16 text-center md:text-right mb-6 md:mb-0">
+                            <div class="md:w-1/2 md:pr-16 text-center md:text-right mb-6">
                                 <span class="text-[10px] font-bold text-tinto uppercase tracking-[0.3em] block mb-2">18:00 hrs</span>
-                                <h4 class="font-cursive text-3xl md:text-4xl text-tinto">Ceremonia Religiosa</h4>
-                                <p class="text-[10px] text-tinto/50 mt-2 font-bold uppercase tracking-widest font-serif">Catedral Metropolitana</p>
+                                <h4 class="font-cursive text-3xl md:text-4xl">Ceremonia Religiosa</h4>
+                                <p class="text-[10px] text-tinto/50 mt-2 font-bold uppercase font-serif">Catedral Metropolitana</p>
                             </div>
-                            <div class="z-10 w-14 h-14 bg-tinto text-white rounded-full flex items-center justify-center shadow-xl border-[6px] border-crema md:absolute md:left-1/2 md:-translate-x-1/2">
-                                <i data-lucide="church" class="w-5 h-5"></i>
-                            </div>
+                            <div class="z-10 w-14 h-14 bg-tinto text-white rounded-full flex items-center justify-center shadow-xl border-[6px] border-crema md:absolute md:left-1/2 md:-translate-x-1/2"><i data-lucide="church" class="w-5 h-5"></i></div>
                             <div class="md:w-1/2 md:pl-16 hidden md:block"></div>
                         </div>
-
                         <div class="relative flex flex-col md:flex-row items-center fade-in">
                             <div class="md:w-1/2 md:pr-16 hidden md:block"></div>
-                            <div class="z-10 w-14 h-14 bg-tinto text-white rounded-full flex items-center justify-center shadow-xl border-[6px] border-crema md:absolute md:left-1/2 md:-translate-x-1/2">
-                                <i data-lucide="glass-water" class="w-5 h-5"></i>
-                            </div>
+                            <div class="z-10 w-14 h-14 bg-tinto text-white rounded-full flex items-center justify-center shadow-xl border-[6px] border-crema md:absolute md:left-1/2 md:-translate-x-1/2"><i data-lucide="glass-water" class="w-5 h-5"></i></div>
                             <div class="md:w-1/2 md:pl-16 text-center md:text-left mt-6 md:mt-0">
-                                <span class="text-[10px] font-bold text-tinto uppercase tracking-[0.3em] block mb-2">19:30 hrs</span>
-                                <h4 class="font-cursive text-3xl md:text-4xl text-tinto">Cóctel de Bienvenida</h4>
-                                <p class="text-[10px] text-tinto/50 mt-2 font-bold uppercase tracking-widest font-serif">Jardín Principal</p>
-                            </div>
-                        </div>
-
-                        <div class="relative flex flex-col md:flex-row items-center fade-in">
-                            <div class="md:w-1/2 md:pr-16 text-center md:text-right mb-6 md:mb-0">
                                 <span class="text-[10px] font-bold text-tinto uppercase tracking-[0.3em] block mb-2">20:30 hrs</span>
-                                <h4 class="font-cursive text-3xl md:text-4xl text-tinto">Cena y Recepción</h4>
-                                <p class="text-[10px] text-tinto/50 mt-2 font-bold uppercase tracking-widest font-serif">Salón Imperial</p>
+                                <h4 class="font-cursive text-3xl md:text-4xl">Recepción & Cena</h4>
+                                <p class="text-[10px] text-tinto/50 mt-2 font-bold uppercase font-serif">Hacienda Santa Rosa</p>
                             </div>
-                            <div class="z-10 w-14 h-14 bg-tinto text-white rounded-full flex items-center justify-center shadow-xl border-[6px] border-crema md:absolute md:left-1/2 md:-translate-x-1/2">
-                                <i data-lucide="utensils" class="w-5 h-5"></i>
-                            </div>
-                            <div class="md:w-1/2 md:pl-16 hidden md:block"></div>
                         </div>
                     </div>
                 </div>
@@ -259,54 +287,51 @@
                 <div class="fade-in mb-12">
                     <p class="font-cursive text-3xl md:text-5xl text-tinto opacity-90">Faltan solo...</p>
                 </div>
-                
                 <div id="countdown" class="grid grid-cols-4 gap-3 md:gap-10 fade-in max-w-3xl mx-auto">
                     <div class="bg-tinto p-5 md:p-10 rounded-sm text-white shadow-xl">
                         <span id="days" class="block text-2xl md:text-5xl font-serif">00</span>
-                        <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] opacity-60 mt-2 block font-bold">Días</span>
+                        <span class="text-[8px] md:text-[10px] uppercase font-bold opacity-60">Días</span>
                     </div>
                     <div class="bg-tinto p-5 md:p-10 rounded-sm text-white shadow-xl">
                         <span id="hours" class="block text-2xl md:text-5xl font-serif">00</span>
-                        <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] opacity-60 mt-2 block font-bold">Horas</span>
+                        <span class="text-[8px] md:text-[10px] uppercase font-bold opacity-60">Horas</span>
                     </div>
                     <div class="bg-tinto p-5 md:p-10 rounded-sm text-white shadow-xl">
                         <span id="minutes" class="block text-2xl md:text-5xl font-serif">00</span>
-                        <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] opacity-60 mt-2 block font-bold">Mins</span>
+                        <span class="text-[8px] md:text-[10px] uppercase font-bold opacity-60">Mins</span>
                     </div>
                     <div class="bg-tinto p-5 md:p-10 rounded-sm text-white shadow-xl">
                         <span id="seconds" class="block text-2xl md:text-5xl font-serif">00</span>
-                        <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] opacity-60 mt-2 block font-bold">Segs</span>
+                        <span class="text-[8px] md:text-[10px] uppercase font-bold opacity-60">Segs</span>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- NARRATIVA 4 -->
+        <div class="text-center px-6 section-padding py-0 fade-in max-w-lg mx-auto">
+            <p class="narrative-phrase text-lg md:text-xl text-tinto/50 italic">"Donde el amor encuentra su morada esta noche, celebrando la dicha de habernos encontrado."</p>
+        </div>
+
         <!-- UBICACIONES -->
-        <section class="section-padding px-6 border-y border-tinto/10 bg-white text-center">
+        <section class="section-padding px-6 border-y border-tinto/10 bg-white text-center mt-12">
             <div class="desktop-max-w grid md:grid-cols-2 gap-8 lg:gap-20">
                 <div class="fade-in p-8 lg:p-16 flex flex-col items-center bg-crema/20 rounded-sm">
                     <i data-lucide="map-pin" class="w-8 h-8 mb-6 text-tinto opacity-40"></i>
                     <h4 class="font-cursive text-3xl md:text-5xl mb-4 text-tinto">Ceremonia</h4>
-                    <p class="text-[10px] md:text-xs uppercase tracking-widest text-tinto font-bold mb-3 font-serif">Catedral Metropolitana</p>
-                    <p class="text-tinto/60 mb-8 font-light text-xs md:text-sm">Av. Central 123, Centro Histórico</p>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Catedral+Metropolitana+CDMX" target="_blank" class="w-full max-w-xs py-4 bg-transparent border border-tinto text-tinto text-[10px] uppercase tracking-[0.2em] hover:bg-tinto hover:text-white transition-all font-black">
-                        Cómo llegar
-                    </a>
+                    <p class="text-[10px] md:text-xs uppercase font-bold mb-3 font-serif tracking-widest text-tinto/60">Catedral Metropolitana</p>
+                    <a href="https://maps.app.goo.gl" target="_blank" class="w-full max-w-xs py-4 bg-transparent border border-tinto text-tinto text-[10px] uppercase tracking-[0.2em] hover:bg-tinto hover:text-white transition-all font-black">Cómo llegar</a>
                 </div>
-
                 <div class="fade-in p-8 lg:p-16 flex flex-col items-center bg-crema/20 rounded-sm">
                     <i data-lucide="castle" class="w-8 h-8 mb-6 text-tinto opacity-40"></i>
                     <h4 class="font-cursive text-3xl md:text-5xl mb-4 text-tinto">Recepción</h4>
-                    <p class="text-[10px] md:text-xs uppercase tracking-widest text-tinto font-bold mb-3 font-serif">Hacienda Santa Rosa</p>
-                    <p class="text-tinto/60 mb-8 font-light text-xs md:text-sm">Km 15 Carr. Antigua, Valle de Oro</p>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Hacienda+Santa+Rosa+Evento" target="_blank" class="w-full max-w-xs py-4 bg-transparent border border-tinto text-tinto text-[10px] uppercase tracking-[0.2em] hover:bg-tinto hover:text-white transition-all font-black">
-                        Cómo llegar
-                    </a>
+                    <p class="text-[10px] md:text-xs uppercase font-bold mb-3 font-serif tracking-widest text-tinto/60">Hacienda Santa Rosa</p>
+                    <a href="https://maps.app.goo.gl" target="_blank" class="w-full max-w-xs py-4 bg-transparent border border-tinto text-tinto text-[10px] uppercase tracking-[0.2em] hover:bg-tinto hover:text-white transition-all font-black">Cómo llegar</a>
                 </div>
             </div>
         </section>
 
-        <!-- AÑADIR AL CALENDARIO -->
+        <!-- CALENDARIO -->
         <section class="py-20 px-6 text-center bg-white border-b border-tinto/5">
             <div class="desktop-max-w">
                 <div class="fade-in">
@@ -314,13 +339,13 @@
                         <i data-lucide="calendar" class="w-5 h-5"></i>
                         <span class="text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold">Añadir al calendario</span>
                     </button>
-                    <p class="mt-6 text-[9px] text-tinto/40 uppercase tracking-[0.3em] italic font-medium">No olvides guardar esta fecha especial</p>
+                    <p class="mt-6 text-[9px] text-tinto/40 uppercase tracking-[0.3em] italic font-medium">Guarda la fecha de nuestro gran día</p>
                 </div>
             </div>
         </section>
 
         <!-- MESA DE REGALOS -->
-        <section class="section-padding px-6 bg-white text-center">
+        <section class="section-padding bg-white text-center">
             <div class="desktop-max-w">
                 <div class="fade-in mb-16">
                     <i data-lucide="gift" class="mx-auto mb-8 text-tinto w-10 h-10 opacity-15"></i>
@@ -350,61 +375,51 @@
             </div>
         </section>
 
-        <!-- RSVP (Confirmar Asistencia con Niños) -->
-        <section class="section-padding px-6 bg-tinto text-white">
-            <div class="desktop-max-w max-w-2xl mx-auto text-center">
-                <div class="fade-in mb-12">
-                    <h3 class="font-cursive text-4xl md:text-6xl mb-6">Confirmar Asistencia</h3>
-                    <p class="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-[0.5em]">Responder antes del 01.12.26</p>
-                </div>
-
-                <form id="rsvpForm" class="space-y-8 fade-in text-left">
-                    <div>
-                        <input type="text" placeholder="Tu nombre completo" required class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none focus:border-white transition-all placeholder:text-white/20 font-light text-sm">
-                    </div>
+        <!-- RSVP -->
+        <section class="section-padding px-6 bg-tinto text-white text-center">
+            <div class="desktop-max-w max-w-2xl mx-auto">
+                <h3 class="font-cursive text-4xl md:text-6xl mb-6">Confirmar Asistencia</h3>
+                <p class="text-[9px] font-bold opacity-60 uppercase tracking-[0.5em] mb-12">Responder antes del 01.12.26</p>
+                <form id="rsvpForm" class="space-y-8 text-left">
+                    <input type="text" placeholder="Tu nombre completo" required class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none focus:border-white transition-all text-sm">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="relative">
-                            <select required class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none focus:border-white transition-all text-sm appearance-none cursor-pointer">
-                                <option value="" disabled selected class="text-tinto">¿Asistirás?</option>
-                                <option value="si" class="text-tinto font-bold">Sí, con gusto</option>
-                                <option value="no" class="text-tinto">No podré asistir</option>
-                            </select>
-                        </div>
+                        <select required class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none transition-all text-sm appearance-none">
+                            <option value="" disabled selected class="text-tinto">¿Asistirás?</option>
+                            <option value="si" class="text-tinto font-bold">Sí, con gusto</option>
+                            <option value="no" class="text-tinto">No podré asistir</option>
+                        </select>
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="number" placeholder="Adultos" min="1" max="10" class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none focus:border-white transition-all placeholder:text-white/20 font-light text-sm">
-                            <input type="number" placeholder="Niños" min="0" max="10" class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none focus:border-white transition-all placeholder:text-white/20 font-light text-sm">
+                            <input type="number" placeholder="Adultos" min="1" class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none text-sm">
+                            <input type="number" placeholder="Niños" min="0" class="w-full bg-transparent border-b border-white/20 p-4 text-white focus:outline-none text-sm">
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-white text-tinto py-6 uppercase tracking-[0.4em] text-[10px] md:text-xs font-black hover:bg-crema transition-all shadow-xl">
-                        Enviar Confirmación
-                    </button>
+                    <button type="submit" class="w-full bg-white text-tinto py-6 uppercase tracking-[0.4em] text-[10px] font-black hover:bg-crema transition-all shadow-xl">Enviar Confirmación</button>
                 </form>
-                <div id="rsvpMessage" class="hidden text-center p-12 border border-white/10 rounded-sm">
+                <div id="rsvpMessage" class="hidden p-12 border border-white/10 rounded-sm">
                     <i data-lucide="heart" class="w-12 h-12 mx-auto mb-8 fill-white"></i>
-                    <p class="font-cursive text-3xl md:text-4xl mb-4">¡Gracias!</p>
-                    <p class="text-[10px] font-medium mt-6 opacity-60 tracking-[0.3em] uppercase">Nos vemos pronto</p>
+                    <p class="font-cursive text-3xl">¡Gracias por confirmar!</p>
                 </div>
             </div>
         </section>
 
         <!-- FOOTER -->
         <footer class="py-20 text-center bg-white border-t border-tinto/5">
-            <div class="fade-in desktop-max-w">
-                <div class="font-cursive text-5xl md:text-6xl text-tinto mb-8 flex flex-col items-center">
-                    <span>Susana</span>
-                    <span class="text-xl not-italic opacity-20 my-1">&</span>
-                    <span>Alejandro</span>
-                </div>
-                <div class="w-16 h-[1px] bg-tinto mx-auto mb-8 opacity-10"></div>
-                <p class="text-[10px] uppercase tracking-[0.4em] text-tinto font-bold font-serif">20 de Diciembre • 2026</p>
+            <div class="font-cursive text-5xl md:text-6xl text-tinto mb-8 flex flex-col items-center">
+                <span>Susana</span><span class="text-xl not-italic opacity-20 my-1">&</span><span>Alejandro</span>
             </div>
+            <p class="text-[10px] uppercase font-bold font-serif opacity-40">20 . 12 . 2026</p>
         </footer>
-
     </div>
 
-    <!-- CONTROL DE AUDIO -->
+    <!-- LIGHTBOX -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <button class="absolute top-8 right-8 text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <img id="lightboxImg" src="" alt="Vista ampliada">
+    </div>
+
+    <!-- AUDIO TOGGLE -->
     <div class="fixed bottom-5 right-5 z-50">
-        <button id="audioToggle" class="w-9 h-9 md:w-12 md:h-12 rounded-full border border-tinto/10 flex items-center justify-center bg-white/80 backdrop-blur-sm shadow-xl text-tinto hover:scale-110 active:scale-95 transition-all">
+        <button id="audioToggle" class="w-9 h-9 md:w-12 md:h-12 rounded-full border border-tinto/10 flex items-center justify-center shadow-xl transition-all hover:scale-110 active:scale-95 bg-white/80 text-tinto">
             <i data-lucide="music" class="w-4 h-4 md:w-5 md:h-5"></i>
         </button>
     </div>
@@ -413,10 +428,26 @@
         lucide.createIcons();
         const audio = document.getElementById('bgMusic');
 
+        // Lightbox Logic
+        function openLightbox(el) {
+            const imgSrc = el.querySelector('img').src;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            lbImg.src = imgSrc;
+            lb.style.display = 'flex';
+            setTimeout(() => { lbImg.style.transform = 'scale(1)'; }, 50);
+        }
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightboxImg').style.transform = 'scale(0.9)';
+            setTimeout(() => { lb.style.display = 'none'; }, 300);
+        }
+
+        // Revelar contenido
         function revealContent() {
             const hero = document.getElementById('hero');
             const main = document.getElementById('main-content');
-            audio.play().catch(e => console.log("Audio play blocked"));
+            audio.play().catch(() => {});
             updateAudioButtonUI(true);
             hero.style.opacity = '0';
             setTimeout(() => {
@@ -438,9 +469,15 @@
 
         function updateAudioButtonUI(isPlaying) {
             const btn = document.getElementById('audioToggle');
-            btn.classList.toggle('bg-tinto', isPlaying);
-            btn.classList.toggle('text-white', isPlaying);
-            btn.innerHTML = isPlaying ? '<i data-lucide="volume-2" class="w-4 h-4 md:w-5 md:h-5"></i>' : '<i data-lucide="volume-x" class="w-4 h-4 md:w-5 md:h-5"></i>';
+            if (isPlaying) {
+                btn.classList.add('bg-tinto', 'text-white');
+                btn.classList.remove('bg-white/80', 'text-tinto');
+                btn.innerHTML = '<i data-lucide="volume-2" class="w-4 h-4 md:w-5 md:h-5"></i>';
+            } else {
+                btn.classList.remove('bg-tinto', 'text-white');
+                btn.classList.add('bg-white/80', 'text-tinto');
+                btn.innerHTML = '<i data-lucide="volume-x" class="w-4 h-4 md:w-5 md:h-5"></i>';
+            }
             lucide.createIcons();
         }
 
@@ -471,18 +508,12 @@
 
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const submitBtn = this.querySelector('button');
-            submitBtn.innerText = "REGISTRANDO...";
-            submitBtn.disabled = true;
-            setTimeout(() => {
-                this.classList.add('hidden');
-                document.getElementById('rsvpMessage').classList.remove('hidden');
-            }, 1200);
+            this.classList.add('hidden');
+            document.getElementById('rsvpMessage').classList.remove('hidden');
         });
 
         function addToCalendar() {
-            const title = "Boda Susana y Alejandro";
-            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=20261220T180000Z/20261221T030000Z&sf=true&output=xml`;
+            const url = "https://www.google.com/calendar/render?action=TEMPLATE&text=Boda+Susana+y+Alejandro&dates=20261220T180000Z/20261221T030000Z&sf=true&output=xml";
             window.open(url, '_blank');
         }
 
