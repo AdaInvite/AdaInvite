@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentina's 10th World Tour | Invitación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f3f4f6; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Animaciones */
+        @keyframes slide-up {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-20px) scale(1.5); opacity: 0.5; }
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1.1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0.7; }
+        }
+
+        .animate-slide-up { animation: slide-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { animation: fade-in 1.5s ease-out forwards; }
+        .animate-float { animation: float infinite ease-in-out; }
+        .animate-pulse-slow { animation: pulse-slow 8s infinite ease-in-out; }
+
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .text-gradient { background: linear-gradient(to right, #ec4899, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .hidden-stage { display: none !important; opacity: 0; }
+        .show-stage { display: block !important; animation: fade-in 1s ease-out forwards; }
+        
+        .music-btn.playing { background: #ec4899; box-shadow: 0 0 15px #ec4899; }
+        
+        .setlist-item { border-left: 4px solid transparent; transition: all 0.3s ease; }
+        .setlist-item:hover { border-left-color: #ec4899; background: rgba(236, 72, 153, 0.1); transform: translateX(10px); }
+
+        /* Estilo para los cuadros de fotos simplificados */
+        .photo-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.1));
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.4s ease;
+        }
+        .photo-placeholder:hover {
+            border-color: #ec4899;
+            color: #ec4899;
+            background: rgba(236, 72, 153, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MÚSICA DE FONDO -->
+    <audio id="bg-music" loop>
+        <source src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/Huntrix%20-%20GOLDEN%20(Sub.%20Espa%C3%B1ol%20%20Lyrics)%20%20Kpop%20Demon%20Hunters.mp3?raw=true" type="audio/mpeg">
+    </audio>
+
+    <!-- CONTROLES FLOTANTES -->
+    <div id="floating-controls" class="hidden-stage fixed top-6 right-6 z-[60] flex gap-3">
+        <button onclick="toggleMusic()" id="music-toggle" class="music-btn w-12 h-12 glass rounded-full flex items-center justify-center transition-all">
+            <i data-lucide="music" id="music-icon" class="w-5 h-5"></i>
+        </button>
+        <button onclick="returnToCover()" class="w-12 h-12 glass rounded-full flex items-center justify-center transition-all hover:bg-white/20">
+            <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- PORTADA (STAGE 1) -->
+    <div id="cover-stage" class="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">
+        <div class="absolute inset-0 bg-cover bg-center animate-pulse-slow" style="background-image: url('https://github.com/AdaInvite/AdaInvite/blob/main/Assets/KPop%20Demon%20Hunters.jpg?raw=true');"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+        
+        <div class="relative z-10 text-center px-6">
+            <div class="mb-4 animate-bounce">
+                <span class="px-4 py-1 border border-pink-500 rounded-full text-[10px] font-bold tracking-[0.3em] text-pink-500 uppercase">
+                    ¡MIS 10 AÑOS! - TOUR MUNDIAL
+                </span>
+            </div>
+            
+            <h1 class="text-7xl md:text-9xl font-black mb-2 tracking-tighter italic animate-slide-up">
+                <span class="block text-gradient uppercase">Valentina</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl font-light tracking-widest mb-12 opacity-0 animate-fade-in" style="animation-delay: 0.8s">
+                DREAMER • WARRIOR • K-POP STAR
+            </p>
+
+            <button onclick="enterExperience()" class="group relative px-10 py-5 bg-white text-black font-bold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.4)] opacity-0 animate-fade-in" style="animation-delay: 1.2s">
+                <span class="relative flex items-center gap-2 text-lg">
+                    TOCA PARA CONTINUAR <i data-lucide="sparkles"></i>
+                </span>
+            </button>
+        </div>
+
+        <div id="particles-container" class="absolute inset-0 pointer-events-none"></div>
+    </div>
+
+    <!-- EXPERIENCIA PRINCIPAL (STAGE 2) -->
+    <div id="main-experience" class="hidden-stage">
+        
+        <!-- Hero Section -->
+        <section class="relative h-[70vh] flex items-end pb-16 px-6 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/KPop%20Demon%20Hunters.jpg?raw=true" class="w-full h-full object-cover object-top opacity-50">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+            </div>
+            <div class="relative z-10 max-w-4xl mx-auto w-full">
+                <h2 class="text-6xl md:text-8xl font-black italic tracking-tighter mb-6 leading-none uppercase">
+                    ¿LISTAS PARA <br />
+                    <span class="text-pink-500">LA FIESTA?</span>
+                </h2>
+                <div class="flex flex-wrap gap-4">
+                    <span class="glass px-5 py-3 rounded-2xl flex items-center gap-3 text-sm font-bold">
+                        <i data-lucide="calendar" class="text-pink-400"></i> 24 de Marzo
+                    </span>
+                    <span class="glass px-5 py-3 rounded-2xl flex items-center gap-3 text-sm font-bold">
+                        <i data-lucide="clock" class="text-purple-400"></i> 6:00 PM
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Countdown -->
+        <section class="py-10 px-6">
+            <div class="max-w-2xl mx-auto glass rounded-[2.5rem] p-10 text-center relative overflow-hidden">
+                <p class="text-[10px] font-bold tracking-[0.3em] text-pink-400 uppercase mb-8 italic">El show empieza en...</p>
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <span id="days" class="text-4xl md:text-6xl font-black text-white">00</span>
+                        <p class="text-[10px] text-gray-500 uppercase mt-1">Días</p>
+                    </div>
+                    <div>
+                        <span id="hours" class="text-4xl md:text-6xl font-black text-white">00</span>
+                        <p class="text-[10px] text-gray-500 uppercase mt-1">Horas</p>
+                    </div>
+                    <div>
+                        <span id="minutes" class="text-4xl md:text-6xl font-black text-white">00</span>
+                        <p class="text-[10px] text-gray-500 uppercase mt-1">Min</p>
+                    </div>
+                    <div>
+                        <span id="seconds" class="text-4xl md:text-6xl font-black text-white">00</span>
+                        <p class="text-[10px] text-gray-500 uppercase mt-1">Seg</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wow Sections: Outfit & Regalos -->
+        <section class="py-12 px-6">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+                <!-- Outfit -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 flex items-center gap-6 group hover:border-pink-500/30 transition-all">
+                    <div class="w-20 h-20 bg-pink-600/20 rounded-2xl flex items-center justify-center shrink-0">
+                        <i data-lucide="zap" class="text-pink-500 w-10 h-10"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black italic mb-2">TU OUTFIT DE GUERRERA</h4>
+                        <p class="text-gray-400 text-sm">Ven con tu look más <span class="text-white font-bold text-gradient">K-Pop y Neón</span>. ¡Vamos a brillar en todas las fotos!</p>
+                    </div>
+                </div>
+                <!-- Regalos -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 flex items-center gap-6 group hover:border-purple-500/30 transition-all">
+                    <div class="w-20 h-20 bg-purple-600/20 rounded-2xl flex items-center justify-center shrink-0">
+                        <i data-lucide="heart" class="text-purple-500 w-10 h-10"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black italic mb-2">CAJA DE SORPRESAS</h4>
+                        <p class="text-gray-400 text-sm">Lo más importante es que vengas a bailar, pero si quieres darme un detalle, tendré una <span class="text-white font-bold">lluvia de sobres</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setlist / Schedule -->
+        <section class="py-16 px-6">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-black italic tracking-tighter uppercase leading-none">Setlist de la Noche</h3>
+                    <p class="text-pink-500 font-bold text-xs tracking-widest uppercase mt-2">¡No te pierdas ni un minuto!</p>
+                </div>
+                <div class="space-y-4 text-sm md:text-base">
+                    <div class="glass p-6 rounded-3xl setlist-item flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-600 font-black">01</span>
+                            <span class="font-bold">CHECK-IN AL BACKSTAGE (LLEGADA)</span>
+                        </div>
+                        <span class="text-pink-500 font-black">18:00</span>
+                    </div>
+                    <div class="glass p-6 rounded-3xl setlist-item flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-600 font-black">02</span>
+                            <span class="font-bold">¡QUE EMPIECE EL SHOW! (JUEGOS)</span>
+                        </div>
+                        <span class="text-pink-500 font-black">19:30</span>
+                    </div>
+                    <div class="glass p-6 rounded-3xl setlist-item flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-600 font-black">03</span>
+                            <span class="font-bold">RECARGA DE ENERGÍA (COMIDA RICA)</span>
+                        </div>
+                        <span class="text-pink-500 font-black">20:30</span>
+                    </div>
+                    <div class="glass p-6 rounded-3xl setlist-item flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-600 font-black">04</span>
+                            <span class="font-bold">DANCE BATTLE & PASTEL</span>
+                        </div>
+                        <span class="text-pink-500 font-black">21:30</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Location -->
+        <section class="py-20 px-6">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-5xl font-black mb-6 italic tracking-tight uppercase leading-none">¿Dónde es el <span class="text-pink-500">Debut?</span></h3>
+                    <p class="text-gray-400 text-lg mb-10 font-light leading-relaxed">
+                        La cita es en el <span class="text-white font-bold">Palacio de Cristal K-Pop</span>. Un lugar lleno de luces y buena música donde seremos las protagonistas.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://maps.google.com" target="_blank" class="flex items-center justify-center gap-3 bg-pink-600 hover:bg-pink-700 text-white font-black py-5 px-10 rounded-2xl transition-all shadow-xl shadow-pink-600/30">
+                            <i data-lucide="map"></i> VER EN EL MAPA
+                        </a>
+                        <button onclick="addToCalendar()" class="flex items-center justify-center gap-3 glass py-5 px-10 rounded-2xl font-black">
+                            <i data-lucide="calendar-plus"></i> AGENDAR FECHA
+                        </button>
+                    </div>
+                </div>
+                <div class="rounded-[3rem] overflow-hidden aspect-video md:aspect-square shadow-2xl relative border border-white/10 group">
+                    <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                    <div class="absolute bottom-0 inset-x-0 p-6 glass m-4 rounded-2xl">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 italic">Av. Las Estrellas 777, Ciudad Mágica</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simplified Gallery -->
+        <section class="py-20 bg-white/[0.02]">
+            <div class="max-w-6xl mx-auto px-6 text-center md:text-left">
+                <div class="mb-12">
+                    <h3 class="text-4xl font-black italic uppercase tracking-tighter">Álbum del Tour</h3>
+                    <p class="text-pink-500 font-bold text-xs uppercase tracking-[0.3em] mt-2">Momentos Proyectados</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-2 row-span-2 rounded-[2.5rem] photo-placeholder text-2xl h-[300px] md:h-auto">
+                        Foto 1
+                    </div>
+                    <div class="aspect-square rounded-[1.5rem] photo-placeholder">
+                        Foto 2
+                    </div>
+                    <div class="aspect-square rounded-[1.5rem] photo-placeholder">
+                        Foto 3
+                    </div>
+                    <div class="aspect-square rounded-[1.5rem] bg-gradient-to-br from-pink-600 to-purple-700 flex items-center justify-center text-center p-4">
+                        <p class="font-black italic text-xl uppercase leading-none">Warrior<br>Girls</p>
+                    </div>
+                    <div class="aspect-square rounded-[1.5rem] photo-placeholder">
+                        Foto 4
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIP List (RSVP) -->
+        <section class="py-24 px-6 relative">
+            <div class="max-w-xl mx-auto relative z-10">
+                <div class="text-center mb-12">
+                    <i data-lucide="star" class="mx-auto text-pink-500 w-12 h-12 mb-4 animate-pulse"></i>
+                    <h3 class="text-5xl font-black mb-3 italic uppercase tracking-tighter leading-none">Lista VIP de Debut</h3>
+                    <p class="text-gray-400 font-light">¿Me acompañas en mi gira de 10 años?</p>
+                </div>
+
+                <div id="rsvp-container">
+                    <form onsubmit="handleRSVP(event)" class="glass p-8 md:p-10 rounded-[3rem] space-y-8">
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest text-gray-500 uppercase mb-3 ml-2">¿CÓMO TE LLAMAS?</label>
+                            <input type="text" id="guest-name" required placeholder="Tu nombre aquí..." class="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-8 focus:ring-2 focus:ring-pink-500 outline-none transition-all placeholder:text-gray-700">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] font-bold tracking-widest text-gray-500 uppercase mb-3 ml-2">¿VIENES?</label>
+                                <select id="attendance" class="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-8 focus:ring-2 focus:ring-pink-500 outline-none cursor-pointer">
+                                    <option value="yes">¡OBVIO SÍ!</option>
+                                    <option value="no">NO PUEDO :(</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold tracking-widest text-gray-500 uppercase mb-3 ml-2">¿CUÁNTOS?</label>
+                                <select id="guest-count" class="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-8 focus:ring-2 focus:ring-pink-500 outline-none cursor-pointer">
+                                    <option value="1">SOLO YO</option>
+                                    <option value="2">VIENE ALGUIEN MÁS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 py-6 rounded-2xl font-black tracking-widest text-lg shadow-xl shadow-pink-600/20 flex items-center justify-center gap-3 active:scale-95 transition-all">
+                            CONFIRMAR MI PASE VIP <i data-lucide="ticket"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-20 text-center border-t border-white/5">
+            <h4 class="text-3xl font-black italic mb-2 tracking-tighter uppercase">
+                Valentina<span class="text-pink-500 italic">.10</span>
+            </h4>
+            <p class="text-[10px] tracking-[0.5em] text-gray-600 mb-10 uppercase font-bold">¡Nos vemos en el escenario!</p>
+            <div class="flex justify-center gap-8 text-gray-700">
+                <i data-lucide="music-2"></i>
+                <i data-lucide="star"></i>
+                <i data-lucide="heart"></i>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                document.getElementById('music-toggle').classList.remove('playing');
+                musicIcon.setAttribute('data-lucide', 'music');
+            } else {
+                music.play().catch(e => console.log("Audio play prevented"));
+                document.getElementById('music-toggle').classList.add('playing');
+                musicIcon.setAttribute('data-lucide', 'pause');
+            }
+            isPlaying = !isPlaying;
+            lucide.createIcons();
+        }
+
+        function enterExperience() {
+            const cover = document.getElementById('cover-stage');
+            const main = document.getElementById('main-experience');
+            const controls = document.getElementById('floating-controls');
+            
+            cover.style.transition = 'opacity 0.8s ease';
+            cover.style.opacity = '0';
+            
+            setTimeout(() => {
+                cover.style.display = 'none';
+                main.classList.remove('hidden-stage');
+                main.classList.add('show-stage');
+                controls.classList.remove('hidden-stage');
+                controls.classList.add('show-stage');
+                window.scrollTo(0,0);
+                if(!isPlaying) toggleMusic();
+            }, 800);
+        }
+
+        function returnToCover() {
+            location.reload();
+        }
+
+        // Countdown
+        const partyDate = new Date('2026-03-24T18:00:00').getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = partyDate - now;
+            if(diff > 0) {
+                document.getElementById('days').innerText = String(Math.floor(diff / (1000*60*60*24))).padStart(2, '0');
+                document.getElementById('hours').innerText = String(Math.floor((diff / (1000*60*60)) % 24)).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+            }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function handleRSVP(e) {
+            e.preventDefault();
+            const name = document.getElementById('guest-name').value;
+            const container = document.getElementById('rsvp-container');
+            const btn = document.getElementById('submit-btn');
+            
+            btn.innerHTML = '<span class="animate-spin">⌛</span> REGISTRANDO...';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="glass p-10 rounded-[3rem] text-center animate-slide-up border-green-500/20">
+                        <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="check-circle" class="text-green-500 w-10 h-10"></i>
+                        </div>
+                        <h4 class="text-3xl font-black mb-3 italic">¡LISTO, ${name.toUpperCase()}!</h4>
+                        <p class="text-gray-400 font-light mb-8 text-lg">¡Tu pase VIP está activado! Prepárate para bailar con Valentina.</p>
+                        <button onclick="location.reload()" class="text-pink-500 font-bold hover:underline">Volver a leer</button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        function addToCalendar() {
+            const title = encodeURIComponent("Valentina's 10th World Tour");
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20260324T180000Z/20260324T220000Z&details=¡Cumple de Valentina!&location=Palacio de Cristal K-Pop`;
+            window.open(url, '_blank');
+        }
+
+        // Partículas decorativas
+        const partContainer = document.getElementById('particles-container');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'absolute rounded-full bg-white opacity-20 animate-float';
+            const size = Math.random() * 4 + 2;
+            p.style.cssText = `width: ${size}px; height: ${size}px; left: ${Math.random()*100}%; top: ${Math.random()*100}%; animation-duration: ${Math.random()*5+5}s; animation-delay: ${Math.random()*5}s;`;
+            partContainer.appendChild(p);
+        }
+    </script>
+</body>
+</html>
