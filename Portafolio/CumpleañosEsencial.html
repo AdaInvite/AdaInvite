@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumpleaños de Liam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para iconos elegantes sin usar emojis -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fef9e7;
+            margin: 0;
+            padding: 0;
+            color: #4e342e;
+        }
+
+        /* Contenedor principal con fondo fijo */
+        .main-wrapper {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('https://github.com/AdaInvite/AdaInvite/blob/main/Assets/descarga.jpg?raw=true');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Sección inicial para que el fondo se vea primero */
+        .hero-spacer {
+            height: 60vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+            color: #bf360c;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 50px 50px 0 0;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 25px 80px;
+            text-align: center;
+        }
+
+        .title-font {
+            font-family: 'Pacifico', cursive;
+            color: #bf360c;
+        }
+
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 15px;
+            min-width: 85px;
+            border: 1px solid rgba(191, 54, 12, 0.1);
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .btn-maps {
+            background-color: #fbc02d;
+            color: #5f4b00;
+        }
+
+        .btn-whatsapp {
+            background-color: #ffffff;
+            color: #d84315;
+            border: 1px solid #ffccbc;
+        }
+
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: #d4a017;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <!-- Espacio inicial para lucir el fondo -->
+        <div class="hero-spacer">
+            <div class="scroll-indicator">
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content-card">
+            
+            <header class="mb-10">
+                <div class="icon-container">
+                    <i data-lucide="heart" size="32" fill="#d4a017"></i>
+                </div>
+                <p class="uppercase tracking-[0.4em] text-[10px] font-bold text-amber-900 opacity-60 mb-2">Acompaña a</p>
+                <h1 class="title-font text-7xl mb-4">Liam</h1>
+                <p class="text-xl font-bold tracking-widest text-orange-950">A CELEBRAR 4 AÑOS</p>
+                <div class="w-24 h-px bg-amber-400 mx-auto mt-6 opacity-40"></div>
+            </header>
+
+            <!-- Sección: Cuándo -->
+            <section class="mb-14">
+                <div class="icon-container">
+                    <i data-lucide="calendar-days"></i>
+                </div>
+                <p class="text-3xl font-light text-gray-800">Sábado 24 Mayo</p>
+                <div class="flex items-center justify-center gap-2 mt-2 text-gray-500 font-medium">
+                    <i data-lucide="clock" size="16"></i>
+                    <span>16:00 a 20:00 Horas</span>
+                </div>
+            </section>
+
+            <!-- Contador -->
+            <section class="mb-14">
+                <p class="text-[10px] uppercase font-bold mb-6 tracking-[0.2em] text-amber-800 opacity-60">Falta muy poco</p>
+                <div class="flex justify-center gap-3" id="countdown">
+                    <div class="countdown-box">
+                        <span id="days" class="block text-3xl font-bold text-orange-700">00</span>
+                        <span class="text-[9px] uppercase text-gray-400 font-bold">Días</span>
+                    </div>
+                    <div class="countdown-box">
+                        <span id="hours" class="block text-3xl font-bold text-orange-700">00</span>
+                        <span class="text-[9px] uppercase text-gray-400 font-bold">Horas</span>
+                    </div>
+                    <div class="countdown-box">
+                        <span id="minutes" class="block text-3xl font-bold text-orange-700">00</span>
+                        <span class="text-[9px] uppercase text-gray-400 font-bold">Minutos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección: Dónde -->
+            <section class="mb-14">
+                <div class="icon-container">
+                    <i data-lucide="map-pin"></i>
+                </div>
+                <h2 class="text-lg font-bold text-amber-900 mb-2 uppercase tracking-tighter">Salón "La Colmena"</h2>
+                <p class="text-gray-600 mb-8 max-w-[250px] mx-auto leading-relaxed">
+                    Calle de la Amistad #123, Colonia del Bosque, Ciudad.
+                </p>
+                <a href="https://maps.google.com" target="_blank" class="btn-action btn-maps">
+                    <i data-lucide="navigation" size="18"></i>
+                    Cómo llegar
+                </a>
+            </section>
+
+            <div class="w-full h-px bg-amber-100 mb-14"></div>
+
+            <!-- Detalles adicionales -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left mb-14 px-4">
+                <div class="flex gap-4">
+                    <div class="text-amber-500 mt-1">
+                        <i data-lucide="shirt" size="20"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase tracking-widest text-amber-900 mb-1">Vestimenta</h4>
+                        <p class="text-sm text-gray-600 leading-snug">Casual. Sugerimos usar tonos pastel.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-amber-500 mt-1">
+                        <i data-lucide="gift" size="20"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase tracking-widest text-amber-900 mb-1">Regalos</h4>
+                        <p class="text-sm text-gray-600 leading-snug">Tu presencia es lo más valioso para nosotros.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Confirmación -->
+            <section class="px-2">
+                <p class="text-xs text-amber-800/50 mb-6 italic">Por favor, confirma antes del 15 de Mayo</p>
+                <a href="https://wa.me/1234567890?text=Hola, confirmo mi asistencia al cumple de Liam" class="btn-action btn-whatsapp">
+                    <i data-lucide="message-circle" size="18"></i>
+                    Confirmar por WhatsApp
+                </a>
+            </section>
+
+            <footer class="mt-20">
+                <div class="icon-container opacity-30 mb-4">
+                    <i data-lucide="star" size="16"></i>
+                </div>
+                <p class="text-[9px] uppercase tracking-[0.5em] font-bold text-amber-900/40">
+                    "Un día sin un amigo es como un tarro sin miel"
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // Lógica del contador
+        const eventDate = new Date(2026, 4, 24, 16, 0, 0).getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = eventDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = "<p class='font-bold text-orange-800 tracking-widest uppercase'>¡Hoy es la gran fiesta!</p>";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
