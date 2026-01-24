@@ -17,34 +17,45 @@
             background-color: #050505;
             color: #fff;
             margin: 0;
-            overflow: hidden; /* Evita scroll antes de entrar */
+            overflow: hidden; /* Deshabilitado hasta que se abra la invitación */
         }
 
         .font-serif { font-family: 'Playfair Display', serif; }
 
-        /* Fondo principal */
+        /* Fondo principal optimizado */
         .bg-main {
-            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
                               url('https://github.com/AdaInvite/AdaInvite/blob/main/Assets/La%20hermosa%20Anita%20en%20sus%20fotos%20de%20%23quincea%C3%B1os_%20_%23QuincePhotos%20%23QuinceMemories%20%23Quincea%C3%B1eraVibes%20%23quincephotoshoot%20%23Sweet15.jpg?raw=true');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
         }
 
-        /* Animaciones */
-        .fade-out {
+        @media (max-width: 768px) {
+            .bg-main {
+                background-position: center bottom; /* Ajuste para ver la parte de abajo en móvil */
+            }
+        }
+
+        /* Transición de pantallas */
+        .intro-screen {
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .intro-hidden {
             opacity: 0;
             visibility: hidden;
-            transition: all 0.8s ease-in-out;
+            transform: scale(1.1);
         }
 
-        .fade-in-section {
+        /* Animaciones de entrada */
+        .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 1s ease-out;
+            transition: all 0.8s ease-out;
         }
 
-        .fade-in-section.visible {
+        .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
@@ -55,168 +66,180 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Botón elegante */
         .btn-elegant {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(212, 163, 115, 0.5);
         }
 
         .btn-elegant:hover {
-            background: var(--rose-gold);
-            color: black;
-            box-shadow: 0 0 20px rgba(212, 163, 115, 0.4);
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        /* Estilo para el mapa */
+        .map-container iframe {
+            filter: grayscale(1) invert(0.9) contrast(1.2);
         }
     </style>
 </head>
 <body class="bg-black">
 
-    <!-- PANTALLA 1: ACCESO -->
-    <div id="landing" class="fixed inset-0 z-50 bg-main flex flex-col items-center justify-center text-center px-6 transition-all duration-1000">
+    <!-- PANTALLA 1: ACCESO (INTRO) -->
+    <div id="intro" class="intro-screen fixed inset-0 bg-main flex flex-col items-center justify-center text-center px-6">
         <div class="space-y-6">
-            <h2 class="text-rose-200 tracking-[0.5em] text-xs md:text-sm uppercase opacity-80">Bienvenidos a la celebración de</h2>
+            <h2 class="text-white/70 tracking-[0.4em] text-xs uppercase animate-pulse">Estás invitado a</h2>
             <h1 class="font-serif text-7xl md:text-9xl text-white">Valentina</h1>
-            <p class="text-lg md:text-xl font-extralight tracking-[0.3em] text-gray-300">24 . JUNIO . 2026</p>
+            <p class="text-lg md:text-xl font-extralight tracking-[0.3em] text-white/80">24 DE JUNIO, 2026</p>
             
-            <button onclick="openInvite()" class="mt-12 btn-elegant px-12 py-4 rounded-full uppercase tracking-widest text-xs text-rose-200">
-                Ingresar
+            <button onclick="unlockInvitation()" class="mt-12 btn-elegant px-10 py-4 rounded-full uppercase tracking-[0.2em] text-[10px] font-bold">
+                Ver Invitación
             </button>
         </div>
     </div>
 
-    <!-- PANTALLA 2: CONTENIDO (Oculto inicialmente) -->
-    <main id="content" class="hidden opacity-0 bg-main min-h-screen overflow-y-auto">
+    <!-- PANTALLA 2: CONTENIDO PRINCIPAL -->
+    <main id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
         
-        <!-- HEADER / INTRO -->
-        <section class="h-screen flex flex-col items-center justify-center text-center p-6">
-            <div class="fade-in-section space-y-4">
-                <span class="text-rose-300 text-5xl font-serif italic">Mis XV</span>
-                <p class="max-w-md mx-auto text-gray-300 font-light italic leading-relaxed">
-                    "Hoy celebro la vida, los sueños y la alegría de compartir este momento inolvidable contigo."
+        <!-- SECCIÓN BIENVENIDA -->
+        <section class="h-[80vh] bg-main flex flex-col items-center justify-center text-center px-6">
+            <div class="reveal space-y-4">
+                <span class="text-rose-200 text-5xl md:text-7xl font-serif italic">Mis XV Años</span>
+                <p class="max-w-md mx-auto text-gray-300 font-light italic leading-relaxed pt-4">
+                    "Un momento para soñar, un momento para brillar y un momento para celebrar con quienes más quiero."
                 </p>
             </div>
         </section>
 
         <!-- CONTADOR Y CALENDARIO -->
         <section class="py-20 px-6 max-w-4xl mx-auto">
-            <div class="fade-in-section glass rounded-3xl p-8 md:p-12 text-center space-y-10">
-                <h3 class="font-serif text-3xl text-rose-100">Comienza la cuenta regresiva</h3>
+            <div class="reveal glass rounded-3xl p-8 md:p-16 text-center space-y-10">
+                <h3 class="font-serif text-3xl text-white">Falta muy poco...</h3>
                 
-                <div id="countdown" class="flex justify-center gap-4 md:gap-8">
+                <div id="countdown" class="flex justify-center gap-4 md:gap-12">
                     <div class="text-center">
-                        <span id="days" class="block text-4xl md:text-6xl font-serif">00</span>
-                        <span class="text-[10px] uppercase tracking-tighter text-rose-300">Días</span>
+                        <span id="days" class="block text-4xl md:text-7xl font-serif">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-white/40">Días</span>
                     </div>
                     <div class="text-center">
-                        <span id="hours" class="block text-4xl md:text-6xl font-serif">00</span>
-                        <span class="text-[10px] uppercase tracking-tighter text-rose-300">Horas</span>
+                        <span id="hours" class="block text-4xl md:text-7xl font-serif">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-white/40">Horas</span>
                     </div>
                     <div class="text-center">
-                        <span id="minutes" class="block text-4xl md:text-6xl font-serif">00</span>
-                        <span class="text-[10px] uppercase tracking-tighter text-rose-300">Minutos</span>
+                        <span id="minutes" class="block text-4xl md:text-7xl font-serif">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-white/40">Mins</span>
                     </div>
                 </div>
 
-                <button onclick="addToCalendar()" class="btn-elegant px-8 py-3 rounded-full text-[10px] uppercase tracking-widest">
-                    Añadir al Calendario
-                </button>
+                <div class="pt-6">
+                    <button onclick="addToCalendar()" class="btn-elegant px-8 py-3 rounded-full text-[10px] uppercase tracking-widest">
+                        Añadir al Calendario
+                    </button>
+                </div>
             </div>
         </section>
 
-        <!-- UBICACIÓN -->
-        <section class="py-20 px-6 max-w-4xl mx-auto">
-            <div class="fade-in-section grid md:grid-cols-2 gap-8 items-center">
+        <!-- UBICACIÓN INTERACTIVA -->
+        <section class="py-20 px-6 max-w-5xl mx-auto">
+            <div class="reveal grid md:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6 text-center md:text-left">
-                    <h3 class="font-serif text-4xl text-rose-100">¿Dónde será?</h3>
-                    <div class="space-y-2">
-                        <p class="text-xl font-medium">Salón de Gala "La Mansión"</p>
-                        <p class="text-gray-400 font-light">Av. de la Reforma 456, Col. Juárez, CDMX.</p>
+                    <h3 class="font-serif text-5xl text-white">¿Dónde?</h3>
+                    <div class="space-y-3">
+                        <p class="text-2xl font-light text-rose-100">Salón de Gala "La Mansión"</p>
+                        <p class="text-gray-400 font-light text-sm">Av. de la Reforma 456, Ciudad de México.</p>
                     </div>
+                    <p class="text-xs tracking-[0.3em] text-white/60 pt-4">RECEPCIÓN: 19:00 HRS</p>
                     <a href="https://maps.google.com" target="_blank" class="inline-block btn-elegant px-10 py-3 rounded-full text-[10px] uppercase tracking-widest">
-                        Cómo llegar
+                        Ver Ubicación
                     </a>
                 </div>
-                <div class="rounded-3xl overflow-hidden h-64 glass">
+                <div class="rounded-3xl overflow-hidden h-80 glass map-container">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.482705786854!2d-99.1673892!3d19.4270245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f5bd1563%3A0x6c366b0e6166944c!2sPaseo%20de%20la%20Reforma!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx" 
-                        width="100%" height="100%" style="border:0; filter: grayscale(1) invert(1);" allowfullscreen="" loading="lazy"></iframe>
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.4827!2d-99.1673!3d19.427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzM3LjIiTiA5OcKwMTAnMDIuMyJX!5e0!3m2!1ses!2smx!4v1700000000000" 
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </section>
 
-        <!-- RSVP FORM -->
+        <!-- RSVP FORMULARIO -->
         <section class="py-20 px-6 max-w-2xl mx-auto">
-            <div class="fade-in-section glass rounded-3xl p-8 md:p-12">
+            <div class="reveal glass rounded-3xl p-8 md:p-12">
                 <div class="text-center mb-10">
-                    <h3 class="font-serif text-4xl text-rose-100 mb-2">Confirmar Asistencia</h3>
-                    <p class="text-gray-400 text-sm">Tu presencia es mi mejor regalo</p>
+                    <h3 class="font-serif text-4xl text-white mb-2">Confirmar Asistencia</h3>
+                    <p class="text-gray-500 text-xs uppercase tracking-widest">Por favor, confirma antes del 10 de Junio</p>
                 </div>
 
                 <form id="rsvpForm" class="space-y-6">
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest text-rose-300 mb-2">Nombre Completo</label>
-                        <input type="text" id="name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-rose-300 transition-all">
+                        <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2">Nombre Completo</label>
+                        <input type="text" id="name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-white/40 transition-all text-sm">
                     </div>
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest text-rose-300 mb-2">¿Asistirás?</label>
-                        <select id="attendance" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-rose-300 transition-all">
-                            <option value="Sí, con mucho gusto">Sí, allí estaré</option>
-                            <option value="Lo siento, no puedo">No podré asistir</option>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2">¿Asistirás?</label>
+                        <select id="attendance" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-white/40 transition-all text-sm appearance-none">
+                            <option value="Sí, allí estaré">Sí, con mucho gusto estaré ahí</option>
+                            <option value="No podré asistir">Lamentablemente no puedo asistir</option>
                         </select>
                     </div>
-                    <button type="submit" class="w-full bg-rose-200 text-black py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-rose-300 transition-all">
+                    <button type="submit" class="w-full bg-white text-black py-5 rounded-xl font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-rose-100 transition-all shadow-xl shadow-white/5">
                         Enviar Confirmación
                     </button>
                 </form>
             </div>
         </section>
 
-        <footer class="py-20 text-center">
-            <p class="font-serif text-2xl text-rose-100 italic">Valentina</p>
-            <p class="text-[10px] tracking-[0.4em] text-gray-600 mt-4 uppercase">2026 • Todos los derechos reservados</p>
+        <footer class="py-20 text-center border-t border-white/5 mt-20">
+            <p class="font-serif text-2xl text-white italic opacity-80">Valentina</p>
+            <p class="text-[9px] tracking-[0.5em] text-gray-600 mt-6 uppercase">Mis XV Años • 2026</p>
         </footer>
 
     </main>
 
     <script>
-        // Función para abrir la invitación
-        function openInvite() {
-            const landing = document.getElementById('landing');
-            const content = document.getElementById('content');
+        // Función para desbloquear e iniciar animaciones
+        function unlockInvitation() {
+            const intro = document.getElementById('intro');
+            const mainContent = document.getElementById('main-content');
             
-            landing.classList.add('fade-out');
+            intro.classList.add('intro-hidden');
             
             setTimeout(() => {
-                landing.style.display = 'none';
-                content.classList.remove('hidden');
-                document.body.style.overflow = 'auto';
+                intro.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                document.body.style.overflow = 'auto'; // Habilitar scroll
+                
+                // Activar animación de la primera sección
                 setTimeout(() => {
-                    content.classList.add('opacity-100');
-                    content.style.transition = "opacity 1s ease";
-                    checkScroll();
+                    mainContent.classList.add('opacity-100');
+                    handleScroll();
                 }, 50);
-            }, 800);
+            }, 1000);
         }
 
         // Animación al hacer scroll
-        function checkScroll() {
-            const sections = document.querySelectorAll('.fade-in-section');
-            sections.forEach(section => {
-                const sectionTop = section.getBoundingClientRect().top;
-                if (sectionTop < window.innerHeight * 0.85) {
-                    section.classList.add('visible');
+        function handleScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('active');
                 }
             });
         }
 
-        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('scroll', handleScroll);
 
-        // Contador
+        // Lógica del Contador
         const eventDate = new Date('June 24, 2026 19:00:00').getTime();
         function updateCountdown() {
             const now = new Date().getTime();
             const diff = eventDate - now;
+            
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -228,24 +251,30 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Agregar al calendario
+        // Agregar al calendario de Google
         function addToCalendar() {
-            const title = "XV Años de Valentina";
-            const details = "Celebración de los XV años de Valentina";
-            const location = "Salón de Gala La Mansión";
-            const date = "20260624T190000Z/20260625T020000Z";
-            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+            const title = encodeURIComponent("XV Años de Valentina");
+            const details = encodeURIComponent("¡Te espero para celebrar mis XV años!");
+            const location = encodeURIComponent("Salón de Gala La Mansión, CDMX");
+            const dates = "20260624T190000Z/20260625T020000Z";
+            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
             window.open(url, '_blank');
         }
 
-        // Formulario RSVP a WhatsApp
+        // Simulación de envío RSVP (puedes conectarlo a un API o WhatsApp)
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const att = document.getElementById('attendance').value;
-            const phone = "1234567890"; // Reemplazar con el número real
-            const message = `¡Hola! Soy ${name}. Confirmo mi asistencia para los XV de Valentina: ${att}.`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            
+            // Simulación de feedback
+            const btn = this.querySelector('button');
+            btn.innerText = "¡GRACIAS POR CONFIRMAR!";
+            btn.style.background = "#d4a373";
+            btn.disabled = true;
+            
+            // Aquí podrías usar window.open con una URL de WhatsApp
+            // window.open(`https://wa.me/TUNUMERO?text=Hola! Soy ${name} y confirmo que: ${att}`);
         });
     </script>
 </body>
