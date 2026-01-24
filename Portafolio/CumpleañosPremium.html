@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumple de Sofía</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Animación de Linternas Flotantes */
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
+        }
+        .lantern {
+            position: absolute;
+            background: #fbbf24;
+            border-radius: 4px;
+            box-shadow: 0 0 12px #fbbf24;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(88, 28, 135, 0.7)), url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Rapunzel%20_%20Tangled.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .glow {
+            filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.8));
+        }
+    </style>
+</head>
+<body class="bg-purple-50 text-gray-800 overflow-x-hidden">
+
+    <!-- PANTALLA 1: PORTADA (Centrada) -->
+    <div id="view1" class="relative h-screen w-full flex items-center justify-center text-center px-6">
+        <div class="absolute inset-0 hero-bg z-0"></div>
+        <div class="relative z-10 max-w-lg w-full flex flex-col items-center space-y-6 fade-in">
+            <!-- Icono decorativo añadido -->
+            <div class="mb-2 glow animate-pulse">
+                <i data-lucide="crown" class="w-16 h-16 text-yellow-400 fill-yellow-400/20"></i>
+            </div>
+            
+            <h1 class="text-white text-6xl md:text-7xl font-bold tracking-tight drop-shadow-lg">Sofía</h1>
+            <div class="h-1 w-24 bg-yellow-400 rounded-full"></div>
+            <p class="text-white text-2xl font-medium">Sábado, 20 de Junio, 2026</p>
+            
+            <button onclick="revealInvitation()" class="mt-8 px-12 py-4 bg-yellow-500 hover:bg-yellow-400 text-purple-950 font-bold rounded-full shadow-xl transform transition hover:scale-105 active:scale-95 uppercase tracking-wider text-sm">
+                Ver invitación
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: DETALLES -->
+    <div id="view2" class="hidden relative min-h-screen bg-white flex flex-col items-center">
+        <!-- Fondo Animado -->
+        <div id="lantern-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-gradient-to-b from-purple-50 to-white"></div>
+
+        <div class="relative z-10 w-full max-w-xl mx-auto pb-20 fade-in flex flex-col items-center">
+            
+            <!-- Imagen Principal -->
+            <div class="w-full aspect-video overflow-hidden shadow-lg rounded-b-[3rem] mb-10 border-b-4 border-yellow-400">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Rapunzel%20_%20Tangled.jpg" alt="Rapunzel" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Introducción -->
+            <div class="px-6 text-center space-y-4 mb-12">
+                <i data-lucide="heart" class="w-8 h-8 text-purple-600 mx-auto fill-purple-100"></i>
+                <h2 class="text-3xl font-bold text-purple-900">¡Cumplo 6 años!</h2>
+                <p class="text-gray-600 text-lg leading-relaxed">
+                    Hola, estoy muy feliz de invitarte a celebrar mi cumpleaños. Será una tarde muy especial y me encantaría que pudieras venir.
+                </p>
+            </div>
+
+            <!-- Contador -->
+            <div class="w-11/12 py-8 bg-purple-900 text-white rounded-3xl shadow-xl text-center mb-12">
+                <p class="text-yellow-400 text-xs font-bold uppercase tracking-widest mb-4">Faltan:</p>
+                <div class="grid grid-cols-4 gap-4 px-4" id="countdown">
+                    <div class="flex flex-col"><span id="days" class="text-3xl font-bold">0</span><span class="text-[10px] opacity-70">Días</span></div>
+                    <div class="flex flex-col"><span id="hours" class="text-3xl font-bold">0</span><span class="text-[10px] opacity-70">Horas</span></div>
+                    <div class="flex flex-col"><span id="minutes" class="text-3xl font-bold">0</span><span class="text-[10px] opacity-70">Min</span></div>
+                    <div class="flex flex-col"><span id="seconds" class="text-3xl font-bold">0</span><span class="text-[10px] opacity-70">Seg</span></div>
+                </div>
+            </div>
+
+            <!-- Información -->
+            <div class="w-full px-6 space-y-6 mb-16 flex flex-col items-center">
+                
+                <div class="w-full p-6 bg-gray-50 rounded-3xl border border-gray-100 flex flex-col items-center text-center">
+                    <div class="bg-purple-100 p-3 rounded-full text-purple-700 mb-4">
+                        <i data-lucide="calendar" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-purple-950">¿Cuándo es?</h3>
+                    <p class="text-gray-700">Sábado 20 de Junio, 2026</p>
+                    <p class="text-gray-500">A partir de las 16:00 hs</p>
+                    <button onclick="addToCalendar()" class="mt-4 text-sm font-semibold text-purple-600 flex items-center gap-2 hover:opacity-70 transition">
+                        Agendar en mi calendario
+                    </button>
+                </div>
+
+                <div class="w-full p-6 bg-gray-50 rounded-3xl border border-gray-100 flex flex-col items-center text-center">
+                    <div class="bg-purple-100 p-3 rounded-full text-purple-700 mb-4">
+                        <i data-lucide="map-pin" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-purple-950">¿Dónde?</h3>
+                    <p class="text-gray-700">Salón "El Castillo Mágico"</p>
+                    <p class="text-gray-500 mb-4 text-sm">Av. Principal 123, Ciudad de México</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Av.+Principal+123" target="_blank" class="px-6 py-2 bg-purple-700 text-white text-sm font-bold rounded-full shadow-md hover:bg-purple-800 transition">
+                        Abrir Mapa
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- RSVP Form -->
+            <div class="w-full px-6 mb-12">
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-purple-50 flex flex-col items-center w-full" id="rsvp-container">
+                    <h3 class="text-2xl font-bold text-purple-950 text-center mb-6">Confirma tu asistencia</h3>
+                    <form id="rsvp-form" class="w-full space-y-4">
+                        <input type="text" required class="w-full px-5 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-300" placeholder="Nombre completo">
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <select class="w-full px-4 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-300">
+                                <option>1 Persona</option>
+                                <option>2 Personas</option>
+                                <option>3 Personas</option>
+                                <option>4+ Personas</option>
+                            </select>
+                            <select class="w-full px-4 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-300 font-semibold">
+                                <option value="yes">Asistiré</option>
+                                <option value="no">No podré ir</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-purple-900 text-white font-bold rounded-2xl shadow-lg hover:bg-purple-800 transition transform active:scale-95 uppercase tracking-widest text-sm">
+                            Confirmar ahora
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Botón para regresar al inicio -->
+            <button onclick="resetToStart()" class="flex items-center gap-2 text-gray-400 hover:text-purple-600 transition-colors text-sm font-medium">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Volver a la portada
+            </button>
+
+            <!-- Footer -->
+            <div class="mt-12 text-center text-gray-400 text-sm px-10">
+                <p>¡Te esperamos con mucha ilusión!</p>
+                <div class="flex justify-center gap-3 mt-4 text-yellow-400">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
+        const targetDate = new Date('June 20, 2026 16:00:00').getTime();
+
+        function revealInvitation() {
+            document.getElementById('view1').classList.add('hidden');
+            const view2 = document.getElementById('view2');
+            view2.classList.remove('hidden');
+            
+            // Limpiar linternas previas si existen
+            document.getElementById('lantern-container').innerHTML = '';
+            createLanterns();
+            startCountdown();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetToStart() {
+            document.getElementById('view2').classList.add('hidden');
+            document.getElementById('view1').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function createLanterns() {
+            const container = document.getElementById('lantern-container');
+            for (let i = 0; i < 12; i++) {
+                const lantern = document.createElement('div');
+                lantern.className = 'lantern';
+                const size = Math.random() * 15 + 10;
+                lantern.style.width = size + 'px';
+                lantern.style.height = (size * 1.5) + 'px';
+                lantern.style.left = Math.random() * 100 + '%';
+                lantern.style.top = '100%';
+                lantern.style.animation = `floatUp ${Math.random() * 10 + 15}s linear infinite`;
+                lantern.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(lantern);
+            }
+        }
+
+        function startCountdown() {
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+
+                if (diff < 0) {
+                    clearInterval(timer);
+                    return;
+                }
+
+                document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            }, 1000);
+        }
+
+        function addToCalendar() {
+            const title = encodeURIComponent("Cumpleaños de Sofía");
+            const details = encodeURIComponent("¡Te esperamos para celebrar los 6 años de Sofía!");
+            const location = encodeURIComponent("Salón El Castillo Mágico");
+            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20260620T160000Z/20260620T200000Z&details=${details}&location=${location}`;
+            window.open(url, '_blank');
+        }
+
+        document.getElementById('rsvp-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('rsvp-container').innerHTML = `
+                <div class="text-center py-10 fade-in flex flex-col items-center">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">¡Confirmado!</h3>
+                    <p class="text-gray-500">Muchas gracias por avisarnos. Nos vemos pronto.</p>
+                </div>
+            `;
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
