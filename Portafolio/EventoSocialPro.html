@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacramento del Bautismo - Mateo Alejandro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #A68966; /* Oro mate profesional */
+            --bg: #FAFAF9;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: #2D2D2D;
+            scroll-behavior: smooth;
+        }
+        .font-serif { font-family: 'Cormorant Garamond', serif; }
+        
+        /* Animaciones de revelación */
+        .reveal {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efecto Ken Burns para la imagen de portada */
+        .hero-zoom {
+            animation: zoomEffect 25s infinite alternate ease-in-out;
+        }
+        @keyframes zoomEffect {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        /* Transición entre vistas */
+        #content-view { display: none; opacity: 0; transition: opacity 1s ease; }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            width: 100px;
+            margin: 2rem auto;
+            opacity: 0.5;
+        }
+
+        .btn-minimal {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .btn-minimal:hover {
+            letter-spacing: 0.1em;
+            background-color: #F5F5F4;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- VISTA 1: PORTADA CINEMATOGRÁFICA -->
+    <section id="hero-view" class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-stone-900">
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/batismo.jpg" 
+                alt="Imagen de Bautizo"
+                class="w-full h-full object-cover opacity-60 hero-zoom"
+            >
+            <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
+        </div>
+
+        <div class="relative z-10 text-center text-white px-8 max-w-3xl">
+            <div class="mb-8 opacity-0 transition-opacity duration-1000 delay-300 transform translate-y-4" id="hero-cross">
+                <svg width="40" height="60" viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
+                    <path d="M20 0V60M5 20H35" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+            </div>
+            
+            <span class="uppercase tracking-[0.5em] text-[10px] md:text-xs mb-4 block text-stone-300 opacity-0 transition-all duration-1000 delay-500 transform translate-y-4" id="hero-sub">
+                El Sacramento del Bautismo
+            </span>
+            
+            <h1 class="text-4xl md:text-7xl font-serif font-light mb-8 opacity-0 transition-all duration-1000 delay-700 transform translate-y-4" id="hero-title">
+                Mateo Alejandro
+            </h1>
+
+            <button onclick="enterExperience()" class="group opacity-0 transition-all duration-1000 delay-1000 flex flex-col items-center gap-6 mx-auto" id="hero-btn">
+                <div class="w-[1px] h-16 bg-white/30 group-hover:h-20 transition-all duration-500"></div>
+                <span class="text-[10px] uppercase tracking-[0.3em] font-light">Entrar</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- VISTA 2: EXPERIENCIA COMPLETA -->
+    <main id="content-view" class="bg-[#FDFCFB]">
+        <!-- Navegación Fija -->
+        <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-white">
+            <span class="font-serif text-lg tracking-widest">M.A.</span>
+            <button onclick="location.reload()" class="text-[9px] uppercase tracking-[0.3em] hover:opacity-60 transition-opacity">Volver al inicio</button>
+        </nav>
+
+        <!-- Contenedor de Contenido -->
+        <div class="max-w-screen-md mx-auto px-6 pt-40 pb-32">
+            
+            <!-- Introducción y Versículo -->
+            <section class="text-center mb-32 reveal">
+                <p class="font-serif italic text-2xl md:text-3xl text-stone-600 mb-8 leading-relaxed">
+                    "Yo te he elegido y te he llamado por tu nombre; tú eres mío."
+                </p>
+                <span class="text-[11px] uppercase tracking-[0.2em] text-stone-400">— Isaías 43:1</span>
+                <div class="divider"></div>
+                <p class="text-stone-500 font-light leading-loose max-w-lg mx-auto">
+                    Con inmensa alegría, los invitamos a presenciar el primer sacramento de nuestro hijo, donde recibirá la luz de Cristo y comenzará su camino en la fe.
+                </p>
+            </section>
+
+            <!-- Contador de Tiempo 2026 -->
+            <section class="mb-32 reveal text-center">
+                <h3 class="text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-10">La espera termina en</h3>
+                <div class="flex justify-center gap-8 md:gap-16">
+                    <div class="flex flex-col">
+                        <span id="d" class="text-4xl md:text-5xl font-serif text-stone-800">00</span>
+                        <span class="text-[9px] uppercase tracking-widest mt-2 text-stone-400">Días</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="h" class="text-4xl md:text-5xl font-serif text-stone-800">00</span>
+                        <span class="text-[9px] uppercase tracking-widest mt-2 text-stone-400">Horas</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="m" class="text-4xl md:text-5xl font-serif text-stone-800">00</span>
+                        <span class="text-[9px] uppercase tracking-widest mt-2 text-stone-400">Minutos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detalles del Evento (Ceremonia y Recepción) -->
+            <section class="grid md:grid-cols-2 gap-px bg-stone-100 border border-stone-100 mb-32 reveal overflow-hidden">
+                <div class="bg-white p-12 text-center flex flex-col items-center">
+                    <i data-lucide="church" stroke-width="1" class="text-stone-400 mb-6"></i>
+                    <h4 class="font-serif text-xl mb-4 tracking-wide">La Ceremonia</h4>
+                    <p class="text-sm text-stone-500 font-light mb-8 leading-relaxed">
+                        Sábado 24 de Mayo, 2026<br>
+                        12:00 Horas<br>
+                        Catedral Metropolitana
+                    </p>
+                    <button onclick="window.open('https://maps.google.com')" class="text-[10px] uppercase tracking-widest text-[#A68966] hover:text-stone-800 transition-colors">Ver Mapa</button>
+                </div>
+                <div class="bg-white p-12 text-center flex flex-col items-center">
+                    <i data-lucide="sparkles" stroke-width="1" class="text-stone-400 mb-6"></i>
+                    <h4 class="font-serif text-xl mb-4 tracking-wide">La Recepción</h4>
+                    <p class="text-sm text-stone-500 font-light mb-8 leading-relaxed">
+                        Posterior a la ceremonia<br>
+                        Hacienda Santa Fe<br>
+                        Salón de los Espejos
+                    </p>
+                    <button onclick="window.open('https://maps.google.com')" class="text-[10px] uppercase tracking-widest text-[#A68966] hover:text-stone-800 transition-colors">Ubicación</button>
+                </div>
+            </section>
+
+            <!-- Galería -->
+            <section class="mb-32 reveal">
+                <div class="grid grid-cols-6 gap-4">
+                    <div class="col-span-3 aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1510154221590-ff63e90a136f?q=80&w=800" alt="Fotografía detalle de bautizo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
+                    </div>
+                    <div class="col-span-3 aspect-[3/4] overflow-hidden mt-8">
+                        <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=800" alt="Fotografía familia bautizo" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Confirmación RSVP -->
+            <section id="rsvp-section" class="max-w-md mx-auto reveal">
+                <div class="text-center mb-12">
+                    <h3 class="font-serif text-3xl mb-4">Confirmación</h3>
+                    <p class="text-xs text-stone-400 uppercase tracking-widest">Favor de confirmar antes del 10.05.26</p>
+                </div>
+                
+                <form id="rsvpForm" class="space-y-10">
+                    <div class="group">
+                        <input required type="text" placeholder="Nombre completo" class="w-full bg-transparent border-b border-stone-200 py-3 focus:border-stone-800 focus:outline-none transition-all placeholder:text-stone-300 font-light text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-10">
+                        <select class="bg-transparent border-b border-stone-200 py-3 focus:outline-none text-sm font-light text-stone-500">
+                            <option>1 Invitado</option>
+                            <option>2 Invitados</option>
+                            <option>3 Invitados</option>
+                        </select>
+                        <select class="bg-transparent border-b border-stone-200 py-3 focus:outline-none text-sm font-light text-stone-500">
+                            <option>Asistiré</option>
+                            <option>No podré asistir</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-5 border border-stone-800 text-[10px] uppercase tracking-[0.4em] font-medium btn-minimal">
+                        Enviar Respuesta
+                    </button>
+                </form>
+
+                <div id="msg" class="hidden text-center py-10">
+                    <p class="font-serif italic text-xl">Gracias por confirmar.</p>
+                </div>
+            </section>
+
+            <!-- Footer Informativo -->
+            <footer class="mt-40 text-center reveal">
+                <div class="flex justify-center gap-12 mb-20 text-stone-400">
+                    <div class="text-center">
+                        <span class="text-[9px] uppercase tracking-widest block mb-2">Padres</span>
+                        <p class="text-stone-800 text-xs font-medium">Sofía & Ricardo</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-[9px] uppercase tracking-widest block mb-2">Padrinos</span>
+                        <p class="text-stone-800 text-xs font-medium">Elena & Carlos</p>
+                    </div>
+                </div>
+                <div class="w-px h-20 bg-stone-200 mx-auto mb-8"></div>
+                <p class="text-[10px] uppercase tracking-[0.5em] text-stone-400">Mateo Alejandro • 2026</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // Control de animación de la portada
+        window.addEventListener('load', () => {
+            const elements = ['hero-cross', 'hero-sub', 'hero-title', 'hero-btn'];
+            elements.forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Función para cambiar de vista
+        function enterExperience() {
+            const hero = document.getElementById('hero-view');
+            const content = document.getElementById('content-view');
+            
+            hero.style.opacity = '0';
+            hero.style.transition = 'opacity 1s ease';
+            
+            setTimeout(() => {
+                hero.style.display = 'none';
+                content.style.display = 'block';
+                setTimeout(() => {
+                    content.style.opacity = '1';
+                    initObserver();
+                }, 50);
+            }, 1000);
+        }
+
+        // Observer para efectos de aparición al hacer scroll
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // Lógica del Contador para Mayo 2026
+        const targetDate = new Date("May 24, 2026 12:00:00").getTime();
+        
+        function updateTimer() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.getElementById('d').innerText = "00";
+                document.getElementById('h').innerText = "00";
+                document.getElementById('m').innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('d').innerText = days.toString().padStart(2, '0');
+            document.getElementById('h').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('m').innerText = minutes.toString().padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Manejo del formulario RSVP
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.style.opacity = '0';
+            this.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                this.style.display = 'none';
+                const msg = document.getElementById('msg');
+                msg.classList.remove('hidden');
+                msg.classList.add('active');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
