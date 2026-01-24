@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentina - XV Años Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark-gold: #8e6d2f;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #050505;
+            color: #fff;
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-luxury { font-family: 'Cinzel', serif; }
+
+        .bg-premium {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(5,5,5,1)), 
+                              url('https://github.com/AdaInvite/AdaInvite/blob/main/Assets/La%20hermosa%20Anita%20en%20sus%20fotos%20de%20%23quincea%C3%B1os_%20_%23QuincePhotos%20%23QuinceMemories%20%23Quincea%C3%B1eraVibes%20%23quincephotoshoot%20%23Sweet15.jpg?raw=true');
+            background-size: cover;
+            background-position: center;
+        }
+
+        @media (max-width: 768px) {
+            .bg-premium {
+                background-position: center bottom;
+            }
+        }
+
+        .overlay-screen {
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease;
+            z-index: 1000;
+        }
+
+        .screen-up {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #fbf5e6, #c5a059, #fbf5e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-premium {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            background: var(--gold);
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-premium:hover { color: #000; }
+        .btn-premium:hover::before { width: 100%; }
+
+        /* Reproductor Integrado sin texto */
+        .music-header {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0,0,0,0.4);
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-header:hover {
+            background: rgba(197, 160, 89, 0.1);
+            border-color: var(--gold);
+        }
+
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 14px;
+        }
+
+        .v-bar {
+            width: 2px;
+            background: var(--gold);
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        .v-bar:nth-child(2) { animation-delay: 0.2s; height: 100%; }
+        .v-bar:nth-child(3) { animation-delay: 0.4s; height: 70%; }
+        .v-bar:nth-child(4) { animation-delay: 0.1s; height: 40%; }
+
+        @keyframes bounce {
+            0%, 100% { height: 30%; }
+            50% { height: 100%; }
+        }
+
+        /* Botón de volver al inicio */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 2000;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #back-to-top:hover { background: var(--gold); color: #000; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); }
+    </style>
+</head>
+<body class="bg-black">
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/La%20canci%C3%B3n%20m%C3%A1s%20hermosa%20para%20una%20Quincea%C3%B1era%20%20Mi%20princesa%20%20Angel%20Melo.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CONTROL DE MÚSICA INTEGRADO (SOLO ICONOS) -->
+    <div id="integrated-music" class="music-header" onclick="toggleMusic()">
+        <div id="v-bars" class="visualizer">
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+            <div class="v-bar"></div>
+        </div>
+        <div id="play-pause-icon" class="text-gold flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <div id="back-to-top" onclick="scrollToTop()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+        </svg>
+    </div>
+
+    <!-- PORTADA ANIMADA -->
+    <div id="cover" class="overlay-screen fixed inset-0 bg-premium flex flex-col items-center justify-center text-center px-6">
+        <div class="space-y-8 max-w-lg">
+            <div class="animate-bounce mb-4">
+                <span class="text-gold uppercase tracking-[0.6em] text-[10px]">Exclusiva Invitación</span>
+            </div>
+            <h1 class="font-luxury text-5xl md:text-8xl gold-gradient-text tracking-tighter">Valentina</h1>
+            <div class="h-[1px] w-24 bg-gold mx-auto opacity-50"></div>
+            <p class="text-xl md:text-2xl font-light tracking-[0.4em] text-white/90">24 . JUN . 2026</p>
+            
+            <button onclick="startExperience()" class="mt-16 btn-premium px-12 py-5 rounded-sm uppercase tracking-[0.3em] text-[10px] font-bold shadow-2xl">
+                Abrir con Música
+            </button>
+        </div>
+        
+        <div class="absolute bottom-10 opacity-30">
+            <p class="text-[9px] uppercase tracking-[0.8em]">Explora mi mundo</p>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="main-content" class="hidden opacity-0">
+        
+        <!-- INTRODUCCIÓN -->
+        <section id="top" class="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-premium">
+            <div class="reveal max-w-2xl space-y-8">
+                <h2 class="font-serif text-5xl md:text-7xl italic text-rose-100/80">Mis Quince Años</h2>
+                <div class="h-[1px] w-12 bg-gold mx-auto"></div>
+                <p class="text-lg md:text-xl font-light text-gray-300 leading-relaxed italic">
+                    "Hay momentos en la vida que imaginamos mil veces, pero vivirlos a tu lado es lo que los hace reales."
+                </p>
+            </div>
+        </section>
+
+        <!-- GALERÍA -->
+        <section class="py-24 px-6 max-w-6xl mx-auto">
+            <div class="reveal text-center mb-16 space-y-4">
+                <h3 class="font-luxury text-3xl tracking-[0.3em]">Momentos</h3>
+                <p class="text-gray-500 text-xs tracking-widest uppercase">Mi historia en imágenes</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="reveal gallery-item bg-zinc-900 flex items-center justify-center">
+                    <span class="text-[10px] uppercase tracking-widest opacity-20">Foto 1</span>
+                </div>
+                <div class="reveal gallery-item bg-zinc-900 flex items-center justify-center">
+                    <span class="text-[10px] uppercase tracking-widest opacity-20">Foto 2</span>
+                </div>
+                <div class="reveal gallery-item bg-zinc-900 flex items-center justify-center md:mt-12">
+                    <span class="text-[10px] uppercase tracking-widest opacity-20">Foto 3</span>
+                </div>
+                <div class="reveal gallery-item bg-zinc-900 flex items-center justify-center md:mt-12">
+                    <span class="text-[10px] uppercase tracking-widest opacity-20">Foto 4</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVENTO Y MAPA -->
+        <section class="py-24 px-6">
+            <div class="reveal max-w-6xl mx-auto grid md:grid-cols-2 gap-0">
+                <div class="glass p-12 flex flex-col justify-center space-y-8 border-r-0 md:border-r">
+                    <div class="space-y-2">
+                        <span class="text-gold text-[10px] uppercase tracking-[0.5em]">Dónde & Cuándo</span>
+                        <h3 class="font-serif text-4xl">La Gran Gala</h3>
+                    </div>
+                    <div class="space-y-4 font-light text-gray-400">
+                        <p class="text-white text-lg italic">Salón de Eventos "El Alcázar"</p>
+                        <p>Avenida de la Paz #1024, Col. Lomas de Chapultepec, CDMX.</p>
+                        <div class="pt-4 space-y-1">
+                            <p class="text-gold tracking-widest text-xs uppercase">Recepción: 20:00 hrs</p>
+                            <p class="text-gold tracking-widest text-xs uppercase">Cena: 21:30 hrs</p>
+                        </div>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" class="btn-premium inline-block px-10 py-4 text-center rounded-sm text-[10px] uppercase tracking-widest w-fit">
+                        Cómo Llegar
+                    </a>
+                </div>
+                <div class="h-[400px] md:h-auto overflow-hidden">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.4!2d-99.16!3d19.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzM3LjIiTiA5OcKwMTAnMDIuMyJX!5e0!3m2!1ses!2smx!4v1700000000000" 
+                        width="100%" height="100%" style="border:0; filter: contrast(1.2) grayscale(1) invert(0.9);" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN BOX (ANTES DE MESA DE REGALOS) -->
+        <section class="py-24 px-6">
+            <div class="reveal glass max-w-5xl mx-auto rounded-none p-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-transparent via-gold to-transparent opacity-50"></div>
+                <h3 class="font-luxury text-2xl tracking-[0.4em] text-gold mb-12">Falta muy poco</h3>
+                
+                <div id="timer" class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+                    <div>
+                        <span id="days" class="block text-5xl md:text-7xl font-serif text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gold/60">Días</span>
+                    </div>
+                    <div>
+                        <span id="hours" class="block text-5xl md:text-7xl font-serif text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gold/60">Horas</span>
+                    </div>
+                    <div>
+                        <span id="minutes" class="block text-5xl md:text-7xl font-serif text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gold/60">Minutos</span>
+                    </div>
+                    <div>
+                        <span id="seconds" class="block text-5xl md:text-7xl font-serif text-rose-200">00</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gold/60">Segundos</span>
+                    </div>
+                </div>
+
+                <div class="mt-16">
+                    <button onclick="addToCalendar()" class="text-[10px] uppercase tracking-[0.4em] border-b border-gold pb-1 hover:text-gold transition-colors">
+                        Agendar en Calendario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MESA DE REGALOS -->
+        <section class="py-24 px-6 text-center bg-zinc-950">
+            <div class="reveal space-y-12 max-w-4xl mx-auto">
+                <div class="space-y-4">
+                    <h3 class="font-luxury text-3xl tracking-[0.3em] text-gold">Mesa de Regalos</h3>
+                    <p class="text-gray-400 font-light text-sm max-w-md mx-auto italic">"Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo, puedes hacerlo aquí:"</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass p-8 space-y-4">
+                        <p class="uppercase tracking-widest text-xs font-semibold">Amazon</p>
+                        <p class="text-[10px] text-gray-500 uppercase">Wishlist de Valentina</p>
+                        <a href="#" class="inline-block text-gold text-[10px] uppercase tracking-widest border-b border-gold/30">Visitar Tienda</a>
+                    </div>
+                    <div class="glass p-8 space-y-4">
+                        <p class="uppercase tracking-widest text-xs font-semibold">Lluvia de Sobres</p>
+                        <p class="text-[10px] text-gray-500 uppercase">En la entrada del salón</p>
+                        <p class="text-gold text-[10px] uppercase tracking-widest">¡Gracias!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONFIRMACIÓN DE ASISTENCIA -->
+        <section class="py-24 px-6 max-w-3xl mx-auto">
+            <div class="reveal glass p-10 md:p-16 space-y-12 relative">
+                <div class="text-center space-y-4">
+                    <h3 class="font-luxury text-4xl text-white">¿Me Acompañas?</h3>
+                    <p class="text-gold text-[10px] uppercase tracking-[0.5em]">Confirma tu Asistencia</p>
+                </div>
+
+                <form id="premiumRSVP" class="grid grid-cols-1 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500">Nombre del Invitado</label>
+                        <input type="text" id="guestName" required class="w-full bg-transparent border-b border-white/20 py-3 focus:border-gold outline-none transition-all font-light">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gray-500">Adultos</label>
+                            <select id="guestCount" class="w-full bg-transparent border-b border-white/20 py-3 focus:border-gold outline-none transition-all font-light appearance-none cursor-pointer">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gray-500">Niños</label>
+                            <select id="childrenCount" class="w-full bg-transparent border-b border-white/20 py-3 focus:border-gold outline-none transition-all font-light appearance-none cursor-pointer">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest text-gray-500">¿Alguna Alergia?</label>
+                            <input type="text" id="diet" placeholder="Ninguna" class="w-full bg-transparent border-b border-white/20 py-3 focus:border-gold outline-none transition-all font-light">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full btn-premium py-5 rounded-sm uppercase tracking-[0.4em] text-[10px] font-bold">
+                        Confirmar mi Lugar
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <footer class="py-32 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <span class="font-luxury text-[20vw] whitespace-nowrap opacity-10">VALENTINA</span>
+            </div>
+            <div class="relative z-10 space-y-6">
+                <p class="font-serif italic text-3xl opacity-80">Te espero para brillar...</p>
+                <div class="h-[1px] w-24 bg-gold mx-auto"></div>
+                <p class="text-[9px] tracking-[0.6em] text-gray-600 uppercase">XV Valentina • Luxury Event 2026</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        const integratedMusic = document.getElementById('integrated-music');
+        const vBars = document.getElementById('v-bars');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const backToTop = document.getElementById('back-to-top');
+
+        function startExperience() {
+            const cover = document.getElementById('cover');
+            const content = document.getElementById('main-content');
+            
+            // Iniciar música
+            audio.play().catch(e => console.log("Autoplay bloqueado"));
+            integratedMusic.style.display = 'flex';
+            
+            cover.classList.add('screen-up');
+            
+            setTimeout(() => {
+                cover.style.display = 'none';
+                content.classList.remove('hidden');
+                document.body.style.overflow = 'auto';
+                
+                setTimeout(() => {
+                    content.classList.add('opacity-100');
+                    handleScroll();
+                }, 50);
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                vBars.style.opacity = '1';
+                playPauseIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/></svg>';
+            } else {
+                audio.pause();
+                vBars.style.opacity = '0.3';
+                playPauseIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const revealTop = reveal.getBoundingClientRect().top;
+                if (revealTop < window.innerHeight - 100) {
+                    reveal.classList.add('active');
+                }
+            });
+
+            // Botón volver
+            if (window.scrollY > 600) {
+                backToTop.style.display = 'flex';
+                setTimeout(() => backToTop.style.opacity = '1', 10);
+            } else {
+                backToTop.style.opacity = '0';
+                setTimeout(() => backToTop.style.display = 'none', 300);
+            }
+        }
+        window.addEventListener('scroll', handleScroll);
+
+        // Timer
+        const eventTime = new Date('June 24, 2026 20:00:00').getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = eventTime - now;
+            
+            if (diff <= 0) {
+                document.getElementById('timer').innerHTML = "<p class='col-span-4 text-gold font-serif text-2xl'>¡Hoy es el gran día!</p>";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').innerText = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function addToCalendar() {
+            const title = "XV Años de Valentina";
+            const dates = "20260624T200000Z/20260625T040000Z";
+            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dates}`;
+            window.open(url, '_blank');
+        }
+
+        document.getElementById('premiumRSVP').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('guestName').value;
+            const adults = document.getElementById('guestCount').value;
+            const children = document.getElementById('childrenCount').value;
+            const diet = document.getElementById('diet').value || "Ninguna";
+            const message = `¡Hola Valentina! Confirmo mi lugar: \n👤 Nombre: ${name} \n👨 Adultos: ${adults} \n🧒 Niños: ${children} \n🍴 Notas: ${diet}`;
+            window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
+        });
+    </script>
+</body>
+</html>
