@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>María & Juan - Boda 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes de Lujo -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Alex+Brush&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        :root {
+            --olive: #556b2f;
+            --gold: #bfa260;
+            --cream: #f9f6f0; 
+            --dark: #2d3122;
+            --tooltip: #556b2f;
+        }
+        
+        body { 
+            font-family: 'Cormorant Garamond', serif; 
+            background-color: var(--cream); 
+            color: var(--dark); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .font-script { font-family: 'Alex Brush', cursive; }
+
+        /* Marco decorativo adaptable */
+        .section-frame {
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid var(--gold);
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0.4;
+        }
+        @media (min-width: 768px) {
+            .section-frame { top: 20px; left: 20px; right: 20px; bottom: 20px; opacity: 0.6; }
+        }
+
+        .section-frame::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px; right: 3px; bottom: 3px;
+            border: 0.5px solid var(--gold);
+        }
+
+        /* --- SOBRE --- */
+        #envelope-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--cream);
+            overflow: hidden;
+        }
+
+        .flap-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.15));
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 60%; 
+            height: 100%;
+            background-color: #fdfaf5;
+            background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+            z-index: 5;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .flap-left { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .flap-right { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+
+        #envelope-container.open .flap-left { transform: translateX(-110%); }
+        #envelope-container.open .flap-right { transform: translateX(110%); }
+        #envelope-container.open .seal-wrapper { opacity: 0; transform: scale(0.8); pointer-events: none; }
+        #envelope-container.open { pointer-events: none; visibility: hidden; transition: visibility 1.5s, opacity 1s 1s; opacity: 0; }
+
+        .seal-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.6s ease;
+        }
+
+        .click-hint {
+            background: var(--olive);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(85, 107, 47, 0.3);
+            animation: bounce 2s infinite;
+        }
+        .click-hint::after {
+            content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+            border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--olive);
+        }
+
+        .seal-img {
+            width: 110px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        @media (min-width: 768px) { .seal-img { width: 130px; } }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* --- CONTENIDO --- */
+        .texture-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+            opacity: 0.25; pointer-events: none; z-index: 1;
+        }
+
+        .bg-section { position: relative; overflow: hidden; background-attachment: scroll; background-size: cover; background-position: center; }
+        @media (min-width: 1024px) { .bg-section { background-attachment: fixed; } }
+        
+        .hero-bg { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop'); }
+        .history-bg { background-image: linear-gradient(rgba(45, 49, 34, 0.6), rgba(45, 49, 34, 0.6)), url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1920&auto=format&fit=crop'); }
+        .dress-bg { background-image: linear-gradient(rgba(85, 107, 47, 0.8), rgba(85, 107, 47, 0.8)), url('https://images.unsplash.com/photo-1471967183320-ee018f6e114a?q=80&w=1920&auto=format&fit=crop'); }
+
+        .interstitial { height: 40vh; width: 100%; object-fit: cover; background-attachment: scroll; background-position: center; position: relative; }
+        @media (min-width: 768px) { .interstitial { height: 50vh; background-attachment: fixed; } }
+
+        .btn-olive {
+            background: var(--olive); color: white; padding: 10px 25px;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
+            transition: 0.3s; border: 1px solid var(--olive); text-align: center;
+            display: inline-block;
+            width: 100%;
+        }
+        @media (min-width: 768px) { .btn-olive { padding: 12px 35px; font-size: 12px; } }
+        .btn-olive:hover { background: transparent; color: var(--olive); }
+
+        .weather-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .weather-scroll::-webkit-scrollbar { display: none; }
+        .weather-item { min-width: 120px; background: white; padding: 15px; border: 0.3px solid rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
+
+        .itinerary-line { position: relative; max-width: 500px; margin: 0 auto; padding: 0 10px; }
+        .itinerary-line::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--gold); opacity: 0.3; }
+        .step { position: relative; margin-bottom: 40px; z-index: 2; width: 100%; }
+        .dot { width: 10px; height: 10px; background: var(--olive); border: 2px solid white; border-radius: 50%; margin: 0 auto 10px; }
+
+        .player-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.98);
+            border-top: 1px solid #eee; z-index: 5000; padding: 10px 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); transform: translateY(100%); transition: 0.5s;
+        }
+        @media (min-width: 768px) { .player-bar { padding: 15px 25px; } }
+        .player-bar.active { transform: translateY(0); }
+        .progress-container { flex-grow: 1; margin: 0 10px; height: 4px; background: #eee; cursor: pointer; position: relative; }
+        @media (min-width: 768px) { .progress-container { margin: 0 20px; } }
+        .progress-bar { height: 100%; background: var(--gold); width: 0%; transition: width 0.1s; }
+
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <!-- PANTALLA DE INICIO (SOBRE) -->
+    <div id="envelope-container">
+        <div class="flap-container">
+            <div class="flap flap-left"></div>
+            <div class="flap flap-right"></div>
+        </div>
+        
+        <div class="seal-wrapper" onclick="startExperience()">
+            <div class="click-hint font-serif">Click Aquí</div>
+            <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/IMG_8443.png?raw=true" alt="Sello Boda" class="seal-img">
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <main id="main-content" class="hidden">
+        
+        <!-- SECCIÓN PORTADA -->
+        <section class="bg-section hero-bg h-screen flex flex-col items-center justify-center text-center text-white relative">
+            <div class="section-frame"></div>
+            <div class="texture-overlay"></div>
+            <div data-aos="fade-up" data-aos-duration="2000" class="z-10 px-6 max-w-full overflow-hidden">
+                <p class="uppercase tracking-[0.4em] md:tracking-[0.6em] text-[9px] md:text-[10px] mb-6 md:mb-8 font-bold">¡Nos Casamos!</p>
+                <h1 class="text-5xl md:text-9xl mb-4 font-light leading-tight">María <span class="font-script text-4xl md:text-7xl block md:inline-block md:mx-4">&</span> Juan</h1>
+                <div class="w-16 md:w-20 h-[1px] bg-white mx-auto my-8 md:my-10 opacity-50"></div>
+                <p class="text-lg md:text-2xl font-light tracking-[0.3em] md:tracking-[0.4em] uppercase">24 de Octubre, 2026</p>
+            </div>
+            <div class="absolute bottom-12 animate-bounce opacity-50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+        </section>
+
+        <!-- IMAGEN 1 -->
+        <div class="interstitial" style="background-image: url('https://images.unsplash.com/photo-1546190255-451a91afc548?q=80&w=1920&auto=format&fit=crop');">
+            <div class="section-frame"></div>
+        </div>
+
+        <!-- CUENTA REGRESIVA -->
+        <section class="py-16 md:py-24 bg-white text-center relative px-4">
+            <div class="section-frame"></div>
+            <div class="container mx-auto" data-aos="fade-up">
+                <h2 class="text-base md:text-xl uppercase tracking-[0.2em] md:tracking-[0.3em] text-gray-300 mb-8 md:mb-12">Estamos a muy poco de</h2>
+                <div id="timer" class="flex flex-wrap justify-center gap-4 md:gap-12">
+                    <div class="min-w-[60px] md:min-w-[80px]"><span id="days" class="text-olive text-4xl md:text-7xl font-light block leading-none">00</span><span class="text-[9px] md:text-[10px] uppercase tracking-widest text-gold font-bold mt-1 block">Días</span></div>
+                    <div class="min-w-[60px] md:min-w-[80px]"><span id="hours" class="text-olive text-4xl md:text-7xl font-light block leading-none">00</span><span class="text-[9px] md:text-[10px] uppercase tracking-widest text-gold font-bold mt-1 block">Horas</span></div>
+                    <div class="min-w-[60px] md:min-w-[80px]"><span id="minutes" class="text-olive text-4xl md:text-7xl font-light block leading-none">00</span><span class="text-[9px] md:text-[10px] uppercase tracking-widest text-gold font-bold mt-1 block">Minutos</span></div>
+                    <div class="min-w-[60px] md:min-w-[80px]"><span id="seconds" class="text-olive text-4xl md:text-7xl font-light block leading-none">00</span><span class="text-[9px] md:text-[10px] uppercase tracking-widest text-gold font-bold mt-1 block">Segundos</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORIA -->
+        <section class="bg-section history-bg py-32 md:py-48 flex items-center justify-center px-4 relative">
+            <div class="section-frame"></div>
+            <div class="texture-overlay"></div>
+            <div class="container mx-auto max-w-4xl z-10 text-center" data-aos="zoom-in">
+                <div class="bg-white/95 backdrop-blur-sm p-8 md:p-24 shadow-2xl relative border border-white">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-white px-6 md:px-8 py-2 md:py-3 border border-gold text-gold font-script text-2xl md:text-3xl whitespace-nowrap">Nuestra Historia</div>
+                    <p class="text-xl md:text-4xl italic font-light text-gray-800 leading-relaxed mb-8 md:mb-10 px-2">
+                        "El amor no es algo que se encuentra, es algo que se construye día tras día. Gracias por ser testigos de nuestro comienzo más especial."
+                    </p>
+                    <div class="w-12 md:w-16 h-[1px] bg-gold mx-auto mb-4 md:mb-6"></div>
+                    <p class="text-[11px] md:text-sm uppercase tracking-[0.4em] text-olive font-bold">M <span class="text-gold">&</span> J</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ITINERARIO -->
+        <section class="py-16 md:py-24 bg-white text-center relative px-4">
+            <div class="section-frame"></div>
+            <div class="container mx-auto" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl italic mb-12 md:mb-16">Itinerario del Día</h2>
+                <div class="itinerary-line">
+                    <div class="step" data-aos="fade-up">
+                        <div class="dot"></div>
+                        <h4 class="text-gold font-bold text-[10px] md:text-xs mb-1">18:00 HRS</h4>
+                        <h3 class="text-lg md:text-xl font-serif italic text-olive">Ceremonia Religiosa</h3>
+                        <p class="text-xs md:text-sm text-gray-400">Parroquia de San Mateo</p>
+                    </div>
+                    <div class="step" data-aos="fade-up">
+                        <div class="dot"></div>
+                        <h4 class="text-gold font-bold text-[10px] md:text-xs mb-1">20:30 HRS</h4>
+                        <h3 class="text-lg md:text-xl font-serif italic text-olive">Cóctel & Cena</h3>
+                        <p class="text-xs md:text-sm text-gray-400">Hacienda Las Flores</p>
+                    </div>
+                    <div class="step" data-aos="fade-up">
+                        <div class="dot"></div>
+                        <h4 class="text-gold font-bold text-[10px] md:text-xs mb-1">23:00 HRS</h4>
+                        <h3 class="text-lg md:text-xl font-serif italic text-olive">Fiesta & Baile</h3>
+                        <p class="text-xs md:text-sm text-gray-400">Hasta que el sol salga</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLIMA -->
+        <section class="py-16 md:py-24 bg-[#f8f7f2] text-center relative px-4">
+            <div class="section-frame"></div>
+            <div class="container mx-auto max-w-4xl" data-aos="fade-up">
+                <h3 class="text-2xl md:text-3xl italic text-olive mb-10 md:mb-12">Pronóstico del Tiempo</h3>
+                <div class="weather-scroll px-2 md:px-4">
+                    <div class="weather-item">
+                        <p class="text-[9px] md:text-[10px] font-bold text-gold uppercase mb-2">18:00 hrs</p>
+                        <svg class="w-8 md:w-10 h-8 md:h-10 text-yellow-500 mx-auto my-2 md:my-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1z"/></svg>
+                        <p class="text-2xl font-light">25°C</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-2">Soleado</p>
+                    </div>
+                    <div class="weather-item active">
+                        <p class="text-[9px] md:text-[10px] font-bold text-gold uppercase mb-2">21:00 hrs</p>
+                        <svg class="w-8 md:w-10 h-8 md:h-10 text-orange-400 mx-auto my-2 md:my-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5a7 7 0 100 14 7 7 0 000-14z"/></svg>
+                        <p class="text-2xl font-light">21°C</p>
+                        <p class="text-[9px] text-olive uppercase tracking-widest font-bold mt-2">Despejado</p>
+                    </div>
+                    <div class="weather-item">
+                        <p class="text-[9px] md:text-[10px] font-bold text-gold uppercase mb-2">00:00 hrs</p>
+                        <svg class="w-8 md:w-10 h-8 md:h-10 text-indigo-300 mx-auto my-2 md:my-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12.1 22c-5.5 0-10-4.5-10-10 0-5.4 4.3-9.8 9.7-10 0 .4-.1.8-.1 1.2 0 4.4 3.6 8 8 8 .4 0 .8 0 1.2-.1-.2 5.4-4.6 9.7-10 10.9v-.1z"/></svg>
+                        <p class="text-2xl font-light">18°C</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-2">Fresco</p>
+                    </div>
+                </div>
+                <p class="text-[9px] md:text-[10px] text-gray-300 uppercase tracking-[0.2em] md:tracking-[0.4em] mt-8 italic">Deslicen para ver más →</p>
+            </div>
+        </section>
+
+        <!-- DRESS CODE -->
+        <section class="bg-section dress-bg py-32 md:py-48 text-center text-white relative px-4">
+            <div class="section-frame"></div>
+            <div class="texture-overlay"></div>
+            <div class="container mx-auto px-2 z-10" data-aos="zoom-in">
+                <span class="text-gold uppercase tracking-[0.4em] md:tracking-[0.5em] text-[9px] md:text-[10px] mb-6 md:mb-8 block">El Estilo</span>
+                <h2 class="text-4xl md:text-7xl font-light italic mb-6 md:mb-8 leading-tight">Código de Vestimenta</h2>
+                <div class="w-16 md:w-20 h-[1px] bg-gold mx-auto mb-8 md:mb-10 opacity-50"></div>
+                <p class="text-xl md:text-3xl font-serif italic tracking-widest mb-4 md:mb-6">Etiqueta Formal</p>
+                <p class="text-base md:text-xl font-light text-gray-200">Hombres: Traje Oscuro o Esmoquin<br>Mujeres: Vestido de Gala</p>
+                <p class="mt-12 md:mt-16 text-[9px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.4em] text-gold font-bold italic">Se solicita evitar el color blanco</p>
+            </div>
+        </section>
+
+        <!-- NIÑOS -->
+        <section class="py-16 md:py-24 bg-white text-center border-b border-neutral-50 px-6 relative">
+            <div class="section-frame"></div>
+            <div class="container mx-auto max-w-3xl" data-aos="fade-up">
+                <h3 class="text-2xl md:text-3xl italic mb-6 md:mb-8">Un Evento para Adultos</h3>
+                <p class="text-gray-500 italic text-base md:text-lg leading-relaxed font-serif">
+                    "Amamos a sus hijos, pero para que todos nuestros invitados puedan disfrutar de una noche de celebración sin preocupaciones, nuestra boda será exclusivamente para adultos."
+                </p>
+            </div>
+        </section>
+
+        <!-- MESA DE REGALOS -->
+        <section class="py-16 md:py-24 bg-[#f8f7f2] text-center relative px-4">
+            <div class="section-frame"></div>
+            <div class="container mx-auto max-w-4xl" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl italic mb-10 md:mb-14">Detalles de Cortesía</h2>
+                <div class="grid md:grid-cols-2 gap-8 md:gap-10">
+                    <div class="bg-white p-8 md:p-12 shadow-sm border-l-4 border-gold text-left">
+                        <h4 class="text-xl md:text-2xl font-serif text-olive italic mb-4 md:mb-6 uppercase tracking-widest">Lluvia de Sobres</h4>
+                        <p class="text-[10px] md:text-[11px] text-gray-400 font-bold tracking-widest uppercase space-y-2 md:space-y-3">
+                            Contaremos con un cofre en la recepción.<br><br>
+                            TITULAR: M & J BODA<br>
+                            CUENTA / CLABE: 0123 4567 8901 2345
+                        </p>
+                    </div>
+                    <div class="flex flex-col justify-center gap-4 md:gap-5">
+                        <a href="#" target="_blank" class="btn-olive font-bold">Mesa en Amazon</a>
+                        <!-- Liverpool ahora es un botón sólido para evitar que se pierda -->
+                        <a href="#" target="_blank" class="btn-olive font-bold">Mesa en Liverpool</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ASISTENCIA -->
+        <section class="py-24 md:py-32 bg-white text-center px-6 relative" id="confirm">
+            <div class="section-frame"></div>
+            <div class="container mx-auto max-w-xl">
+                <h2 class="text-5xl md:text-7xl font-script text-olive mb-4" data-aos="fade-up">Asistencia</h2>
+                <p class="text-gray-400 mb-12 md:mb-16 italic text-base md:text-lg font-serif">Su presencia sería nuestro mayor regalo.<br>Por favor confirmen antes del 30 de Septiembre, 2026.</p>
+                
+                <form class="space-y-8 md:space-y-10 text-left" id="rsvpForm" data-aos="zoom-in">
+                    <div class="border-b border-gray-100 py-2 md:py-3">
+                        <input type="text" placeholder="Vuestro nombre completo" required class="w-full bg-transparent outline-none italic text-lg md:text-xl font-light">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                        <select required class="bg-transparent border-b border-gray-100 py-2 md:py-3 outline-none italic font-light text-base">
+                            <option value="">¿Confirmáis?</option>
+                            <option value="si">¡Sí, allí estaremos!</option>
+                            <option value="no">No podré asistir</option>
+                        </select>
+                        <select required class="bg-transparent border-b border-gray-100 py-2 md:py-3 outline-none italic font-light text-base">
+                            <option value="">Invitados</option>
+                            <option value="1">1 Persona</option>
+                            <option value="2">2 Personas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full btn-olive !py-4 md:!py-5 font-bold tracking-[0.3em] md:tracking-[0.4em] shadow-xl mt-6">Enviar Confirmación</button>
+                </form>
+                <div id="success" class="hidden mt-10 p-8 md:p-10 bg-[#fdfaf5] border border-gold/30 text-olive text-lg md:text-xl italic font-serif">
+                    ¡Gracias! Su respuesta ha sido registrada.
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-24 md:py-32 bg-[#2d3122] text-white text-center relative px-4">
+            <div class="section-frame" style="opacity: 0.15;"></div>
+            <div data-aos="fade-up">
+                <p class="text-5xl md:text-6xl font-script mb-8 md:mb-10">María <span class="text-gold">&</span> Juan</p>
+                <p class="text-[9px] md:text-[10px] text-gray-500 tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold italic">OCTUBRE . 24 . 2026</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- REPRODUCTOR DE MÚSICA -->
+    <div class="player-bar" id="musicBar">
+        <div class="flex items-center gap-3 md:gap-4">
+            <button id="playPauseBtn" class="text-olive">
+                <svg id="playIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5l11 6.5-11 6.5z"/></svg>
+                <svg id="pauseIcon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <div class="hidden sm:block">
+                <p class="text-[8px] md:text-[9px] text-gold uppercase tracking-widest font-bold">Reproduciendo</p>
+                <p class="text-[10px] md:text-[11px] italic font-bold text-olive">Nuestra Melodía</p>
+            </div>
+        </div>
+        <div class="progress-container" id="pContainer"><div class="progress-bar" id="pBar"></div></div>
+        <div class="text-[9px] md:text-[10px] font-bold text-olive tracking-widest min-w-[60px] md:min-w-[70px] text-right">
+            <span id="curTime">0:00</span> / <span id="totTime">0:00</span>
+        </div>
+        <audio id="bgMusic" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+    </div>
+
+    <script>
+        function startExperience() {
+            const envelope = document.getElementById('envelope-container');
+            envelope.classList.add('open');
+            document.body.classList.remove('overflow-hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('musicBar').classList.add('active');
+                AOS.init({ duration: 1200, once: true });
+                const audio = document.getElementById('bgMusic');
+                audio.play().catch(() => console.log("Se requiere interacción manual"));
+                document.getElementById('playIcon').classList.add('hidden');
+                document.getElementById('pauseIcon').classList.remove('hidden');
+            }, 800);
+        }
+
+        const targetDate = new Date("Oct 24, 2026 18:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if(document.getElementById("days")) {
+                document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            }
+        }, 1000);
+
+        const audio = document.getElementById('bgMusic');
+        const btn = document.getElementById('playPauseBtn');
+        const pBar = document.getElementById('pBar');
+        const cTime = document.getElementById('curTime');
+        const tTime = document.getElementById('totTime');
+
+        btn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('playIcon').classList.add('hidden');
+                document.getElementById('pauseIcon').classList.remove('hidden');
+            } else {
+                audio.pause();
+                document.getElementById('playIcon').classList.remove('hidden');
+                document.getElementById('pauseIcon').classList.add('hidden');
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const pct = (audio.currentTime / audio.duration) * 100;
+            pBar.style.width = pct + "%";
+            cTime.innerText = Math.floor(audio.currentTime / 60) + ":" + Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+            if(audio.duration) tTime.innerText = Math.floor(audio.duration / 60) + ":" + Math.floor(audio.duration % 60).toString().padStart(2, '0');
+        });
+
+        document.getElementById('pContainer').addEventListener('click', (e) => {
+            const width = document.getElementById('pContainer').clientWidth;
+            audio.currentTime = (e.offsetX / width) * audio.duration;
+        });
+
+        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('rsvpForm').style.display = 'none';
+            document.getElementById('success').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
+
