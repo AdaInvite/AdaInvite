@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Valeria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --soft-gold: #e5c07b;
+        }
+
+        body {
+            background-color: #050505;
+            color: #fdf6e3;
+            font-family: 'Playfair Display', serif;
+            overflow-x: hidden;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, .cinzel {
+            font-family: 'Cinzel Decorative', cursive;
+        }
+
+        /* Animaciones */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-element {
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .page-container {
+            display: none;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .page-active {
+            display: block;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .hero-bg {
+            background-image: url('https://i.imgur.com/1QTF4Ca.jpeg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
+        }
+
+        .gold-text {
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .btn-wonderland {
+            background: var(--gold);
+            color: black;
+            padding: 0.8rem 2rem;
+            border-radius: 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-wonderland:hover {
+            background: transparent;
+            color: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+        }
+
+        .section-card {
+            background: rgba(15, 15, 15, 0.85);
+            border: 1px solid var(--gold);
+            padding: 2.5rem;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .section-card::after {
+            content: "";
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            pointer-events: none;
+        }
+
+        .decorative-img {
+            max-width: 150px;
+            filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.2));
+        }
+
+        /* Galería Deslizante */
+        .gallery-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) #050505;
+        }
+
+        .gallery-container::-webkit-scrollbar { height: 4px; }
+        .gallery-container::-webkit-scrollbar-thumb { background: var(--gold); }
+
+        .gallery-item {
+            flex: 0 0 80%;
+            aspect-ratio: 4/5;
+            scroll-snap-align: center;
+            background: #111;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        @media (min-width: 768px) { .gallery-item { flex: 0 0 30%; } }
+
+        /* Contador */
+        .countdown-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            min-width: 70px;
+        }
+
+        @media (max-width: 768px) {
+            .text-mobile-sm { font-size: 0.85rem; }
+            .text-mobile-xs { font-size: 0.75rem; }
+            .section-card { padding: 1.5rem; }
+            .countdown-box { min-width: 60px; padding: 0.5rem; }
+        }
+
+        .mist {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%; height: 150px;
+            background: linear-gradient(to top, rgba(255,255,255,0.05), transparent);
+            pointer-events: none; z-index: 5;
+        }
+
+        /* Pantalla completa para la primera sección de la Página 2 */
+        .full-intro {
+            height: calc(100vh - 64px); /* Ajustado para el header */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PÁGINA 1: BIENVENIDA -->
+    <div id="page1" class="page-container page-active h-screen flex items-center justify-center hero-bg overflow-hidden">
+        <div class="hero-overlay absolute inset-0 z-10"></div>
+        <div class="relative z-20 text-center px-6">
+            <h2 class="cinzel gold-text text-lg md:text-2xl mb-2 tracking-widest uppercase">Mis XV Años</h2>
+            <h1 class="cinzel text-6xl md:text-9xl font-black mb-6 gold-text">VALERIA</h1>
+            <p class="text-lg md:text-2xl italic mb-10 max-w-xl mx-auto opacity-90">"Acompáñame a celebrar una aventura inolvidable"</p>
+            <button onclick="togglePages('page1', 'page2')" class="btn-wonderland cinzel text-base">Tocar para entrar</button>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: CONTENIDO -->
+    <div id="page2" class="page-container min-h-screen bg-[#050505] relative pb-20">
+        
+        <!-- Header con botón de regreso funcional -->
+        <header class="py-4 px-6 flex justify-between items-center border-b border-[#c5a05933] sticky top-0 bg-[#050505] z-50">
+            <button onclick="togglePages('page2', 'page1')" class="text-[#c5a059] text-xs cinzel tracking-widest hover:opacity-70 flex items-center gap-2">
+                <span>←</span> INICIO
+            </button>
+            <h2 class="cinzel gold-text text-[10px] md:text-sm tracking-widest uppercase">Valeria · 20 Sept 2026</h2>
+            <div class="w-12"></div>
+        </header>
+
+        <main class="max-w-4xl mx-auto px-5 relative z-10">
+            
+            <!-- SECCIÓN 1: INTRODUCCIÓN (PANTALLA COMPLETA) -->
+            <section class="full-intro space-y-6">
+                <img src="https://i.imgur.com/w0eEL22.png" alt="Decoración Wonderland" class="decorative-img floating-element mb-6 w-32 md:w-48">
+                <h3 class="cinzel text-2xl md:text-4xl gold-text uppercase">Un Sueño Hecho Realidad</h3>
+                <p class="text-mobile-sm md:text-lg leading-relaxed max-w-lg px-4">
+                    Quiero compartir contigo la alegría de mis quince años. Será un día lleno de magia donde tú eres el invitado especial.
+                </p>
+                <div class="pt-10 animate-bounce opacity-40 flex flex-col items-center">
+                    <span class="text-[10px] cinzel gold-text tracking-widest">Desliza para ver más</span>
+                    <span class="text-lg">↓</span>
+                </div>
+            </section>
+
+            <!-- CONTENEDOR CON ESPACIADO MAXIMALISTA -->
+            <div class="space-y-40 pt-20">
+                
+                <!-- SECCIÓN: PADRES -->
+                <section class="text-center space-y-8 flex flex-col items-center">
+                    <div class="w-16 h-[1px] bg-[#c5a059] mb-4 opacity-50"></div>
+                    <h3 class="cinzel text-xl md:text-2xl gold-text tracking-widest uppercase">Con la bendición de mis padres</h3>
+                    <div class="space-y-4">
+                        <p class="cinzel text-lg md:text-xl">Sra. María Elena García</p>
+                        <p class="cinzel text-lg md:text-xl">Sr. Roberto Hernández</p>
+                        <p class="text-mobile-xs italic opacity-70 mt-4">Quienes con amor han guiado mi camino.</p>
+                    </div>
+                    <div class="w-16 h-[1px] bg-[#c5a059] mt-4 opacity-50"></div>
+                </section>
+
+                <!-- SECCIÓN: GALERÍA DE FOTOS (DEBAJO DE LOS PADRES) -->
+                <section class="space-y-10">
+                    <div class="text-center">
+                        <h3 class="cinzel gold-text text-2xl md:text-3xl uppercase">Galería de Recuerdos</h3>
+                        <p class="text-mobile-xs italic opacity-60 mt-2">Explora mis momentos favoritos</p>
+                    </div>
+                    
+                    <div class="gallery-container">
+                        <div class="gallery-item"><span class="cinzel text-xs gold-text opacity-40">FOTO 1</span></div>
+                        <div class="gallery-item"><span class="cinzel text-xs gold-text opacity-40">FOTO 2</span></div>
+                        <div class="gallery-item"><span class="cinzel text-xs gold-text opacity-40">FOTO 3</span></div>
+                        <div class="gallery-item"><span class="cinzel text-xs gold-text opacity-40">FOTO 4</span></div>
+                        <div class="gallery-item"><span class="cinzel text-xs gold-text opacity-40">FOTO 5</span></div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: DÓNDE Y CUÁNDO -->
+                <section class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="section-card text-center space-y-4">
+                        <h3 class="cinzel gold-text text-xl">Misa</h3>
+                        <div class="space-y-1 text-mobile-sm">
+                            <p class="font-bold text-lg">20 de Septiembre, 2026</p>
+                            <p>18:00 Horas</p>
+                            <p class="italic text-gray-300">Parroquia de Nuestra Señora de los Ángeles</p>
+                        </div>
+                        <!-- Botón funcional de mapa -->
+                        <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+de+Nuestra+Señora+de+los+Ángeles" target="_blank" class="inline-block border border-[#c5a059] px-4 py-2 text-[10px] uppercase tracking-widest hover:bg-[#c5a059] hover:text-black transition">Ver Ubicación</a>
+                    </div>
+
+                    <div class="flex justify-center md:order-none order-first">
+                        <img src="https://i.imgur.com/hiEDTe3.png" alt="Reloj" class="decorative-img w-28 md:w-40 floating-element" style="animation-delay: 1s;">
+                    </div>
+
+                    <div class="flex justify-center">
+                        <img src="https://i.imgur.com/U7C9GA9.png" alt="Taza de Té" class="decorative-img w-32 md:w-44 floating-element" style="animation-delay: 2s;">
+                    </div>
+
+                    <div class="section-card text-center space-y-4">
+                        <h3 class="cinzel gold-text text-xl">Recepción</h3>
+                        <div class="space-y-1 text-mobile-sm">
+                            <p class="font-bold text-lg">Salón del Bosque</p>
+                            <p>A partir de las 20:30 Horas</p>
+                            <p class="italic text-gray-300">Camino al Castillo Blanco #456</p>
+                        </div>
+                        <!-- Botón funcional de mapa -->
+                        <a href="https://www.google.com/maps/search/?api=1&query=Salón+del+Bosque" target="_blank" class="inline-block border border-[#c5a059] px-4 py-2 text-[10px] uppercase tracking-widest hover:bg-[#c5a059] hover:text-black transition">Ver Mapa</a>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: CONTADOR Y CALENDARIO -->
+                <section class="text-center space-y-12">
+                    <h3 class="cinzel gold-text text-2xl uppercase">Falta muy poco...</h3>
+                    
+                    <div id="countdown" class="flex justify-center gap-3 md:gap-6">
+                        <div class="countdown-box">
+                            <span id="days" class="cinzel text-2xl md:text-4xl gold-text">00</span>
+                            <span class="text-[10px] uppercase tracking-tighter opacity-60">Días</span>
+                        </div>
+                        <div class="countdown-box">
+                            <span id="hours" class="cinzel text-2xl md:text-4xl gold-text">00</span>
+                            <span class="text-[10px] uppercase tracking-tighter opacity-60">Hrs</span>
+                        </div>
+                        <div class="countdown-box">
+                            <span id="minutes" class="cinzel text-2xl md:text-4xl gold-text">00</span>
+                            <span class="text-[10px] uppercase tracking-tighter opacity-60">Min</span>
+                        </div>
+                        <div class="countdown-box border-white/20">
+                            <span id="seconds" class="cinzel text-2xl md:text-4xl text-white">00</span>
+                            <span class="text-[10px] uppercase tracking-tighter opacity-60">Seg</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <!-- Botón funcional de calendario -->
+                        <button onclick="addToCalendar()" class="border border-[#c5a059] px-6 py-3 text-[10px] cinzel hover:bg-[#c5a059] hover:text-black transition tracking-[3px]">
+                            Agregar al Calendario
+                        </button>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: DRESS CODE -->
+                <section class="flex flex-col md:flex-row items-center justify-center gap-12">
+                    <img src="https://i.imgur.com/R9Firvm.png" alt="Cartas" class="w-40 md:w-56 floating-element">
+                    <div class="section-card text-center w-full max-w-sm">
+                        <h3 class="cinzel gold-text text-2xl mb-4">Dress Code</h3>
+                        <p class="text-xl tracking-widest font-bold mb-2 uppercase">Formal</p>
+                        <p class="text-mobile-xs text-gray-400 italic">"No llegues tarde, es una orden real"</p>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: REGALOS -->
+                <section class="text-center space-y-8">
+                    <h3 class="cinzel gold-text text-2xl uppercase">Lluvia de Sobres</h3>
+                    <p class="max-w-md mx-auto text-mobile-sm px-4">
+                        Tu presencia es lo más importante. Si deseas darme un detalle, contaremos con un baúl para sobres en la recepción.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN: RSVP -->
+                <section class="section-card max-w-md mx-auto">
+                    <h3 class="cinzel gold-text text-2xl text-center mb-6 uppercase">Confirmación</h3>
+                    <p class="text-center text-mobile-xs mb-8">Por favor confirma tu asistencia antes del 1 de Septiembre.</p>
+                    <form id="rsvpForm" class="space-y-4">
+                        <input id="guestName" type="text" placeholder="Nombre completo" class="w-full bg-transparent border-b border-[#c5a059] py-2 px-1 text-sm focus:outline-none focus:border-white transition" required>
+                        <select id="attendanceStatus" class="w-full bg-transparent border-b border-[#c5a059] py-2 px-1 text-sm focus:outline-none cursor-pointer">
+                            <option class="bg-black text-white" value="Asistiré con mucho gusto">Asistiré con mucho gusto</option>
+                            <option class="bg-black text-white" value="Lo lamento, no podré asistir">Lo lamento, no podré asistir</option>
+                        </select>
+                        <!-- Botón funcional de WhatsApp -->
+                        <button type="button" onclick="sendRSVP()" class="btn-wonderland w-full mt-4 text-xs py-3">Enviar vía WhatsApp</button>
+                    </form>
+                </section>
+            </div>
+
+        </main>
+
+        <footer class="py-20 text-center opacity-60">
+            <p class="cinzel gold-text text-lg mb-2 uppercase">Te espero para el té</p>
+            <p class="text-[10px] uppercase tracking-[4px]">Valeria 2026</p>
+        </footer>
+
+        <div class="mist"></div>
+    </div>
+
+    <script>
+        // --- Navegación ---
+        function togglePages(fromId, toId) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById(toId);
+            from.style.opacity = '0';
+            setTimeout(() => {
+                from.classList.remove('page-active');
+                from.style.display = 'none';
+                to.style.display = 'block';
+                setTimeout(() => {
+                    to.classList.add('page-active');
+                    to.style.opacity = '1';
+                    window.scrollTo(0, 0);
+                }, 50);
+            }, 600);
+        }
+
+        // --- Contador (Actualizado a Septiembre 20, 2026) ---
+        const targetDate = new Date("September 20, 2026 18:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const dEl = document.getElementById("days");
+            const hEl = document.getElementById("hours");
+            const mEl = document.getElementById("minutes");
+            const sEl = document.getElementById("seconds");
+
+            if(dEl) dEl.innerText = d < 0 ? "00" : (d < 10 ? "0"+d : d);
+            if(hEl) hEl.innerText = h < 0 ? "00" : (h < 10 ? "0"+h : h);
+            if(mEl) mEl.innerText = m < 0 ? "00" : (m < 10 ? "0"+m : m);
+            if(sEl) sEl.innerText = s < 0 ? "00" : (s < 10 ? "0"+s : s);
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                const countDiv = document.getElementById("countdown");
+                if(countDiv) countDiv.innerHTML = "<p class='cinzel gold-text'>¡LLEGÓ EL DÍA!</p>";
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- Calendario ---
+        function addToCalendar() {
+            const event = {
+                title: "XV Años de Valeria",
+                start: "20260920T180000",
+                end: "20260921T030000",
+                description: "Celebración de mis XV años en el País de las Maravillas.",
+                location: "Parroquia de Nuestra Señora de los Ángeles / Salón del Bosque"
+            };
+
+            const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
+            
+            window.open(googleUrl, '_blank');
+        }
+
+        // --- Confirmación RSVP vía WhatsApp ---
+        function sendRSVP() {
+            const name = document.getElementById('guestName').value;
+            const status = document.getElementById('attendanceStatus').value;
+            const phoneNumber = "520000000000"; // Reemplaza con el número real (formato: código de país + número)
+
+            if(!name) {
+                alert("Por favor, ingresa tu nombre antes de enviar.");
+                return;
+            }
+
+            const message = `¡Hola Valeria! Soy ${name}, confirmo que: ${status} a tus XV años. ¡Nos vemos pronto!`;
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
