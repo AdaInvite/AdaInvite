@@ -92,7 +92,49 @@
             font-weight: 700;
         }
 
-        /* --- NUEVAS ANIMACIONES DE APARICIÓN --- */
+        /* --- MÚSICA Y CONTROL --- */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border: 2px solid var(--pale-pink);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .music-control.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .music-control img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .playing img {
+            animation: pulse-icon 1.5s infinite;
+        }
+
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* --- ANIMACIONES DE APARICIÓN --- */
         .reveal-up {
             opacity: 0;
             transform: translateY(40px);
@@ -119,7 +161,6 @@
             transform: translate(0) scale(1) !important;
         }
 
-        /* Retrasos para cascada */
         .delay-1 { transition-delay: 0.2s; }
         .delay-2 { transition-delay: 0.4s; }
         .delay-3 { transition-delay: 0.6s; }
@@ -148,8 +189,8 @@
             border: none;
             cursor: pointer;
             display: inline-block;
+            text-decoration: none;
         }
-        .btn-small:hover { transform: scale(1.05); }
 
         .btn-calendar {
             background-color: var(--dusty-pink);
@@ -169,9 +210,7 @@
             text-decoration: none;
         }
 
-        .floating {
-            animation: floating 4s ease-in-out infinite;
-        }
+        .floating { animation: floating 4s ease-in-out infinite; }
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
@@ -205,6 +244,17 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.02);
         }
 
+        .weather-card {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            min-width: 90px;
+            text-align: center;
+            border: 1px solid #f5f5f5;
+            scroll-snap-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
         /* Alerta Personalizada */
         #customAlert {
             position: fixed;
@@ -220,22 +270,21 @@
             z-index: 10500; opacity: 0; pointer-events: none; transition: opacity 0.4s;
         }
         .overlay.active { opacity: 1; pointer-events: auto; }
-
-        .weather-card {
-            background: white;
-            border-radius: 20px;
-            padding: 15px;
-            min-width: 90px;
-            text-align: center;
-            border: 1px solid #f5f5f5;
-            scroll-snap-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        }
     </style>
 </head>
 <body>
 
-    <!-- 1. PANTALLA SOBRE -->
+    <!-- AUDIO ELEMENT -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/musica%20suave%20de%20fondo%20para%20videos%20y%20presentacion.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CONTROL MÚSICA -->
+    <div id="musicToggle" class="music-control" onclick="toggleMusic()">
+        <img src="https://i.imgur.com/8Q8S52I.png" alt="Música">
+    </div>
+
+    <!-- 1. SOBRE -->
     <div id="envelope-container">
         <div class="flap-container">
             <div class="flap flap-left"></div>
@@ -243,27 +292,27 @@
         </div>
         <div class="seal-wrapper" onclick="openEnvelope()">
             <div class="click-hint">Abrir Invitación</div>
-            <img src="https://i.imgur.com/4l9Gz5o.png" class="w-24 floating" alt="Sello Dinosaurio">
+            <img src="https://i.imgur.com/4l9Gz5o.png" class="w-24 floating" alt="Sello">
         </div>
     </div>
 
-    <!-- 2. OVERLAY Y ALERTAS -->
+    <!-- 2. MODAL ALERTA -->
     <div id="overlay" class="overlay" onclick="closeAlert()"></div>
     <div id="customAlert">
-        <img src="https://i.imgur.com/4l9Gz5o.png" class="w-16 mx-auto mb-4" alt="Icono Dinosaurio">
+        <img src="https://i.imgur.com/4l9Gz5o.png" class="w-16 mx-auto mb-4" alt="Dino">
         <h3 id="alertTitle" class="text-lg font-bold text-[#93A286] mb-2"></h3>
         <p id="alertMsg" class="text-xs text-gray-400 mb-6"></p>
         <button onclick="closeAlert()" class="btn-small">Cerrar</button>
     </div>
 
-    <!-- 3. PÁGINA DE BIENVENIDA (PÁGINA 1) -->
+    <!-- 3. BIENVENIDA -->
     <section id="page1" class="page flex flex-col items-center justify-center text-center p-6 bg-welcome relative overflow-hidden">
         <div class="bg-white/85 backdrop-blur-md p-10 rounded-[50px] shadow-2xl border border-white/60 max-w-xs w-full z-10 reveal-scale active">
             <h1 class="text-5xl font-script text-[#93A286] mb-2 leading-tight reveal-up active delay-1">Sofía Elena</h1>
             <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8 reveal-up active delay-2">Mi Bautizo</p>
             
             <div class="mb-6 reveal-scale active delay-1">
-                <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto floating" alt="Dinosaurio tierno">
+                <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto floating" alt="Dino">
             </div>
 
             <div class="mb-8 space-y-1 reveal-up active delay-3">
@@ -275,18 +324,16 @@
                 Continuar
             </button>
         </div>
-        
-        <!-- Decoración lateral -->
-        <img src="https://i.imgur.com/66wlrir.png" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-12 reveal-side-left active delay-2" alt="decoración">
+        <img src="https://i.imgur.com/66wlrir.png" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-12 reveal-side-left active delay-2" alt="decor">
     </section>
 
-    <!-- 4. PÁGINA DE CONTENIDO (FUSIONADA) -->
+    <!-- 4. CONTENIDO -->
     <section id="page2" class="hidden bg-[#FAF9F6] pb-10 relative">
         
-        <!-- MENSAJE ESPIRITUAL -->
+        <!-- Mensaje Espiritual -->
         <div class="min-h-screen flex items-center justify-center p-8 text-center bg-white shadow-sm mb-10">
             <div class="max-w-xs">
-                <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50 floating reveal-scale" alt="decoración">
+                <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50 floating reveal-scale" alt="decor">
                 <p class="text-3xl md:text-4xl font-script text-[#7c8a6f] leading-relaxed reveal-up delay-1">
                     "Damos gracias a Dios por el don de la vida de nuestra hija. Deseamos que este encuentro de fe sea el inicio de un camino lleno de luz y amor para ella."
                 </p>
@@ -299,7 +346,7 @@
             </div>
         </div>
 
-        <!-- PADRES -->
+        <!-- Padres -->
         <div class="max-w-md mx-auto px-8 text-center py-20">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-[#93A286] font-extrabold underline decoration-pink-100 underline-offset-8 reveal-up">Padres</h3>
             <div class="space-y-1">
@@ -307,10 +354,10 @@
                 <p class="text-sm italic text-pink-400 font-script text-2xl my-2 reveal-scale delay-2">y</p>
                 <p class="text-lg font-bold text-gray-700 reveal-side-right delay-1">Roberto Morales</p>
             </div>
-            <img src="https://i.imgur.com/JionfTY.png" class="w-20 mx-auto mt-12 opacity-80 floating reveal-scale delay-3" alt="dinosaurio padres">
+            <img src="https://i.imgur.com/JionfTY.png" class="w-20 mx-auto mt-12 opacity-80 floating reveal-scale delay-3" alt="dino">
         </div>
 
-        <!-- GALERÍA -->
+        <!-- Galería -->
         <div class="max-w-md mx-auto py-12">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-center text-pink-400 font-extrabold reveal-up">Momentos Dulces</h3>
             <div class="gallery-track reveal-scale delay-1">
@@ -326,191 +373,147 @@
             </div>
         </div>
 
-        <!-- CEREMONIA -->
-        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-right">
-            <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-12 mx-auto mb-6 reveal-scale" alt="Icono Mapa">
+        <!-- Ubicaciones -->
+        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-right mb-12">
+            <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-12 mx-auto mb-6" alt="Mapa">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">La Ceremonia</h3>
             <p class="text-sm font-bold text-gray-800 reveal-up delay-1">Parroquia de San Judas Tadeo</p>
-            <p class="text-[11px] mb-8 text-gray-500 leading-relaxed font-semibold reveal-up delay-2">25 de Octubre, 2026 - 12:00 PM<br>Calle de la Paz #123, Col. Arboledas</p>
-            <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+San+Judas+Tadeo+Arboledas" target="_blank" class="btn-small reveal-up delay-3">Ver ubicación</a>
+            <p class="text-[11px] mb-8 text-gray-500 font-semibold reveal-up delay-2">Sábado 25 de Octubre - 12:00 PM</p>
+            <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=Parroquia+San+Judas+Tadeo+Arboledas', '_blank')" class="btn-small reveal-up delay-3">Ver ubicación</button>
         </div>
 
-        <!-- RECEPCIÓN -->
-        <div class="max-w-md mx-auto px-10 py-16 text-center mt-12 bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left">
-            <img src="https://i.imgur.com/8Q8S52I.png" class="w-12 mx-auto mb-6 opacity-70 reveal-scale" alt="Fiesta">
+        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left mb-24">
+            <img src="https://i.imgur.com/8Q8S52I.png" class="w-12 mx-auto mb-6 opacity-70" alt="Fiesta">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
             <p class="text-sm font-bold text-gray-800 reveal-up delay-1">Jardín de Eventos "El Edén"</p>
-            <p class="text-[11px] mb-8 text-gray-500 leading-relaxed font-semibold reveal-up delay-2">Inmediatamente después<br>Avenida de los Sueños #456</p>
-            <a href="https://www.google.com/maps/search/?api=1&query=Jardin+Eventos+El+Eden" target="_blank" class="btn-small !bg-pink-300 reveal-up delay-3">Cómo llegar</a>
-            <img src="https://i.imgur.com/XxQH0h7.png" class="w-14 absolute -bottom-6 -left-4 opacity-30 reveal-side-left" alt="dino">
+            <p class="text-[11px] mb-8 text-gray-500 font-semibold reveal-up delay-2">Después de la ceremonia</p>
+            <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=Jardin+Eventos+El+Eden', '_blank')" class="btn-small !bg-pink-300 reveal-up delay-3">Cómo llegar</button>
         </div>
 
-        <!-- CONTADOR -->
+        <!-- Contador -->
         <div class="max-w-md mx-auto py-24 px-8 text-center reveal-up">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-12 font-extrabold opacity-40">Falta muy poco</h3>
             <div id="countdown" class="flex justify-around items-center max-w-sm mx-auto reveal-scale delay-1">
-                <div class="flex flex-col">
-                    <span id="days" class="text-3xl font-light text-[#93A286]">00</span>
-                    <span class="text-[10px] uppercase font-bold opacity-30">Días</span>
-                </div>
+                <div class="flex flex-col"><span id="days" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Días</span></div>
                 <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col">
-                    <span id="hours" class="text-3xl font-light text-[#93A286]">00</span>
-                    <span class="text-[10px] uppercase font-bold opacity-30">Hrs</span>
-                </div>
+                <div class="flex flex-col"><span id="hours" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Hrs</span></div>
                 <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col">
-                    <span id="minutes" class="text-3xl font-light text-[#93A286]">00</span>
-                    <span class="text-[10px] uppercase font-bold opacity-30">Min</span>
-                </div>
+                <div class="flex flex-col"><span id="minutes" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Min</span></div>
                 <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col">
-                    <span id="seconds" class="text-3xl font-light text-pink-300">00</span>
-                    <span class="text-[10px] uppercase font-bold opacity-30">Seg</span>
-                </div>
+                <div class="flex flex-col"><span id="seconds" class="text-3xl font-light text-pink-300">00</span><span class="text-[10px] uppercase font-bold opacity-30">Seg</span></div>
             </div>
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bautizo+de+Sofía+Elena&dates=20261025T180000Z/20261025T220000Z&details=Acompáñanos+al+bautizo+de+nuestra+hija+Sofía+Elena&location=Parroquia+San+Judas+Tadeo" target="_blank" class="btn-calendar reveal-up delay-2">Agendar Evento</a>
+            <button onclick="window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bautizo+Sofía+Elena&dates=20261025T180000Z/20261025T220000Z&location=Parroquia+San+Judas+Tadeo', '_blank')" class="btn-calendar reveal-up delay-2">Agendar Evento</button>
         </div>
 
-        <!-- CLIMA PREVISTO -->
+        <!-- Clima -->
         <div class="max-w-md mx-auto py-16 px-6 text-center reveal-up">
             <img src="https://i.imgur.com/O1zSf9S.png" class="w-10 mx-auto mb-8 opacity-60" alt="Clima">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-10 font-extrabold text-[#93A286]">Clima Previsto</h3>
             <div class="weather-track reveal-side-right">
-                <div class="weather-card">
-                    <p class="text-[9px] font-bold opacity-40 mb-2">12:00</p>
-                    <svg class="w-5 h-5 mx-auto mb-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                    <p class="text-xs font-bold text-gray-600">22°C</p>
-                </div>
-                <div class="weather-card">
-                    <p class="text-[9px] font-bold opacity-40 mb-2">14:00</p>
-                    <svg class="w-5 h-5 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                    <p class="text-xs font-bold text-gray-600">24°C</p>
-                </div>
-                <div class="weather-card">
-                    <p class="text-[9px] font-bold opacity-40 mb-2">16:00</p>
-                    <svg class="w-5 h-5 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                    <p class="text-xs font-bold text-gray-600">23°C</p>
-                </div>
-                <div class="weather-card">
-                    <p class="text-[9px] font-bold opacity-40 mb-2">18:00</p>
-                    <svg class="w-5 h-5 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                    <p class="text-xs font-bold text-gray-600">21°C</p>
-                </div>
-                <div class="weather-card">
-                    <p class="text-[9px] font-bold opacity-40 mb-2">20:00</p>
-                    <svg class="w-5 h-5 mx-auto mb-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                    <p class="text-xs font-bold text-gray-600">18°C</p>
-                </div>
+                <div class="weather-card"><p class="text-[9px] font-bold opacity-40 mb-2">12:00</p><svg class="w-5 h-5 mx-auto mb-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><p class="text-xs font-bold">22°C</p></div>
+                <div class="weather-card"><p class="text-[9px] font-bold opacity-40 mb-2">14:00</p><svg class="w-5 h-5 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><p class="text-xs font-bold">24°C</p></div>
+                <div class="weather-card"><p class="text-[9px] font-bold opacity-40 mb-2">16:00</p><svg class="w-5 h-5 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><p class="text-xs font-bold">23°C</p></div>
+                <div class="weather-card"><p class="text-[9px] font-bold opacity-40 mb-2">18:00</p><svg class="w-5 h-5 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><p class="text-xs font-bold">21°C</p></div>
+                <div class="weather-card"><p class="text-[9px] font-bold opacity-40 mb-2">20:00</p><svg class="w-5 h-5 mx-auto mb-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><p class="text-xs font-bold">18°C</p></div>
             </div>
             <p class="text-[9px] text-center mt-2 opacity-30 italic reveal-up delay-2">Desliza para ver el horario completo</p>
         </div>
 
         <!-- RSVP -->
         <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">Confirmación</h3>
-            <p class="text-[10px] mb-12 opacity-50 reveal-up delay-1">Confirmar antes del 10 de octubre, 2026</p>
+            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold">Confirmación</h3>
+            <p class="text-[10px] mb-12 opacity-50">Confirmar antes del 10 de octubre, 2026</p>
             <form id="rsvpForm" onsubmit="handleRSVP(event)" class="space-y-6 text-left">
-                <div class="reveal-side-left delay-2">
+                <div>
                     <label class="text-[9px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Nombre</label>
-                    <input type="text" id="rsvpName" required placeholder="Escribe tu nombre" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none">
+                    <input type="text" id="rsvpName" required placeholder="Tu nombre" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none">
                 </div>
-                <div class="reveal-side-right delay-2">
+                <div>
                     <label class="text-[9px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Invitados</label>
-                    <select id="rsvpCount" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none appearance-none cursor-pointer">
-                        <option value="1">1 Persona</option>
-                        <option value="2">2 Personas</option>
-                        <option value="3">3 Personas</option>
-                        <option value="4">Familia</option>
+                    <select id="rsvpCount" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none appearance-none">
+                        <option>1 Persona</option><option>2 Personas</option><option>3 Personas</option><option>Familia</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full btn-small !py-5 !text-[10px] reveal-up delay-3">Confirmar</button>
+                <button type="submit" class="w-full btn-small !py-5 !text-[10px]">Confirmar</button>
             </form>
         </div>
 
-        <!-- CIERRE -->
+        <!-- Cierre -->
         <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
             <p class="text-2xl italic leading-relaxed text-gray-400 font-script px-4 reveal-up">
                 "Tu compañía es el regalo más grande que podemos recibir. Esperamos de todo corazón compartir este día inolvidable a tu lado y celebrar juntos esta bendición en la vida de nuestra hija."
             </p>
-            <img src="https://i.imgur.com/Md7bALw.png" class="w-24 mx-auto mt-12 opacity-30 floating reveal-scale delay-1" alt="Dino final">
+            <img src="https://i.imgur.com/Md7bALw.png" class="w-24 mx-auto mt-12 opacity-30 floating" alt="Dino">
         </div>
 
-        <!-- BOTÓN VOLVER -->
         <div class="max-w-md mx-auto py-10 text-center reveal-up">
-            <button onclick="backToStart()" class="text-[10px] uppercase tracking-[0.4em] text-gray-300 border-b border-pink-100 pb-2 cursor-pointer hover:text-pink-300 transition-colors">Volver al inicio</button>
+            <button onclick="backToStart()" class="text-[10px] uppercase tracking-[0.4em] text-gray-300 border-b border-pink-100 pb-2 hover:text-pink-300 transition-colors">Volver al inicio</button>
         </div>
 
-        <!-- Decoraciones laterales -->
-        <img src="https://i.imgur.com/XxQH0h7.png" class="fixed bottom-10 -left-10 w-24 opacity-10 pointer-events-none transform rotate-45" alt="decoración">
-        <img src="https://i.imgur.com/0O7bEUs.png" class="fixed top-1/2 -right-10 w-24 opacity-10 pointer-events-none transform -rotate-12" alt="decoración">
+        <img src="https://i.imgur.com/XxQH0h7.png" class="fixed bottom-10 -left-10 w-24 opacity-10 pointer-events-none transform rotate-45" alt="float">
+        <img src="https://i.imgur.com/0O7bEUs.png" class="fixed top-1/2 -right-10 w-24 opacity-10 pointer-events-none transform -rotate-12" alt="float">
     </section>
 
     <script>
-        // --- Abrir Sobre ---
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isPlaying = false;
+
         function openEnvelope() {
-            const env = document.getElementById('envelope-container');
-            env.classList.add('open');
-            setTimeout(() => {
-                env.style.display = 'none';
-            }, 2500);
+            document.getElementById('envelope-container').classList.add('open');
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicToggle.classList.add('playing');
+            }).catch(() => {});
+            musicToggle.classList.add('visible');
+            setTimeout(() => { document.getElementById('envelope-container').style.display = 'none'; }, 2500);
         }
 
-        // --- Navegación ---
+        function toggleMusic() {
+            if (isPlaying) { bgMusic.pause(); musicToggle.classList.remove('playing'); }
+            else { bgMusic.play(); musicToggle.classList.add('playing'); }
+            isPlaying = !isPlaying;
+        }
+
         function enterInvitation() {
-            const page1 = document.getElementById('page1');
-            const page2 = document.getElementById('page2');
-            
-            page1.style.opacity = '0';
+            document.getElementById('page1').style.opacity = '0';
             setTimeout(() => {
-                page1.classList.add('hidden');
-                page2.classList.remove('hidden');
-                page2.style.opacity = '1';
+                document.getElementById('page1').classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+                document.getElementById('page2').style.opacity = '1';
                 window.scrollTo(0, 0);
                 setTimeout(initScrollObserver, 100);
             }, 600);
         }
 
-        // Función corregida para volver al inicio sin recargar
         function backToStart() {
-            const page1 = document.getElementById('page1');
-            const page2 = document.getElementById('page2');
-            
             window.scrollTo({top: 0, behavior: 'smooth'});
-            
             setTimeout(() => {
-                page2.style.opacity = '0';
+                document.getElementById('page2').style.opacity = '0';
                 setTimeout(() => {
-                    page2.classList.add('hidden');
-                    page1.classList.remove('hidden');
-                    page1.style.opacity = '1';
-                    // Reiniciar animaciones de página 1
+                    document.getElementById('page2').classList.add('hidden');
+                    const p1 = document.getElementById('page1');
+                    p1.classList.remove('hidden');
+                    p1.style.opacity = '1';
                     document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-                    setTimeout(() => {
-                        document.querySelectorAll('#page1 .reveal-up, #page1 .reveal-scale, #page1 .reveal-side-left').forEach(el => el.classList.add('active'));
-                    }, 50);
+                    setTimeout(() => { document.querySelectorAll('#page1 [class*="reveal"]').forEach(el => el.classList.add('active')); }, 50);
                 }, 600);
             }, 400);
         }
 
-        // --- Animaciones Scroll (Múltiples tipos) ---
         function initScrollObserver() {
-            const options = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Activar hijos si los hay
                         const children = entry.target.querySelectorAll('[class*="reveal-"]');
-                        children.forEach((child) => child.classList.add('active'));
+                        children.forEach(c => c.classList.add('active'));
                     }
                 });
-            }, options);
-
+            }, { threshold: 0.1 });
             document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-side-left, .reveal-side-right').forEach(el => observer.observe(el));
         }
 
-        // --- RSVP ---
         function handleRSVP(e) {
             e.preventDefault();
             const name = document.getElementById('rsvpName').value;
@@ -531,7 +534,6 @@
             document.getElementById('customAlert').classList.remove('active');
         }
 
-        // --- Contador 2026 ---
         const eventDate = new Date('October 25, 2026 12:00:00').getTime();
         setInterval(() => {
             const now = new Date().getTime();
