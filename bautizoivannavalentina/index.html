@@ -134,26 +134,26 @@
             50% { transform: scale(1.15); }
         }
 
-        /* --- ANIMACIONES DE APARICIÓN --- */
+        /* --- ANIMACIONES DE APARICIÓN (MÁS SUTILES) --- */
         .reveal-up {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(15px);
+            transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .reveal-scale {
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
         .reveal-side-left {
             opacity: 0;
-            transform: translateX(-50px);
-            transition: all 1s ease-out;
+            transform: translateX(-15px);
+            transition: all 0.8s ease-out;
         }
         .reveal-side-right {
             opacity: 0;
-            transform: translateX(50px);
-            transition: all 1s ease-out;
+            transform: translateX(15px);
+            transition: all 0.8s ease-out;
         }
 
         .active {
@@ -161,9 +161,9 @@
             transform: translate(0) scale(1) !important;
         }
 
-        .delay-1 { transition-delay: 0.2s; }
-        .delay-2 { transition-delay: 0.4s; }
-        .delay-3 { transition-delay: 0.6s; }
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.45s; }
 
         /* --- ESTILOS DE PÁGINAS --- */
         .page { min-height: 100vh; width: 100%; transition: opacity 0.8s ease; }
@@ -178,9 +178,9 @@
         .btn-small {
             background-color: var(--sage-green);
             color: white;
-            padding: 12px 26px;
+            padding: 14px 30px;
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 700;
@@ -195,9 +195,9 @@
         .btn-calendar {
             background-color: var(--dusty-pink);
             color: white;
-            padding: 12px 26px;
+            padding: 14px 30px;
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 700;
@@ -230,25 +230,58 @@
         .gallery-track::-webkit-scrollbar, .weather-track::-webkit-scrollbar { display: none; }
         
         .gallery-card {
-            flex: 0 0 80%;
+            flex: 0 0 85%;
             aspect-ratio: 4/5;
             background: white;
-            border-radius: 30px;
+            border-radius: 4px;
             scroll-snap-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--pale-pink);
-            color: var(--sage-green);
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            /* Marco estilo foto física */
+            padding: 12px 12px 40px 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             overflow: hidden;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .gallery-card:active {
+            transform: scale(0.98);
         }
 
         .gallery-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        /* Lightbox (Visor de fotos) */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 12000;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        #lightbox img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         .weather-card {
@@ -281,7 +314,13 @@
 </head>
 <body>
 
-    <!-- AUDIO ELEMENT (Carlos Rivera - Te Esperaba) -->
+    <!-- LIGHTBOX -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="Visor de foto">
+        <button class="absolute top-8 right-8 text-white text-4xl">&times;</button>
+    </div>
+
+    <!-- AUDIO ELEMENT -->
     <audio id="bgMusic" loop preload="auto">
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Carlos%20Rivera%20-%20Te%20Esperaba%20(Lyric%20Video).mp3" type="audio/mpeg">
     </audio>
@@ -327,7 +366,7 @@
                 <p class="text-[10px] text-gray-400 font-medium">1:30 PM</p>
             </div>
 
-            <button onclick="enterInvitation()" class="btn-small reveal-up active delay-3">
+            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8 reveal-up active delay-3">
                 Continuar
             </button>
         </div>
@@ -370,67 +409,67 @@
             <img src="https://i.imgur.com/JionfTY.png" class="w-20 mx-auto mt-12 opacity-80 floating reveal-scale delay-3" alt="dinosaurio padres">
         </div>
 
-        <!-- GALERÍA -->
+        <!-- GALERÍA (CON ANIMACIONES Y MARCOS) -->
         <div class="max-w-md mx-auto py-12">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-center text-pink-400 font-extrabold reveal-up">Nuestra Alegría</h3>
-            <div class="gallery-track reveal-scale delay-1">
-                <div class="gallery-card">
-                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1474%20-%20Ana%20Barrera.jpeg" alt="Ivanna 1">
-                </div>
-                <div class="gallery-card">
-                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1467%20-%20Ana%20Barrera.jpeg" alt="Ivanna 2">
-                </div>
-                <div class="gallery-card">
-                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_0888%20-%20Ana%20Barrera.jpeg" alt="Ivanna 3">
-                </div>
+            <div class="gallery-track">
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1474%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1467%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_0888%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/2773d4df-7461-4591-89bb-48393b1590bd.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/3b606149-4706-47af-bb09-2872f1e47a00.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/50095235-9849-4b99-ab57-c322ef083899.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/622bfd24-7ad2-49ca-a1aa-37b69d8d387d.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/6cc6c06c-2aba-4e38-9735-e55be231ef0a.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/74467032-1b80-451d-b5a8-d431c2ad82cc.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/79cc98a6-fba6-4aaa-a918-152670f9c6a6.jpeg" alt="Foto"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/7cbcfb7b-fd4b-416f-bb54-e23b3b39fbf6.jpeg" alt="Foto"></div>
             </div>
             <div class="flex justify-center mt-6 opacity-30 reveal-up">
-                <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 animate-pulse text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                 </svg>
             </div>
         </div>
 
         <!-- UBICACIONES -->
-        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-right mb-12">
-            <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-12 mx-auto mb-6" alt="Mapa">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">La Ceremonia</h3>
-            <p class="text-sm font-bold text-gray-800 reveal-up delay-1">Parroquia de Nuestra Señora de Guadalupe</p>
-            <p class="text-[11px] mb-8 text-gray-500 font-semibold reveal-up delay-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
-            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small reveal-up delay-3">Ver ubicación</a>
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-side-right mb-14">
+            <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-16 mx-auto mb-8" alt="Mapa">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">La Ceremonia</h3>
+            <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Parroquia de Nuestra Señora de Guadalupe</p>
+            <p class="text-base mb-10 text-gray-500 font-semibold reveal-up delay-2 mt-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
+            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small reveal-up delay-3 scale-110">Ver ubicación</a>
         </div>
 
-        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left mb-12">
-            <img src="https://i.imgur.com/8Q8S52I.png" class="w-12 mx-auto mb-6 opacity-70" alt="Fiesta">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
-            <p class="text-sm font-bold text-gray-800 reveal-up delay-1">Salón Gran Sonata</p>
-            <p class="text-[11px] mb-8 text-gray-500 font-semibold reveal-up delay-2">Horario: 3:30 PM</p>
-            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 reveal-up delay-3">Cómo llegar</a>
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left mb-14">
+            <img src="https://i.imgur.com/8Q8S52I.png" class="w-16 mx-auto mb-8 opacity-70" alt="Fiesta">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
+            <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Salón Gran Sonata</p>
+            <p class="text-base mb-10 text-gray-500 font-semibold reveal-up delay-2 mt-2">Horario: 3:30 PM</p>
+            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 reveal-up delay-3 scale-110">Cómo llegar</a>
         </div>
 
         <!-- CÓDIGO DE VESTIMENTA -->
-        <div class="max-w-md mx-auto px-10 py-16 text-center bg-[#fef8f9] rounded-[40px] mx-6 shadow-sm border border-pink-50 relative reveal-up mb-24">
-            <svg class="w-10 h-10 mx-auto mb-6 text-pink-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold">Código de Vestimenta</h3>
-            <p class="text-md font-bold text-gray-700">Casual</p>
-            <p class="text-[10px] text-gray-400 mt-2">Tu comodidad es lo más importante</p>
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-[#fef8f9] rounded-[50px] mx-6 shadow-sm border border-pink-50 relative reveal-up mb-24">
+            <img src="https://i.imgur.com/UBbLTKA.png" class="w-24 mx-auto mb-8 grayscale opacity-80" alt="Código Vestimenta">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-6 text-pink-400 font-extrabold">Código de Vestimenta</h3>
+            <p class="text-2xl font-bold text-gray-700">Casual</p>
+            <p class="text-sm text-gray-400 mt-4 leading-relaxed px-4">Tu comodidad es lo más importante para nosotros.</p>
         </div>
 
         <!-- Contador -->
         <div class="max-w-md mx-auto py-24 px-8 text-center reveal-up">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-12 font-extrabold opacity-40">Falta muy poco</h3>
+            <h3 class="text-[12px] uppercase tracking-[0.4em] mb-12 font-extrabold opacity-40">Falta muy poco</h3>
             <div id="countdown" class="flex justify-around items-center max-w-sm mx-auto reveal-scale delay-1">
-                <div class="flex flex-col"><span id="days" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Días</span></div>
-                <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="hours" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Hrs</span></div>
-                <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="minutes" class="text-3xl font-light text-[#93A286]">00</span><span class="text-[10px] uppercase font-bold opacity-30">Min</span></div>
-                <div class="h-8 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="seconds" class="text-3xl font-light text-pink-300">00</span><span class="text-[10px] uppercase font-bold opacity-30">Seg</span></div>
+                <div class="flex flex-col"><span id="days" class="text-4xl font-light text-[#93A286]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Días</span></div>
+                <div class="h-10 w-[1px] bg-pink-100"></div>
+                <div class="flex flex-col"><span id="hours" class="text-4xl font-light text-[#93A286]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Hrs</span></div>
+                <div class="h-10 w-[1px] bg-pink-100"></div>
+                <div class="flex flex-col"><span id="minutes" class="text-4xl font-light text-[#93A286]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Min</span></div>
+                <div class="h-10 w-[1px] bg-pink-100"></div>
+                <div class="flex flex-col"><span id="seconds" class="text-4xl font-light text-pink-300">00</span><span class="text-[11px] uppercase font-bold opacity-30">Seg</span></div>
             </div>
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bautizo+Ivanna+Valentina&dates=20260314T193000Z/20260314T235900Z&location=Salón+Gran+Sonata" target="_blank" class="btn-calendar reveal-up delay-2">Agendar Evento</a>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bautizo+Ivanna+Valentina&dates=20260314T193000Z/20260314T235900Z&location=Salón+Gran+Sonata" target="_blank" class="btn-calendar reveal-up delay-2 scale-105">Agendar Evento</a>
         </div>
 
         <!-- Clima -->
@@ -446,56 +485,59 @@
 
         <!-- RSVP -->
         <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up mb-12">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">Confirmación</h3>
-            <p class="text-[10px] mb-12 opacity-50 reveal-up delay-1">Favor de confirmar asistencia vía WhatsApp</p>
-            <form id="rsvpForm" onsubmit="handleRSVP(event)" class="space-y-6 text-left">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#93A286] font-extrabold reveal-up">Confirmación</h3>
+            <p class="text-sm mb-12 opacity-60 reveal-up delay-1 font-medium">Favor de confirmar asistencia vía WhatsApp</p>
+            <form id="rsvpForm" class="space-y-8 text-left">
                 <div class="reveal-side-left delay-2">
-                    <label class="text-[9px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">¿Asistirás?</label>
-                    <select id="attendance" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none appearance-none cursor-pointer">
+                    <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">¿Asistirás?</label>
+                    <select id="attendance" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none appearance-none cursor-pointer">
                         <option value="Sí">Sí, asistiré con gusto</option>
                         <option value="No">No podré asistir</option>
                     </select>
                 </div>
-                <div class="reveal-side-right delay-2">
-                    <label class="text-[9px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Adultos</label>
-                    <input type="number" id="adults" required min="0" value="1" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="reveal-side-left delay-2">
+                        <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Adultos</label>
+                        <input type="number" id="adults" required min="0" value="1" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
+                    </div>
+                    <div class="reveal-side-right delay-2">
+                        <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Niños</label>
+                        <input type="number" id="kids" min="0" value="0" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
+                    </div>
                 </div>
-                <div class="reveal-side-left delay-2">
-                    <label class="text-[9px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Niños</label>
-                    <input type="number" id="kids" min="0" value="0" class="w-full bg-white border-none p-5 rounded-3xl text-sm shadow-sm mt-2 outline-none">
-                </div>
-                <button type="submit" class="w-full btn-small !py-5 !text-[10px] reveal-up delay-3">Confirmar por WhatsApp</button>
+                <button type="button" onclick="handleRSVP()" class="w-full btn-small !py-6 !text-[12px] reveal-up delay-3 uppercase tracking-[2px] shadow-lg">Confirmar por WhatsApp</button>
             </form>
         </div>
 
-        <!-- ÁLBUM COMPARTIDO (DEBAJO DEL RSVP) -->
-        <div class="max-w-md mx-auto px-10 py-16 text-center bg-white rounded-[40px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-[#93A286] font-extrabold">Álbum Compartido</h3>
-            <p class="text-[10px] text-gray-500 mb-8 px-4 font-medium">Toca el botón de abajo para subir tus fotos favoritas del evento y compartirlas con nosotros.</p>
-            <div class="mb-8 relative">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_8506.jpeg" class="w-48 mx-auto shadow-md rounded-2xl opacity-25" alt="QR Álbum">
+        <!-- ÁLBUM COMPARTIDO (MÁS GRANDE Y DEBAJO DEL RSVP) -->
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-8 text-[#93A286] font-extrabold">Álbum Compartido</h3>
+            <p class="text-base text-gray-500 mb-10 px-4 font-semibold leading-relaxed">Toca el botón de abajo para subir tus fotos favoritas del evento y compartirlas con nosotros.</p>
+            <div class="mb-10 relative">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_8506.jpeg" class="w-56 mx-auto shadow-md rounded-3xl opacity-25" alt="QR Álbum">
                 <div class="absolute inset-0 flex items-center justify-center">
-                    <svg class="w-12 h-12 text-pink-200 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-16 h-16 text-pink-200 opacity-80 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
             </div>
             <div class="mt-8">
-                <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="btn-small">Ver Álbum en Drive</a>
+                <!-- Botón actualizado a verde salvia -->
+                <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="btn-small scale-110">Ver Álbum en Drive</a>
             </div>
         </div>
 
         <!-- CIERRE -->
         <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
-            <p class="text-2xl italic leading-relaxed text-gray-400 font-script px-4 reveal-up">
+            <p class="text-2xl md:text-3xl italic leading-relaxed text-gray-400 font-script px-4 reveal-up">
                 "Tu compañía es el regalo más grande que podemos recibir. Esperamos de todo corazón compartir este día inolvidable a tu lado y celebrar juntos esta bendición en la vida de nuestra hija."
             </p>
-            <p class="text-4xl font-script text-[#93A286] mt-8 reveal-scale delay-1">¡No faltes!</p>
-            <img src="https://i.imgur.com/Md7bALw.png" class="w-24 mx-auto mt-12 opacity-30 floating reveal-scale delay-2" alt="Dino final">
+            <p class="text-5xl font-script text-[#93A286] mt-10 reveal-scale delay-1">¡No faltes!</p>
+            <img src="https://i.imgur.com/Md7bALw.png" class="w-28 mx-auto mt-12 opacity-30 floating reveal-scale delay-2" alt="Dino final">
         </div>
 
         <div class="max-w-md mx-auto py-10 text-center reveal-up">
-            <button onclick="backToStart()" class="text-[10px] uppercase tracking-[0.4em] text-gray-300 border-b border-pink-100 pb-2 hover:text-pink-300 transition-colors">Volver al inicio</button>
+            <button onclick="backToStart()" class="text-[11px] uppercase tracking-[0.4em] text-gray-300 border-b border-pink-100 pb-2 hover:text-pink-300 transition-colors font-bold">Volver al inicio</button>
         </div>
 
         <img src="https://i.imgur.com/XxQH0h7.png" class="fixed bottom-10 -left-10 w-24 opacity-10 pointer-events-none transform rotate-45" alt="decoración">
@@ -521,6 +563,20 @@
             if (isPlaying) { bgMusic.pause(); musicToggle.classList.remove('playing'); }
             else { bgMusic.play(); musicToggle.classList.add('playing'); }
             isPlaying = !isPlaying;
+        }
+
+        // --- Visor de fotos (Lightbox) ---
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            img.src = src;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Bloquear scroll
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = ''; // Restaurar scroll
         }
 
         function enterInvitation() {
@@ -555,15 +611,16 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
                         const children = entry.target.querySelectorAll('[class*="reveal-"]');
-                        children.forEach(c => c.classList.add('active'));
+                        children.forEach((c, i) => {
+                            setTimeout(() => c.classList.add('active'), i * 120);
+                        });
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.05 });
             document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-side-left, .reveal-side-right').forEach(el => observer.observe(el));
         }
 
-        function handleRSVP(e) {
-            e.preventDefault();
+        function handleRSVP() {
             const attendance = document.getElementById('attendance').value;
             const adults = document.getElementById('adults').value;
             const kids = document.getElementById('kids').value;
@@ -576,15 +633,8 @@
                 message = `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina. ¡Muchas gracias por la invitación!`;
             }
             
-            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(waUrl, '_blank');
-        }
-
-        function showAlert(title, msg) {
-            document.getElementById('alertTitle').innerText = title;
-            document.getElementById('alertMsg').innerText = msg;
-            document.getElementById('overlay').classList.add('active');
-            document.getElementById('customAlert').classList.add('active');
+            const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+            window.location.href = waUrl;
         }
 
         function closeAlert() {
@@ -592,7 +642,6 @@
             document.getElementById('customAlert').classList.remove('active');
         }
 
-        // --- Contador 14 de Marzo, 2026 ---
         const eventDate = new Date('March 14, 2026 13:30:00').getTime();
         setInterval(() => {
             const now = new Date().getTime();
