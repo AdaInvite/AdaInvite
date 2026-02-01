@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Verde más fuerte y profundo solicitado */
             --sage-green: #5F6F52; 
             --soft-green: #A9B388;
             --dusty-pink: #E5B0C2;
+            --strong-pink: #BF6A8A;
             --pale-pink: #F7E9ED;
             --cream: #FAF9F6;
             --text-gray: #4A4A4A;
@@ -129,16 +129,8 @@
         }
 
         /* --- ANIMACIONES --- */
-        .reveal-up {
-            opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .reveal-scale {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
+        .reveal-up { opacity: 0; transform: translateY(15px); transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .reveal-side-left { opacity: 0; transform: translateX(-15px); transition: all 0.8s ease-out; }
         .reveal-side-right { opacity: 0; transform: translateX(15px); transition: all 0.8s ease-out; }
         .active { opacity: 1 !important; transform: translate(0) scale(1) !important; }
@@ -171,6 +163,12 @@
             cursor: pointer;
             display: inline-block;
             text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-mama {
+            background-color: var(--strong-pink);
+            box-shadow: 0 5px 15px rgba(191, 106, 138, 0.2);
         }
 
         .btn-calendar {
@@ -197,7 +195,7 @@
 
         @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* Galería */
+        /* Galería con Auto-scroll */
         .gallery-track {
             display: flex;
             overflow-x: auto;
@@ -205,6 +203,7 @@
             gap: 20px;
             padding: 20px 25px;
             scrollbar-width: none;
+            scroll-behavior: smooth;
         }
         .gallery-track::-webkit-scrollbar { display: none; }
         
@@ -225,11 +224,7 @@
             cursor: pointer;
         }
 
-        .gallery-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .gallery-card img { width: 100%; height: 100%; object-fit: cover; }
 
         #lightbox {
             position: fixed;
@@ -271,21 +266,6 @@
             border: 1px solid #f5f5f5;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
-
-        #customAlert {
-            position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            z-index: 11000; background: white; padding: 2.5rem; border-radius: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2); text-align: center;
-            opacity: 0; pointer-events: none; transition: all 0.4s;
-            width: 90%; max-width: 350px;
-        }
-        #customAlert.active { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
-        .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);
-            z-index: 10500; opacity: 0; pointer-events: none; transition: opacity 0.4s;
-        }
-        .overlay.active { opacity: 1; pointer-events: auto; }
     </style>
 </head>
 <body>
@@ -318,35 +298,20 @@
         </div>
     </div>
 
-    <!-- 2. OVERLAY Y ALERTAS -->
-    <div id="overlay" class="overlay" onclick="closeAlert()"></div>
-    <div id="customAlert">
-        <img src="https://i.imgur.com/4l9Gz5o.png" class="w-16 mx-auto mb-4" alt="Icono Dinosaurio">
-        <h3 id="alertTitle" class="text-lg font-bold text-[#5F6F52] mb-2"></h3>
-        <p id="alertMsg" class="text-xs text-gray-400 mb-6"></p>
-        <button onclick="closeAlert()" class="btn-small">Cerrar</button>
-    </div>
-
     <!-- 3. PÁGINA DE BIENVENIDA -->
     <section id="page1" class="page flex flex-col items-center justify-center text-center p-6 bg-welcome relative overflow-hidden">
         <div class="bg-white/85 backdrop-blur-md p-10 rounded-[50px] shadow-2xl border border-white/60 max-w-xs w-full z-10 reveal-scale active">
             <h1 class="text-5xl font-script text-[#5F6F52] mb-2 leading-tight reveal-up active delay-1">Ivanna Valentina</h1>
             <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8 reveal-up active delay-2">Mi Bautizo</p>
-            
             <div class="mb-6 reveal-scale active delay-1">
                 <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto floating" alt="Dinosaurio tierno">
             </div>
-
             <div class="mb-8 space-y-1 reveal-up active delay-3">
                 <p class="text-[11px] font-bold tracking-[0.2em] text-gray-600 uppercase">14 de Marzo, 2026</p>
                 <p class="text-[10px] text-gray-400 font-medium">1:30 PM</p>
             </div>
-
-            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8 reveal-up active delay-3">
-                Continuar
-            </button>
+            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8 reveal-up active delay-3">Continuar</button>
         </div>
-        <img src="https://i.imgur.com/66wlrir.png" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-12 active delay-2" alt="decoración">
     </section>
 
     <!-- 4. PÁGINA DE CONTENIDO -->
@@ -356,7 +321,7 @@
         <div class="min-h-screen flex items-center justify-center p-8 text-center bg-white shadow-sm mb-10">
             <div class="max-w-xs">
                 <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50 floating" alt="decoración">
-                <p class="text-xl md:text-2xl font-script text-[#5F6F52] leading-relaxed reveal-up delay-1">
+                <p class="text-xl md:text-2xl font-script text-[#BF6A8A] font-bold leading-relaxed reveal-up delay-1">
                     "Hoy Jesús me ha llamado dulcemente por mi nombre. Señor hoy me presento ante ti para ser bañada con la gracia de tu amor toma mi pequeño corazón en tus benditas manos y jamás te separes de mí."
                 </p>
                 <div class="w-16 h-[2px] bg-pink-100 mx-auto mt-12 mb-8"></div>
@@ -376,31 +341,28 @@
                 <p class="text-sm italic text-pink-400 font-script text-2xl my-2">y</p>
                 <p class="text-lg font-bold text-gray-700">Cristian Nolasco Villanueva</p>
             </div>
-            
             <h3 class="text-[11px] uppercase tracking-[0.4em] mt-12 mb-4 text-[#5F6F52] font-extrabold underline decoration-pink-100 underline-offset-8 reveal-up">Padrino</h3>
             <div class="space-y-1 reveal-side-right delay-2">
                 <p class="text-lg font-bold text-gray-700">Fidel Manuel Nolasco Diaz</p>
             </div>
-
-            <img src="https://i.imgur.com/JionfTY.png" class="w-20 mx-auto mt-12 opacity-80 floating reveal-scale delay-3" alt="dinosaurio padres">
         </div>
 
-        <!-- GALERÍA -->
+        <!-- GALERÍA (NUEVAS FOTOS CON AUTO-SCROLL) -->
         <div class="max-w-md mx-auto py-12">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-center text-pink-400 font-extrabold reveal-up">Nuestra Alegría</h3>
-            <div class="gallery-track">
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1474%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_1467%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_0888%20-%20Ana%20Barrera.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/2773d4df-7461-4591-89bb-48393b1590bd.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/3b606149-4706-47af-bb09-2872f1e47a00.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/50095235-9849-4b99-ab57-c322ef083899.jpeg" alt="Foto"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/BautizoIvannaValentina/622bfd24-7ad2-49ca-a1aa-37b69d8d387d.jpeg" alt="Foto"></div>
+            <div id="galleryTrack" class="gallery-track">
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%201.jpeg" alt="Bautizo 1"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%202.jpeg" alt="Bautizo 2"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%203.jpeg" alt="Bautizo 3"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%204.jpeg" alt="Bautizo 4"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%205.jpeg" alt="Bautizo 5"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%206.jpeg" alt="Bautizo 6"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%207.jpeg" alt="Bautizo 7"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%208.jpeg" alt="Bautizo 8"></div>
+                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%209.jpeg" alt="Bautizo 9"></div>
             </div>
-            <div class="flex justify-center mt-6 opacity-30 reveal-up">
-                <svg class="w-8 h-8 animate-pulse text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
+            <div class="flex justify-center mt-6 opacity-30">
+                <svg class="w-8 h-8 animate-pulse text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </div>
         </div>
 
@@ -409,21 +371,20 @@
             <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-16 mx-auto mb-8" alt="Mapa">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold reveal-up">La Ceremonia</h3>
             <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Parroquia de Nuestra Señora de Guadalupe</p>
-            <p class="text-base mb-10 text-gray-500 font-semibold reveal-up delay-2 mt-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
-            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small reveal-up delay-3 scale-110">Ver ubicación</a>
+            <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
+            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small scale-110">Ver ubicación</a>
         </div>
 
         <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left mb-14">
             <img src="https://i.imgur.com/8Q8S52I.png" class="w-16 mx-auto mb-8 opacity-70" alt="Fiesta">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
             <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Salón Gran Sonata</p>
-            <p class="text-base mb-10 text-gray-500 font-semibold reveal-up delay-2 mt-2">Horario: 3:30 PM</p>
-            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 reveal-up delay-3 scale-110">Cómo llegar</a>
+            <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Horario: 3:30 PM</p>
+            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 scale-110">Cómo llegar</a>
         </div>
 
-        <!-- CÓDIGO DE VESTIMENTA (ICONO SIN ESCALA DE GRISES) -->
+        <!-- CÓDIGO DE VESTIMENTA -->
         <div class="max-w-md mx-auto px-10 py-20 text-center bg-[#fef8f9] rounded-[50px] mx-6 shadow-sm border border-pink-50 relative reveal-up mb-24">
-            <!-- Eliminada la clase 'grayscale' para que se vea a color -->
             <img src="https://i.imgur.com/UBbLTKA.png" class="w-24 mx-auto mb-8 opacity-90" alt="Código Vestimenta">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-6 text-pink-400 font-extrabold">Código de Vestimenta</h3>
             <p class="text-2xl font-bold text-gray-700">Formal</p>
@@ -450,46 +411,28 @@
             <img src="https://i.imgur.com/O1zSf9S.png" class="w-20 mx-auto mb-8 opacity-60" alt="Clima">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-10 font-extrabold text-[#5F6F52]">Clima Previsto</h3>
             <div class="weather-track reveal-side-right">
-                <!-- 13:00 con icono de sol -->
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">13:00</p>
-                    <svg class="w-6 h-6 mx-auto mb-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
+                    <svg class="w-6 h-6 mx-auto mb-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line></svg>
                     <p class="text-xs font-bold">22°C</p>
                 </div>
-                <!-- 16:00 con icono de nube/sol -->
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">16:00</p>
-                    <svg class="w-6 h-6 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path d="M12 2v2M4.93 4.93l1.41 1.41M2 12h2M4.93 19.07l1.41-1.41M12 22v-2M17.66 17.66l1.41 1.41M22 12h-2M17.66 6.34l1.41-1.41"></path>
-                        <path d="M15.3 12a3.5 3.5 0 1 1-3.3-3.3"></path>
-                    </svg>
+                    <svg class="w-6 h-6 mx-auto mb-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2v2M4.93 4.93l1.41 1.41M2 12h2M15.3 12a3.5 3.5 0 1 1-3.3-3.3"></path></svg>
                     <p class="text-xs font-bold">24°C</p>
                 </div>
-                <!-- 19:00 con icono de luna -->
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">19:00</p>
-                    <svg class="w-6 h-6 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
+                    <svg class="w-6 h-6 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                     <p class="text-xs font-bold">19°C</p>
                 </div>
             </div>
         </div>
 
-        <!-- RSVP -->
+        <!-- RSVP (2 BOTONES) -->
         <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up mb-12">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold">Confirmación</h3>
-            <p class="text-sm mb-12 opacity-60 font-medium">Favor de confirmar asistencia vía WhatsApp</p>
+            <p class="text-sm mb-12 opacity-60 font-medium">Favor de confirmar asistencia vía WhatsApp con los papás</p>
             <form id="rsvpForm" class="space-y-8 text-left">
                 <div class="reveal-side-left delay-1">
                     <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">¿Asistirás?</label>
@@ -508,11 +451,14 @@
                         <input type="number" id="kids" min="0" value="0" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
                     </div>
                 </div>
-                <button type="button" onclick="handleRSVP()" class="w-full btn-small !py-6 !text-[12px] uppercase tracking-[2px] shadow-lg">Confirmar por WhatsApp</button>
+                <div class="flex flex-col space-y-4 pt-4">
+                    <button type="button" onclick="handleRSVP('papa')" class="w-full btn-small !py-6 !text-[11px] uppercase tracking-[1px] shadow-lg">Confirmar al Papá</button>
+                    <button type="button" onclick="handleRSVP('mama')" class="w-full btn-small btn-mama !py-6 !text-[11px] uppercase tracking-[1px] shadow-lg">Confirmar a la Mamá</button>
+                </div>
             </form>
         </div>
 
-        <!-- ÁLBUM COMPARTIDO -->
+       <!-- ÁLBUM COMPARTIDO -->
         <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-8 text-[#5F6F52] font-extrabold">Álbum Compartido</h3>
             <p class="text-base text-gray-500 mb-10 px-4 font-semibold leading-relaxed">Toca el botón de abajo para subir tus fotos favoritas del evento.</p>
@@ -529,9 +475,7 @@
 
         <!-- CIERRE -->
         <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
-            <p class="text-2xl md:text-3xl italic leading-relaxed text-gray-400 font-script px-4">
-                "Tu compañía es el regalo más grande que podemos recibir..."
-            </p>
+            <p class="text-2xl md:text-3xl italic leading-relaxed text-gray-400 font-script px-4">"Tu compañía es el regalo más grande que podemos recibir..."</p>
             <p class="text-5xl font-script text-[#5F6F52] mt-10 reveal-scale delay-1">¡No faltes!</p>
             <img src="https://i.imgur.com/Md7bALw.png" class="w-28 mx-auto mt-12 opacity-30 floating" alt="Dino final">
         </div>
@@ -548,10 +492,7 @@
 
         function openEnvelope() {
             document.getElementById('envelope-container').classList.add('open');
-            bgMusic.play().then(() => {
-                isPlaying = true;
-                musicToggle.classList.add('playing');
-            }).catch(() => {});
+            bgMusic.play().then(() => { isPlaying = true; musicToggle.classList.add('playing'); }).catch(() => {});
             musicToggle.classList.add('visible');
             setTimeout(() => { document.getElementById('envelope-container').style.display = 'none'; }, 2500);
         }
@@ -582,7 +523,10 @@
                 document.getElementById('page2').classList.remove('hidden');
                 document.getElementById('page2').style.opacity = '1';
                 window.scrollTo(0, 0);
-                setTimeout(initScrollObserver, 100);
+                setTimeout(() => {
+                    initScrollObserver();
+                    startGalleryAutoScroll();
+                }, 100);
             }, 600);
         }
 
@@ -601,29 +545,37 @@
 
         function initScrollObserver() {
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
             }, { threshold: 0.1 });
             document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-side-left, .reveal-side-right').forEach(el => observer.observe(el));
         }
 
-        function handleRSVP() {
+        // --- EFECTO AUTO-SCROLL GALERÍA ---
+        function startGalleryAutoScroll() {
+            const track = document.getElementById('galleryTrack');
+            let scrollAmount = 0;
+            const cardWidth = track.querySelector('.gallery-card').offsetWidth + 20; // Ancho + gap
+            const maxScroll = track.scrollWidth - track.clientWidth;
+
+            setInterval(() => {
+                if (scrollAmount >= maxScroll) {
+                    scrollAmount = 0;
+                } else {
+                    scrollAmount += cardWidth;
+                }
+                track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+            }, 3500); // Cambio cada 3.5 segundos
+        }
+
+        function handleRSVP(target) {
             const attendance = document.getElementById('attendance').value;
             const adults = document.getElementById('adults').value;
             const kids = document.getElementById('kids').value;
-            const phone = "525543556242"; 
+            const phone = target === 'papa' ? "525543556242" : "525575260844"; 
             let message = attendance === "Sí" ? 
-                `¡Hola! Confirmo mi asistencia para el bautizo de Ivanna Valentina. Seremos ${adults} adultos y ${kids} niños.` : 
-                `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina.`;
+                `¡Hola! Confirmo mi asistencia para el bautizo de Ivanna Valentina. Seremos ${adults} adultos y ${kids} niños. ¡Nos vemos pronto!` : 
+                `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina. ¡Muchas gracias por la invitación!`;
             window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
-        }
-
-        function closeAlert() {
-            document.getElementById('overlay').classList.remove('active');
-            document.getElementById('customAlert').classList.remove('active');
         }
 
         const eventDate = new Date('March 14, 2026 13:30:00').getTime();
