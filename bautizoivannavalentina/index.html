@@ -49,6 +49,26 @@
             font-family: 'Dancing Script', cursive;
         }
 
+        /* --- DECORACIONES LATERALES (VISIBLES EN TODO EL SCROLL) --- */
+        .side-decoration {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 220px;
+            opacity: 0.08; /* Muy translúcido para no cansar la vista */
+            z-index: 50; /* Por encima de los fondos blancos de las secciones */
+            pointer-events: none; /* No interfiere con clics */
+            transition: opacity 0.5s ease;
+        }
+        .side-left { left: -40px; }
+        .side-right { right: -40px; }
+
+        @media (max-width: 768px) {
+            .side-decoration { width: 140px; opacity: 0.06; }
+            .side-left { left: -30px; }
+            .side-right { right: -30px; }
+        }
+
         /* --- SOBRE INICIAL --- */
         #envelope-container {
             position: fixed;
@@ -303,6 +323,10 @@
 </head>
 <body>
 
+    <!-- DECORACIONES TRANSLÚCIDAS LATERALES (Z-INDEX 50 PARA SER VISIBLES EN TODO EL SCROLL) -->
+    <img src="https://i.imgur.com/0O7bEUs.png" class="side-decoration side-left" alt="Decoración Izquierda">
+    <img src="https://i.imgur.com/XxQH0h7.png" class="side-decoration side-right" alt="Decoración Derecha">
+
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightboxImg" src="" alt="Visor de foto">
         <button class="absolute top-8 right-8 text-white text-4xl">&times;</button>
@@ -331,16 +355,16 @@
     <!-- 2. PÁGINA DE BIENVENIDA -->
     <section id="page1" class="page flex flex-col items-center justify-center text-center p-6 bg-welcome relative overflow-hidden">
         <div class="bg-white/85 backdrop-blur-md p-10 rounded-[50px] shadow-2xl border border-white/60 max-w-xs w-full z-10 reveal-scale active">
-            <h1 class="text-5xl font-script text-[#5F6F52] mb-2 leading-tight">Ivanna Valentina</h1>
-            <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8">Mi Bautizo</p>
+            <h1 class="text-5xl font-script text-[#5F6F52] mb-2 leading-tight reveal-up active">Ivanna Valentina</h1>
+            <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8 reveal-up active">Mi Bautizo</p>
             <div class="mb-6">
                 <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto icon-swing" alt="Dino">
             </div>
-            <div class="mb-8 space-y-1">
+            <div class="mb-8 space-y-1 reveal-up active">
                 <p class="text-[11px] font-bold tracking-[0.2em] text-gray-600 uppercase">14 de Marzo, 2026</p>
                 <p class="text-[10px] text-gray-400 font-medium">1:30 PM</p>
             </div>
-            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8">Continuar</button>
+            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8 reveal-scale active">Continuar</button>
         </div>
         <img src="https://i.imgur.com/66wlrir.png" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-12 icon-swing" alt="deco">
     </section>
@@ -348,20 +372,22 @@
     <!-- 3. CONTENIDO -->
     <section id="page2" class="hidden bg-[#FAF9F6] pb-10 relative">
         
-        <div class="min-h-screen flex items-center justify-center p-8 text-center bg-white shadow-sm mb-10">
+        <!-- INTRO TEXTO -->
+        <div class="min-h-screen flex items-center justify-center p-8 text-center bg-white shadow-sm mb-10 relative z-10">
             <div class="max-w-xs">
                 <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50 icon-bounce" alt="deco">
                 <p class="text-xl md:text-3xl font-script text-[#BF6A8A] font-bold leading-relaxed reveal-up">
                     "Hoy Jesús me ha llamado dulcemente por mi nombre. Señor hoy me presento ante ti para ser bañada con la gracia de tu amor toma mi pequeño corazón en tus benditas manos y jamás te separes de mí."
                 </p>
-                <div class="w-16 h-[2px] bg-pink-100 mx-auto mt-12 mb-8"></div>
-                <div class="opacity-20 animate-bounce">
+                <div class="w-16 h-[2px] bg-pink-100 mx-auto mt-12 mb-8 reveal-up"></div>
+                <div class="opacity-20 animate-bounce reveal-up">
                     <svg class="w-6 h-6 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 13l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </div>
             </div>
         </div>
 
-        <div class="max-w-md mx-auto px-8 text-center py-20">
+        <!-- PADRES -->
+        <div class="max-w-md mx-auto px-8 text-center py-20 relative z-10">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold underline decoration-pink-100 underline-offset-8 reveal-up">Padres</h3>
             <div class="space-y-1 reveal-up">
                 <p class="text-lg font-bold text-gray-700">Ana Barrera Gonzalez</p>
@@ -374,7 +400,7 @@
         </div>
 
         <!-- GALERÍA -->
-        <div class="max-w-md mx-auto py-12">
+        <div class="max-w-md mx-auto py-12 relative z-10">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-center text-pink-400 font-extrabold reveal-up">Nuestra Alegría</h3>
             <div id="galleryTrack" class="gallery-track reveal-scale">
                 <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%201.jpeg" onclick="openLightbox(this.src)" alt="1"></div>
@@ -390,68 +416,58 @@
         </div>
 
         <!-- UBICACIONES -->
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14 z-10">
             <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-16 mx-auto mb-8 icon-bounce" alt="Mapa">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold">La Ceremonia</h3>
-            <p class="text-xl font-bold text-gray-800 leading-tight">Parroquia de Nuestra Señora de Guadalupe</p>
-            <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
-            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small scale-110">Ver ubicación</a>
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold reveal-up">La Ceremonia</h3>
+            <p class="text-xl font-bold text-gray-800 leading-tight reveal-up">Parroquia de Nuestra Señora de Guadalupe</p>
+            <p class="text-base mb-10 text-gray-500 font-semibold mt-2 reveal-up">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
+            <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small scale-110 reveal-scale">Ver ubicación</a>
         </div>
 
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14 z-10">
             <img src="https://i.imgur.com/8Q8S52I.png" class="w-16 mx-auto mb-8 opacity-70 icon-pulse" alt="Fiesta">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold">La Recepción</h3>
-            <p class="text-xl font-bold text-gray-800 leading-tight">Salón Gran Sonata</p>
-            <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Horario: 3:30 PM</p>
-            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 scale-110">Cómo llegar</a>
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
+            <p class="text-xl font-bold text-gray-800 leading-tight reveal-up">Salón Gran Sonata</p>
+            <p class="text-base mb-10 text-gray-500 font-semibold mt-2 reveal-up">Horario: 3:30 PM</p>
+            <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 scale-110 reveal-scale">Cómo llegar</a>
         </div>
 
         <!-- VESTIMENTA -->
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-[#fef8f9] rounded-[50px] mx-6 shadow-sm border border-pink-50 relative reveal-up mb-24">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-[#fef8f9] rounded-[50px] mx-6 shadow-sm border border-pink-50 relative reveal-up mb-24 z-10">
             <img src="https://i.imgur.com/UBbLTKA.png" class="w-24 mx-auto mb-8 opacity-90 icon-swing" alt="Código Vestimenta">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-6 text-pink-400 font-extrabold">Código de Vestimenta</h3>
-            <p class="text-2xl font-bold text-gray-700">Formal</p>
-            <p class="text-sm text-gray-400 mt-4 leading-relaxed px-4">Ropa formal y cómoda para acompañarnos en este día tan especial.</p>
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-6 text-pink-400 font-extrabold reveal-up">Código de Vestimenta</h3>
+            <p class="text-2xl font-bold text-gray-700 reveal-up">Formal</p>
+            <p class="text-sm text-gray-400 mt-4 leading-relaxed px-4 reveal-up">Ropa formal y cómoda para acompañarnos en este día tan especial.</p>
         </div>
 
         <!-- CLIMA -->
-        <div class="max-w-md mx-auto py-16 px-6 text-center reveal-up mb-12">
+        <div class="max-w-md mx-auto py-16 px-6 text-center reveal-up mb-12 z-10">
             <img src="https://i.imgur.com/O1zSf9S.png" class="w-20 mx-auto mb-8 opacity-60 icon-pulse" alt="Clima">
-            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-10 font-extrabold text-[#5F6F52]">Clima Previsto</h3>
+            <h3 class="text-[11px] uppercase tracking-[0.4em] mb-10 font-extrabold text-[#5F6F52] reveal-up">Clima Previsto</h3>
             <div class="flex justify-center gap-4 reveal-up">
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">13:00</p>
-                    <!-- Icono Sol -->
                     <svg class="w-8 h-8 mx-auto mb-2 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
                         <line x1="12" y1="21" x2="12" y2="23"></line>
                         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
                         <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                     <p class="text-xs font-bold">22°C</p>
                 </div>
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">16:00</p>
-                    <!-- Icono Nube y Sol -->
                     <svg class="w-8 h-8 mx-auto mb-2 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41"></path>
-                        <path d="M15.947 12.65a4 4 0 0 0-5.925-4.128" opacity="0.6"></path>
                         <path d="M17 21c3.314 0 6-2.686 6-6s-2.686-6-6-6a5.5 5.5 0 0 0-5.5 5.5c0 .34.03.674.09 1.002C9.462 15.19 8 16.925 8 19c0 2.21 1.79 4 4 4h5z" fill="white" stroke="#5F6F52"></path>
                     </svg>
                     <p class="text-xs font-bold">24°C</p>
                 </div>
                 <div class="weather-card">
                     <p class="text-[9px] font-bold opacity-40 mb-2">19:00</p>
-                    <!-- Icono Luna -->
                     <svg class="w-8 h-8 mx-auto mb-2 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        <circle cx="15" cy="7" r="0.5" fill="currentColor"></circle>
-                        <circle cx="18" cy="10" r="0.5" fill="currentColor"></circle>
                     </svg>
                     <p class="text-xs font-bold">19°C</p>
                 </div>
@@ -459,9 +475,9 @@
         </div>
 
         <!-- CONTADOR -->
-        <div class="max-w-md mx-auto py-24 px-8 text-center reveal-up">
-            <h3 class="text-[12px] uppercase tracking-[0.5em] mb-12 font-extrabold opacity-40">Cuenta Atrás</h3>
-            <div id="countdown" class="flex justify-around items-center max-w-sm mx-auto">
+        <div class="max-w-md mx-auto py-24 px-8 text-center reveal-up z-10">
+            <h3 class="text-[12px] uppercase tracking-[0.5em] mb-12 font-extrabold opacity-40 reveal-up">Cuenta Atrás</h3>
+            <div id="countdown" class="flex justify-around items-center max-w-sm mx-auto reveal-up">
                 <div class="flex flex-col">
                     <span id="days" class="text-3xl font-light text-[#93A286]">00</span>
                     <span class="text-[10px] uppercase font-bold opacity-40">Días</span>
@@ -482,44 +498,43 @@
                     <span class="text-[10px] uppercase font-bold opacity-40">Seg</span>
                 </div>
             </div>
-            <!-- BOTÓN ACTUALIZADO A COLOR VERDE FIJO -->
-            <button onclick="addToCalendar()" class="btn-small mt-16 !bg-[#5F6F52] !text-white hover:opacity-90 transition-all shadow-lg">Agendar en Calendario</button>
+            <button onclick="addToCalendar()" class="btn-small mt-16 !bg-[#5F6F52] !text-white hover:opacity-90 transition-all shadow-lg reveal-scale">Agendar en Calendario</button>
         </div>
 
         <!-- RSVP -->
-        <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up mb-12">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold">Confirmación</h3>
-            <p class="text-sm mb-12 opacity-60 font-medium">Te agradecemos confirmar antes del 1 de marzo 2026</p>
-            <form id="rsvpForm" class="space-y-8 text-left">
+        <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up mb-12 z-10">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold reveal-up">Confirmación</h3>
+            <p class="text-sm mb-12 opacity-60 font-medium reveal-up">Te agradecemos confirmar antes del 1 de marzo 2026</p>
+            <form id="rsvpForm" class="space-y-8 text-left reveal-up">
                 <div>
-                    <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">¿Asistirás?</label>
+                    <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3 reveal-up">¿Asistirás?</label>
                     <select id="attendance" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
                         <option value="Sí">Sí, asistiré con gusto</option>
                         <option value="No">No podré asistir</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col reveal-up">
                         <label class="text-[10px] uppercase tracking-widest text-gray-400 font-bold ml-3 mb-1">Adultos</label>
                         <input type="number" id="adults" value="1" min="1" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm outline-none">
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col reveal-up">
                         <label class="text-[10px] uppercase tracking-widest text-gray-400 font-bold ml-3 mb-1">Niños</label>
                         <input type="number" id="kids" value="0" min="0" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm outline-none">
                     </div>
                 </div>
                 <div class="flex flex-col space-y-4 pt-4">
-                    <button type="button" onclick="handleRSVP('mama')" class="w-full btn-small btn-mama !py-6 !text-[11px] uppercase tracking-[1px]">Confirmar a la Mamá</button>
-                    <button type="button" onclick="handleRSVP('papa')" class="w-full btn-small !py-6 !text-[11px] uppercase tracking-[1px]">Confirmar al Papá</button>
+                    <button type="button" onclick="handleRSVP('mama')" class="w-full btn-small btn-mama !py-6 !text-[11px] uppercase tracking-[1px] reveal-scale">Confirmar a la Mamá</button>
+                    <button type="button" onclick="handleRSVP('papa')" class="w-full btn-small !py-6 !text-[11px] uppercase tracking-[1px] reveal-scale">Confirmar al Papá</button>
                 </div>
             </form>
         </div>
 
         <!-- ÁLBUM -->
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-8 text-[#5F6F52] font-extrabold">Álbum Compartido</h3>
-            <p class="text-base text-gray-500 mb-10 px-4 font-semibold leading-relaxed">Escanea el QR o toca el botón para subir tus fotos favoritas del evento.</p>
-            <div class="mb-10 relative group">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24 z-10">
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-8 text-[#5F6F52] font-extrabold reveal-up">Álbum Compartido</h3>
+            <p class="text-base text-gray-500 mb-10 px-4 font-semibold leading-relaxed reveal-up">Escanea el QR o toca el botón para subir tus fotos favoritas del evento.</p>
+            <div class="mb-10 relative group reveal-scale">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/IMG_8506.jpeg" class="w-56 mx-auto shadow-md rounded-3xl opacity-25" alt="Drive">
                 <div class="absolute inset-0 flex items-center justify-center">
                     <svg class="w-16 h-16 text-pink-200 opacity-80 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -527,18 +542,18 @@
                     </svg>
                 </div>
             </div>
-            <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="btn-small scale-110">Ver Álbum en Drive</a>
+            <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="btn-small scale-110 reveal-scale">Ver Álbum en Drive</a>
         </div>
         
         <!-- CIERRE -->
-        <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
-            <p class="text-3xl font-script text-[#5F6F52]">
+        <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up z-10">
+            <p class="text-3xl font-script text-[#5F6F52] reveal-up">
                 "Tu compañía es el regalo más grande que podemos recibir. Esperamos de todo corazón compartir este día inolvidable a tu lado y celebrar juntos esta bendición en la vida de nuestra hija..."
             </p>
         </div>
         
-        <div class="max-w-md mx-auto px-10 py-10 text-center reveal-up">
-            <p class="text-5xl font-script text-[#5F6F52]">¡No faltes!</p>
+        <div class="max-w-md mx-auto px-10 py-10 text-center reveal-up z-10">
+            <p class="text-5xl font-script text-[#5F6F52] reveal-up">¡No faltes!</p>
             <img src="https://i.imgur.com/Md7bALw.png" class="w-28 mx-auto mt-12 opacity-30 icon-swing" alt="Dino">
         </div>
 
@@ -622,7 +637,7 @@
         }
 
         function initScrollObserver() {
-            const options = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+            const options = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { 
                     if (entry.isIntersecting) {
