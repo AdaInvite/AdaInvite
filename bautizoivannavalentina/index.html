@@ -514,6 +514,7 @@
                 setTimeout(() => {
                     initScrollObserver();
                     startGalleryAutoScroll();
+                    initCountdown(); // Iniciar contador al entrar
                 }, 100);
             }, 600);
         }
@@ -582,6 +583,51 @@
                 `¡Hola! Confirmo mi asistencia para el bautizo de Ivanna Valentina. Seremos ${adults} adultos y ${kids} niños. ¡Nos vemos pronto!` : 
                 `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina.`;
             window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+        }
+
+        // --- NUEVAS FUNCIONES PARA CONTADOR Y CALENDARIO ---
+        
+        function initCountdown() {
+            // Fecha del evento: 14 de marzo de 2026 a la 1:30 PM
+            const eventDate = new Date('March 14, 2026 13:30:00').getTime();
+
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = eventDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.getElementById('days').innerText = '00';
+                    document.getElementById('hours').innerText = '00';
+                    document.getElementById('minutes').innerText = '00';
+                    document.getElementById('seconds').innerText = '00';
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        function addToCalendar() {
+            const title = "Bautizo de Ivanna Valentina";
+            const details = "Ceremonia en la Parroquia de Nuestra Señora de Guadalupe a la 1:30 PM. Recepción en Salón Gran Sonata a las 3:30 PM.";
+            const location = "Parroquia de Nuestra Señora de Guadalupe, Santa María Tlayacampa";
+            
+            // Fechas en formato ISO básico (YYYYMMDDTHHMMSSZ)
+            const startDate = "20260314T133000"; 
+            const endDate = "20260314T200000";
+
+            const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
+            
+            window.open(calendarUrl, '_blank');
         }
     </script>
 </body>
