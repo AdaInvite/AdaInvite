@@ -43,11 +43,13 @@
             transition: opacity 1s ease-in-out, visibility 1s;
         }
 
+        /* Contenedor para aplicar la sombra a las solapas */
         .flap-container {
             position: absolute;
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0px 0px 20px rgba(0,0,0,0.1));
+            filter: drop-shadow(0px 0px 20px rgba(0,0,0,0.15));
+            z-index: 5;
         }
 
         .flap {
@@ -58,11 +60,19 @@
             background-color: #ffffff;
             background-image: url("https://www.transparenttextures.com/patterns/p6.png");
             transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
-            z-index: 5;
         }
 
-        .flap-left { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); border-right: 1px solid rgba(0,0,0,0.05); }
-        .flap-right { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); border-left: 1px solid rgba(0,0,0,0.05); }
+        /* Bordes reforzados para dar efecto de profundidad */
+        .flap-left { 
+            left: 0; 
+            clip-path: polygon(0 0, 100% 50%, 0 100%); 
+            border-right: 1.5px solid rgba(0,0,0,0.08); 
+        }
+        .flap-right { 
+            right: 0; 
+            clip-path: polygon(100% 0, 0 50%, 100% 100%); 
+            border-left: 1.5px solid rgba(0,0,0,0.08); 
+        }
 
         #envelope-container.open .flap-left { transform: translateX(-100%); }
         #envelope-container.open .flap-right { transform: translateX(100%); }
@@ -131,13 +141,7 @@
         /* --- ANIMACIONES --- */
         .reveal-up { opacity: 0; transform: translateY(15px); transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .reveal-scale { opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .reveal-side-left { opacity: 0; transform: translateX(-15px); transition: all 0.8s ease-out; }
-        .reveal-side-right { opacity: 0; transform: translateX(15px); transition: all 0.8s ease-out; }
         .active { opacity: 1 !important; transform: translate(0) scale(1) !important; }
-
-        .delay-1 { transition-delay: 0.15s; }
-        .delay-2 { transition-delay: 0.3s; }
-        .delay-3 { transition-delay: 0.45s; }
 
         .page { min-height: 100vh; width: 100%; transition: opacity 0.8s ease; }
         .hidden { display: none; }
@@ -171,31 +175,7 @@
             box-shadow: 0 5px 15px rgba(191, 106, 138, 0.2);
         }
 
-        .btn-calendar {
-            background-color: var(--dusty-pink);
-            color: white;
-            padding: 14px 30px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(229, 176, 194, 0.3);
-            display: inline-block;
-            margin-top: 1rem;
-            text-decoration: none;
-        }
-
-        .floating { animation: floating 4s ease-in-out infinite; }
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-        }
-
-        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* Galería con Auto-scroll */
+        /* Galería con Proporción Original */
         .gallery-track {
             display: flex;
             overflow-x: auto;
@@ -204,12 +184,12 @@
             padding: 20px 25px;
             scrollbar-width: none;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
         .gallery-track::-webkit-scrollbar { display: none; }
         
         .gallery-card {
             flex: 0 0 92%;
-            aspect-ratio: 4/5;
             background: white;
             border-radius: 4px;
             scroll-snap-align: center;
@@ -220,11 +200,15 @@
             border: 1px solid rgba(0,0,0,0.05);
             box-shadow: 0 12px 30px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: transform 0.4s ease;
-            cursor: pointer;
+            min-height: 400px;
         }
 
-        .gallery-card img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-card img { 
+            width: 100%; 
+            height: auto; 
+            max-height: 60vh;
+            object-fit: contain; 
+        }
 
         #lightbox {
             position: fixed;
@@ -248,15 +232,6 @@
 
         @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .weather-track {
-            display: flex;
-            overflow-x: auto;
-            gap: 15px;
-            padding: 20px;
-            scrollbar-width: none;
-        }
-        .weather-track::-webkit-scrollbar { display: none; }
-        
         .weather-card {
             background: white;
             border-radius: 20px;
@@ -266,119 +241,112 @@
             border: 1px solid #f5f5f5;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
+
+        @keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
 
-    <!-- LIGHTBOX -->
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightboxImg" src="" alt="Visor de foto">
         <button class="absolute top-8 right-8 text-white text-4xl">&times;</button>
     </div>
 
-    <!-- AUDIO ELEMENT -->
     <audio id="bgMusic" loop preload="auto">
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Carlos%20Rivera%20-%20Te%20Esperaba%20(Lyric%20Video).mp3" type="audio/mpeg">
     </audio>
 
-    <!-- CONTROL MÚSICA -->
     <div id="musicToggle" class="music-control" onclick="toggleMusic()">
         <img src="https://i.imgur.com/8Q8S52I.png" class="w-8 h-8" alt="Música">
     </div>
 
     <!-- 1. SOBRE -->
     <div id="envelope-container">
+        <!-- Contenedor con sombra para las solapas -->
         <div class="flap-container">
             <div class="flap flap-left"></div>
             <div class="flap flap-right"></div>
         </div>
         <div class="seal-wrapper" onclick="openEnvelope()">
             <div class="click-hint">Abrir Invitación</div>
-            <img src="https://i.imgur.com/4l9Gz5o.png" class="w-24 floating" alt="Sello Dinosaurio">
+            <img src="https://i.imgur.com/4l9Gz5o.png" class="w-24" style="animation: floating 4s infinite ease-in-out" alt="Sello">
         </div>
     </div>
 
-    <!-- 3. PÁGINA DE BIENVENIDA -->
+    <!-- 2. PÁGINA DE BIENVENIDA -->
     <section id="page1" class="page flex flex-col items-center justify-center text-center p-6 bg-welcome relative overflow-hidden">
         <div class="bg-white/85 backdrop-blur-md p-10 rounded-[50px] shadow-2xl border border-white/60 max-w-xs w-full z-10 reveal-scale active">
-            <h1 class="text-5xl font-script text-[#5F6F52] mb-2 leading-tight reveal-up active delay-1">Ivanna Valentina</h1>
-            <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8 reveal-up active delay-2">Mi Bautizo</p>
-            <div class="mb-6 reveal-scale active delay-1">
-                <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto floating" alt="Dinosaurio tierno">
+            <h1 class="text-5xl font-script text-[#5F6F52] mb-2 leading-tight">Ivanna Valentina</h1>
+            <p class="text-[10px] tracking-[0.4em] text-pink-300 font-extrabold uppercase mb-8">Mi Bautizo</p>
+            <div class="mb-6">
+                <img src="https://i.imgur.com/4l9Gz5o.png" class="w-32 mx-auto" style="animation: floating 4s infinite ease-in-out" alt="Dino">
             </div>
-            <div class="mb-8 space-y-1 reveal-up active delay-3">
+            <div class="mb-8 space-y-1">
                 <p class="text-[11px] font-bold tracking-[0.2em] text-gray-600 uppercase">14 de Marzo, 2026</p>
                 <p class="text-[10px] text-gray-400 font-medium">1:30 PM</p>
             </div>
-            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8 reveal-up active delay-3">Continuar</button>
+            <button onclick="enterInvitation()" class="btn-small !py-3 !px-8">Continuar</button>
         </div>
+        <img src="https://i.imgur.com/66wlrir.png" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-12" alt="deco">
     </section>
 
-    <!-- 4. PÁGINA DE CONTENIDO -->
+    <!-- 3. CONTENIDO -->
     <section id="page2" class="hidden bg-[#FAF9F6] pb-10 relative">
         
-        <!-- MENSAJE ESPIRITUAL -->
         <div class="min-h-screen flex items-center justify-center p-8 text-center bg-white shadow-sm mb-10">
             <div class="max-w-xs">
-                <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50 floating" alt="decoración">
-                <p class="text-xl md:text-2xl font-script text-[#BF6A8A] font-bold leading-relaxed reveal-up delay-1">
+                <img src="https://i.imgur.com/hCNMcq2.png" class="w-20 mx-auto mb-10 opacity-50" alt="deco">
+                <p class="text-xl md:text-2xl font-script text-[#BF6A8A] font-bold leading-relaxed reveal-up">
                     "Hoy Jesús me ha llamado dulcemente por mi nombre. Señor hoy me presento ante ti para ser bañada con la gracia de tu amor toma mi pequeño corazón en tus benditas manos y jamás te separes de mí."
                 </p>
                 <div class="w-16 h-[2px] bg-pink-100 mx-auto mt-12 mb-8"></div>
                 <div class="opacity-20 animate-bounce">
-                    <svg class="w-6 h-6 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7"></path>
-                    </svg>
+                    <svg class="w-6 h-6 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 13l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </div>
             </div>
         </div>
 
-        <!-- PADRES Y PADRINO -->
         <div class="max-w-md mx-auto px-8 text-center py-20">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold underline decoration-pink-100 underline-offset-8 reveal-up">Padres</h3>
-            <div class="space-y-1 reveal-side-left delay-1">
+            <div class="space-y-1 reveal-up">
                 <p class="text-lg font-bold text-gray-700">Ana Barrera Gonzalez</p>
                 <p class="text-sm italic text-pink-400 font-script text-2xl my-2">y</p>
                 <p class="text-lg font-bold text-gray-700">Cristian Nolasco Villanueva</p>
             </div>
             <h3 class="text-[11px] uppercase tracking-[0.4em] mt-12 mb-4 text-[#5F6F52] font-extrabold underline decoration-pink-100 underline-offset-8 reveal-up">Padrino</h3>
-            <div class="space-y-1 reveal-side-right delay-2">
-                <p class="text-lg font-bold text-gray-700">Fidel Manuel Nolasco Diaz</p>
-            </div>
+            <div class="reveal-up"><p class="text-lg font-bold text-gray-700">Fidel Manuel Nolasco Diaz</p></div>
         </div>
 
-        <!-- GALERÍA (NUEVAS FOTOS CON AUTO-SCROLL) -->
+        <!-- GALERÍA (AUTO-SCROLL MEJORADO) -->
         <div class="max-w-md mx-auto py-12">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-8 text-center text-pink-400 font-extrabold reveal-up">Nuestra Alegría</h3>
             <div id="galleryTrack" class="gallery-track">
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%201.jpeg" alt="Bautizo 1"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%202.jpeg" alt="Bautizo 2"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%203.jpeg" alt="Bautizo 3"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%204.jpeg" alt="Bautizo 4"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%205.jpeg" alt="Bautizo 5"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%206.jpeg" alt="Bautizo 6"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%207.jpeg" alt="Bautizo 7"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%208.jpeg" alt="Bautizo 8"></div>
-                <div class="gallery-card reveal-scale" onclick="openLightbox(this.querySelector('img').src)"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%209.jpeg" alt="Bautizo 9"></div>
-            </div>
-            <div class="flex justify-center mt-6 opacity-30">
-                <svg class="w-8 h-8 animate-pulse text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%201.jpeg" onclick="openLightbox(this.src)" alt="1"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%202.jpeg" onclick="openLightbox(this.src)" alt="2"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%203.jpeg" onclick="openLightbox(this.src)" alt="3"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%204.jpeg" onclick="openLightbox(this.src)" alt="4"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%205.jpeg" onclick="openLightbox(this.src)" alt="5"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%206.jpeg" onclick="openLightbox(this.src)" alt="6"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%207.jpeg" onclick="openLightbox(this.src)" alt="7"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%208.jpeg" onclick="openLightbox(this.src)" alt="8"></div>
+                <div class="gallery-card"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/BautizoIvannaValentina/Bautizo%209.jpeg" onclick="openLightbox(this.src)" alt="9"></div>
             </div>
         </div>
 
         <!-- UBICACIONES -->
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-side-right mb-14">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14">
             <img src="https://i.imgur.com/ZOXzsdZ.png" class="w-16 mx-auto mb-8" alt="Mapa">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold reveal-up">La Ceremonia</h3>
-            <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Parroquia de Nuestra Señora de Guadalupe</p>
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold">La Ceremonia</h3>
+            <p class="text-xl font-bold text-gray-800 leading-tight">Parroquia de Nuestra Señora de Guadalupe</p>
             <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Santa María Tlayacampa<br>Sábado 14 de Marzo - 1:30 PM</p>
             <a href="https://maps.app.goo.gl/P8TkuDKS3bkfJTZh7?g_st=ic" target="_blank" class="btn-small scale-110">Ver ubicación</a>
         </div>
 
-        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-side-left mb-14">
+        <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-14">
             <img src="https://i.imgur.com/8Q8S52I.png" class="w-16 mx-auto mb-8 opacity-70" alt="Fiesta">
-            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold reveal-up">La Recepción</h3>
-            <p class="text-xl font-bold text-gray-800 reveal-up delay-1 leading-tight">Salón Gran Sonata</p>
+            <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-pink-400 font-extrabold">La Recepción</h3>
+            <p class="text-xl font-bold text-gray-800 leading-tight">Salón Gran Sonata</p>
             <p class="text-base mb-10 text-gray-500 font-semibold mt-2">Horario: 3:30 PM</p>
             <a href="https://maps.app.goo.gl/5ZkxaMezCe6E6HAj9?g_st=ic" target="_blank" class="btn-small !bg-pink-300 scale-110">Cómo llegar</a>
         </div>
@@ -391,22 +359,7 @@
             <p class="text-sm text-gray-400 mt-4 leading-relaxed px-4">Ropa formal y cómoda para acompañarnos en este día tan especial.</p>
         </div>
 
-        <!-- CONTADOR -->
-        <div class="max-w-md mx-auto py-24 px-8 text-center reveal-up">
-            <h3 class="text-[12px] uppercase tracking-[0.4em] mb-12 font-extrabold opacity-40">Falta muy poco</h3>
-            <div id="countdown" class="flex justify-around items-center max-w-sm mx-auto">
-                <div class="flex flex-col"><span id="days" class="text-4xl font-light text-[#5F6F52]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Días</span></div>
-                <div class="h-10 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="hours" class="text-4xl font-light text-[#5F6F52]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Hrs</span></div>
-                <div class="h-10 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="minutes" class="text-4xl font-light text-[#5F6F52]">00</span><span class="text-[11px] uppercase font-bold opacity-30">Min</span></div>
-                <div class="h-10 w-[1px] bg-pink-100"></div>
-                <div class="flex flex-col"><span id="seconds" class="text-4xl font-light text-pink-300">00</span><span class="text-[11px] uppercase font-bold opacity-30">Seg</span></div>
-            </div>
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bautizo+Ivanna+Valentina&dates=20260314T193000Z/20260314T235900Z&location=Salón+Gran+Sonata" target="_blank" class="btn-calendar scale-105">Agendar Evento</a>
-        </div>
-
-        <!-- CLIMA -->
+       <!-- CLIMA -->
         <div class="max-w-md mx-auto py-16 px-6 text-center reveal-up mb-12">
             <img src="https://i.imgur.com/O1zSf9S.png" class="w-20 mx-auto mb-8 opacity-60" alt="Clima">
             <h3 class="text-[11px] uppercase tracking-[0.4em] mb-10 font-extrabold text-[#5F6F52]">Clima Previsto</h3>
@@ -429,36 +382,30 @@
             </div>
         </div>
 
-        <!-- RSVP (2 BOTONES) -->
+        <!-- RSVP (BOTONES CORREGIDOS) -->
         <div class="max-w-md mx-auto px-10 py-24 text-center bg-[#F9F4F6] rounded-[60px] mx-4 shadow-inner reveal-up mb-12">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-4 text-[#5F6F52] font-extrabold">Confirmación</h3>
-            <p class="text-sm mb-12 opacity-60 font-medium">Favor de confirmar asistencia vía WhatsApp con los papás</p>
+            <p class="text-sm mb-12 opacity-60 font-medium">Favor de confirmar asistencia vía WhatsApp</p>
             <form id="rsvpForm" class="space-y-8 text-left">
-                <div class="reveal-side-left delay-1">
+                <div>
                     <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">¿Asistirás?</label>
-                    <select id="attendance" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none appearance-none cursor-pointer">
+                    <select id="attendance" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
                         <option value="Sí">Sí, asistiré con gusto</option>
                         <option value="No">No podré asistir</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="reveal-side-left delay-2">
-                        <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Adultos</label>
-                        <input type="number" id="adults" required min="0" value="1" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
-                    </div>
-                    <div class="reveal-side-right delay-2">
-                        <label class="text-[11px] uppercase tracking-widest text-gray-400 font-extrabold ml-3">Niños</label>
-                        <input type="number" id="kids" min="0" value="0" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
-                    </div>
+                    <input type="number" id="adults" value="1" min="1" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
+                    <input type="number" id="kids" value="0" min="0" class="w-full bg-white border-none p-6 rounded-3xl text-base shadow-sm mt-2 outline-none">
                 </div>
                 <div class="flex flex-col space-y-4 pt-4">
-                    <button type="button" onclick="handleRSVP('papa')" class="w-full btn-small !py-6 !text-[11px] uppercase tracking-[1px] shadow-lg">Confirmar al Papá</button>
-                    <button type="button" onclick="handleRSVP('mama')" class="w-full btn-small btn-mama !py-6 !text-[11px] uppercase tracking-[1px] shadow-lg">Confirmar a la Mamá</button>
+                    <button type="button" onclick="handleRSVP('mama')" class="w-full btn-small btn-mama !py-6 !text-[11px] uppercase tracking-[1px]">Confirmar a la Mamá</button>
+                    <button type="button" onclick="handleRSVP('papa')" class="w-full btn-small !py-6 !text-[11px] uppercase tracking-[1px]">Confirmar al Papá</button>
                 </div>
             </form>
         </div>
 
-       <!-- ÁLBUM COMPARTIDO -->
+        <!-- ÁLBUM COMPARTIDO -->
         <div class="max-w-md mx-auto px-10 py-20 text-center bg-white rounded-[50px] mx-6 shadow-sm border border-gray-50 relative reveal-up mb-24">
             <h3 class="text-[13px] uppercase tracking-[0.4em] mb-8 text-[#5F6F52] font-extrabold">Álbum Compartido</h3>
             <p class="text-base text-gray-500 mb-10 px-4 font-semibold leading-relaxed">Toca el botón de abajo para subir tus fotos favoritas del evento.</p>
@@ -472,12 +419,15 @@
             </div>
             <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="btn-small scale-110">Ver Álbum en Drive</a>
         </div>
-
-        <!-- CIERRE -->
+        
+ <!-- CIERRE -->
         <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
-            <p class="text-2xl md:text-3xl italic leading-relaxed text-gray-400 font-script px-4">"Tu compañía es el regalo más grande que podemos recibir..."</p>
-            <p class="text-5xl font-script text-[#5F6F52] mt-10 reveal-scale delay-1">¡No faltes!</p>
-            <img src="https://i.imgur.com/Md7bALw.png" class="w-28 mx-auto mt-12 opacity-30 floating" alt="Dino final">
+            <p class="text-2xl md:text-3xl italic leading-relaxed text-gray-400 font-script px-4">
+                "Tu compañía es el regalo más grande que podemos recibir..."
+            </p>
+        <div class="max-w-md mx-auto px-10 py-24 text-center reveal-up">
+            <p class="text-5xl font-script text-[#5F6F52]">¡No faltes!</p>
+            <img src="https://i.imgur.com/Md7bALw.png" class="w-28 mx-auto mt-12 opacity-30" style="animation: floating 4s infinite ease-in-out" alt="Dino">
         </div>
 
         <div class="max-w-md mx-auto py-10 text-center">
@@ -501,19 +451,6 @@
             if (isPlaying) { bgMusic.pause(); musicToggle.classList.remove('playing'); }
             else { bgMusic.play(); musicToggle.classList.add('playing'); }
             isPlaying = !isPlaying;
-        }
-
-        function openLightbox(src) {
-            const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightboxImg');
-            img.src = src;
-            lightbox.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-            document.body.style.overflow = '';
         }
 
         function enterInvitation() {
@@ -543,51 +480,56 @@
             }, 400);
         }
 
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightboxImg').src = src;
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
         function initScrollObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
             }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-side-left, .reveal-side-right').forEach(el => observer.observe(el));
+            document.querySelectorAll('.reveal-up, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // --- EFECTO AUTO-SCROLL GALERÍA ---
+        let isUserInteracting = false;
+        const track = document.getElementById('galleryTrack');
+
+        track.addEventListener('touchstart', () => isUserInteracting = true);
+        track.addEventListener('mousedown', () => isUserInteracting = true);
+        track.addEventListener('touchend', () => isUserInteracting = false);
+        track.addEventListener('mouseup', () => isUserInteracting = false);
+
         function startGalleryAutoScroll() {
-            const track = document.getElementById('galleryTrack');
-            let scrollAmount = 0;
-            const cardWidth = track.querySelector('.gallery-card').offsetWidth + 20; // Ancho + gap
-            const maxScroll = track.scrollWidth - track.clientWidth;
+            const cardWidth = track.querySelector('.gallery-card').offsetWidth + 20;
 
             setInterval(() => {
-                if (scrollAmount >= maxScroll) {
-                    scrollAmount = 0;
-                } else {
-                    scrollAmount += cardWidth;
-                }
-                track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-            }, 3500); // Cambio cada 3.5 segundos
+                if (isUserInteracting) return;
+                const maxScroll = track.scrollWidth - track.clientWidth;
+                let currentPos = track.scrollLeft;
+                let nextPos = currentPos + cardWidth;
+                if (nextPos > maxScroll + 10) nextPos = 0;
+                track.scrollTo({ left: nextPos, behavior: 'smooth' });
+            }, 5500);
         }
 
         function handleRSVP(target) {
             const attendance = document.getElementById('attendance').value;
             const adults = document.getElementById('adults').value;
             const kids = document.getElementById('kids').value;
-            const phone = target === 'papa' ? "525543556242" : "525575260844"; 
+            const phone = target === 'mama' ? "525543556242" : "525575260844"; 
             let message = attendance === "Sí" ? 
                 `¡Hola! Confirmo mi asistencia para el bautizo de Ivanna Valentina. Seremos ${adults} adultos y ${kids} niños. ¡Nos vemos pronto!` : 
-                `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina. ¡Muchas gracias por la invitación!`;
+                `¡Hola! Lamento informar que no podré asistir al bautizo de Ivanna Valentina.`;
             window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
         }
-
-        const eventDate = new Date('March 14, 2026 13:30:00').getTime();
-        setInterval(() => {
-            const now = new Date().getTime();
-            const dist = eventDate - now;
-            if (dist < 0) return;
-            document.getElementById('days').innerText = Math.floor(dist / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-            document.getElementById('hours').innerText = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-            document.getElementById('minutes').innerText = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = Math.floor((dist % (1000 * 60)) / 1000).toString().padStart(2, '0');
-        }, 1000);
     </script>
 </body>
 </html>
