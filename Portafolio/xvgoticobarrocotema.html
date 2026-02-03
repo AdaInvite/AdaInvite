@@ -28,13 +28,30 @@
         h1, h2, h3 { font-family: 'Cinzel', serif; color: var(--white); letter-spacing: 0.1em; }
         .cursive { font-family: 'Playfair Display', serif; font-style: italic; color: var(--silver); }
 
+        /* --- Animaciones Base --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes fadeInBlur {
+            from { opacity: 0; filter: blur(10px); transform: translateY(20px); }
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+            50% { box-shadow: 0 0 25px rgba(255,255,255,0.5); }
+        }
+
         /* --- Fondo Decorativo Fijo --- */
         .bg-ornament {
             position: fixed;
             width: 250px;
-            opacity: 0.04;
+            opacity: 0.05;
             pointer-events: none;
             z-index: 0;
+            animation: float 8s ease-in-out infinite;
         }
 
         /* --- Pantalla 1: Sobre --- */
@@ -44,6 +61,7 @@
             z-index: 1000;
             background-color: #000;
             display: flex; align-items: center; justify-content: center;
+            transition: opacity 1s ease-in-out;
         }
 
         .flap {
@@ -52,18 +70,16 @@
             background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/Textura%20sobre.jpg');
             background-size: cover;
             background-position: center;
-            transition: all 1.2s cubic-bezier(0.7, 0, 0.3, 1);
-            filter: drop-shadow(0 0 12px rgba(0,0,0,0.8));
+            transition: all 1.4s cubic-bezier(0.7, 0, 0.3, 1);
+            filter: drop-shadow(0 0 20px rgba(0,0,0,1));
         }
 
         .flap-top { clip-path: polygon(0 0, 100% 0, 50% 50%); transform-origin: top; z-index: 5; }
         .flap-bottom { clip-path: polygon(0 100%, 100% 100%, 50% 50%); transform-origin: bottom; z-index: 4; }
-        
-        /* Solapas laterales con oscurecimiento más sutil y suave */
-        .flap-left { clip-path: polygon(0 0, 0 100%, 50% 50%); transform-origin: left; z-index: 3; filter: brightness(0.88) contrast(1.05); }
-        .flap-right { clip-path: polygon(100% 0, 100% 100%, 50% 50%); transform-origin: right; z-index: 3; filter: brightness(0.88) contrast(1.05); }
+        .flap-left { clip-path: polygon(0 0, 0 100%, 50% 50%); transform-origin: left; z-index: 3; filter: brightness(0.85); }
+        .flap-right { clip-path: polygon(100% 0, 100% 100%, 50% 50%); transform-origin: right; z-index: 3; filter: brightness(0.85); }
 
-        .opened .flap-top { transform: rotateX(160deg); z-index: 1; filter: brightness(0.2); }
+        .opened .flap-top { transform: rotateX(165deg); z-index: 1; filter: brightness(0.2); }
         .opened .flap-bottom { transform: translateY(100%); opacity: 0; }
         .opened .flap-left { transform: translateX(-100%); opacity: 0; }
         .opened .flap-right { transform: translateX(100%); opacity: 0; }
@@ -79,7 +95,9 @@
             flex-direction: column;
             align-items: center;
             width: 160px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
+        .seal-trigger:hover { transform: translate(-50%, -50%) scale(1.1); }
         .entrar-btn {
             margin-top: 15px;
             background: var(--white);
@@ -91,6 +109,7 @@
             letter-spacing: 4px;
             display: inline-block;
             box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            animation: pulseGold 2s infinite;
         }
 
         /* --- Pantalla 2: Hero --- */
@@ -106,7 +125,7 @@
             background-position: center;
             text-align: center;
             padding: 20px;
-            z-index: 10;
+            transition: opacity 0.8s ease;
         }
 
         .main-title {
@@ -115,7 +134,7 @@
             letter-spacing: 0.15em;
             margin-bottom: 1rem;
             line-height: 1.1;
-            white-space: nowrap;
+            animation: fadeInBlur 1.5s ease-out;
         }
 
         /* --- Pantalla 3: Info --- */
@@ -132,14 +151,17 @@
         .tex-obsidian { background: var(--black); border-top: 1px solid rgba(255,255,255,0.05); }
         .tex-silk { background: linear-gradient(45deg, #050505 25%, #080808 25%, #080808 50%, #050505 50%, #050505 75%, #080808 75%, #080808 100%); background-size: 40px 40px; }
 
+        /* Efecto de Revelación al Scroll */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s ease-out;
+            transform: translateY(40px);
+            filter: blur(5px);
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
+            filter: blur(0);
         }
 
         .side-block {
@@ -160,13 +182,20 @@
             letter-spacing: 2px;
             box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
             font-size: 14px;
+            transition: all 0.3s ease;
         }
+        .btn-submit:active { transform: scale(0.95); }
 
         .gallery-scroll {
             display: flex; overflow-x: auto; gap: 12px; padding: 10px;
             scrollbar-width: none;
         }
-        .gallery-scroll img { width: 260px; height: 380px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .gallery-scroll img { 
+            width: 240px; height: 350px; object-fit: cover; 
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.5s ease;
+        }
+        .gallery-scroll img:hover { transform: scale(1.02); }
 
         .main-photo-valentina {
             width: 100%;
@@ -175,6 +204,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 25px rgba(0,0,0,0.9);
             display: block;
+            animation: fadeInBlur 2s ease-out;
         }
 
         .countdown-container {
@@ -184,7 +214,9 @@
         .countdown-item {
             background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 5px; text-align: center;
+            transition: background 0.3s ease;
         }
+        .countdown-item:hover { background: rgba(255, 255, 255, 0.08); }
         .countdown-number { font-family: 'Cinzel', serif; font-size: 1.5rem; display: block; color: var(--white); line-height: 1; }
         .countdown-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--metallic); margin-top: 4px; display: block; }
 
@@ -192,7 +224,9 @@
             width: 160px; height: 160px; margin: 1.5rem auto;
             padding: 12px; background: white; border: 1px solid var(--silver);
             display: flex; align-items: center; justify-content: center;
+            transition: transform 0.5s ease;
         }
+        .qr-wrapper:hover { transform: scale(1.05); }
 
         .section-label {
             font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
@@ -200,7 +234,8 @@
         }
 
         .name-text { font-size: 1.75rem; line-height: 1.2; font-family: 'Cinzel', serif; }
-        .icon-large { width: 80px !important; height: auto; opacity: 1; }
+        .icon-large { width: 80px !important; height: auto; opacity: 1; transition: transform 0.5s ease; }
+        .side-block:hover .icon-large { transform: rotate(-5deg) scale(1.1); }
 
         .back-home-btn {
             position: fixed; top: 20px; left: 20px; z-index: 200;
@@ -214,7 +249,9 @@
             display: none;
             cursor: pointer;
             backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
         }
+        .back-home-btn:hover { background: var(--white); color: #000; }
 
         @media (max-width: 480px) {
             .main-title { font-size: 2.8rem !important; }
@@ -226,13 +263,13 @@
 
     <button class="back-home-btn" id="back-home" onclick="resetToStart()">← Inicio</button>
 
-    <!-- Fondo decorativo fijo -->
+    <!-- Fondo decorativo balanceante -->
     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8656.png" class="bg-ornament top-0 left-[-80px]">
-    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8657.png" class="bg-ornament bottom-0 right-[-80px] rotate-180">
+    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8657.png" class="bg-ornament bottom-0 right-[-80px] rotate-180" style="animation-delay: -2s;">
 
     <!-- MÚSICA -->
     <img id="music-btn" src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8672.png" 
-         class="fixed bottom-5 right-5 w-12 h-12 z-[100] cursor-pointer hidden opacity-80" onclick="toggleMusic()">
+         class="fixed bottom-5 right-5 w-12 h-12 z-[100] cursor-pointer hidden opacity-80 transition-transform hover:scale-110 active:scale-90" onclick="toggleMusic()">
     <audio id="audio-bg" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
     </audio>
@@ -246,42 +283,42 @@
             <div class="flap flap-right"></div>
             <div class="seal-trigger" onclick="openEnvelope()">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/Boto%CC%81n.PNG" class="w-24 drop-shadow-lg" alt="Sello">
-                <div class="entrar-btn animate-pulse">Entrar</div>
+                <div class="entrar-btn">Entrar</div>
             </div>
         </div>
     </div>
 
     <!-- PÁGINA 2: DATOS PRINCIPALES -->
     <section id="screen-hero" class="tex-charcoal">
-        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8660.png" class="absolute top-10 w-24">
+        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8660.png" class="absolute top-10 w-24 opacity-0 transition-all duration-1000" id="hero-crown">
         <div class="z-10 w-full px-4">
-            <h2 class="cursive cursive-hero text-2xl mb-4">Mis XV Años</h2>
-            <h1 class="main-title">VALENTINA</h1>
-            <div class="space-y-3 text-white/90">
+            <h2 class="cursive cursive-hero text-2xl mb-4 opacity-0 transition-all duration-1000 delay-300" id="hero-subtitle">Mis XV Años</h2>
+            <h1 class="main-title opacity-0 transition-all duration-1000 delay-500" id="hero-title">VALENTINA</h1>
+            <div class="space-y-3 text-white/90 opacity-0 transition-all duration-1000 delay-700" id="hero-date">
                 <p class="text-lg tracking-[0.25em] uppercase font-light">14 · Noviembre · 2026</p>
                 <p class="text-base tracking-widest uppercase font-light opacity-80">20:00 Horas</p>
             </div>
-            <button onclick="goToInfo()" class="mt-16 border border-white py-4 px-12 uppercase text-[11px] font-bold tracking-[0.4em] hover:bg-white hover:text-black transition-all">Continuar</button>
+            <button onclick="goToInfo()" class="mt-16 border border-white py-4 px-12 uppercase text-[11px] font-bold tracking-[0.4em] hover:bg-white hover:text-black transition-all opacity-0 delay-1000" id="hero-btn">Continuar</button>
         </div>
     </section>
 
     <!-- PÁGINA 3: INFORMACIÓN COMPLETA -->
     <main id="screen-info">
         
-        <!-- Frase y Foto Inicial (Textura Wine) -->
+        <!-- Frase y Foto Inicial -->
         <section class="py-16 px-6 text-center tex-wine">
             <div class="max-w-xl mx-auto">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8669.png" class="w-16 mx-auto mb-6 opacity-80">
-                <p class="cursive text-xl sm:text-2xl text-white italic leading-relaxed mb-8">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8669.png" class="w-16 mx-auto mb-6 opacity-80 reveal">
+                <p class="cursive text-xl sm:text-2xl text-white italic leading-relaxed mb-8 reveal">
                     "Que la mística de esta noche y la luz de mi juventud guíen mis pasos hacia un nuevo despertar."
                 </p>
-                <div class="main-photo-valentina overflow-hidden">
+                <div class="main-photo-valentina overflow-hidden reveal">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8687.jpeg" alt="Valentina" class="w-full h-auto">
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE NOMBRES (Textura Charcoal) -->
+        <!-- SECCIÓN DE NOMBRES -->
         <section class="py-12 px-8 max-w-sm mx-auto reveal tex-charcoal">
             <div class="text-center mb-16">
                 <span class="section-label">Con la bendición de mis padres</span>
@@ -300,7 +337,7 @@
             </div>
         </section>
 
-        <!-- Galería (Textura Silk) -->
+        <!-- Galería -->
         <section class="py-12 tex-silk">
             <div class="reveal">
                 <h3 class="text-center text-[11px] tracking-[0.6em] mb-10 uppercase text-white/40">Momentos</h3>
@@ -313,12 +350,12 @@
             </div>
         </section>
 
-        <!-- Ubicaciones (Textura Obsidian) -->
+        <!-- Ubicaciones -->
         <section class="py-12 px-8 max-w-sm mx-auto space-y-24 tex-obsidian">
             <div class="side-block reveal">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8671.png" class="icon-large">
                 <div>
-                    <h2 class="text-xl uppercase tracking-widest mb-1">Ceremonia</h2>
+                    <h2 class="text-xl uppercase tracking-widest mb-2">Ceremonia</h2>
                     <p class="text-sm opacity-70 leading-snug mb-3">Parroquia de Nuestra Señora del Carmen</p>
                     <p class="cursive text-lg mb-4">18:00 Horas</p>
                     <button onclick="window.open('https://www.google.com/maps?q=Parroquia+de+Nuestra+Señora+del+Carmen', '_blank')" class="border border-white/30 text-white/80 px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Mapa</button>
@@ -336,27 +373,15 @@
             </div>
         </section>
 
-        <!-- Contador (Textura Wine) -->
+        <!-- Contador y Calendario -->
         <section class="py-20 px-6 text-center reveal border-t border-white/5 tex-wine">
             <span class="section-label mb-6">La gala comienza en:</span>
             
             <div class="countdown-container">
-                <div class="countdown-item">
-                    <span id="days" class="countdown-number">00</span>
-                    <span class="countdown-label">Días</span>
-                </div>
-                <div class="countdown-item">
-                    <span id="hours" class="countdown-number">00</span>
-                    <span class="countdown-label">Horas</span>
-                </div>
-                <div class="countdown-item">
-                    <span id="minutes" class="countdown-number">00</span>
-                    <span class="countdown-label">Min</span>
-                </div>
-                <div class="countdown-item">
-                    <span id="seconds" class="countdown-number" style="color: var(--metallic);">00</span>
-                    <span class="countdown-label">Seg</span>
-                </div>
+                <div class="countdown-item"><span id="days" class="countdown-number">00</span><span class="countdown-label">Días</span></div>
+                <div class="countdown-item"><span id="hours" class="countdown-number">00</span><span class="countdown-label">Horas</span></div>
+                <div class="countdown-item"><span id="minutes" class="countdown-number">00</span><span class="countdown-label">Min</span></div>
+                <div class="countdown-item"><span id="seconds" class="countdown-number" style="color: var(--white);">00</span><span class="countdown-label">Seg</span></div>
             </div>
 
             <button onclick="window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+A%C3%B1os+-+Valentina&dates=20261114T200000Z/20261115T020000Z&details=Celebraci%C3%B3n+de+XV+A%C3%B1os+de+Valentina.&location=Sal%C3%B3n+Real+Castillo+de+los+Reyes', '_blank')" 
@@ -365,7 +390,7 @@
             </button>
         </section>
 
-        <!-- Álbum Digital (Textura Charcoal) -->
+        <!-- Álbum Digital -->
         <section class="py-20 px-6 text-center reveal border-t border-white/5 tex-charcoal">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8670.png" class="icon-large mx-auto mb-8">
             <h2 class="text-2xl mb-4 tracking-widest uppercase">Álbum Digital</h2>
@@ -378,7 +403,7 @@
             <button onclick="window.open('https://photos.google.com', '_blank')" class="bg-white text-black px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] mt-8">Subir Fotos</button>
         </section>
 
-        <!-- RSVP (Textura Obsidian) -->
+        <!-- RSVP -->
         <section class="py-24 px-8 reveal tex-obsidian">
             <h2 class="text-3xl text-center mb-12 tracking-widest uppercase text-white">Asistencia</h2>
             <form class="space-y-12 max-w-xs mx-auto" onsubmit="event.preventDefault(); alert('¡Confirmación enviada con éxito!');">
@@ -411,39 +436,57 @@
         function openEnvelope() {
             document.getElementById('env-box').classList.add('opened');
             setTimeout(() => {
-                document.getElementById('envelope-overlay').style.display = 'none';
+                const overlay = document.getElementById('envelope-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    // Animar la entrada de la Pantalla 2
+                    document.getElementById('hero-crown').style.opacity = '1';
+                    document.getElementById('hero-crown').style.transform = 'translateY(0)';
+                    document.getElementById('hero-subtitle').style.opacity = '1';
+                    document.getElementById('hero-title').style.opacity = '1';
+                    document.getElementById('hero-date').style.opacity = '1';
+                    document.getElementById('hero-btn').style.opacity = '1';
+                }, 1000);
                 if(!playing) toggleMusic();
             }, 1200);
         }
 
         function goToInfo() {
-            document.getElementById('screen-hero').style.display = 'none';
-            document.getElementById('screen-info').style.display = 'block';
-            document.getElementById('music-btn').style.display = 'block';
-            document.getElementById('back-home').style.display = 'block';
-            document.body.style.overflowY = 'auto';
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+            const hero = document.getElementById('screen-hero');
+            hero.style.opacity = '0';
+            setTimeout(() => {
+                hero.style.display = 'none';
+                document.getElementById('screen-info').style.display = 'block';
+                document.getElementById('music-btn').style.display = 'block';
+                document.getElementById('back-home').style.display = 'block';
+                document.body.style.overflowY = 'auto';
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
 
-            startCountdown();
-            window.scrollTo(0, 0);
+                startCountdown();
+                window.scrollTo(0, 0);
+            }, 800);
         }
 
         function resetToStart() {
-            document.getElementById('screen-hero').style.display = 'flex';
-            document.getElementById('screen-info').style.display = 'none';
-            document.getElementById('music-btn').style.display = 'none';
-            document.getElementById('back-home').style.display = 'none';
-            document.body.style.overflowY = 'hidden';
-            window.scrollTo(0, 0);
+            location.reload(); // Recarga para volver al estado inicial del sobre
         }
 
         function toggleMusic() {
-            if (playing) { audio.pause(); playing = false; document.getElementById('music-btn').style.opacity = '0.3'; }
-            else { audio.play().catch(() => {}); playing = true; document.getElementById('music-btn').style.opacity = '1'; }
+            if (playing) { 
+                audio.pause(); playing = false; 
+                document.getElementById('music-btn').style.opacity = '0.3'; 
+                document.getElementById('music-btn').style.transform = 'scale(1)';
+            }
+            else { 
+                audio.play().catch(() => {}); playing = true; 
+                document.getElementById('music-btn').style.opacity = '1'; 
+                document.getElementById('music-btn').style.transform = 'scale(1.1)';
+            }
         }
 
         function startCountdown() {
