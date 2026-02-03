@@ -64,6 +64,7 @@
         .opened .flap-left { transform: translateX(-100%); opacity: 0; }
         .opened .flap-right { transform: translateX(100%); opacity: 0; }
         
+        /* Centrado absoluto del botón del sobre */
         .seal-trigger {
             position: absolute;
             top: 50%; left: 50%;
@@ -111,7 +112,6 @@
             letter-spacing: 0.15em;
             margin-bottom: 1rem;
             line-height: 1.1;
-            white-space: nowrap;
         }
 
         /* --- Pantalla 3: Info --- */
@@ -133,6 +133,15 @@
             transform: translateY(0);
         }
 
+        /* Estructura lateral para secciones de ubicación */
+        .side-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+            margin: 30px 0;
+        }
+
         .btn-submit {
             background-color: var(--white) !important;
             color: #000 !important;
@@ -149,44 +158,83 @@
             display: flex; overflow-x: auto; gap: 12px; padding: 10px;
             scrollbar-width: none;
         }
-        .gallery-scroll img { width: 260px; height: 380px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .gallery-scroll img { width: 240px; height: 350px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
 
+        /* Contenedor de la foto principal en pantalla 3 */
         .main-photo-valentina {
             width: 100%;
             max-width: 280px;
             margin: 5px auto;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+            display: block;
         }
 
+        /* Contador con segundos */
         .countdown-container {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 12px; max-width: 320px; margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 320px;
+            margin: 2rem auto;
         }
         .countdown-item {
-            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 5px; text-align: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 5px;
+            text-align: center;
         }
-        .countdown-number { font-family: 'Cinzel', serif; font-size: 1.8rem; display: block; color: var(--white); line-height: 1; }
-        .countdown-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--metallic); margin-top: 4px; display: block; }
+        .countdown-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            display: block;
+            color: var(--white);
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--metallic);
+            margin-top: 4px;
+        }
 
         .qr-wrapper {
-            width: 160px; height: 160px; margin: 1.5rem auto;
-            padding: 12px; background: white; border: 1px solid var(--silver);
-            display: flex; align-items: center; justify-content: center;
+            width: 160px;
+            height: 160px;
+            margin: 1.5rem auto;
+            padding: 12px;
+            background: white;
+            border: 1px solid var(--silver);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .section-label {
-            font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
-            color: var(--metallic); display: block; margin-bottom: 1rem;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--metallic);
+            display: block;
+            margin-bottom: 1rem;
         }
 
-        .name-text { font-size: 1.75rem; line-height: 1.2; font-family: 'Cinzel', serif; }
-        .icon-large { width: 80px !important; height: auto; opacity: 1; }
+        .name-text {
+            font-size: 1.75rem;
+            line-height: 1.2;
+            font-family: 'Cinzel', serif;
+        }
+
+        .icon-large {
+            width: 85px !important;
+            height: auto;
+            opacity: 1;
+        }
 
         .back-home-btn {
             position: fixed; top: 20px; left: 20px; z-index: 200;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--white);
             color: var(--white);
             padding: 6px 12px;
@@ -201,6 +249,7 @@
         @media (max-width: 480px) {
             .main-title { font-size: 2.8rem !important; }
             .cursive-hero { font-size: 1.2rem !important; }
+            .name-text { font-size: 1.5rem !important; }
         }
     </style>
 </head>
@@ -240,8 +289,8 @@
             <h2 class="cursive cursive-hero text-2xl mb-4">Mis XV Años</h2>
             <h1 class="main-title">VALENTINA</h1>
             <div class="space-y-3 text-white/90">
-                <p class="text-2xl tracking-[0.25em] uppercase font-light">14 · Noviembre · 2026</p>
-                <p class="text-lg tracking-widest uppercase font-light opacity-80">20:00 Horas</p>
+                <p class="text-lg tracking-[0.25em] uppercase font-light">14 · Noviembre · 2026</p>
+                <p class="text-base tracking-widest uppercase font-light opacity-80">20:00 Horas</p>
             </div>
             <button onclick="goToInfo()" class="mt-16 border border-white py-4 px-12 uppercase text-[11px] font-bold tracking-[0.4em] hover:bg-white hover:text-black transition-all">Continuar</button>
         </div>
@@ -250,18 +299,21 @@
     <!-- PÁGINA 3: INFORMACIÓN COMPLETA -->
     <main id="screen-info">
         
-        <!-- Frase y Foto -->
+        <!-- Frase y Foto Inicial -->
         <section class="py-16 px-6 text-center">
             <div class="max-w-xl mx-auto">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8669.png" class="w-16 mx-auto mb-6 opacity-80">
                 <p class="cursive text-xl sm:text-2xl text-white italic leading-relaxed mb-8">
                     "Que la mística de esta noche y la luz de mi juventud guíen mis pasos hacia un nuevo despertar."
                 </p>
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8687.jpeg" class="main-photo-valentina" alt="Valentina">
+                <!-- Foto Principal Valentina corregida para que no sobresalga -->
+                <div class="main-photo-valentina overflow-hidden">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8687.jpeg" alt="Valentina" class="w-full h-auto">
+                </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE NOMBRES -->
+        <!-- SECCIÓN DE NOMBRES (Vertical) -->
         <section class="py-12 px-8 max-w-sm mx-auto reveal">
             <div class="text-center mb-16">
                 <span class="section-label">Con la bendición de mis padres</span>
@@ -280,7 +332,7 @@
             </div>
         </section>
 
-        <!-- Galería -->
+        <!-- Galería Actualizada -->
         <section class="py-12 bg-zinc-950/40">
             <div class="reveal">
                 <h3 class="text-center text-[11px] tracking-[0.6em] mb-10 uppercase text-white/40">Momentos</h3>
@@ -293,12 +345,13 @@
             </div>
         </section>
 
-        <!-- Ubicaciones -->
-        <section class="py-12 px-8 max-sm mx-auto space-y-24">
+        <!-- Ubicaciones con Estructura Variada -->
+        <section class="py-12 px-8 max-w-sm mx-auto space-y-24">
             <div class="side-block reveal">
+                <!-- Icono Ceremonia a la Izquierda -->
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8671.png" class="icon-large">
                 <div>
-                    <h2 class="text-xl uppercase tracking-widest mb-2">Ceremonia</h2>
+                    <h2 class="text-xl uppercase tracking-widest mb-1">Ceremonia</h2>
                     <p class="text-sm opacity-70 leading-snug mb-3">Parroquia de Nuestra Señora del Carmen</p>
                     <p class="cursive text-lg mb-4">18:00 Horas</p>
                     <button onclick="window.open('https://www.google.com/maps?q=Parroquia+de+Nuestra+Señora+del+Carmen', '_blank')" class="border border-white/30 text-white/80 px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Mapa</button>
@@ -306,9 +359,10 @@
             </div>
 
             <div class="side-block flex-row-reverse text-right reveal">
+                <!-- Icono Recepción a la Derecha -->
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8664.png" class="icon-large">
                 <div>
-                    <h2 class="text-xl uppercase tracking-widest mb-2">Recepción</h2>
+                    <h2 class="text-xl uppercase tracking-widest mb-1">Recepción</h2>
                     <p class="text-sm opacity-70 leading-snug mb-3">Salón Real · Castillo de los Reyes</p>
                     <p class="cursive text-lg mb-4">21:00 Horas</p>
                     <button onclick="window.open('https://www.google.com/maps?q=Salón+Real+Castillo+de+los+Reyes', '_blank')" class="border border-white/30 text-white/80 px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Mapa</button>
@@ -316,7 +370,7 @@
             </div>
         </section>
 
-        <!-- Contador y Calendario -->
+        <!-- Contador Regresivo y Calendario -->
         <section class="py-20 px-6 text-center reveal border-t border-white/5 bg-zinc-950/20">
             <span class="section-label mb-6">La gala comienza en:</span>
             
@@ -345,23 +399,24 @@
             </button>
         </section>
 
-        <!-- Álbum Digital -->
+        <!-- Álbum Digital con QR -->
         <section class="py-20 px-6 text-center reveal border-t border-white/5">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8670.png" class="icon-large mx-auto mb-8">
             <h2 class="text-2xl mb-4 tracking-widest uppercase">Álbum Digital</h2>
-            <p class="text-sm text-white/50 mb-6 italic italic leading-relaxed">Escanea o toca para compartir tus momentos.</p>
+            <p class="text-sm text-white/50 mb-6 italic leading-relaxed">Escanea o toca para compartir tus momentos.</p>
             
             <div class="qr-wrapper">
+                <!-- Generador de QR dinámico -->
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://photos.google.com" alt="QR Album">
             </div>
 
             <button onclick="window.open('https://photos.google.com', '_blank')" class="bg-white text-black px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] mt-8">Subir Fotos</button>
         </section>
 
-        <!-- RSVP -->
+        <!-- RSVP con Botón de Alta Visibilidad -->
         <section class="py-24 px-8 reveal bg-[#0a0a0a]">
-            <h2 class="text-3xl text-center mb-12 tracking-widest uppercase">Asistencia</h2>
-            <form class="space-y-12 max-w-xs mx-auto" onsubmit="event.preventDefault(); alert('¡Confirmación enviada!');">
+            <h2 class="text-3xl text-center mb-12 tracking-widest uppercase text-white">Asistencia</h2>
+            <form class="space-y-12 max-w-xs mx-auto" onsubmit="event.preventDefault(); alert('¡Confirmación enviada con éxito!');">
                 <div class="group relative">
                     <label class="text-[10px] uppercase tracking-widest text-white/40 mb-2 block text-left">Nombre completo</label>
                     <input type="text" required class="w-full bg-transparent border-b border-white/20 py-3 outline-none text-lg transition-colors focus:border-white" placeholder="Tu nombre aquí...">
@@ -370,7 +425,7 @@
                     <label class="text-[10px] uppercase tracking-widest text-white/40 mb-2 block text-left">Confirmación</label>
                     <select class="w-full bg-transparent border-b border-white/20 py-3 outline-none text-white/60 text-lg appearance-none">
                         <option class="bg-black" value="si">Asistiré con gusto</option>
-                        <option class="bg-black" value="no">No podré asistir</option>
+                        <option class="bg-black" value="no">Lo siento, no podré asistir</option>
                     </select>
                 </div>
                 <button type="submit" class="btn-submit">Confirmar Asistencia</button>
@@ -413,7 +468,7 @@
         }
 
         function resetToStart() {
-            // Regresar a la Pantalla 2
+            // Regresar a la Pantalla 2 y ocultar la 3
             document.getElementById('screen-hero').style.display = 'flex';
             document.getElementById('screen-info').style.display = 'none';
             document.getElementById('music-btn').style.display = 'none';
@@ -437,10 +492,14 @@
                 const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById("days").innerText = String(d).padStart(2, '0');
-                document.getElementById("hours").innerText = String(h).padStart(2, '0');
-                document.getElementById("minutes").innerText = String(m).padStart(2, '0');
-                document.getElementById("seconds").innerText = String(s).padStart(2, '0');
+                
+                // Actualizar elementos del contador
+                if(document.getElementById("days")) {
+                    document.getElementById("days").innerText = String(d).padStart(2, '0');
+                    document.getElementById("hours").innerText = String(h).padStart(2, '0');
+                    document.getElementById("minutes").innerText = String(m).padStart(2, '0');
+                    document.getElementById("seconds").innerText = String(s).padStart(2, '0');
+                }
             };
             setInterval(update, 1000);
             update();
