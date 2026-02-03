@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Valentina - Mis XV Años</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --silver: #e5e7eb;
+            --metallic: #9ca3af;
+            --white: #ffffff;
+            --black: #050505;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        h1, h2, h3 { font-family: 'Cinzel', serif; color: var(--white); letter-spacing: 0.1em; }
+        .cursive { font-family: 'Playfair Display', serif; font-style: italic; color: var(--silver); }
+
+        /* --- Fondo Decorativo Fijo --- */
+        .bg-ornament {
+            position: fixed;
+            width: 250px;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- Pantalla 1: Sobre --- */
+        #envelope-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000;
+            background-color: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .flap {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/Textura%20sobre.jpg');
+            background-size: cover;
+            background-position: center;
+            transition: all 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+            filter: drop-shadow(0 0 15px rgba(0,0,0,1));
+        }
+
+        .flap-top { clip-path: polygon(0 0, 100% 0, 50% 50%); transform-origin: top; z-index: 5; }
+        .flap-bottom { clip-path: polygon(0 100%, 100% 100%, 50% 50%); transform-origin: bottom; z-index: 4; }
+        .flap-left { clip-path: polygon(0 0, 0 100%, 50% 50%); transform-origin: left; z-index: 3; }
+        .flap-right { clip-path: polygon(100% 0, 100% 100%, 50% 50%); transform-origin: right; z-index: 3; }
+
+        .opened .flap-top { transform: rotateX(160deg); z-index: 1; filter: brightness(0.2); }
+        .opened .flap-bottom { transform: translateY(100%); opacity: 0; }
+        .opened .flap-left { transform: translateX(-100%); opacity: 0; }
+        .opened .flap-right { transform: translateX(100%); opacity: 0; }
+        
+        .seal-trigger {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 160px;
+        }
+        .entrar-btn {
+            margin-top: 15px;
+            background: var(--white);
+            color: #000;
+            padding: 10px 30px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* --- Pantalla 2: Hero --- */
+        #screen-hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, rgba(5, 5, 5, 0.4), rgba(5, 5, 5, 1)), 
+                        url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8676.jpeg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 12vw, 5.5rem);
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        /* --- Pantalla 3: Info --- */
+        #screen-info {
+            display: none;
+            background-color: var(--black);
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-submit {
+            background-color: var(--white) !important;
+            color: #000 !important;
+            font-weight: 800 !important;
+            width: 100%;
+            padding: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+        }
+
+        .gallery-scroll {
+            display: flex; overflow-x: auto; gap: 12px; padding: 10px;
+            scrollbar-width: none;
+        }
+        .gallery-scroll img { width: 260px; height: 380px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+
+        .main-photo-valentina {
+            width: 100%;
+            max-width: 280px;
+            margin: 5px auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+        }
+
+        .countdown-container {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 12px; max-width: 320px; margin: 2rem auto;
+        }
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 5px; text-align: center;
+        }
+        .countdown-number { font-family: 'Cinzel', serif; font-size: 1.8rem; display: block; color: var(--white); line-height: 1; }
+        .countdown-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--metallic); margin-top: 4px; display: block; }
+
+        .qr-wrapper {
+            width: 160px; height: 160px; margin: 1.5rem auto;
+            padding: 12px; background: white; border: 1px solid var(--silver);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .section-label {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--metallic); display: block; margin-bottom: 1rem;
+        }
+
+        .name-text { font-size: 1.75rem; line-height: 1.2; font-family: 'Cinzel', serif; }
+        .icon-large { width: 80px !important; height: auto; opacity: 1; }
+
+        .back-home-btn {
+            position: fixed; top: 20px; left: 20px; z-index: 200;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--white);
+            color: var(--white);
+            padding: 6px 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: none;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        @media (max-width: 480px) {
+            .main-title { font-size: 2.8rem !important; }
+            .cursive-hero { font-size: 1.2rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="back-home-btn" id="back-home" onclick="resetToStart()">← Inicio</button>
+
+    <!-- Fondo fijo translúcido -->
+    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8656.png" class="bg-ornament top-0 left-[-80px]">
+    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8657.png" class="bg-ornament bottom-0 right-[-80px] rotate-180">
+
+    <!-- MÚSICA -->
+    <img id="music-btn" src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8672.png" 
+         class="fixed bottom-5 right-5 w-12 h-12 z-[100] cursor-pointer hidden opacity-80" onclick="toggleMusic()">
+    <audio id="audio-bg" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- PÁGINA 1: SOBRE -->
+    <div id="envelope-overlay">
+        <div class="envelope-container h-full w-full relative overflow-hidden" id="env-box">
+            <div class="flap flap-top"></div>
+            <div class="flap flap-bottom"></div>
+            <div class="flap flap-left"></div>
+            <div class="flap flap-right"></div>
+            <div class="seal-trigger" onclick="openEnvelope()">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/Boto%CC%81n.PNG" class="w-24 drop-shadow-lg" alt="Sello">
+                <div class="entrar-btn animate-pulse">Entrar</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: DATOS PRINCIPALES -->
+    <section id="screen-hero">
+        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8660.png" class="absolute top-10 w-24">
+        <div class="z-10 w-full px-4">
+            <h2 class="cursive cursive-hero text-2xl mb-4">Mis XV Años</h2>
+            <h1 class="main-title">VALENTINA</h1>
+            <div class="space-y-3 text-white/90">
+                <p class="text-2xl tracking-[0.25em] uppercase font-light">14 · Noviembre · 2026</p>
+                <p class="text-lg tracking-widest uppercase font-light opacity-80">20:00 Horas</p>
+            </div>
+            <button onclick="goToInfo()" class="mt-16 border border-white py-4 px-12 uppercase text-[11px] font-bold tracking-[0.4em] hover:bg-white hover:text-black transition-all">Continuar</button>
+        </div>
+    </section>
+
+    <!-- PÁGINA 3: INFORMACIÓN COMPLETA -->
+    <main id="screen-info">
+        
+        <!-- Frase y Foto -->
+        <section class="py-16 px-6 text-center">
+            <div class="max-w-xl mx-auto">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8669.png" class="w-16 mx-auto mb-6 opacity-80">
+                <p class="cursive text-xl sm:text-2xl text-white italic leading-relaxed mb-8">
+                    "Que la mística de esta noche y la luz de mi juventud guíen mis pasos hacia un nuevo despertar."
+                </p>
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8687.jpeg" class="main-photo-valentina" alt="Valentina">
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE NOMBRES -->
+        <section class="py-12 px-8 max-w-sm mx-auto reveal">
+            <div class="text-center mb-16">
+                <span class="section-label">Con la bendición de mis padres</span>
+                <p class="name-text mb-2">Ricardo Valente</p>
+                <p class="cursive text-2xl mb-2">&</p>
+                <p class="name-text">Elena Moreno</p>
+            </div>
+
+            <div class="w-16 h-[1px] bg-white/20 mx-auto mb-16"></div>
+
+            <div class="text-center">
+                <span class="section-label">MIS PADRINOS</span>
+                <p class="name-text mb-2">Carlos Castillo</p>
+                <p class="cursive text-2xl mb-2">&</p>
+                <p class="name-text">Elena Guzmán</p>
+            </div>
+        </section>
+
+        <!-- Galería -->
+        <section class="py-12 bg-zinc-950/40">
+            <div class="reveal">
+                <h3 class="text-center text-[11px] tracking-[0.6em] mb-10 uppercase text-white/40">Momentos</h3>
+                <div class="gallery-scroll" id="slider">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8686.jpeg" alt="G1">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8688.jpeg" alt="G2">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8689.jpeg" alt="G3">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8690.jpeg" alt="G4">
+                </div>
+            </div>
+        </section>
+
+        <!-- Ubicaciones -->
+        <section class="py-12 px-8 max-sm mx-auto space-y-24">
+            <div class="side-block reveal">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8671.png" class="icon-large">
+                <div>
+                    <h2 class="text-xl uppercase tracking-widest mb-2">Ceremonia</h2>
+                    <p class="text-sm opacity-70 leading-snug mb-3">Parroquia de Nuestra Señora del Carmen</p>
+                    <p class="cursive text-lg mb-4">18:00 Horas</p>
+                    <button onclick="window.open('https://www.google.com/maps?q=Parroquia+de+Nuestra+Señora+del+Carmen', '_blank')" class="border border-white/30 text-white/80 px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Mapa</button>
+                </div>
+            </div>
+
+            <div class="side-block flex-row-reverse text-right reveal">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8664.png" class="icon-large">
+                <div>
+                    <h2 class="text-xl uppercase tracking-widest mb-2">Recepción</h2>
+                    <p class="text-sm opacity-70 leading-snug mb-3">Salón Real · Castillo de los Reyes</p>
+                    <p class="cursive text-lg mb-4">21:00 Horas</p>
+                    <button onclick="window.open('https://www.google.com/maps?q=Salón+Real+Castillo+de+los+Reyes', '_blank')" class="border border-white/30 text-white/80 px-6 py-2 text-[10px] font-bold uppercase tracking-widest">Mapa</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contador y Calendario -->
+        <section class="py-20 px-6 text-center reveal border-t border-white/5 bg-zinc-950/20">
+            <span class="section-label mb-6">La gala comienza en:</span>
+            
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span id="days" class="countdown-number">00</span>
+                    <span class="countdown-label">Días</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="hours" class="countdown-number">00</span>
+                    <span class="countdown-label">Horas</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes" class="countdown-number">00</span>
+                    <span class="countdown-label">Min</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds" class="countdown-number" style="color: var(--metallic);">00</span>
+                    <span class="countdown-label">Seg</span>
+                </div>
+            </div>
+
+            <button onclick="window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+A%C3%B1os+-+Valentina&dates=20261114T200000Z/20261115T020000Z&details=Celebraci%C3%B3n+de+XV+A%C3%B1os+de+Valentina.&location=Sal%C3%B3n+Real+Castillo+de+los+Reyes', '_blank')" 
+                    class="mt-8 border border-white/40 text-white/80 py-3 px-8 uppercase text-[11px] font-bold tracking-widest hover:bg-white/10 transition-all">
+                Añadir al Calendario
+            </button>
+        </section>
+
+        <!-- Álbum Digital -->
+        <section class="py-20 px-6 text-center reveal border-t border-white/5">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8670.png" class="icon-large mx-auto mb-8">
+            <h2 class="text-2xl mb-4 tracking-widest uppercase">Álbum Digital</h2>
+            <p class="text-sm text-white/50 mb-6 italic italic leading-relaxed">Escanea o toca para compartir tus momentos.</p>
+            
+            <div class="qr-wrapper">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://photos.google.com" alt="QR Album">
+            </div>
+
+            <button onclick="window.open('https://photos.google.com', '_blank')" class="bg-white text-black px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] mt-8">Subir Fotos</button>
+        </section>
+
+        <!-- RSVP -->
+        <section class="py-24 px-8 reveal bg-[#0a0a0a]">
+            <h2 class="text-3xl text-center mb-12 tracking-widest uppercase">Asistencia</h2>
+            <form class="space-y-12 max-w-xs mx-auto" onsubmit="event.preventDefault(); alert('¡Confirmación enviada!');">
+                <div class="group relative">
+                    <label class="text-[10px] uppercase tracking-widest text-white/40 mb-2 block text-left">Nombre completo</label>
+                    <input type="text" required class="w-full bg-transparent border-b border-white/20 py-3 outline-none text-lg transition-colors focus:border-white" placeholder="Tu nombre aquí...">
+                </div>
+                <div class="group relative">
+                    <label class="text-[10px] uppercase tracking-widest text-white/40 mb-2 block text-left">Confirmación</label>
+                    <select class="w-full bg-transparent border-b border-white/20 py-3 outline-none text-white/60 text-lg appearance-none">
+                        <option class="bg-black" value="si">Asistiré con gusto</option>
+                        <option class="bg-black" value="no">No podré asistir</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Confirmar Asistencia</button>
+            </form>
+        </section>
+
+        <footer class="py-32 text-center reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8665.png" class="w-24 mx-auto mb-10 opacity-30">
+            <h2 class="cursive text-4xl mb-12 text-white/80">¡Te esperamos!</h2>
+            <p class="text-[11px] tracking-[0.6em] uppercase opacity-30">Valentina · 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        const audio = document.getElementById('audio-bg');
+        let playing = false;
+
+        function openEnvelope() {
+            document.getElementById('env-box').classList.add('opened');
+            setTimeout(() => {
+                document.getElementById('envelope-overlay').style.display = 'none';
+                if(!playing) toggleMusic();
+            }, 1200);
+        }
+
+        function goToInfo() {
+            document.getElementById('screen-hero').style.display = 'none';
+            document.getElementById('screen-info').style.display = 'block';
+            document.getElementById('music-btn').style.display = 'block';
+            document.getElementById('back-home').style.display = 'block';
+            document.body.style.overflowY = 'auto';
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+            startCountdown();
+            window.scrollTo(0, 0);
+        }
+
+        function resetToStart() {
+            // Regresar a la Pantalla 2
+            document.getElementById('screen-hero').style.display = 'flex';
+            document.getElementById('screen-info').style.display = 'none';
+            document.getElementById('music-btn').style.display = 'none';
+            document.getElementById('back-home').style.display = 'none';
+            document.body.style.overflowY = 'hidden';
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMusic() {
+            if (playing) { audio.pause(); playing = false; document.getElementById('music-btn').style.opacity = '0.3'; }
+            else { audio.play().catch(() => {}); playing = true; document.getElementById('music-btn').style.opacity = '1'; }
+        }
+
+        function startCountdown() {
+            const target = new Date("Nov 14, 2026 20:00:00").getTime();
+            const update = () => {
+                const now = new Date().getTime();
+                const diff = target - now;
+                if (diff < 0) return;
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById("days").innerText = String(d).padStart(2, '0');
+                document.getElementById("hours").innerText = String(h).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(m).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(s).padStart(2, '0');
+            };
+            setInterval(update, 1000);
+            update();
+        }
+    </script>
+</body>
+</html>
