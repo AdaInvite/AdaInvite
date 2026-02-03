@@ -44,6 +44,17 @@
             50% { box-shadow: 0 0 25px rgba(255,255,255,0.5); }
         }
 
+        /* Animación para el icono de música */
+        @keyframes music-playing {
+            from { transform: rotate(0deg) scale(1.1); }
+            to { transform: rotate(360deg) scale(1.1); }
+        }
+
+        .music-playing {
+            animation: music-playing 10s linear infinite !important;
+            opacity: 1 !important;
+        }
+
         /* --- Fondo Decorativo Fijo --- */
         .bg-ornament {
             position: fixed;
@@ -151,7 +162,6 @@
         .tex-obsidian { background: var(--black); border-top: 1px solid rgba(255,255,255,0.05); }
         .tex-silk { background: linear-gradient(45deg, #050505 25%, #080808 25%, #080808 50%, #050505 50%, #050505 75%, #080808 75%, #080808 100%); background-size: 40px 40px; }
 
-        /* Efecto de Revelación al Scroll */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -255,7 +265,7 @@
 
         @media (max-width: 480px) {
             .main-title { font-size: 2.8rem !important; }
-            .cursive-hero { font-size: 1.2rem !important; }
+            .cursive-hero { font-size: 1.4rem !important; }
         }
     </style>
 </head>
@@ -267,9 +277,9 @@
     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8656.png" class="bg-ornament top-0 left-[-80px]">
     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8657.png" class="bg-ornament bottom-0 right-[-80px] rotate-180" style="animation-delay: -2s;">
 
-    <!-- MÚSICA -->
+    <!-- MÚSICA CON ICONO ANIMADO -->
     <img id="music-btn" src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8672.png" 
-         class="fixed bottom-5 right-5 w-12 h-12 z-[100] cursor-pointer hidden opacity-80 transition-transform hover:scale-110 active:scale-90" onclick="toggleMusic()">
+         class="fixed bottom-5 right-5 w-12 h-12 z-[100] cursor-pointer hidden opacity-80 transition-all duration-500" onclick="toggleMusic()">
     <audio id="audio-bg" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
     </audio>
@@ -403,6 +413,25 @@
             <button onclick="window.open('https://photos.google.com', '_blank')" class="bg-white text-black px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] mt-8">Subir Fotos</button>
         </section>
 
+        <!-- Mesa de Regalos (Restaurada) -->
+        <section class="py-20 text-center reveal px-6 tex-charcoal border-t border-white/5">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8674.png" class="w-16 mx-auto mb-8 opacity-80">
+            <span class="section-label mb-4">Sugerencia de Regalos</span>
+            <p class="text-sm text-white/50 mb-10 italic">Tu presencia es mi mayor regalo, pero si deseas tener un detalle:</p>
+            <div class="flex flex-col gap-4 max-w-xs mx-auto">
+                <button onclick="window.open('https://www.amazon.com.mx/wedding', '_blank')" class="border border-white/30 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Amazon Wishlist</button>
+                <button onclick="alert('Muchas gracias. Habrá un espacio para sobres en la entrada del salón.')" class="border border-white/30 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Lluvia de Sobres</button>
+            </div>
+        </section>
+
+        <!-- Dress Code (Restaurado) -->
+        <section class="py-20 text-center reveal px-6 tex-silk">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/xvgoticobarroco/IMG_8667.png" class="w-20 mx-auto mb-8 opacity-80">
+            <span class="section-label mb-4">Código de Vestimenta</span>
+            <h2 class="text-3xl font-light tracking-[0.2em] mb-4">FORMAL ELEGANTE</h2>
+            <p class="text-[11px] uppercase tracking-[0.2em] opacity-50">Hombres: Traje oscuro · Mujeres: Vestido largo</p>
+        </section>
+
         <!-- RSVP -->
         <section class="py-24 px-8 reveal tex-obsidian">
             <h2 class="text-3xl text-center mb-12 tracking-widest uppercase text-white">Asistencia</h2>
@@ -473,19 +502,20 @@
         }
 
         function resetToStart() {
-            location.reload(); // Recarga para volver al estado inicial del sobre
+            location.reload(); 
         }
 
         function toggleMusic() {
+            const btn = document.getElementById('music-btn');
             if (playing) { 
                 audio.pause(); playing = false; 
-                document.getElementById('music-btn').style.opacity = '0.3'; 
-                document.getElementById('music-btn').style.transform = 'scale(1)';
+                btn.style.opacity = '0.3'; 
+                btn.classList.remove('music-playing');
             }
             else { 
                 audio.play().catch(() => {}); playing = true; 
-                document.getElementById('music-btn').style.opacity = '1'; 
-                document.getElementById('music-btn').style.transform = 'scale(1.1)';
+                btn.style.opacity = '1'; 
+                btn.classList.add('music-playing');
             }
         }
 
