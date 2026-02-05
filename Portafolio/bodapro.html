@@ -11,12 +11,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
         :root {
-            /* Paleta extraída de la imagen enviada */
-            --olive-dark: #3e4e2a;    /* Color 1 */
-            --olive-med: #5d6b2c;     /* Color 2 */
-            --olive-bright: #8a9315;  /* Color 3 */
-            --olive-muted: #788a48;   /* Color 4 */
-            --olive-light: #a5af3e;   /* Color 5 */
+            --olive-dark: #3e4e2a;
+            --olive-med: #5d6b2c;
+            --olive-bright: #8a9315;
+            --olive-muted: #788a48;
+            --olive-light: #a5af3e;
             --gold: #bfa260;
             --cream: #fdfaf5; 
             --white: #ffffff;
@@ -34,7 +33,6 @@
         h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; color: var(--olive-dark); }
         .font-script { font-family: 'Alex Brush', cursive; }
 
-        /* Estilos de scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--cream); }
         ::-webkit-scrollbar-thumb { background: var(--olive-muted); }
@@ -49,19 +47,15 @@
             opacity: 0.3;
         }
         @media (min-width: 768px) { .section-frame { top: 20px; left: 20px; right: 20px; bottom: 20px; } }
-        .section-frame::after {
-            content: ''; position: absolute; top: 3px; left: 3px; right: 3px; bottom: 3px;
-            border: 0.5px solid var(--olive-muted);
-        }
 
-        /* --- TEXTURAS --- */
+        /* Texturas */
         .tex-paper { background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png"); }
         .tex-linen { background-image: url("https://www.transparenttextures.com/patterns/linen-design.png"); }
-        .tex-floral { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
-        .tex-diagonal { background-image: url("https://www.transparenttextures.com/patterns/diagonal-stripes.png"); }
         .tex-p6 { background-image: url("https://www.transparenttextures.com/patterns/p6.png"); }
+        .tex-diagonal { background-image: url("https://www.transparenttextures.com/patterns/diagonal-stripes.png"); }
+        .tex-floral { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
 
-        /* --- SOBRE (ESTILO ORIGINAL MANTENIDO) --- */
+        /* --- SOBRE --- */
         #envelope-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 10000; display: flex; align-items: center; justify-content: center;
@@ -86,27 +80,49 @@
         .seal-img { width: 110px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        /* --- ELEMENTOS DE DISEÑO --- */
+        /* Galería Horizontal Automática */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            max-height: 500px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .slider-content {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            height: 100%;
+        }
+        .slide {
+            min-width: 100%;
+            height: 100%;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Estilos generales */
         .btn-olive {
             background: var(--olive-dark); color: white; padding: 12px 24px;
             text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
             transition: 0.4s; border: 1px solid var(--olive-dark); display: inline-block;
             cursor: pointer; text-align: center; width: 100%;
         }
-        .btn-olive:hover { background: transparent; color: var(--olive-dark); }
-
         .btn-outline {
             border: 1px solid var(--olive-med); color: var(--olive-med); padding: 10px 20px;
             text-transform: uppercase; letter-spacing: 2px; font-size: 10px; transition: 0.4s;
             display: inline-block; text-align: center;
         }
-        .btn-outline:hover { background: var(--olive-med); color: white; }
-
-        .horizontal-scroll { display: flex; overflow-x: auto; gap: 20px; padding: 20px 0; scrollbar-width: none; }
-        .scroll-item { min-width: 280px; background: white; padding: 30px; border: 1px solid var(--olive-light); text-align: center; border-radius: 4px; }
-
         .timeline-item { position: relative; padding-left: 40px; margin-bottom: 40px; border-left: 2px solid var(--olive-bright); }
         .timeline-dot { position: absolute; left: -6px; top: 0; width: 11px; height: 11px; background: var(--olive-bright); border-radius: 50%; }
+
+        .horizontal-scroll { display: flex; overflow-x: auto; gap: 20px; padding: 20px 0; scrollbar-width: none; -ms-overflow-style: none; }
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
+        .scroll-item { min-width: 250px; background: white; padding: 25px; border: 1px solid var(--olive-light); text-align: center; border-radius: 4px; }
 
         .player-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
@@ -116,13 +132,8 @@
         }
         .player-bar.active { transform: translateY(0); }
 
-        .photo-item { aspect-ratio: 1; overflow: hidden; position: relative; border: 4px solid var(--white); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
-        .photo-item:hover img { transform: scale(1.1) rotate(2deg); }
-
-        .itinerary-icon { color: var(--olive-bright); margin-bottom: 1rem; display: inline-block; }
-
-        /* QR Section Styling */
+        .separator-img { width: 100%; height: 350px; object-fit: cover; }
+        
         .qr-card {
             background: white; padding: 2rem; border: 1px solid var(--olive-light);
             box-shadow: 0 10px 30px rgba(62, 78, 42, 0.1);
@@ -132,7 +143,7 @@
 </head>
 <body class="overflow-hidden">
 
-    <!-- SOBRE DE INICIO (INTACTO) -->
+    <!-- SOBRE DE INICIO -->
     <div id="envelope-container">
         <div class="flap-container">
             <div class="flap flap-left"></div>
@@ -147,18 +158,21 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content" class="hidden">
         
-        <!-- HERO -->
-        <section class="h-screen flex flex-col items-center justify-center text-center text-white relative bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920');">
+        <!-- HERO (Texto pequeño en la parte inferior) -->
+        <section class="h-screen flex flex-col items-center justify-end text-center text-white relative bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8746.jpeg');">
             <div class="section-frame"></div>
-            <div class="absolute inset-0 tex-p6 opacity-20 pointer-events-none"></div>
-            <div data-aos="fade-up" data-aos-duration="2000" class="z-10 px-6">
-                <p class="uppercase tracking-[0.5em] text-[10px] mb-6 font-bold">¡Nos Casamos!</p>
-                <h1 class="text-6xl md:text-9xl mb-4 font-light leading-tight !text-white">María <span class="font-script text-4xl md:text-7xl block md:inline md:mx-4">&</span> Juan</h1>
-                <div class="w-20 h-[1px] bg-white mx-auto my-10 opacity-50"></div>
-                <p class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">24 de Octubre, 2026</p>
+            <div class="absolute inset-0 tex-p6 opacity-10 pointer-events-none"></div>
+            
+            <div data-aos="fade-up" data-aos-duration="2000" class="z-10 px-6 pb-24">
+                <h1 class="text-4xl md:text-6xl mb-2 font-light leading-tight !text-white">
+                    María <span class="font-script text-3xl md:text-5xl mx-2">&</span> Juan
+                </h1>
+                <div class="w-12 h-[1px] bg-white mx-auto my-4 opacity-40"></div>
+                <p class="text-sm md:text-lg font-light tracking-[0.3em] uppercase opacity-90">24 de Octubre, 2026</p>
             </div>
-            <div class="absolute bottom-12 animate-bounce opacity-50 z-10">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+
+            <div class="absolute bottom-8 animate-bounce opacity-40 z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
             </div>
         </section>
 
@@ -206,6 +220,11 @@
             </div>
         </section>
 
+        <!-- SEPARADOR 1 (IMG_8748) -->
+        <div class="w-full overflow-hidden" data-aos="fade-up">
+            <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8748.jpeg" class="separator-img" alt="Separador">
+        </div>
+
         <!-- HISTORIA -->
         <section class="py-24 px-6 relative tex-linen" style="background-color: #f4f6f0;">
             <div class="section-frame"></div>
@@ -234,19 +253,26 @@
             </div>
         </section>
 
-        <!-- GALERÍA (MOVIDA DEBAJO DE HISTORIA) -->
+        <!-- GALERÍA HORIZONTAL AUTOMÁTICA -->
         <section class="py-24 bg-white px-6 relative tex-diagonal">
-            <div class="section-frame"></div>
-            <div class="container mx-auto max-w-6xl text-center">
-                <h2 class="text-4xl italic mb-12">Nuestros Momentos</h2>
-                <div class="photo-grid">
-                    <div class="photo-item" data-aos="zoom-in" data-aos-delay="100"><img src="https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=600" alt="Boda 1"></div>
-                    <div class="photo-item" data-aos="zoom-in" data-aos-delay="200"><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" alt="Boda 2"></div>
-                    <div class="photo-item" data-aos="zoom-in" data-aos-delay="300"><img src="https://images.unsplash.com/photo-1519225495810-758eb31e7a72?auto=format&fit=crop&q=80&w=600" alt="Boda 3"></div>
-                    <div class="photo-item" data-aos="zoom-in" data-aos-delay="400"><img src="https://images.unsplash.com/photo-1522673607200-164883eecd18?auto=format&fit=crop&q=80&w=600" alt="Boda 4"></div>
+            <div class="container mx-auto max-w-5xl text-center">
+                <h2 class="text-4xl italic mb-12" data-aos="fade-up">Nuestros Momentos</h2>
+                <div class="slider-wrapper" data-aos="zoom-in">
+                    <div class="slider-content" id="mainSlider">
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8749.jpeg" alt="Imagen 1"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" alt="Imagen 2"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" alt="Imagen 3"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg" alt="Imagen 4"></div>
+                    </div>
                 </div>
+                <p class="mt-4 text-xs italic text-olive-muted font-bold uppercase tracking-widest">Deslizando automáticamente...</p>
             </div>
         </section>
+
+        <!-- SEPARADOR 2 (IMG_8750) -->
+        <div class="w-full overflow-hidden" data-aos="fade-up">
+            <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" class="separator-img" alt="Separador">
+        </div>
 
         <!-- ITINERARIO -->
         <section class="py-24 bg-white px-6 text-center relative tex-paper">
@@ -255,25 +281,16 @@
                 <h2 class="text-4xl italic mb-16" data-aos="fade-up">Itinerario del Día</h2>
                 <div class="grid md:grid-cols-3 gap-12 relative">
                     <div data-aos="fade-up" data-aos-delay="100">
-                        <div class="itinerary-icon">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 8V7a1 1 0 011-1h2a1 1 0 011 1v1a1 1 0 01-1 1h-2a1 1 0 01-1-1z"></path><circle cx="12" cy="14" r="3"></circle></svg>
-                        </div>
                         <div class="text-olive-bright text-3xl mb-2 font-serif">18:00</div>
                         <h4 class="text-xl font-serif italic text-olive-dark">Ceremonia</h4>
                         <p class="text-olive-muted text-xs uppercase tracking-widest mt-2">Parroquia de San Mateo</p>
                     </div>
                     <div data-aos="fade-up" data-aos-delay="200">
-                        <div class="itinerary-icon">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m16-10V7a2 2 0 00-2-2H5a2 2 0 00-2 2v4m14 0a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2m12 0h2a2 2 0 012 2v2a2 2 0 01-2 2h-2"></path></svg>
-                        </div>
                         <div class="text-olive-bright text-3xl mb-2 font-serif">20:00</div>
                         <h4 class="text-xl font-serif italic text-olive-dark">Recepción</h4>
                         <p class="text-olive-muted text-xs uppercase tracking-widest mt-2">Hacienda Las Flores</p>
                     </div>
                     <div data-aos="fade-up" data-aos-delay="300">
-                        <div class="itinerary-icon">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"></path></svg>
-                        </div>
                         <div class="text-olive-bright text-3xl mb-2 font-serif">22:00</div>
                         <h4 class="text-xl font-serif italic text-olive-dark">Fiesta</h4>
                         <p class="text-olive-muted text-xs uppercase tracking-widest mt-2">Salón Principal</p>
@@ -290,16 +307,21 @@
                     <div class="bg-white p-8 shadow-sm text-center border-l-4 border-olive-bright" data-aos="fade-right">
                         <h3 class="text-2xl font-serif italic mb-4">La Ceremonia</h3>
                         <p class="text-gray-500 mb-6 italic font-serif">Calle Mayor 123, Centro Histórico.<br>Puntualidad sugerida: 17:45 hrs.</p>
-                        <a href="https://maps.google.com" target="_blank" class="btn-outline w-full block font-bold">Ver Mapa de Ubicación</a>
+                        <a href="#" target="_blank" class="btn-outline w-full block font-bold">Ver Mapa de Ubicación</a>
                     </div>
                     <div class="bg-white p-8 shadow-sm text-center border-l-4 border-olive-bright" data-aos="fade-left">
                         <h3 class="text-2xl font-serif italic mb-4">La Celebración</h3>
                         <p class="text-gray-500 mb-6 italic font-serif">Kilómetro 5, Carretera Antigua.<br>Estacionamiento privado disponible.</p>
-                        <a href="https://maps.google.com" target="_blank" class="btn-outline w-full block font-bold">Ver Mapa de Ubicación</a>
+                        <a href="#" target="_blank" class="btn-outline w-full block font-bold">Ver Mapa de Ubicación</a>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- SEPARADOR 3 (IMG_8751) -->
+        <div class="w-full overflow-hidden" data-aos="fade-up">
+            <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" class="separator-img" alt="Separador">
+        </div>
 
         <!-- HOSPEDAJE & CLIMA -->
         <section class="py-20 bg-white px-6 relative tex-linen">
@@ -331,8 +353,8 @@
             </div>
         </section>
 
-        <!-- VESTIMENTA -->
-        <section class="py-24 text-white text-center relative bg-cover bg-center" style="background-image: linear-gradient(rgba(62, 78, 42, 0.9), rgba(62, 78, 42, 0.9)), url('https://images.unsplash.com/photo-1471967183320-ee018f6e114a?auto=format&fit=crop&q=80&w=1920');">
+        <!-- VESTIMENTA (IMG_8753 fondo) -->
+        <section class="py-24 text-white text-center relative bg-cover bg-center" style="background-image: linear-gradient(rgba(62, 78, 42, 0.9), rgba(62, 78, 42, 0.9)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg');">
             <div class="absolute inset-0 tex-linen opacity-20"></div>
             <div class="container mx-auto px-6 relative z-10" data-aos="zoom-in">
                 <h2 class="text-5xl italic mb-8 !text-white">Código de Vestimenta</h2>
@@ -342,21 +364,18 @@
                     <div class="w-14 h-14 rounded-full bg-[#3e4e2a] border-2 border-white/30" title="Oliva Oscuro"></div>
                     <div class="w-14 h-14 rounded-full bg-[#5d6b2c] border-2 border-white/30" title="Oliva Medio"></div>
                     <div class="w-14 h-14 rounded-full bg-[#8a9315] border-2 border-white/30" title="Oliva Brillante"></div>
-                    <div class="w-14 h-14 rounded-full bg-[#788a48] border-2 border-white/30" title="Oliva Mate"></div>
                 </div>
-                <p class="text-[10px] uppercase tracking-widest mt-6 opacity-60 font-bold">Inspiración de Colores</p>
             </div>
         </section>
 
-        <!-- SECCIÓN DE QR PARA ÁLBUM COMPARTIDO -->
+        <!-- ÁLBUM QR -->
         <section class="py-24 bg-[#f9faf7] px-6 text-center relative tex-paper">
             <div class="section-frame"></div>
-            <div class="container mx-auto max-w-xl" data-aos="fade-up">
+            <div class="container mx-auto max-xl" data-aos="fade-up">
                 <h2 class="text-4xl italic mb-8">Álbum Compartido</h2>
-                <p class="text-gray-500 mb-10 italic font-serif">¡Ayúdanos a capturar cada momento especial! Escanea el código para subir tus fotos y videos del gran día.</p>
+                <p class="text-gray-500 mb-10 italic font-serif">¡Ayúdanos a capturar cada momento! Escanea el código para subir tus fotos del gran día.</p>
                 <div class="qr-card" data-aos="zoom-in">
-                    <!-- Generador de QR dinámico (usando un placeholder de Google Photos) -->
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://photos.app.goo.gl/placeholder" alt="QR Álbum Compartido" class="w-48 h-48 mx-auto mb-4 border-2 border-cream p-1">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://photos.app.goo.gl/" alt="QR" class="w-48 h-48 mx-auto mb-4 border-2 border-cream p-1">
                     <p class="text-[10px] uppercase tracking-[0.2em] text-olive-muted font-bold">Escanea con tu cámara</p>
                 </div>
             </div>
@@ -370,7 +389,7 @@
                     <h3 class="text-3xl italic mb-8">¡A Tomar en Cuenta!</h3>
                     <ul class="text-left max-w-md mx-auto space-y-4 font-serif italic text-lg text-olive-dark">
                         <li class="flex items-start gap-3"><span>✨</span> Boda exclusivamente para adultos.</li>
-                        <li class="flex items-start gap-3"><span>✨</span> Agradecemos su puntualidad en la ceremonia.</li>
+                        <li class="flex items-start gap-3"><span>✨</span> Agradecemos su puntualidad.</li>
                         <li class="flex items-start gap-3"><span>✨</span> Confirmar antes del 30 de Septiembre.</li>
                     </ul>
                     <div class="mt-16">
@@ -389,8 +408,8 @@
                 <div class="grid md:grid-cols-2 gap-8 text-left">
                     <div class="bg-[#fdfaf5] p-8 border-l-4 border-olive-bright shadow-sm">
                         <h4 class="text-xl font-serif italic mb-4">Lluvia de Sobres</h4>
-                        <p class="text-sm text-gray-500 mb-4 italic">Su presencia es nuestro regalo, pero si desean tener un detalle con nosotros, contaremos con un cofre en la recepción.</p>
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-olive-dark">Banco: Internacional / CLABE: 0123...456</p>
+                        <p class="text-sm text-gray-500 mb-4 italic">Su presencia es nuestro regalo, pero si desean tener un detalle, contaremos con un cofre en la recepción.</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-olive-dark">CLABE: 0123 4567 8901 2345 67</p>
                     </div>
                     <div class="flex flex-col gap-4 justify-center">
                         <a href="#" class="btn-olive text-center font-bold">Mesa en Amazon</a>
@@ -415,7 +434,7 @@
                 <div data-aos="fade-left">
                     <h3 class="text-2xl italic mb-8">Buenos Deseos</h3>
                     <div id="wishesList" class="h-48 overflow-y-auto mb-4 p-4 bg-white border border-olive-light space-y-4 shadow-inner">
-                        <p class="text-sm italic text-gray-400">¡Sé el primero en dejarnos un mensaje!</p>
+                        <p class="text-sm italic text-gray-400">¡Déjanos un mensaje!</p>
                     </div>
                     <div class="flex gap-2">
                         <input id="wishInput" type="text" placeholder="Tu mensaje..." class="flex-grow p-4 bg-white border border-olive-light italic outline-none">
@@ -457,11 +476,11 @@
         <section class="py-20 bg-white border-t border-olive-light/20 text-center px-6 tex-paper">
             <p class="text-[10px] text-olive-muted uppercase tracking-widest font-bold mb-8 italic">Atención de los novios</p>
             <div class="flex flex-col md:flex-row justify-center gap-6">
-                <a href="https://wa.me/123456789" target="_blank" class="text-olive-med flex items-center justify-center gap-2 italic hover:text-olive-bright transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.767 5.77 0 1.26.408 2.43 1.099 3.38l-.715 2.614 2.673-.701a5.733 5.733 0 002.712.678c3.18 0 5.767-2.586 5.767-5.77s-2.587-5.771-5.769-5.771z"></path></svg> Chat con María
+                <a href="#" target="_blank" class="text-olive-med flex items-center justify-center gap-2 italic hover:text-olive-bright transition">
+                    Chat con María
                 </a>
-                <a href="https://wa.me/987654321" target="_blank" class="text-olive-med flex items-center justify-center gap-2 italic hover:text-olive-bright transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.767 5.77 0 1.26.408 2.43 1.099 3.38l-.715 2.614 2.673-.701a5.733 5.733 0 002.712.678c3.18 0 5.767-2.586 5.767-5.77s-2.587-5.771-5.769-5.771z"></path></svg> Chat con Juan
+                <a href="#" target="_blank" class="text-olive-med flex items-center justify-center gap-2 italic hover:text-olive-bright transition">
+                    Chat con Juan
                 </a>
             </div>
         </section>
@@ -469,7 +488,6 @@
         <!-- FOOTER -->
         <footer class="py-24 bg-[#2d3122] text-white text-center relative">
             <div class="section-frame" style="opacity: 0.1;"></div>
-            <div class="absolute inset-0 tex-linen opacity-10"></div>
             <p class="text-6xl font-script mb-4 !text-white">María <span class="text-olive-light">&</span> Juan</p>
             <p class="text-[10px] text-gray-400 tracking-[0.4em] uppercase font-bold italic">24 . OCTUBRE . 2026</p>
         </footer>
@@ -483,18 +501,22 @@
                 <svg id="playIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5l11 6.5-11 6.5z"/></svg>
                 <svg id="pauseIcon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
             </button>
-            <div class="hidden sm:block">
-                <p class="text-[8px] text-olive-light uppercase tracking-widest font-bold">Nuestra Canción</p>
-                <p class="text-[10px] italic font-bold text-olive-dark">Melodía de Amor</p>
-            </div>
-        </div>
-        <div class="text-[10px] font-bold text-olive-dark tracking-widest">
-            <span id="curTime">0:00</span> / <span id="totTime">0:00</span>
+            <p class="text-[10px] italic font-bold text-olive-dark">Nuestra Canción</p>
         </div>
         <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
     </div>
 
     <script>
+        let currentSlide = 0;
+        const slider = document.getElementById('mainSlider');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function autoSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
         function startExperience() {
             const env = document.getElementById('envelope-container');
             env.classList.add('open');
@@ -504,9 +526,9 @@
             setTimeout(() => {
                 document.getElementById('musicBar').classList.add('active');
                 AOS.init({ duration: 1200, once: true });
-                const audio = document.getElementById('bgMusic');
-                audio.play().catch(() => console.log("Audio requiere interacción"));
+                document.getElementById('bgMusic').play().catch(() => {});
                 updatePlayState(true);
+                setInterval(autoSlide, 4000);
             }, 800);
         }
 
@@ -525,15 +547,6 @@
             if (audio.paused) { audio.play(); updatePlayState(true); } 
             else { audio.pause(); updatePlayState(false); }
         });
-
-        audio.addEventListener('timeupdate', () => {
-            document.getElementById('curTime').innerText = formatTime(audio.currentTime);
-            if(audio.duration) document.getElementById('totTime').innerText = formatTime(audio.duration);
-        });
-
-        function formatTime(s) {
-            return Math.floor(s / 60) + ":" + Math.floor(s % 60).toString().padStart(2, '0');
-        }
 
         function addWish() {
             const input = document.getElementById('wishInput');
