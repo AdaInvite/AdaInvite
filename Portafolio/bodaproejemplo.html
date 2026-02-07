@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>María & Juan - Boda 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fuentes de Lujo -->
@@ -13,18 +13,16 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --olive-dark: #8a764d;
-            --olive-med: #d4af37;
-            --olive-bright: #e5c158;
-            --olive-muted: #d6c5a0;
-            --olive-light: #f3ede2;
-            --gold: #c4a464;
-            --cream: #fdfaf5;
+            /* Paleta Renovada: Beige Luminous & Gold */
+            --olive-dark: #8a764d;   /* Bronce Dorado suave */
+            --olive-med: #d4af37;    /* Oro Clásico */
+            --olive-bright: #e5c158; /* Oro Brillante */
+            --olive-muted: #d6c5a0;  /* Champagne Satinado */
+            --olive-light: #f3ede2;  /* Crema muy claro */
+            --gold: #c4a464;         /* Dorado metálico */
+            --cream: #fdfaf5;        
             --white: #ffffff;
         }
-        
-        /* Reset y compatibilidad base */
-        * { -webkit-tap-highlight-color: transparent; }
         
         html, body { 
             font-family: 'Cormorant Garamond', serif; 
@@ -32,12 +30,14 @@
             color: var(--olive-dark); 
             margin: 0; padding: 0; width: 100%; max-width: 100vw;
             overflow-x: hidden; position: relative;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; color: var(--olive-dark); }
         .font-script { font-family: 'Alex Brush', cursive; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--cream); }
+        ::-webkit-scrollbar-thumb { background: var(--olive-med); }
 
         .section-frame {
             position: absolute;
@@ -46,37 +46,14 @@
             pointer-events: none; z-index: 20; opacity: 0.4;
         }
 
-        /* Texturas */
         .tex-paper { background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png"); }
         .tex-linen { background-image: url("https://www.transparenttextures.com/patterns/linen-design.png"); }
         .tex-diagonal { background-image: url("https://www.transparenttextures.com/patterns/diagonal-stripes.png"); }
         .tex-floral { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
 
-        /* Formas de Fotos Elegantes */
-        .photo-arch {
-            border-radius: 500px 500px 0 0;
-            overflow: hidden;
-            border: 1px solid var(--olive-muted);
-            padding: 8px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .photo-arch img {
-            border-radius: 500px 500px 0 0;
-        }
-
-        .photo-oval {
-            border-radius: 100%;
-            overflow: hidden;
-            aspect-ratio: 4/5;
-            border: 1px solid var(--olive-muted);
-            padding: 6px;
-            background: white;
-        }
-
         /* --- SOBRE (ENVELOPE) --- */
         #envelope-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100svh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             z-index: 10000; display: flex; align-items: center; justify-content: center;
             background-color: var(--cream); overflow: hidden;
             transition: opacity 1s ease-in-out, visibility 1s;
@@ -87,18 +64,33 @@
             transition: transform 1.6s cubic-bezier(0.7, 0, 0.3, 1);
             background-size: cover;
             background-position: center;
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
         }
 
         .tex-formas-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20formas%20beige.jpg?raw=true"); }
         .tex-satin-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20satin%20lisa%20beige.jpg?raw=true"); }
 
-        .flap-left { left: 0; top: 0; width: 52%; height: 100%; border-radius: 0 180px 180px 0; z-index: 100; box-shadow: 10px 0 20px rgba(0,0,0,0.1); }
-        .flap-right { right: 0; top: 0; width: 52%; height: 100%; border-radius: 180px 0 0 180px; z-index: 50; }
-        .flap-top { top: 0; left: 0; width: 100%; height: 50%; clip-path: polygon(0 0, 100% 0, 50% 100%); -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 40; }
-        .flap-bottom { bottom: 0; left: 0; width: 100%; height: 50%; clip-path: polygon(50% 0, 100% 100%, 0 100%); -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%); z-index: 40; }
+        /* Solapas Simétricas Redondeadas */
+        .flap-left { 
+            left: 0; top: 0; width: 52%; height: 100%; 
+            border-radius: 0 180px 180px 0; 
+            z-index: 100; 
+            box-shadow: 10px 0 20px rgba(0,0,0,0.1);
+        }
+        .flap-right { 
+            right: 0; top: 0; width: 52%; height: 100%; 
+            border-radius: 180px 0 0 180px; 
+            z-index: 50; 
+        }
+        .flap-top { 
+            top: 0; left: 0; width: 100%; height: 50%; 
+            clip-path: polygon(0 0, 100% 0, 50% 100%); 
+            z-index: 40; 
+        }
+        .flap-bottom { 
+            bottom: 0; left: 0; width: 100%; height: 50%; 
+            clip-path: polygon(50% 0, 100% 100%, 0 100%); 
+            z-index: 40; 
+        }
 
         #envelope-container.open .flap-left { transform: translateX(-110%); }
         #envelope-container.open .flap-right { transform: translateX(110%); }
@@ -106,53 +98,66 @@
         #envelope-container.open .flap-bottom { transform: translateY(110%); }
         #envelope-container.open { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        .seal-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; cursor: pointer; text-align: center; }
+        .seal-wrapper { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            z-index: 200; cursor: pointer; text-align: center;
+        }
         .seal-img { width: 110px; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.15)); transition: 0.3s; }
-        .click-hint { background: var(--olive-dark); color: white; padding: 6px 15px; border-radius: 20px; font-size: 11px; margin-bottom: 20px; animation: bounce 2s infinite; text-transform: uppercase; }
+        .click-hint { 
+            background: var(--olive-dark); color: white; padding: 6px 15px; border-radius: 20px; 
+            font-size: 11px; margin-bottom: 20px; animation: bounce 2s infinite; text-transform: uppercase;
+        }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        /* Sliders */
+        .separator-img { width: 100%; max-height: 80vh; object-fit: contain; background: #fdfaf5; }
+
         .slider-wrapper { 
             position: relative; width: 100%; overflow-x: auto; display: flex;
-            scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none;
-            -webkit-overflow-scrolling: touch;
-            padding: 20px 0;
+            scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; cursor: grab;
         }
         .slider-wrapper::-webkit-scrollbar { display: none; }
-        .slide { min-width: 80%; margin: 0 10%; scroll-snap-align: center; flex-shrink: 0; }
-        .slide img { width: 100%; height: auto; display: block; object-fit: cover; }
+        .slide { min-width: 100%; scroll-snap-align: center; }
+        .slide img { width: 100%; height: auto; display: block; }
 
-        .horizontal-scroll { display: flex; overflow-x: auto; gap: 20px; padding: 20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .horizontal-scroll::-webkit-scrollbar { display: none; }
-        .scroll-item { min-width: 250px; background: white; padding: 25px; border: 1px solid var(--olive-muted); border-radius: 4px; flex-shrink: 0; }
-
-        /* Botones */
         .btn-olive {
             background: var(--olive-med); color: white; padding: 14px 28px;
             text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
             border: 1px solid var(--olive-med); display: inline-block; width: 100%;
-            transition: all 0.3s ease; text-align: center;
+            transition: 0.3s;
         }
         .btn-olive:hover { background: var(--olive-dark); border-color: var(--olive-dark); }
         
-        .btn-outline { border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; text-transform: uppercase; font-size: 10px; display: inline-block; transition: all 0.3s ease; }
+        .btn-outline {
+            border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px;
+            text-transform: uppercase; font-size: 10px; display: inline-block;
+            transition: 0.3s;
+        }
+        .btn-outline:hover { background: var(--olive-light); }
 
-        /* Reproductor */
+        .timeline-item { position: relative; padding-left: 40px; margin-bottom: 40px; border-left: 2px solid var(--olive-med); }
+        .timeline-dot { position: absolute; left: -6px; top: 0; width: 11px; height: 11px; background: var(--olive-med); border-radius: 50%; }
+
+        .horizontal-scroll { display: flex; overflow-x: auto; gap: 20px; padding: 20px; scrollbar-width: none; }
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
+        .scroll-item { min-width: 250px; background: white; padding: 25px; border: 1px solid var(--olive-muted); border-radius: 4px; }
+
         .player-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
             z-index: 5000; padding: 12px 20px; display: flex; align-items: center;
             justify-content: space-between; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-            transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            transform: translateY(100%); transition: 0.6s ease-out;
         }
         .player-bar.active { transform: translateY(0); }
+        
+        .qr-card { background: white; padding: 2rem; border: 1px solid var(--olive-muted); border-radius: 4px; display: inline-block; }
 
+        .hotel-card { background: white; border: 1px solid var(--olive-muted); overflow: hidden; }
+        .hotel-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .hotel-img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
+
+        /* Estilo para los iconos */
         .icon-gold { color: var(--olive-med); width: 24px; height: 24px; stroke-width: 1.5px; }
         .icon-large { width: 40px; height: 40px; margin-bottom: 12px; }
-
-        /* Optimizaciones */
-        .bg-fixed-optimized { background-attachment: scroll; }
-        @media (min-width: 1024px) { .bg-fixed-optimized { background-attachment: fixed; } }
     </style>
 </head>
 <body class="overflow-hidden">
@@ -171,11 +176,11 @@
     </div>
 
     <!-- CONTENEDOR MAESTRO -->
-    <div id="master-wrapper" class="w-full">
-        <main id="main-content" class="hidden w-full">
+    <div id="master-wrapper" class="w-full overflow-x-hidden">
+        <main id="main-content" class="hidden w-full overflow-x-hidden">
             
-            <!-- HERO -->
-            <section class="h-screen min-h-[100vh] min-h-[100svh] w-full flex flex-col items-center justify-end text-center text-white relative bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8746.jpeg');">
+            <!-- HERO: Foto Completa -->
+            <section class="h-screen min-h-[100svh] w-full flex flex-col items-center justify-end text-center text-white relative bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8746.jpeg');">
                 <div class="section-frame"></div>
                 <div data-aos="fade-up" data-aos-duration="2000" class="z-10 px-6 pb-28 md:pb-32">
                     <h1 class="text-5xl md:text-7xl mb-2 font-light leading-tight !text-white drop-shadow-lg">
@@ -237,13 +242,9 @@
                 </div>
             </section>
 
-            <!-- SEPARADOR 1 - Forma de Arco -->
-            <div class="w-full bg-[#fdfaf5] py-12" data-aos="fade-up">
-                <div class="max-w-md mx-auto px-6">
-                    <div class="photo-arch">
-                        <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8748.jpeg" class="w-full h-auto" alt="Nuestra Foto">
-                    </div>
-                </div>
+            <!-- SEPARADOR 1 -->
+            <div class="w-full bg-[#fdfaf5]" data-aos="fade-up">
+                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8748.jpeg" class="separator-img mx-auto" alt="Separador">
             </div>
 
             <!-- HISTORIA -->
@@ -274,32 +275,16 @@
                 </div>
             </section>
 
-            <!-- GALERÍA CON FORMAS -->
+            <!-- GALERÍA MANUAL -->
             <section class="py-24 bg-white px-6 relative tex-diagonal overflow-hidden">
                 <div class="container mx-auto max-w-6xl text-center">
                     <h2 class="text-4xl italic mb-12" data-aos="fade-up">Nuestros Momentos</h2>
-                    <p class="mb-8 text-[10px] uppercase tracking-widest text-olive-muted font-bold">Desliza para navegar</p>
+                    <p class="mb-4 text-[10px] uppercase tracking-widest text-olive-muted font-bold">Desliza para navegar</p>
                     <div class="slider-wrapper" id="mainSlider">
-                        <div class="slide">
-                            <div class="photo-arch">
-                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8749.jpeg" alt="Momento 1">
-                            </div>
-                        </div>
-                        <div class="slide">
-                            <div class="photo-arch">
-                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" alt="Momento 2">
-                            </div>
-                        </div>
-                        <div class="slide">
-                            <div class="photo-arch">
-                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" alt="Momento 3">
-                            </div>
-                        </div>
-                        <div class="slide">
-                            <div class="photo-arch">
-                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg" alt="Momento 4">
-                            </div>
-                        </div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8749.jpeg" alt="Imagen 1"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" alt="Imagen 2"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" alt="Imagen 3"></div>
+                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg" alt="Imagen 4"></div>
                     </div>
                 </div>
             </section>
@@ -357,54 +342,54 @@
                 </div>
             </section>
 
-            <!-- HOSPEDAJE CON FORMAS -->
+            <!-- HOSPEDAJE -->
             <section class="py-24 bg-white px-6 relative tex-linen">
                 <div class="section-frame"></div>
                 <div class="container mx-auto max-w-6xl overflow-hidden">
                     <h2 class="text-4xl italic mb-12 text-center" data-aos="fade-up">Sugerencias de Hospedaje</h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <div class="text-center" data-aos="fade-up">
-                            <div class="photo-arch mb-6">
-                                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 1">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="100">
+                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hotel El Olivo">
+                            <div class="p-6">
+                                <h4 class="font-bold text-olive-dark mb-2">Boutique El Olivo</h4>
+                                <p class="text-xs text-gray-500 italic mb-4">A 5 min de la Hacienda. Código: BODA-MJ</p>
+                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                             </div>
-                            <h4 class="font-bold text-olive-dark mb-1">Boutique El Olivo</h4>
-                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Código: BODA-MJ</p>
-                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                            <div class="photo-arch mb-6">
-                                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 2">
+                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="200">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Gran Plaza Central">
+                            <div class="p-6">
+                                <h4 class="font-bold text-olive-dark mb-2">Gran Plaza Central</h4>
+                                <p class="text-xs text-gray-500 italic mb-4">En el corazón histórico de la ciudad.</p>
+                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                             </div>
-                            <h4 class="font-bold text-olive-dark mb-1">Gran Plaza</h4>
-                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Centro Histórico</p>
-                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                            <div class="photo-arch mb-6">
-                                <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 3">
+                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="300">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Posada del Sol">
+                            <div class="p-6">
+                                <h4 class="font-bold text-olive-dark mb-2">Posada del Sol</h4>
+                                <p class="text-xs text-gray-500 italic mb-4">Acogedor y tradicional, ideal para familias.</p>
+                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                             </div>
-                            <h4 class="font-bold text-olive-dark mb-1">Posada del Sol</h4>
-                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Tradicional</p>
-                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                            <div class="photo-arch mb-6">
-                                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 4">
+                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="400">
+                            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hacienda Resort">
+                            <div class="p-6">
+                                <h4 class="font-bold text-olive-dark mb-2">Hacienda Resort</h4>
+                                <p class="text-xs text-gray-500 italic mb-4">Estilo colonial de lujo con spa disponible.</p>
+                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                             </div>
-                            <h4 class="font-bold text-olive-dark mb-1">Hacienda Resort</h4>
-                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Lujo & Spa</p>
-                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- VESTIMENTA -->
-            <section class="py-32 text-white text-center relative bg-cover bg-center bg-fixed-optimized overflow-hidden" style="background-image: linear-gradient(rgba(138, 118, 77, 0.8), rgba(212, 175, 55, 0.8)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg');">
+            <!-- VESTIMENTA: Champagne y Oro -->
+            <section class="py-32 text-white text-center relative bg-cover bg-center bg-fixed overflow-hidden" style="background-image: linear-gradient(rgba(138, 118, 77, 0.8), rgba(212, 175, 55, 0.8)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg');">
                 <div class="absolute inset-0 tex-linen opacity-10"></div>
                 <div class="container mx-auto px-6 relative z-10" data-aos="zoom-in">
                     <h2 class="text-5xl italic mb-8 !text-white drop-shadow-md">Código de Vestimenta</h2>
-                    <p class="text-3xl font-serif italic tracking-widest mb-6 !text-white drop-shadow-[0_4px_15_rgba(0,0,0,0.6)] font-bold">Etiqueta Formal</p>
+                    <p class="text-3xl font-serif italic tracking-widest mb-6 !text-white drop-shadow-[0_4px_15px_rgba(0,0,0,0.6)] font-bold">Etiqueta Formal</p>
                     <p class="text-gray-100 max-w-lg mx-auto mb-12 italic text-lg font-light leading-relaxed">Agradecemos su presencia luciendo sus mejores galas. Por favor, eviten el color blanco y derivados.</p>
                     <div class="flex justify-center gap-6 mt-8">
                         <div class="w-16 h-16 rounded-full bg-[#8a764d] border-2 border-white/40 shadow-xl"></div>
@@ -446,7 +431,7 @@
                 </div>
             </section>
 
-            <!-- REGALOS -->
+            <!-- MESA DE REGALOS -->
             <section class="py-24 bg-white px-6 text-center relative tex-linen">
                 <div class="section-frame"></div>
                 <div class="container mx-auto max-w-4xl overflow-hidden">
@@ -530,11 +515,10 @@
                 </div>
             </section>
 
-            <!-- FOOTER -->
+            <!-- FOOTER: Bronce Suave -->
             <footer class="py-32 bg-[#5c523d] text-white text-center relative overflow-hidden">
                 <div class="section-frame" style="opacity: 0.1;"></div>
-               <p class="text-7xl font-script mb-6 !text-white leading-tight"> María<br> <span class="text-olive-bright">&</span><br> Juan </p> 
-               <p class="text-[10px] text-olive-light tracking-[0.5em] uppercase font-bold italic"> 24 . OCTUBRE . 2026 </p>
+              <p class="text-7xl font-script mb-6 !text-white leading-tight">  María<br>  <span class="text-olive-bright">&</span><br> Juan </p> <p class="text-[10px] text-olive-light tracking-[0.5em] uppercase font-bold italic"> 24 . OCTUBRE . 2026 </p>
             </footer>
         </main>
     </div>
@@ -548,16 +532,29 @@
             </button>
             <p class="text-[10px] italic font-bold text-olive-dark tracking-widest uppercase">Te Esperaba - Carlos Rivera</p>
         </div>
-        <audio id="bgMusic" preload="auto" loop>
+        <audio id="bgMusic" loop>
             <source src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/Carlos%20Rivera%20-%20Te%20Esperaba%20(Lyric%20Video).mp3?raw=true" type="audio/mpeg">
         </audio>
     </div>
 
     <script>
+        // Inicializar iconos de Lucide
         lucide.createIcons();
 
-        let playPromise = null;
-        const audio = document.getElementById('bgMusic');
+        function startExperience() {
+            const env = document.getElementById('envelope-container');
+            env.classList.add('open');
+            document.body.classList.remove('overflow-hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('musicBar').classList.add('active');
+                AOS.init({ duration: 1200, once: true });
+                const audio = document.getElementById('bgMusic');
+                audio.play().catch(() => {});
+                updatePlayState(true);
+            }, 1200);
+        }
 
         function updatePlayState(playing) {
             const play = document.getElementById('playIcon');
@@ -569,52 +566,10 @@
             }
         }
 
-        function safePlay() {
-            playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    updatePlayState(true);
-                }).catch(e => {
-                    if (e.name !== 'AbortError') console.log(e);
-                    updatePlayState(false);
-                });
-            }
-        }
-
-        function safePause() {
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audio.pause();
-                    updatePlayState(false);
-                }).catch(() => {
-                    audio.pause();
-                    updatePlayState(false);
-                });
-            } else {
-                audio.pause();
-                updatePlayState(false);
-            }
-        }
-
-        function startExperience() {
-            const env = document.getElementById('envelope-container');
-            const main = document.getElementById('main-content');
-            const musicBar = document.getElementById('musicBar');
-
-            env.classList.add('open');
-            document.body.classList.remove('overflow-hidden');
-            main.classList.remove('hidden');
-            
-            setTimeout(() => {
-                musicBar.classList.add('active');
-                AOS.init({ duration: 1200, once: true, disable: 'mobile' });
-                safePlay();
-            }, 1200);
-        }
-
-        document.getElementById('playPauseBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (audio.paused) safePlay(); else safePause();
+        const audio = document.getElementById('bgMusic');
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (audio.paused) { audio.play(); updatePlayState(true); } 
+            else { audio.pause(); updatePlayState(false); }
         });
 
         function addWish() {
@@ -626,6 +581,7 @@
                 p.innerHTML = `<i data-lucide="quote" class="w-4 h-4 text-olive-muted shrink-0 mt-1"></i> "${input.value}"`;
                 if(list.querySelector('.text-gray-400')) list.innerHTML = '';
                 list.prepend(p);
+                // Re-inicializar iconos para el nuevo elemento
                 lucide.createIcons();
                 input.value = "";
             }
@@ -636,13 +592,6 @@
             document.getElementById('rsvpForm').style.display = 'none';
             document.getElementById('rsvpSuccess').classList.remove('hidden');
         });
-
-        const setVh = () => {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        };
-        window.addEventListener('resize', setVh);
-        setVh();
     </script>
 </body>
 </html>
