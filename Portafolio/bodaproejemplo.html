@@ -11,13 +11,14 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
         :root {
-            --olive-dark: #3e4e2a;
-            --olive-med: #5d6b2c;
-            --olive-bright: #8a9315;
-            --olive-muted: #788a48;
-            --olive-light: #a5af3e;
-            --gold: #bfa260;
-            --cream: #fdfaf5; 
+            /* Paleta: Beige y Dorados */
+            --olive-dark: #5c4d32;   
+            --olive-med: #bfa260;    
+            --olive-bright: #d4af37; 
+            --olive-muted: #c5b358;  
+            --olive-light: #e1d5b7;  
+            --gold: #bfa260;         
+            --cream: #fdfaf5;        
             --white: #ffffff;
         }
         
@@ -44,7 +45,7 @@
             border: 1px solid var(--olive-light);
             pointer-events: none;
             z-index: 20;
-            opacity: 0.2;
+            opacity: 0.3;
         }
 
         /* Texturas de fondo */
@@ -53,7 +54,7 @@
         .tex-diagonal { background-image: url("https://www.transparenttextures.com/patterns/diagonal-stripes.png"); }
         .tex-floral { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
 
-        /* --- SOBRE (ENVELOPE) --- */
+        /* --- SOBRE (ENVELOPE) CON BORDES REDONDEADOS INTERNOS --- */
         #envelope-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 10000; display: flex; align-items: center; justify-content: center;
@@ -73,10 +74,31 @@
         .tex-formas-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20formas%20beige.jpg?raw=true"); }
         .tex-satin-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20satin%20lisa%20beige.jpg?raw=true"); }
 
-        .flap-left { left: 0; top: 0; width: 50.5%; height: 100%; clip-path: polygon(0 0, 100% 50%, 0 100%); z-index: 7; }
-        .flap-right { right: 0; top: 0; width: 50.5%; height: 100%; clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 7; }
-        .flap-top { top: 0; left: 0; width: 100%; height: 50.5%; clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 8; }
-        .flap-bottom { bottom: 0; left: 0; width: 100%; height: 50.5%; clip-path: polygon(50% 0, 100% 100%, 0 100%); z-index: 8; }
+        /* Estilo de solapas con bordes internos redondeados */
+        .flap-left { 
+            left: 0; top: 0; width: 52%; height: 100%; 
+            clip-path: polygon(0 0, 100% 50%, 0 100%); 
+            border-radius: 0 60px 60px 0; 
+            z-index: 7; 
+        }
+        .flap-right { 
+            right: 0; top: 0; width: 52%; height: 100%; 
+            clip-path: polygon(100% 0, 0 50%, 100% 100%); 
+            border-radius: 60px 0 0 60px; 
+            z-index: 7; 
+        }
+        .flap-top { 
+            top: 0; left: 0; width: 100%; height: 52%; 
+            clip-path: polygon(0 0, 100% 0, 50% 100%); 
+            border-radius: 0 0 80px 80px; 
+            z-index: 8; 
+        }
+        .flap-bottom { 
+            bottom: 0; left: 0; width: 100%; height: 52%; 
+            clip-path: polygon(50% 0, 100% 100%, 0 100%); 
+            border-radius: 80px 80px 0 0; 
+            z-index: 8; 
+        }
 
         #envelope-container.open .flap-left { transform: translateX(-100%); }
         #envelope-container.open .flap-right { transform: translateX(100%); }
@@ -102,21 +124,12 @@
 
         /* --- GALERÍA MANUAL --- */
         .slider-wrapper { 
-            position: relative; 
-            width: 100%; 
-            overflow-x: auto; 
-            display: flex;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            cursor: grab;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative; width: 100%; overflow-x: auto; display: flex;
+            scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none;
+            cursor: grab; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .slider-wrapper::-webkit-scrollbar { display: none; }
-        .slide { 
-            min-width: 100%; 
-            scroll-snap-align: center;
-        }
+        .slide { min-width: 100%; scroll-snap-align: center; }
         .slide img { width: 100%; height: auto; display: block; pointer-events: none; }
 
         /* Estilos UI */
@@ -148,7 +161,6 @@
         
         .qr-card { background: white; padding: 2rem; border: 1px solid var(--olive-light); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 4px; display: inline-block; }
 
-        /* Estilos Hospedaje */
         .hotel-card { background: white; border: 1px solid var(--olive-light); overflow: hidden; transition: 0.3s; }
         .hotel-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .hotel-img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
@@ -172,7 +184,7 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content" class="hidden">
         
-        <!-- HERO OPTIMIZADO: Más corto en móvil para visibilidad inmediata -->
+        <!-- HERO OPTIMIZADO: Altura ajustada para visibilidad -->
         <section class="h-[70vh] md:h-[85vh] flex flex-col items-center justify-end text-center text-white relative bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8746.jpeg');">
             <div class="section-frame"></div>
             <div data-aos="fade-up" data-aos-duration="2000" class="z-10 px-6 pb-12 md:pb-24">
@@ -195,12 +207,12 @@
                     <h2 class="text-4xl italic mb-4">Con la bendición de nuestros padres</h2>
                     <div class="grid md:grid-cols-2 gap-12 mt-12">
                         <div>
-                            <p class="text-olive-light uppercase tracking-widest text-[10px] font-bold mb-4">Padres de la Novia</p>
+                            <p class="text-olive-med uppercase tracking-widest text-[10px] font-bold mb-4">Padres de la Novia</p>
                             <p class="text-2xl font-serif italic">Sr. Alberto Martínez</p>
                             <p class="text-2xl font-serif italic">Sra. Elena García</p>
                         </div>
                         <div>
-                            <p class="text-olive-light uppercase tracking-widest text-[10px] font-bold mb-4">Padres del Novio</p>
+                            <p class="text-olive-med uppercase tracking-widest text-[10px] font-bold mb-4">Padres del Novio</p>
                             <p class="text-2xl font-serif italic">Sr. Roberto Sánchez</p>
                             <p class="text-2xl font-serif italic">Sra. Lucía Fernández</p>
                         </div>
@@ -237,7 +249,7 @@
         </div>
 
         <!-- HISTORIA -->
-        <section class="py-24 px-6 relative tex-linen" style="background-color: #f4f6f0;">
+        <section class="py-24 px-6 relative tex-linen" style="background-color: #faf8f3;">
             <div class="section-frame"></div>
             <div class="container mx-auto max-w-3xl">
                 <h2 class="text-center text-4xl italic mb-16" data-aos="fade-up">Nuestra Historia</h2>
@@ -333,36 +345,32 @@
             <div class="container mx-auto max-w-6xl">
                 <h2 class="text-4xl italic mb-12 text-center" data-aos="fade-up">Sugerencias de Hospedaje</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Hotel 1 -->
                     <div class="hotel-card" data-aos="fade-up" data-aos-delay="100">
-                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hotel El Olivo" onerror="this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop'">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hotel El Olivo">
                         <div class="p-6">
                             <h4 class="font-bold text-olive-dark mb-2">Boutique El Olivo</h4>
                             <p class="text-sm text-gray-500 italic mb-4">A 5 min de la Hacienda. Código: BODA-MJ</p>
                             <a href="#" class="text-xs uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                         </div>
                     </div>
-                    <!-- Hotel 2 -->
                     <div class="hotel-card" data-aos="fade-up" data-aos-delay="200">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Gran Plaza Central" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop'">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Gran Plaza Central">
                         <div class="p-6">
                             <h4 class="font-bold text-olive-dark mb-2">Gran Plaza Central</h4>
                             <p class="text-sm text-gray-500 italic mb-4">Ubicado en el corazón histórico de la ciudad.</p>
                             <a href="#" class="text-xs uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                         </div>
                     </div>
-                    <!-- Hotel 3 -->
                     <div class="hotel-card" data-aos="fade-up" data-aos-delay="300">
-                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Posada del Sol" onerror="this.src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop'">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Posada del Sol">
                         <div class="p-6">
                             <h4 class="font-bold text-olive-dark mb-2">Posada del Sol</h4>
                             <p class="text-sm text-gray-500 italic mb-4">Acogedor y tradicional, ideal para familias.</p>
                             <a href="#" class="text-xs uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
                         </div>
                     </div>
-                    <!-- Hotel 4 -->
                     <div class="hotel-card" data-aos="fade-up" data-aos-delay="400">
-                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hacienda Resort" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop'">
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="hotel-img" alt="Hacienda Resort">
                         <div class="p-6">
                             <h4 class="font-bold text-olive-dark mb-2">Hacienda Resort</h4>
                             <p class="text-sm text-gray-500 italic mb-4">Estilo colonial de lujo con spa disponible.</p>
@@ -373,28 +381,23 @@
             </div>
         </section>
 
-        <!-- SEPARADOR 3 -->
-        <div class="w-full bg-[#fdfaf5]" data-aos="fade-up">
-            <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" class="separator-img mx-auto" alt="Separador">
-        </div>
-
         <!-- VESTIMENTA -->
-        <section class="py-32 text-white text-center relative bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(62, 78, 42, 0.85), rgba(62, 78, 42, 0.85)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg');">
+        <section class="py-32 text-white text-center relative bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(125, 107, 71, 0.85), rgba(92, 77, 50, 0.85)), url('https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg');">
             <div class="absolute inset-0 tex-linen opacity-10"></div>
             <div class="container mx-auto px-6 relative z-10" data-aos="zoom-in">
                 <h2 class="text-5xl italic mb-8 !text-white">Código de Vestimenta</h2>
                 <p class="text-3xl font-serif italic tracking-widest mb-6">Etiqueta Formal</p>
                 <p class="text-gray-100 max-w-lg mx-auto mb-12 italic text-lg font-light leading-relaxed">Agradecemos su presencia luciendo sus mejores galas. Por favor, eviten el color blanco y derivados.</p>
                 <div class="flex justify-center gap-6 mt-8">
-                    <div class="w-16 h-16 rounded-full bg-[#3e4e2a] border-2 border-white/40 shadow-xl" title="Oliva Oscuro"></div>
-                    <div class="w-16 h-16 rounded-full bg-[#5d6b2c] border-2 border-white/40 shadow-xl" title="Oliva Medio"></div>
-                    <div class="w-16 h-16 rounded-full bg-[#8a9315] border-2 border-white/40 shadow-xl" title="Oliva Brillante"></div>
+                    <div class="w-16 h-16 rounded-full bg-[#7d6b47] border-2 border-white/40 shadow-xl" title="Bronce"></div>
+                    <div class="w-16 h-16 rounded-full bg-[#bfa260] border-2 border-white/40 shadow-xl" title="Dorado Clásico"></div>
+                    <div class="w-16 h-16 rounded-full bg-[#e5d3b3] border-2 border-white/40 shadow-xl" title="Champagne"></div>
                 </div>
             </div>
         </section>
 
         <!-- ÁLBUM QR -->
-        <section class="py-24 bg-[#f9faf7] px-6 text-center relative tex-paper">
+        <section class="py-24 bg-[#fcf9f2] px-6 text-center relative tex-paper">
             <div class="section-frame"></div>
             <div class="container mx-auto max-xl" data-aos="fade-up">
                 <h2 class="text-4xl italic mb-8">Álbum Compartido</h2>
@@ -407,15 +410,15 @@
         </section>
 
         <!-- REGLAS & HASHTAG -->
-        <section class="py-24 px-6 text-center relative tex-paper" style="background-color: #f1f3eb;">
+        <section class="py-24 px-6 text-center relative tex-paper" style="background-color: #f7f4ec;">
             <div class="section-frame"></div>
             <div class="container mx-auto max-w-4xl">
                 <div class="bg-white p-12 shadow-sm border border-olive-bright/10" data-aos="fade-up">
                     <h3 class="text-3xl italic mb-10">¡A Tomar en Cuenta!</h3>
                     <ul class="text-left max-w-md mx-auto space-y-6 font-serif italic text-xl text-olive-dark">
-                        <li class="flex items-start gap-4"><span>🌿</span> Boda exclusivamente para adultos.</li>
-                        <li class="flex items-start gap-4"><span>🌿</span> Agradecemos su puntualidad.</li>
-                        <li class="flex items-start gap-4"><span>🌿</span> Confirmar antes del 30 de Septiembre.</li>
+                        <li class="flex items-start gap-4"><span>✨</span> Boda exclusivamente para adultos.</li>
+                        <li class="flex items-start gap-4"><span>✨</span> Agradecemos su puntualidad.</li>
+                        <li class="flex items-start gap-4"><span>✨</span> Confirmar antes del 30 de Septiembre.</li>
                     </ul>
                     <div class="mt-20">
                         <p class="text-olive-muted uppercase tracking-[0.4em] text-[10px] font-bold mb-4">Usa nuestro Hashtag</p>
@@ -445,7 +448,7 @@
         </section>
 
         <!-- INTERACCIÓN -->
-        <section class="py-24 px-6 relative tex-diagonal" style="background-color: #f9faf7;">
+        <section class="py-24 px-6 relative tex-diagonal" style="background-color: #faf9f5;">
             <div class="section-frame"></div>
             <div class="container mx-auto max-w-5xl grid md:grid-cols-2 gap-16">
                 <div data-aos="fade-right">
@@ -497,7 +500,7 @@
         </section>
 
         <!-- FOOTER -->
-        <footer class="py-32 bg-[#2d3122] text-white text-center relative">
+        <footer class="py-32 bg-[#3b3323] text-white text-center relative">
             <div class="section-frame" style="opacity: 0.1;"></div>
             <p class="text-7xl font-script mb-6 !text-white">María <span class="text-olive-light">&</span> Juan</p>
             <p class="text-[10px] text-gray-400 tracking-[0.5em] uppercase font-bold italic">24 . OCTUBRE . 2026</p>
@@ -505,16 +508,18 @@
 
     </main>
 
-    <!-- REPRODUCTOR -->
+    <!-- REPRODUCTOR ACTUALIZADO -->
     <div class="player-bar" id="musicBar">
         <div class="flex items-center gap-4">
             <button id="playPauseBtn" class="text-olive-dark">
                 <svg id="playIcon" class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5l11 6.5-11 6.5z"/></svg>
                 <svg id="pauseIcon" class="w-7 h-7 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
             </button>
-            <p class="text-[10px] italic font-bold text-olive-dark tracking-widest uppercase">Nuestra Canción</p>
+            <p class="text-[10px] italic font-bold text-olive-dark tracking-widest uppercase">Te Esperaba - Carlos Rivera</p>
         </div>
-        <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+        <audio id="bgMusic" loop>
+            <source src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/Carlos%20Rivera%20-%20Te%20Esperaba%20(Lyric%20Video).mp3?raw=true" type="audio/mpeg">
+        </audio>
     </div>
 
     <script>
@@ -528,7 +533,9 @@
                 document.getElementById('musicBar').classList.add('active');
                 AOS.init({ duration: 1500, once: true });
                 const audio = document.getElementById('bgMusic');
-                audio.play().catch(() => {});
+                audio.play().catch(() => {
+                    console.log("Autoplay bloqueado por el navegador");
+                });
                 updatePlayState(true);
             }, 1200);
         }
