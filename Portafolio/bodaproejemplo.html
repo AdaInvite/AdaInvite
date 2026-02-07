@@ -402,7 +402,7 @@
                 <div class="absolute inset-0 tex-linen opacity-10"></div>
                 <div class="container mx-auto px-6 relative z-10" data-aos="zoom-in">
                     <h2 class="text-5xl italic mb-8 !text-white drop-shadow-md">Código de Vestimenta</h2>
-                    <p class="text-3xl font-serif italic tracking-widest mb-6 !text-white drop-shadow-[0_4px_15px_rgba(0,0,0,0.6)] font-bold">Etiqueta Formal</p>
+                    <p class="text-3xl font-serif italic tracking-widest mb-6 !text-white drop-shadow-[0_4px_15_rgba(0,0,0,0.6)] font-bold">Etiqueta Formal</p>
                     <p class="text-gray-100 max-w-lg mx-auto mb-12 italic text-lg font-light leading-relaxed">Agradecemos su presencia luciendo sus mejores galas. Por favor, eviten el color blanco y derivados.</p>
                     <div class="flex justify-center gap-6 mt-8">
                         <div class="w-16 h-16 rounded-full bg-[#8a764d] border-2 border-white/40 shadow-xl"></div>
@@ -555,34 +555,8 @@
         // Inicializar iconos
         lucide.createIcons();
 
-        function startExperience() {
-            const env = document.getElementById('envelope-container');
-            const main = document.getElementById('main-content');
-            const musicBar = document.getElementById('musicBar');
-            const audio = document.getElementById('bgMusic');
-
-            env.classList.add('open');
-            document.body.classList.remove('overflow-hidden');
-            main.classList.remove('hidden');
-            
-            // Garantizar renderizado antes de AOS
-            setTimeout(() => {
-                musicBar.classList.add('active');
-                AOS.init({ 
-                    duration: 1200, 
-                    once: true,
-                    disable: 'mobile' // Opcional: deshabilitar en móviles muy viejos si hay lag
-                });
-                
-                // Intento de reproducción compatible
-                audio.play().then(() => {
-                    updatePlayState(true);
-                }).catch(e => {
-                    console.log("Auto-play bloqueado por el navegador");
-                    updatePlayState(false);
-                });
-            }, 1200);
-        }
+        let playPromise = null;
+        const audio = document.getElementById('bgMusic');
 
         function updatePlayState(playing) {
             const play = document.getElementById('playIcon');
@@ -594,15 +568,65 @@
             }
         }
 
-        const audio = document.getElementById('bgMusic');
+        // Helper para reproducir audio de forma segura
+        function safePlay() {
+            playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    updatePlayState(true);
+                }).catch(e => {
+                    if (e.name !== 'AbortError') {
+                        console.log("Playback blocked or failed:", e);
+                    }
+                    updatePlayState(false);
+                });
+            }
+        }
+
+        // Helper para pausar audio de forma segura
+        function safePause() {
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audio.pause();
+                    updatePlayState(false);
+                }).catch(() => {
+                    // Si el play falló, igual nos aseguramos de que esté pausado
+                    audio.pause();
+                    updatePlayState(false);
+                });
+            } else {
+                audio.pause();
+                updatePlayState(false);
+            }
+        }
+
+        function startExperience() {
+            const env = document.getElementById('envelope-container');
+            const main = document.getElementById('main-content');
+            const musicBar = document.getElementById('musicBar');
+
+            env.classList.add('open');
+            document.body.classList.remove('overflow-hidden');
+            main.classList.remove('hidden');
+            
+            setTimeout(() => {
+                musicBar.classList.add('active');
+                AOS.init({ 
+                    duration: 1200, 
+                    once: true,
+                    disable: 'mobile'
+                });
+                
+                safePlay();
+            }, 1200);
+        }
+
         document.getElementById('playPauseBtn').addEventListener('click', (e) => {
             e.preventDefault();
             if (audio.paused) { 
-                audio.play(); 
-                updatePlayState(true); 
+                safePlay();
             } else { 
-                audio.pause(); 
-                updatePlayState(false); 
+                safePause();
             }
         });
 
@@ -626,7 +650,6 @@
             document.getElementById('rsvpSuccess').classList.remove('hidden');
         });
 
-        // Corregir altura en móviles Chrome
         const setVh = () => {
             let vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
