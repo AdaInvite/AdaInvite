@@ -46,16 +46,37 @@
             pointer-events: none; z-index: 20; opacity: 0.4;
         }
 
-        /* Texturas optimizadas */
+        /* Texturas */
         .tex-paper { background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png"); }
         .tex-linen { background-image: url("https://www.transparenttextures.com/patterns/linen-design.png"); }
         .tex-diagonal { background-image: url("https://www.transparenttextures.com/patterns/diagonal-stripes.png"); }
         .tex-floral { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
 
+        /* Formas de Fotos Elegantes */
+        .photo-arch {
+            border-radius: 500px 500px 0 0;
+            overflow: hidden;
+            border: 1px solid var(--olive-muted);
+            padding: 8px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .photo-arch img {
+            border-radius: 500px 500px 0 0;
+        }
+
+        .photo-oval {
+            border-radius: 100%;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            border: 1px solid var(--olive-muted);
+            padding: 6px;
+            background: white;
+        }
+
         /* --- SOBRE (ENVELOPE) --- */
         #envelope-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            height: 100svh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100svh;
             z-index: 10000; display: flex; align-items: center; justify-content: center;
             background-color: var(--cream); overflow: hidden;
             transition: opacity 1s ease-in-out, visibility 1s;
@@ -74,29 +95,10 @@
         .tex-formas-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20formas%20beige.jpg?raw=true"); }
         .tex-satin-beige { background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura%20satin%20lisa%20beige.jpg?raw=true"); }
 
-        .flap-left { 
-            left: 0; top: 0; width: 52%; height: 100%; 
-            border-radius: 0 180px 180px 0; 
-            z-index: 100; 
-            box-shadow: 10px 0 20px rgba(0,0,0,0.1);
-        }
-        .flap-right { 
-            right: 0; top: 0; width: 52%; height: 100%; 
-            border-radius: 180px 0 0 180px; 
-            z-index: 50; 
-        }
-        .flap-top { 
-            top: 0; left: 0; width: 100%; height: 50%; 
-            clip-path: polygon(0 0, 100% 0, 50% 100%); 
-            -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
-            z-index: 40; 
-        }
-        .flap-bottom { 
-            bottom: 0; left: 0; width: 100%; height: 50%; 
-            clip-path: polygon(50% 0, 100% 100%, 0 100%); 
-            -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%);
-            z-index: 40; 
-        }
+        .flap-left { left: 0; top: 0; width: 52%; height: 100%; border-radius: 0 180px 180px 0; z-index: 100; box-shadow: 10px 0 20px rgba(0,0,0,0.1); }
+        .flap-right { right: 0; top: 0; width: 52%; height: 100%; border-radius: 180px 0 0 180px; z-index: 50; }
+        .flap-top { top: 0; left: 0; width: 100%; height: 50%; clip-path: polygon(0 0, 100% 0, 50% 100%); -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 40; }
+        .flap-bottom { bottom: 0; left: 0; width: 100%; height: 50%; clip-path: polygon(50% 0, 100% 100%, 0 100%); -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%); z-index: 40; }
 
         #envelope-container.open .flap-left { transform: translateX(-110%); }
         #envelope-container.open .flap-right { transform: translateX(110%); }
@@ -104,31 +106,23 @@
         #envelope-container.open .flap-bottom { transform: translateY(110%); }
         #envelope-container.open { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        .seal-wrapper { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            z-index: 200; cursor: pointer; text-align: center;
-        }
+        .seal-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; cursor: pointer; text-align: center; }
         .seal-img { width: 110px; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.15)); transition: 0.3s; }
-        .click-hint { 
-            background: var(--olive-dark); color: white; padding: 6px 15px; border-radius: 20px; 
-            font-size: 11px; margin-bottom: 20px; animation: bounce 2s infinite; text-transform: uppercase;
-        }
+        .click-hint { background: var(--olive-dark); color: white; padding: 6px 15px; border-radius: 20px; font-size: 11px; margin-bottom: 20px; animation: bounce 2s infinite; text-transform: uppercase; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        /* Sliders y Contenedores */
+        /* Sliders */
         .slider-wrapper { 
             position: relative; width: 100%; overflow-x: auto; display: flex;
             scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
+            padding: 20px 0;
         }
         .slider-wrapper::-webkit-scrollbar { display: none; }
-        .slide { min-width: 100%; scroll-snap-align: center; flex-shrink: 0; }
-        .slide img { width: 100%; height: auto; display: block; }
+        .slide { min-width: 80%; margin: 0 10%; scroll-snap-align: center; flex-shrink: 0; }
+        .slide img { width: 100%; height: auto; display: block; object-fit: cover; }
 
-        .horizontal-scroll { 
-            display: flex; overflow-x: auto; gap: 20px; padding: 20px; 
-            scrollbar-width: none; -webkit-overflow-scrolling: touch;
-        }
+        .horizontal-scroll { display: flex; overflow-x: auto; gap: 20px; padding: 20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
         .scroll-item { min-width: 250px; background: white; padding: 25px; border: 1px solid var(--olive-muted); border-radius: 4px; flex-shrink: 0; }
 
@@ -141,15 +135,7 @@
         }
         .btn-olive:hover { background: var(--olive-dark); border-color: var(--olive-dark); }
         
-        .btn-outline {
-            border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px;
-            text-transform: uppercase; font-size: 10px; display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        /* Línea de tiempo */
-        .timeline-item { position: relative; padding-left: 40px; margin-bottom: 40px; border-left: 2px solid var(--olive-med); }
-        .timeline-dot { position: absolute; left: -6.5px; top: 0; width: 11px; height: 11px; background: var(--olive-med); border-radius: 50%; }
+        .btn-outline { border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; text-transform: uppercase; font-size: 10px; display: inline-block; transition: all 0.3s ease; }
 
         /* Reproductor */
         .player-bar {
@@ -161,16 +147,12 @@
         }
         .player-bar.active { transform: translateY(0); }
 
-        /* Fix para bg-fixed en Chrome/Safari Mobile */
-        .bg-fixed-optimized {
-            background-attachment: scroll;
-        }
-        @media (min-width: 1024px) {
-            .bg-fixed-optimized { background-attachment: fixed; }
-        }
-
         .icon-gold { color: var(--olive-med); width: 24px; height: 24px; stroke-width: 1.5px; }
         .icon-large { width: 40px; height: 40px; margin-bottom: 12px; }
+
+        /* Optimizaciones */
+        .bg-fixed-optimized { background-attachment: scroll; }
+        @media (min-width: 1024px) { .bg-fixed-optimized { background-attachment: fixed; } }
     </style>
 </head>
 <body class="overflow-hidden">
@@ -255,9 +237,13 @@
                 </div>
             </section>
 
-            <!-- SEPARADOR 1 -->
-            <div class="w-full bg-[#fdfaf5]" data-aos="fade-up">
-                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8748.jpeg" class="w-full max-h-[80vh] object-contain mx-auto" alt="Separador">
+            <!-- SEPARADOR 1 - Forma de Arco -->
+            <div class="w-full bg-[#fdfaf5] py-12" data-aos="fade-up">
+                <div class="max-w-md mx-auto px-6">
+                    <div class="photo-arch">
+                        <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8748.jpeg" class="w-full h-auto" alt="Nuestra Foto">
+                    </div>
+                </div>
             </div>
 
             <!-- HISTORIA -->
@@ -288,16 +274,32 @@
                 </div>
             </section>
 
-            <!-- GALERÍA -->
+            <!-- GALERÍA CON FORMAS -->
             <section class="py-24 bg-white px-6 relative tex-diagonal overflow-hidden">
                 <div class="container mx-auto max-w-6xl text-center">
                     <h2 class="text-4xl italic mb-12" data-aos="fade-up">Nuestros Momentos</h2>
-                    <p class="mb-4 text-[10px] uppercase tracking-widest text-olive-muted font-bold">Desliza para navegar</p>
+                    <p class="mb-8 text-[10px] uppercase tracking-widest text-olive-muted font-bold">Desliza para navegar</p>
                     <div class="slider-wrapper" id="mainSlider">
-                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8749.jpeg" alt="Imagen 1"></div>
-                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" alt="Imagen 2"></div>
-                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" alt="Imagen 3"></div>
-                        <div class="slide"><img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg" alt="Imagen 4"></div>
+                        <div class="slide">
+                            <div class="photo-arch">
+                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8749.jpeg" alt="Momento 1">
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="photo-arch">
+                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8750.jpeg" alt="Momento 2">
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="photo-arch">
+                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8751.jpeg" alt="Momento 3">
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="photo-arch">
+                                <img src="https://github.com/AdaInvite/AdaInvite/raw/main/Assets/bodaverdeoliva/IMG_8753.jpeg" alt="Momento 4">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -355,43 +357,43 @@
                 </div>
             </section>
 
-            <!-- HOSPEDAJE -->
+            <!-- HOSPEDAJE CON FORMAS -->
             <section class="py-24 bg-white px-6 relative tex-linen">
                 <div class="section-frame"></div>
                 <div class="container mx-auto max-w-6xl overflow-hidden">
                     <h2 class="text-4xl italic mb-12 text-center" data-aos="fade-up">Sugerencias de Hospedaje</h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="hotel-card" data-aos="fade-up">
-                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="w-full h-[200px] object-cover" alt="Hotel 1">
-                            <div class="p-6">
-                                <h4 class="font-bold text-olive-dark mb-2">Boutique El Olivo</h4>
-                                <p class="text-xs text-gray-500 italic mb-4">A 5 min de la Hacienda. Código: BODA-MJ</p>
-                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="text-center" data-aos="fade-up">
+                            <div class="photo-arch mb-6">
+                                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 1">
                             </div>
+                            <h4 class="font-bold text-olive-dark mb-1">Boutique El Olivo</h4>
+                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Código: BODA-MJ</p>
+                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="100">
-                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="w-full h-[200px] object-cover" alt="Hotel 2">
-                            <div class="p-6">
-                                <h4 class="font-bold text-olive-dark mb-2">Gran Plaza Central</h4>
-                                <p class="text-xs text-gray-500 italic mb-4">En el corazón histórico de la ciudad.</p>
-                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
+                        <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                            <div class="photo-arch mb-6">
+                                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 2">
                             </div>
+                            <h4 class="font-bold text-olive-dark mb-1">Gran Plaza</h4>
+                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Centro Histórico</p>
+                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="200">
-                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="w-full h-[200px] object-cover" alt="Hotel 3">
-                            <div class="p-6">
-                                <h4 class="font-bold text-olive-dark mb-2">Posada del Sol</h4>
-                                <p class="text-xs text-gray-500 italic mb-4">Acogedor y tradicional, ideal para familias.</p>
-                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
+                        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                            <div class="photo-arch mb-6">
+                                <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 3">
                             </div>
+                            <h4 class="font-bold text-olive-dark mb-1">Posada del Sol</h4>
+                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Tradicional</p>
+                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
-                        <div class="hotel-card" data-aos="fade-up" data-aos-delay="300">
-                            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="w-full h-[200px] object-cover" alt="Hotel 4">
-                            <div class="p-6">
-                                <h4 class="font-bold text-olive-dark mb-2">Hacienda Resort</h4>
-                                <p class="text-xs text-gray-500 italic mb-4">Estilo colonial de lujo con spa disponible.</p>
-                                <a href="#" class="text-[10px] uppercase font-bold tracking-widest text-olive-med border-b border-olive-med">Reservar</a>
+                        <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                            <div class="photo-arch mb-6">
+                                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=600&auto=format&fit=crop" class="w-full h-48 object-cover" alt="Hotel 4">
                             </div>
+                            <h4 class="font-bold text-olive-dark mb-1">Hacienda Resort</h4>
+                            <p class="text-[11px] text-gray-500 italic mb-4 uppercase tracking-tighter">Lujo & Spa</p>
+                            <a href="#" class="btn-outline !py-2 !px-4 text-[9px]">Reservar</a>
                         </div>
                     </div>
                 </div>
@@ -552,7 +554,6 @@
     </div>
 
     <script>
-        // Inicializar iconos
         lucide.createIcons();
 
         let playPromise = null;
@@ -568,29 +569,24 @@
             }
         }
 
-        // Helper para reproducir audio de forma segura
         function safePlay() {
             playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     updatePlayState(true);
                 }).catch(e => {
-                    if (e.name !== 'AbortError') {
-                        console.log("Playback blocked or failed:", e);
-                    }
+                    if (e.name !== 'AbortError') console.log(e);
                     updatePlayState(false);
                 });
             }
         }
 
-        // Helper para pausar audio de forma segura
         function safePause() {
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     audio.pause();
                     updatePlayState(false);
                 }).catch(() => {
-                    // Si el play falló, igual nos aseguramos de que esté pausado
                     audio.pause();
                     updatePlayState(false);
                 });
@@ -611,23 +607,14 @@
             
             setTimeout(() => {
                 musicBar.classList.add('active');
-                AOS.init({ 
-                    duration: 1200, 
-                    once: true,
-                    disable: 'mobile'
-                });
-                
+                AOS.init({ duration: 1200, once: true, disable: 'mobile' });
                 safePlay();
             }, 1200);
         }
 
         document.getElementById('playPauseBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            if (audio.paused) { 
-                safePlay();
-            } else { 
-                safePause();
-            }
+            if (audio.paused) safePlay(); else safePause();
         });
 
         function addWish() {
