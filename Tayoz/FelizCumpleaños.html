@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños 24 | Ricardo de Jesús</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --silver: #C0C0C0;
+            --platinum: #E5E4E2;
+            --accent: #8e9eab;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-cursive { font-family: 'Dancing Script', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease, visibility 1s;
+            cursor: pointer;
+        }
+
+        .splash-text { animation: pulse-light 2s infinite ease-in-out; }
+        @keyframes pulse-light {
+            0%, 100% { opacity: 0.4; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Hero & Video Background */
+        .hero-header {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .video-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4); /* Oscurecemos para legibilidad */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 20%, #000 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+
+        /* Waveform Icon */
+        .music-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: transparent;
+            padding: 10px;
+            height: 60px;
+            transition: all 0.3s ease;
+        }
+        
+        .wave-bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--accent), #ffffff);
+            border-radius: 10px;
+            height: 6px; 
+            transition: height 0.05s ease;
+        }
+
+        /* Cursor Trail */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: #ffffff;
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            mix-blend-mode: difference;
+        }
+        @media (pointer: fine) { #cursor-dot { display: block; } }
+
+        .sparkle {
+            position: fixed; pointer-events: none; z-index: 9998;
+            color: var(--platinum); font-size: 10px;
+            animation: sparkle-anim 1s linear forwards;
+        }
+        @keyframes sparkle-anim {
+            0% { transform: translate(0,0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--mdx), var(--mdy)) scale(0); opacity: 0; }
+        }
+
+        .silver-gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #8e9eab 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Gallery */
+        .photo-card {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            filter: grayscale(100%) brightness(0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .photo-card:hover {
+            filter: grayscale(0%) brightness(1);
+            transform: translateY(-5px) scale(1.02);
+            z-index: 10;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Reason Cards */
+        .reason-card { perspective: 1000px; height: 120px; }
+        .reason-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d; cursor: pointer;
+        }
+        .reason-card.active .reason-inner { transform: rotateY(180deg); }
+        .reason-front, .reason-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .reason-front { background: #111111; color: #444; font-size: 1.5rem; }
+        .reason-back { 
+            background: #1a1a1a; transform: rotateY(180deg); 
+            text-align: center; font-size: 0.85rem; color: #bbb;
+        }
+
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(to right, #444, #fff);
+            z-index: 100; width: 0%;
+        }
+
+        .scroll-indicator {
+            width: 1px; height: 60px;
+            background: linear-gradient(to bottom, #fff, transparent);
+            animation: pulse-scroll 2s infinite;
+        }
+        @keyframes pulse-scroll {
+            0%, 100% { opacity: 0.2; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Inicio -->
+    <div id="splash-screen" onclick="openInvitation()">
+        <div class="text-center px-6">
+            <p class="text-[10px] uppercase tracking-[1em] text-gray-500 mb-8">Invitación Especial</p>
+            <h1 class="text-3xl font-serif text-white mb-2">Ricardo de Jesús</h1>
+            <p class="text-sm font-light text-gray-500 mb-16 tracking-widest uppercase">Capítulo 24</p>
+            <div class="splash-text flex flex-col items-center">
+                <i data-lucide="heart" class="text-white/20 mb-4 w-10 h-10"></i>
+                <span class="text-[9px] uppercase tracking-[0.5em] text-gray-400">Toca para abrir</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="progress-bar"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Audio - Vicente Fernández -->
+    <audio id="bgMusic" loop crossorigin="anonymous">
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Tayoz/LAS%20MAANITAS%20-%20Vicente%20Fernndez%20LETRA%20estas%20son%20las%20maanitas.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Botón de Música Waveform -->
+    <div id="musicToggle" class="fixed bottom-8 right-8 z-50 cursor-pointer hidden">
+        <div class="music-pill" id="musicVisualizer">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main id="main-content" class="opacity-0 transition-opacity duration-1000">
+        
+        <!-- Hero con Video Background -->
+        <header class="hero-header">
+            <div class="video-bg">
+                <video id="heroVideo" loop muted playsinline>
+                    <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Tayoz/7ebfc690be2d4bfbbdebfad5cede4da8.mov" type="video/mp4">
+                </video>
+            </div>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content px-4">
+                <h2 class="text-[10px] uppercase tracking-[1.5em] text-gray-400 font-light mb-6">Celebrating 24 Years</h2>
+                <h1 class="text-6xl md:text-9xl font-serif silver-gradient-text mb-4">Ricardo de Jesús</h1>
+                <p class="text-xl md:text-2xl font-cursive text-gray-400 mb-12">By Alexi Daniela</p>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+                <div class="scroll-indicator"></div>
+            </div>
+        </header>
+
+        <!-- Galería de Recuerdos -->
+        <section class="py-32 px-4 bg-black">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-24">
+                    <h3 class="text-4xl font-serif italic text-white/90">Fragmentos de ti</h3>
+                    <div class="w-16 h-px bg-white/10 mx-auto mt-8"></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="main-gallery">
+                    <!-- Se llena con JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 24 Razones -->
+        <section class="py-32 bg-[#080808] px-4">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="flex items-end gap-4 mb-8">
+                        <h3 class="text-7xl font-serif silver-gradient-text">24</h3>
+                        <div class="mb-2">
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500">Razones para celebrarte</p>
+                            <p class="text-xs text-white/40"><span id="reason-count" class="text-white">0</span> de 24 descubiertas</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="razones-grid">
+                        <!-- Se llena con JS -->
+                    </div>
+                </div>
+                <div class="relative p-1 bg-[#111] shadow-2xl rounded-sm">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Tayoz/IMG_2609.jpeg" class="w-full grayscale opacity-60 hover:opacity-100 transition-all duration-1000" alt="Ricardo">
+                </div>
+            </div>
+        </section>
+
+        <!-- Carta Final -->
+        <section class="py-48 px-6 text-center bg-black" id="letter-section">
+            <div class="max-w-3xl mx-auto">
+                <i data-lucide="sparkles" class="mx-auto text-white/10 w-8 h-8 mb-12"></i>
+                <h4 class="text-4xl font-cursive mb-12 text-white/90" id="letter-title">Feliz Cumpleaños, mi amor</h4>
+                <div id="typewriter-content" class="min-h-[150px] space-y-6 text-gray-400 font-light italic text-xl leading-relaxed"></div>
+                <div class="mt-24 opacity-0 transition-all duration-1000 transform translate-y-4" id="signature">
+                    <p class="text-[9px] uppercase tracking-[0.8em] text-gray-600 mb-4">Siempre tuya</p>
+                    <p class="text-2xl font-serif text-white font-bold">Alexi Daniela</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-12 border-t border-white/5 text-center bg-black">
+            <p class="text-[8px] uppercase tracking-[1em] text-gray-700">Ricardo de Jesús • MMXXVI</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        let audioCtx, analyser, dataArray, source;
+        const waveBars = document.querySelectorAll('.wave-bar');
+        const music = document.getElementById('bgMusic');
+        const video = document.getElementById('heroVideo');
+
+        function initAudioVisualizer() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 64; 
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                source = audioCtx.createMediaElementSource(music);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                animateVisualizer();
+            }
+        }
+
+        function animateVisualizer() {
+            if (!music.paused) {
+                analyser.getByteFrequencyData(dataArray);
+                const indices = [4, 8, 12, 16, 20]; 
+                waveBars.forEach((bar, i) => {
+                    const value = dataArray[indices[i]];
+                    bar.style.height = `${6 + (value / 255 * 40)}px`;
+                });
+            } else {
+                waveBars.forEach(bar => bar.style.height = '6px');
+            }
+            requestAnimationFrame(animateVisualizer);
+        }
+
+        function openInvitation() {
+            const splash = document.getElementById('splash-screen');
+            const main = document.getElementById('main-content');
+            const musicBtn = document.getElementById('musicToggle');
+
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+                main.classList.remove('opacity-0');
+                musicBtn.classList.remove('hidden');
+                
+                // Init Audio & Video
+                initAudioVisualizer();
+                audioCtx.resume();
+                music.play().catch(() => {});
+                video.play().catch(() => {});
+                
+                confetti({ 
+                    particleCount: 150, spread: 70, origin: { y: 0.6 },
+                    colors: ['#ffffff', '#C0C0C0', '#444444']
+                });
+            }, 1000);
+        }
+
+        document.getElementById('musicToggle').onclick = () => {
+            if (music.paused) {
+                if (audioCtx) audioCtx.resume();
+                music.play();
+            } else {
+                music.pause();
+            }
+        };
+
+        // Galería
+        const images = [
+            "IMG_0103.jpeg", "IMG_0694.jpeg", "7609e72c-adbb-43be-a63b-569e50277782.jpeg", 
+            "8416012f-4ae6-4bb3-9638-4af688c5a09d.jpeg", "86efeebd-b9d7-46ae-b3b7-cc6fb38af3c2.jpeg", 
+            "c330c4b8-8728-44e9-97b1-4052bee45f97.jpeg", "cb7a511b-9fa0-49ae-b118-4bca878ce920.jpeg",
+            "f35e6c68-8935-482e-bfab-79a6423a5937.jpeg", "00c11ffe-e58a-4bef-856e-a93311aa3ca9.jpeg",
+            "IMG_7253.jpeg", "08d0a795-c5c1-46cc-a4e0-fce46838dda1.jpeg", "1184b9b7-122a-499c-b168-0701dee8e9c3.jpeg",
+            "16b64004-8a34-44d1-a6b0-79a8a835253c.jpeg", "1c79d2c6-667e-4c61-9b6e-11de0b13ee43.jpeg",
+            "27762cfa-ae5d-4f4c-b01a-f1c8fac0b0ae.jpeg", "2d701adb-25ef-451c-a511-8fb2983a2ca1.jpeg",
+            "4212c415-0899-4097-9e4f-b1b79468a824.jpeg", "46280caf-15cd-4366-8957-d1886d987ce6.jpeg",
+            "4f790542-40e0-47f2-b408-8b0f781a160c.jpeg", "6fc99a8f-a59a-4e5d-994f-bf3ff6cb7b10.jpeg",
+            "974e9599-0579-49c0-91a5-4dede288d7cd.jpeg", "9db08efd-cdc2-44a2-af04-75b067f2c1de.jpeg",
+            "a11cfb80-25a9-4b30-96de-e3c4e41f47d5.jpeg", "a40fb090-943b-441b-96d8-26192de8c910.jpeg",
+            "IMG_8825.jpeg", "IMG_2609.jpeg", "IMG_7230.jpeg"
+        ];
+
+        const gallery = document.getElementById('main-gallery');
+        images.forEach((img, idx) => {
+            const div = document.createElement('div');
+            div.className = `photo-card rounded-sm overflow-hidden aspect-[3/4] ${idx < 2 ? 'md:col-span-2 md:aspect-video' : ''}`;
+            div.innerHTML = `<img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Tayoz/${img}" class="w-full h-full object-cover" loading="lazy">`;
+            gallery.appendChild(div);
+        });
+
+        const razones = [
+            "Tu mirada sincera.", "Cómo te esfuerzas.", "Tu paz interna.", "Tus ganas de vivir.",
+            "Lo guapo que eres.", "Tu inteligencia.", "Tu gran corazón.", "Tu apoyo.",
+            "Tus 24 primaveras.", "Tu resiliencia.", "Tu voz.", "Tus abrazos.",
+            "Cómo me cuidas.", "Tu estilo.", "Tu risa.", "Tus metas.",
+            "Tu honestidad.", "Tu lealtad.", "Nuestros recuerdos.", "Tu luz única.",
+            "Tu paciencia.", "Tu determinación.", "Ser mi compañero.", "Ser simplemente tú."
+        ];
+
+        let flippedCount = 0;
+        const razonesGrid = document.getElementById('razones-grid');
+        razones.forEach((r, i) => {
+            const card = document.createElement('div');
+            card.className = 'reason-card';
+            card.innerHTML = `<div class="reason-inner" onclick="flipCard(this)"><div class="reason-front">${i + 1}</div><div class="reason-back">${r}</div></div>`;
+            razonesGrid.appendChild(card);
+        });
+
+        function flipCard(el) {
+            if (!el.parentElement.classList.contains('active')) {
+                el.parentElement.classList.add('active');
+                flippedCount++;
+                document.getElementById('reason-count').innerText = flippedCount;
+                if (flippedCount === 24) confetti({ particleCount: 100, spread: 70 });
+            }
+        }
+
+        const letterLines = [
+            "Agradezco cada día por cruzarte en mi camino.",
+            "En estos 24 años que cumples, mi mayor deseo es que sigas brillando con esa nobleza que te caracteriza.",
+            "Eres el reflejo de la elegancia y la bondad.",
+            "Te amo más de lo que estas fotos pueden capturar."
+        ];
+
+        let typed = false;
+        async function typeLetter() {
+            if (typed) return; typed = true;
+            const container = document.getElementById('typewriter-content');
+            for (const line of letterLines) {
+                const p = document.createElement('p');
+                container.appendChild(p);
+                for (let i = 0; i < line.length; i++) {
+                    p.innerHTML += line[i];
+                    await new Promise(r => setTimeout(r, 40));
+                }
+                await new Promise(r => setTimeout(r, 600));
+            }
+            document.getElementById('signature').classList.remove('opacity-0', 'translate-y-4');
+        }
+
+        const dot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            if (Math.random() > 0.8) {
+                const s = document.createElement('div');
+                s.className = 'sparkle'; s.innerHTML = '✦';
+                s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
+                s.style.setProperty('--mdx', (Math.random()-0.5)*80+'px');
+                s.style.setProperty('--mdy', (Math.random()-0.5)*80+'px');
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+            const letterSection = document.getElementById('letter-section');
+            if (letterSection.getBoundingClientRect().top < window.innerHeight * 0.7) typeLetter();
+        });
+    </script>
+</body>
+</html>
