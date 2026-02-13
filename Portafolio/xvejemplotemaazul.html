@@ -11,7 +11,7 @@
     <style>
         :root {
             --navy: #1a365d;
-            --texture-url: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Textura%20sobre.png');
+            --texture-url: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20Textura%20sobre.png');
         }
         
         body, html {
@@ -25,6 +25,30 @@
 
         .font-script { font-family: 'Great Vibes', cursive; }
         .font-sans { font-family: 'Montserrat', sans-serif; }
+
+        /* --- PRELOADER --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--navy);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* --- SOBRE PANTALLA COMPLETA --- */
         #envelope-wrapper {
@@ -101,7 +125,7 @@
 
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        /* --- INDICADOR SCROLL AZUL --- */
+        /* --- INDICADOR SCROLL --- */
         .scroll-down-indicator {
             position: absolute;
             bottom: 40px;
@@ -136,43 +160,49 @@
             display: block;
         }
 
-        .flower-corner {
+        /* Adornos de esquina */
+        .corner-decoration {
             position: absolute;
-            width: 180px;
+            width: 150px;
             z-index: 30;
             pointer-events: none;
-            opacity: 1 !important; 
         }
 
-        .shadow-decoration {
-            position: absolute;
-            width: 220px;
-            z-index: 30;
-            pointer-events: none;
-            opacity: 1 !important;
+        .flower-quote {
+            top: 0;
+            left: 0;
+            opacity: 1;
         }
 
-        .section-padding { padding: 80px 25px; }
+        .shadow-quote {
+            top: 0;
+            right: 0;
+            width: 110px; /* Tamaño solicitado */
+            opacity: 0.12 !important; /* Más bajito y sutil */
+            transform: scaleX(-1); /* Invertida */
+        }
+
+        .section-padding { padding: 40px 25px; }
 
         .btn-navy {
             background-color: var(--navy);
             color: white;
-            padding: 14px 40px;
+            padding: 12px 35px;
             border-radius: 50px;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             letter-spacing: 2px;
             display: inline-block;
             box-shadow: 0 4px 15px rgba(26, 54, 93, 0.2);
         }
 
-        /* ITINERARIO MEJORADO */
+        /* ITINERARIO */
         .itinerary-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 150px; 
+            margin-bottom: 120px; 
             position: relative;
         }
 
@@ -183,24 +213,8 @@
             border: 1px solid var(--navy);
             border-radius: 50%;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             z-index: 10;
-        }
-
-        .itinerary-text { 
-            text-align: center;
-            width: 100%;
-        }
-
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background-color: #e2e8f0;
-            transform: translateX(-50%);
-            z-index: 1;
         }
 
         #music-control {
@@ -219,9 +233,22 @@
             cursor: pointer;
             border: 1px solid #f1f5f9;
         }
+        
+        .opened #envelope-wrapper {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .opened .left-flap { transform: translateX(-110%); }
+        .opened .base-envelope { transform: translateX(110%); }
     </style>
 </head>
 <body>
+
+    <!-- PANTALLA DE CARGA -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <p class="font-sans text-[0.6rem] mt-4 tracking-[0.3em] uppercase text-slate-400">Preparando tu invitación...</p>
+    </div>
 
     <!-- SOBRE DE INICIO -->
     <div id="envelope-wrapper">
@@ -255,186 +282,169 @@
             </div>
         </div>
 
-        <!-- Pantalla de Texto Inspirador (Quote) -->
-        <div class="relative h-screen flex items-center justify-center bg-white px-8 overflow-hidden">
-            <!-- Flores a la izquierda -->
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20esquina.png" class="flower-corner left-0 top-12">
-            <!-- Sombra azul a la derecha -->
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Sombra%20azul.png" class="shadow-decoration right-0 top-12">
+        <!-- Pantalla de Quote con Sombra Invertida Sutil -->
+        <div class="relative h-screen flex items-center justify-center bg-white px-10 overflow-hidden">
+            <!-- Flores esquina superior izquierda -->
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20Flor%20azul%20esquina.png" class="corner-decoration flower-quote">
+            <!-- Sombra azul sutil, pequeña e invertida en la derecha -->
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20Sombra%20azul.png" class="corner-decoration shadow-quote">
 
-            <p class="text-gray-500 italic text-2xl md:text-3xl text-center leading-relaxed font-serif relative z-10">
+            <p class="text-gray-500 italic text-2xl text-center leading-relaxed font-serif relative z-10 px-4">
                 "Hay momentos inolvidables que se atesoran en el corazón para siempre, por esa razón, quiero que compartas conmigo este día tan especial."
             </p>
         </div>
 
-        <!-- Sección de Nombres y Bienvenida -->
-        <div class="relative bg-white pb-16 pt-20">
-            <div class="section-padding text-center">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Corona%20plata.png" class="w-24 mx-auto mb-8">
-                <h2 class="text-navy-900 tracking-[0.6em] text-xs font-sans mb-2 font-bold uppercase">Mis XV Años</h2>
-                <h1 class="text-7xl font-script text-slate-800 my-8">Adriana Lopez</h1>
+        <!-- Sección de Información Compacta y Centrada -->
+        <div class="relative h-screen flex flex-col items-center justify-center bg-white text-center px-6 overflow-hidden">
+            <div class="scale-90 md:scale-100">
+                <!-- Corona plateada restaurada -->
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Corona%20plata.png" class="w-16 mx-auto mb-8">
+                
+                <h2 class="text-navy-900 tracking-[0.6em] text-[0.65rem] font-sans mb-1 font-bold uppercase">Mis XV Años</h2>
+                <h1 class="text-5xl font-script text-slate-800 mb-6">Adriana Lopez</h1>
 
-                <p class="text-gray-500 italic text-2xl px-6 mb-24 leading-relaxed font-serif">
+                <p class="text-gray-500 italic text-lg px-6 mb-10 leading-relaxed font-serif">
                     Con la bendición de Dios y el amor de mis padres, te invito a celebrar con alegría este momento tan especial.
                 </p>
 
-                <!-- Familia Vertical -->
-                <div class="space-y-24 mb-32">
+                <!-- Familia Vertical Compacta -->
+                <div class="space-y-8">
                     <div class="flex flex-col items-center">
-                        <span class="text-xs tracking-[0.5em] uppercase font-sans text-navy-800 font-bold mb-8">Mis Padres</span>
-                        <p class="text-4xl font-script text-slate-700">Juan Lopez</p>
-                        <p class="text-4xl font-script text-slate-700 mt-4">Maria Garcia</p>
+                        <span class="text-[0.6rem] tracking-[0.4em] uppercase font-sans text-navy-800 font-bold mb-2">Mis Padres</span>
+                        <p class="text-2xl font-script text-slate-700 leading-tight">Juan Lopez</p>
+                        <span class="text-base font-script text-navy-800 leading-none py-1">&</span>
+                        <p class="text-2xl font-script text-slate-700 leading-tight">Maria Garcia</p>
                     </div>
                     
                     <div class="flex flex-col items-center">
-                        <span class="text-xs tracking-[0.5em] uppercase font-sans text-navy-800 font-bold mb-8">Mis Padrinos</span>
-                        <p class="text-4xl font-script text-slate-700">Carlos Ruiz</p>
-                        <p class="text-4xl font-script text-slate-700 mt-4">Elena Soto</p>
+                        <span class="text-[0.6rem] tracking-[0.4em] uppercase font-sans text-navy-800 font-bold mb-2">Mis Padrinos</span>
+                        <p class="text-2xl font-script text-slate-700 leading-tight">Carlos Ruiz</p>
+                        <span class="text-base font-script text-navy-800 leading-none py-1">&</span>
+                        <p class="text-2xl font-script text-slate-700 leading-tight">Elena Soto</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Foto 2 (Bajo Padrinos) -->
+        <!-- Foto 2 (Pantalla Completa) -->
         <div class="w-full">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9135.jpeg" alt="Adriana" class="full-screen-photo">
         </div>
 
         <!-- Cuenta Regresiva -->
-        <div class="py-32 bg-slate-50 text-center relative overflow-hidden">
-            <h3 class="font-sans text-[0.65rem] tracking-[0.6em] text-navy-800 mb-10 uppercase font-bold">Septiembre</h3>
-            <div class="flex items-center justify-center gap-8 mb-16">
+        <div class="py-24 bg-slate-50 text-center relative overflow-hidden">
+            <h3 class="font-sans text-[0.6rem] tracking-[0.5em] text-navy-800 mb-8 uppercase font-bold">Septiembre</h3>
+            <div class="flex items-center justify-center gap-6 mb-12">
                 <span class="text-gray-400 text-sm tracking-widest font-sans">SÁBADO</span>
-                <span class="text-7xl font-light border-x px-10 border-slate-200 text-navy-900 leading-none">24</span>
+                <span class="text-6xl font-light border-x px-8 border-slate-200 text-navy-900 leading-none">24</span>
                 <span class="text-gray-400 text-sm tracking-widest font-sans">2025</span>
             </div>
             
-            <p class="text-[0.6rem] tracking-[0.8em] text-gray-400 mb-8 uppercase">Faltan</p>
-            <div id="countdown" class="flex justify-center gap-10 text-navy-900 mb-10">
-                <div class="flex flex-col"><span id="days" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Días</span></div>
-                <div class="flex flex-col"><span id="hours" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Horas</span></div>
-                <div class="flex flex-col"><span id="mins" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Min</span></div>
-                <div class="flex flex-col"><span id="secs" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Seg</span></div>
+            <div id="countdown" class="flex justify-center gap-8 text-navy-900">
+                <div class="flex flex-col"><span id="days" class="text-3xl block font-light">00</span><span class="text-[8px] uppercase tracking-widest text-gray-400">Días</span></div>
+                <div class="flex flex-col"><span id="hours" class="text-3xl block font-light">00</span><span class="text-[8px] uppercase tracking-widest text-gray-400">Horas</span></div>
+                <div class="flex flex-col"><span id="mins" class="text-3xl block font-light">00</span><span class="text-[8px] uppercase tracking-widest text-gray-400">Min</span></div>
+                <div class="flex flex-col"><span id="secs" class="text-3xl block font-light">00</span><span class="text-[8px] uppercase tracking-widest text-gray-400">Seg</span></div>
             </div>
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20deco.png" class="absolute -bottom-12 -left-12 w-64 opacity-100">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20Flor%20azul%20deco.png" class="absolute -bottom-10 -left-10 w-64 opacity-100">
         </div>
 
         <!-- Misa -->
         <div class="section-padding bg-white text-center pb-12">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Iglesia%20azul%20ceremonia.png" class="w-24 mx-auto mb-6">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Iglesia%20azul%20ceremonia.png" class="w-20 mx-auto mb-6">
             <h3 class="text-xs tracking-[0.5em] font-sans text-navy-800 mb-4 uppercase font-bold">Misa</h3>
-            <p class="text-3xl mb-2 font-semibold text-slate-800">Iglesia San Pedro</p>
-            <p class="text-gray-500 text-lg mb-10">Calle Tarija y Av. América, 5:00 PM</p>
-            
+            <p class="text-2xl mb-1 font-semibold text-slate-800">Iglesia San Pedro</p>
+            <p class="text-gray-500 text-sm mb-8">Calle Tarija y Av. América, 5:00 PM</p>
             <a href="#" class="btn-navy font-sans">Ver ubicación</a>
-        </div>
-
-        <!-- Foto 3 (Bajo Misa) -->
-        <div class="w-full">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9129.jpeg" alt="Misa" class="full-screen-photo">
         </div>
 
         <!-- Recepción -->
         <div class="section-padding bg-white text-center py-24">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Copas%20azul%20recepci%C3%B3n.png" class="w-24 mx-auto mb-6">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Copas%20azul%20recepci%C3%B3n.png" class="w-20 mx-auto mb-6">
             <h3 class="text-xs tracking-[0.5em] font-sans text-navy-800 mb-4 uppercase font-bold">Recepción</h3>
-            <p class="text-3xl mb-2 font-semibold text-slate-800">Jardín Padilla</p>
-            <p class="text-gray-500 text-lg mb-10">Calle Sucre y 16 de Julio, 8:00 PM</p>
+            <p class="text-2xl mb-1 font-semibold text-slate-800">Jardín Padilla</p>
+            <p class="text-gray-500 text-sm mb-10">Calle Sucre y 16 de Julio, 8:00 PM</p>
             <a href="#" class="btn-navy font-sans">Ver ubicación</a>
+        </div>
+        <!-- Foto 3 (Pantalla Completa) -->
+        <div class="w-full">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9129.jpeg" alt="Misa" class="full-screen-photo">
         </div>
 
         <!-- Itinerario -->
         <div class="section-padding bg-slate-50 relative overflow-hidden pb-40">
-            <h3 class="text-center text-xs tracking-[0.8em] font-sans text-navy-800 mb-32 uppercase font-bold">Itinerario</h3>
-            
+            <h3 class="text-center text-xs tracking-[0.8em] font-sans text-navy-800 mb-24 uppercase font-bold">Itinerario</h3>
             <div class="timeline-container">
                 <div class="timeline-line"></div>
-                
                 <div class="itinerary-item">
                     <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/C%C3%A1mara%20azul.png" class="w-full"></div>
-                    <div class="itinerary-text">
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">12:00 PM</p>
-                        <p class="text-xl font-bold text-slate-700 tracking-wider">SESIÓN DE FOTOS</p>
-                    </div>
+                    <div class="itinerary-text"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">12:00 PM</p><p class="text-lg font-bold text-slate-700">SESIÓN DE FOTOS</p></div>
                 </div>
-
                 <div class="itinerary-item">
                     <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Iglesia%20azul%20ceremonia.png" class="w-full"></div>
-                    <div class="itinerary-text">
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">5:00 PM</p>
-                        <p class="text-xl font-bold text-slate-700 tracking-wider">MISA</p>
-                    </div>
+                    <div class="itinerary-text"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">5:00 PM</p><p class="text-lg font-bold text-slate-700">MISA</p></div>
                 </div>
-
                 <div class="itinerary-item">
                     <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Copas%20azul.png" class="w-full"></div>
-                    <div class="itinerary-text">
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">8:00 PM</p>
-                        <p class="text-xl font-bold text-slate-700 tracking-wider">RECEPCIÓN</p>
-                    </div>
+                    <div class="itinerary-text"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">8:00 PM</p><p class="text-lg font-bold text-slate-700">RECEPCIÓN</p></div>
                 </div>
-
                 <div class="itinerary-item">
                     <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Vals%20azul.png" class="w-full"></div>
-                    <div class="itinerary-text">
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">10:30 PM</p>
-                        <p class="text-xl font-bold text-slate-700 tracking-wider">VALS</p>
-                    </div>
+                    <div class="itinerary-text"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">10:30 PM</p><p class="text-lg font-bold text-slate-700">VALS</p></div>
                 </div>
-
                 <div class="itinerary-item">
                     <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Pastel%20azul.png" class="w-full"></div>
-                    <div class="itinerary-text">
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">11:30 PM</p>
-                        <p class="text-xl font-bold text-slate-700 tracking-wider">PASTEL</p>
-                    </div>
+                    <div class="itinerary-text"><p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">11:30 PM</p><p class="text-xl font-bold text-slate-700 tracking-wider">PASTEL</p></div>
                 </div>
             </div>
-            
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20deco.png" class="absolute bottom-0 left-0 w-80 opacity-100">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20flor%20azul%20deco%202.png" class="absolute bottom-0 left-0 w-80 opacity-100">
         </div>
 
-        <!-- Regalos y Confirmación -->
+        <!-- Regalos -->
         <div class="section-padding text-center bg-white">
-            <div class="mb-40">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Dress%20code%20azul.png" class="w-64 mx-auto mb-10">
+            <div class="mb-32">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Dress%20code%20azul.png" class="w-56 mx-auto mb-8">
                 <h3 class="text-xs tracking-[0.6em] font-sans text-navy-800 mb-4 uppercase font-bold">Vestimenta</h3>
-                <p class="text-slate-500 font-sans text-xl italic">Gala Formal</p>
+                <p class="text-slate-500 font-sans text-lg italic">Gala Formal</p>
             </div>
-
             <div class="mb-24">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Regalo%20azul.png" class="w-32 mx-auto mb-10">
-                <h3 class="text-xs tracking-[0.6em] font-sans text-navy-800 mb-8 uppercase font-bold">Regalos</h3>
-                <div class="bg-white border border-slate-100 p-8 rounded-[50px] shadow-sm inline-block mb-12">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AdrianaLopezXV" class="w-56 h-56">
-                </div>
-                <p class="text-[0.8rem] text-gray-400 font-sans tracking-[0.6em] uppercase font-bold">Transferencia</p>
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Regalo%20azul.png" class="w-15 mx-auto mb-8">
+                <h3 class="text-xs tracking-[0.6em] font-sans text-navy-800 mb-6 uppercase font-bold">Regalos</h3>
+                <div class="bg-white border border-slate-100 p-6 rounded-[40px] shadow-sm inline-block mb-10"><img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AdrianaLopezXV" class="w-48 h-48"></div>
+                <p class="text-[0.7rem] text-gray-400 font-sans tracking-[0.5em] uppercase font-bold">Transferencia</p>
             </div>
         </div>
 
-        <!-- Confirmación Final -->
+        <!-- RSVP -->
         <div class="section-padding bg-slate-900 text-white text-center relative overflow-hidden pb-32">
-            <h3 class="text-xs tracking-[0.8em] font-sans mb-16 uppercase font-bold">Confirmación</h3>
-            
-            <div class="mb-32">
-                <a href="#" class="inline-block bg-white text-navy-900 font-sans text-xs tracking-[0.3em] font-bold py-8 px-24 rounded-full uppercase">Confirmar aquí</a>
-            </div>
-            
-            <div class="relative z-10">
-                <p class="font-script text-7xl text-slate-100 mb-8">Muchas Gracias!</p>
-            </div>
-            
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20esquina.png" class="absolute bottom-0 left-0 w-64 opacity-100 brightness-100">
+            <h3 class="text-xs tracking-[0.8em] font-sans mb-12 uppercase font-bold">Confirmación</h3>
+            <div class="mb-32"><a href="#" class="inline-block bg-white text-navy-900 font-sans text-xs tracking-[0.3em] font-bold py-7 px-20 rounded-full uppercase">Confirmar aquí</a></div>
+            <p class="font-script text-7xl text-slate-100 mb-8">Muchas Gracias!</p>
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Items%20invitacio%CC%81n%20azul%20XV%20-%20Flor%20azul%20esquina.png" class="absolute bottom-0 left-0 w-20 opacity-100 brightness-100">
         </div>
     </div>
 
     <script>
+        // Precarga de fotos
+        const imagesToPreload = [
+            "https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9135.jpeg",
+            "https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9129.jpeg"
+        ];
+        imagesToPreload.forEach(src => { (new Image()).src = src; });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 1000);
+        });
+
         function openInvitation() {
             document.body.classList.add('opened');
             const music = document.getElementById('bgMusic');
             setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
-            music.play().catch(e => console.log("Audio interact blocked"));
+            music.play().catch(e => console.log("Audio play blocked"));
         }
+
         function toggleMusic() {
             const music = document.getElementById('bgMusic');
             const onIcon = document.getElementById('music-on');
@@ -442,19 +452,16 @@
             if (music.paused) { music.play(); onIcon.classList.remove('hidden'); offIcon.classList.add('hidden'); }
             else { music.pause(); onIcon.classList.add('hidden'); offIcon.classList.remove('hidden'); }
         }
+
         const target = new Date("September 24, 2025 18:00:00").getTime();
         setInterval(function() {
             const now = new Date().getTime();
             const diff = target - now;
             if (diff < 0) return;
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById("days").innerText = String(d).padStart(2, '0');
-            document.getElementById("hours").innerText = String(h).padStart(2, '0');
-            document.getElementById("mins").innerText = String(m).padStart(2, '0');
-            document.getElementById("secs").innerText = String(s).padStart(2, '0');
+            document.getElementById("days").innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById("mins").innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById("secs").innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
         }, 1000);
     </script>
 </body>
