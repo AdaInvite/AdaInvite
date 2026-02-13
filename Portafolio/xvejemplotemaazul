@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adriana López - XV Años</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a365d;
+            --texture-url: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Textura%20sobre.png');
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #ffffff;
+            scroll-behavior: smooth;
+        }
+
+        .font-script { font-family: 'Great Vibes', cursive; }
+        .font-sans { font-family: 'Montserrat', sans-serif; }
+
+        /* --- SOBRE PANTALLA COMPLETA --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f4f8;
+            pointer-events: none;
+            transition: visibility 1.8s, opacity 1.8s;
+        }
+
+        .envelope-part {
+            position: absolute;
+            top: 0;
+            height: 100vh;
+            background-image: var(--texture-url);
+            background-size: cover;
+            background-position: center;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 1.5s ease;
+            pointer-events: auto;
+        }
+
+        .base-envelope { right: 0; width: 100vw; z-index: 1; }
+        .base-envelope::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 76%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2) 40%, transparent);
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(20px);
+        }
+
+        .left-flap {
+            left: 0;
+            width: 75%; 
+            z-index: 10;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            filter: drop-shadow(25px 0 30px rgba(0,0,0,0.8));
+        }
+
+        .seal-container {
+            position: absolute;
+            left: 75%;
+            top: 50%;
+            transform: translate(-65%, -50%);
+            z-index: 20;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            pointer-events: auto;
+        }
+
+        .seal-img { width: 110px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+
+        .click-text {
+            position: absolute;
+            left: 75%;
+            top: 58%;
+            transform: translateX(-50%);
+            color: var(--navy);
+            font-size: 0.65rem;
+            z-index: 20;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* --- INDICADOR SCROLL AZUL --- */
+        .scroll-down-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 40;
+            color: var(--navy);
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* --- CONTENIDO INVITACIÓN --- */
+        .invitation-main {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            z-index: 5;
+        }
+
+        .full-screen-photo {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+
+        .flower-corner {
+            position: absolute;
+            width: 180px;
+            z-index: 30;
+            pointer-events: none;
+            opacity: 1 !important; 
+        }
+
+        .section-padding { padding: 80px 25px; }
+
+        .btn-navy {
+            background-color: var(--navy);
+            color: white;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.2);
+        }
+
+        /* ITINERARIO MEJORADO */
+        .itinerary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 150px; /* Más espacio para evitar apilamiento */
+            position: relative;
+        }
+
+        .itinerary-icon {
+            width: 130px;
+            height: 130px;
+            background: white;
+            border: 1px solid var(--navy);
+            border-radius: 50%;
+            padding: 20px;
+            margin-bottom: 25px;
+            z-index: 10;
+        }
+
+        .itinerary-text { 
+            text-align: center;
+            width: 100%;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #e2e8f0;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        #music-control {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SOBRE DE INICIO -->
+    <div id="envelope-wrapper">
+        <div class="envelope-part base-envelope"></div>
+        <div class="envelope-part left-flap"></div>
+        
+        <div class="seal-container" onclick="openInvitation()">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Sello%20plata%20flor.png" alt="Sello" class="seal-img">
+        </div>
+        <p class="click-text font-sans">Toca para abrir</p>
+    </div>
+
+    <!-- BOTÓN MÚSICA -->
+    <div id="music-control" onclick="toggleMusic()">
+        <svg id="music-on" class="w-5 h-5 text-navy-800" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <svg id="music-off" class="w-5 h-5 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1V10a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+    </div>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="invitation-main">
+        <!-- Hero (Foto 1) -->
+        <div class="relative h-screen">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9134.jpeg" alt="Adriana López" class="full-screen-photo">
+            <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-white to-transparent"></div>
+            
+            <div class="scroll-down-indicator">
+                <p class="text-[10px] tracking-[0.4em] uppercase mb-2 font-sans">Desliza</p>
+                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7"></path></svg>
+            </div>
+        </div>
+
+        <!-- Introducción -->
+        <div class="relative bg-white pt-24 pb-16">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20esquina.png" class="flower-corner left-0 top-12">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20esquina.png" class="flower-corner right-0 top-12 scale-x-[-1]">
+
+            <div class="section-padding text-center pt-32">
+                <p class="text-gray-500 italic text-2xl px-6 mb-16 leading-relaxed">
+                    "Hay momentos inolvidables que se atesoran en el corazón para siempre, por esa razón, quiero que compartas conmigo este día tan especial."
+                </p>
+
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Corona%20plata.png" class="w-24 mx-auto mb-8">
+                <h2 class="text-navy-900 tracking-[0.6em] text-xs font-sans mb-2 font-bold uppercase">Mis XV Años</h2>
+                <h1 class="text-7xl font-script text-slate-800 my-8">Adriana Lopez</h1>
+
+                <p class="text-gray-500 italic text-2xl px-6 mb-24 leading-relaxed">
+                    Con la bendición de Dios y el amor de mis padres, te invito a celebrar con alegría este momento tan especial.
+                </p>
+
+                <!-- Familia Vertical -->
+                <div class="space-y-24 mb-32">
+                    <div class="flex flex-col items-center">
+                        <span class="text-xs tracking-[0.5em] uppercase font-sans text-navy-800 font-bold mb-8">Mis Padres</span>
+                        <p class="text-4xl font-script text-slate-700">Juan Lopez</p>
+                        <p class="text-4xl font-script text-slate-700 mt-4">Maria Garcia</p>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <span class="text-xs tracking-[0.5em] uppercase font-sans text-navy-800 font-bold mb-8">Mis Padrinos</span>
+                        <p class="text-4xl font-script text-slate-700">Carlos Ruiz</p>
+                        <p class="text-4xl font-script text-slate-700 mt-4">Elena Soto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foto 2 (Bajo Padrinos) -->
+        <div class="w-full">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9135.jpeg" alt="Adriana" class="full-screen-photo">
+        </div>
+
+        <!-- Cuenta Regresiva -->
+        <div class="py-32 bg-slate-50 text-center relative overflow-hidden">
+            <h3 class="font-sans text-[0.65rem] tracking-[0.6em] text-navy-800 mb-10 uppercase font-bold">Septiembre</h3>
+            <div class="flex items-center justify-center gap-8 mb-16">
+                <span class="text-gray-400 text-sm tracking-widest font-sans">SÁBADO</span>
+                <span class="text-7xl font-light border-x px-10 border-slate-200 text-navy-900 leading-none">24</span>
+                <span class="text-gray-400 text-sm tracking-widest font-sans">2025</span>
+            </div>
+            
+            <p class="text-[0.6rem] tracking-[0.8em] text-gray-400 mb-8 uppercase">Faltan</p>
+            <div id="countdown" class="flex justify-center gap-10 text-navy-900 mb-10">
+                <div class="flex flex-col"><span id="days" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Días</span></div>
+                <div class="flex flex-col"><span id="hours" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Horas</span></div>
+                <div class="flex flex-col"><span id="mins" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Min</span></div>
+                <div class="flex flex-col"><span id="secs" class="text-4xl block font-light">00</span><span class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">Seg</span></div>
+            </div>
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20deco.png" class="absolute -bottom-12 -left-12 w-64 opacity-100">
+        </div>
+
+        <!-- Misa -->
+        <div class="section-padding bg-white text-center pb-12">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Iglesia%20azul%20ceremonia.png" class="w-24 mx-auto mb-6">
+            <h3 class="text-xs tracking-[0.5em] font-sans text-navy-800 mb-4 uppercase font-bold">Misa</h3>
+            <p class="text-3xl mb-2 font-semibold text-slate-800">Iglesia San Pedro</p>
+            <p class="text-gray-500 text-lg mb-10">Calle Tarija y Av. América, 5:00 PM</p>
+            
+            <a href="#" class="btn-navy font-sans">Ver ubicación</a>
+        </div>
+
+        <!-- Foto 3 (Bajo Misa) -->
+        <div class="w-full">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/IMG_9129.jpeg" alt="Misa" class="full-screen-photo">
+        </div>
+
+        <!-- Recepción -->
+        <div class="section-padding bg-white text-center py-24">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Copas%20azul%20recepci%C3%B3n.png" class="w-24 mx-auto mb-6">
+            <h3 class="text-xs tracking-[0.5em] font-sans text-navy-800 mb-4 uppercase font-bold">Recepción</h3>
+            <p class="text-3xl mb-2 font-semibold text-slate-800">Jardín Padilla</p>
+            <p class="text-gray-500 text-lg mb-10">Calle Sucre y 16 de Julio, 8:00 PM</p>
+            <a href="#" class="btn-navy font-sans">Ver ubicación</a>
+        </div>
+
+        <!-- Itinerario (Sin empalmes) -->
+        <div class="section-padding bg-slate-50 relative overflow-hidden pb-40">
+            <h3 class="text-center text-xs tracking-[0.8em] font-sans text-navy-800 mb-32 uppercase font-bold">Itinerario</h3>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="itinerary-item">
+                    <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/C%C3%A1mara%20azul.png" class="w-full"></div>
+                    <div class="itinerary-text">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">12:00 PM</p>
+                        <p class="text-xl font-bold text-slate-700 tracking-wider">SESIÓN DE FOTOS</p>
+                    </div>
+                </div>
+
+                <div class="itinerary-item">
+                    <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Iglesia%20azul%20ceremonia.png" class="w-full"></div>
+                    <div class="itinerary-text">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">5:00 PM</p>
+                        <p class="text-xl font-bold text-slate-700 tracking-wider">MISA</p>
+                    </div>
+                </div>
+
+                <div class="itinerary-item">
+                    <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Copas%20azul.png" class="w-full"></div>
+                    <div class="itinerary-text">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">8:00 PM</p>
+                        <p class="text-xl font-bold text-slate-700 tracking-wider">RECEPCIÓN</p>
+                    </div>
+                </div>
+
+                <div class="itinerary-item">
+                    <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Vals%20azul.png" class="w-full"></div>
+                    <div class="itinerary-text">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">10:30 PM</p>
+                        <p class="text-xl font-bold text-slate-700 tracking-wider">VALS</p>
+                    </div>
+                </div>
+
+                <div class="itinerary-item">
+                    <div class="itinerary-icon"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Pastel%20azul.png" class="w-full"></div>
+                    <div class="itinerary-text">
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">11:30 PM</p>
+                        <p class="text-xl font-bold text-slate-700 tracking-wider">PASTEL</p>
+                    </div>
+                </div>
+            </div>
+            
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20deco.png" class="absolute bottom-0 left-0 w-80 opacity-100">
+        </div>
+
+        <!-- Regalos y Confirmación -->
+        <div class="section-padding text-center bg-white">
+            <div class="mb-40">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Dress%20code%20azul.png" class="w-64 mx-auto mb-10">
+                <h3 class="text-xs tracking-[0.6em] font-sans text-navy-800 mb-4 uppercase font-bold">Vestimenta</h3>
+                <p class="text-slate-500 font-sans text-xl italic">Gala Formal</p>
+            </div>
+
+            <div class="mb-24">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Regalo%20azul.png" class="w-32 mx-auto mb-10">
+                <h3 class="text-xs tracking-[0.6em] font-sans text-navy-800 mb-8 uppercase font-bold">Regalos</h3>
+                <div class="bg-white border border-slate-100 p-8 rounded-[50px] shadow-sm inline-block mb-12">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AdrianaLopezXV" class="w-56 h-56">
+                </div>
+                <p class="text-[0.8rem] text-gray-400 font-sans tracking-[0.6em] uppercase font-bold">Transferencia</p>
+            </div>
+        </div>
+
+        <!-- Confirmación Final -->
+        <div class="section-padding bg-slate-900 text-white text-center relative overflow-hidden pb-32">
+            <h3 class="text-xs tracking-[0.8em] font-sans mb-16 uppercase font-bold">Confirmación</h3>
+            
+            <div class="mb-32">
+                <a href="#" class="inline-block bg-white text-navy-900 font-sans text-xs tracking-[0.3em] font-bold py-8 px-24 rounded-full uppercase">Confirmar aquí</a>
+            </div>
+            
+            <div class="relative z-10">
+                <p class="font-script text-7xl text-slate-100 mb-8">Muchas Gracias!</p>
+            </div>
+            
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Items%20invitaci%C3%B3n%20azul%20XV/Flor%20azul%20esquina.png" class="absolute bottom-0 left-0 w-64 opacity-100 brightness-100">
+        </div>
+    </div>
+
+    <script>
+        function openInvitation() {
+            document.body.classList.add('opened');
+            const music = document.getElementById('bgMusic');
+            setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
+            music.play().catch(e => console.log("Audio block"));
+        }
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const onIcon = document.getElementById('music-on');
+            const offIcon = document.getElementById('music-off');
+            if (music.paused) { music.play(); onIcon.classList.remove('hidden'); offIcon.classList.add('hidden'); }
+            else { music.pause(); onIcon.classList.add('hidden'); offIcon.classList.remove('hidden'); }
+        }
+        const target = new Date("September 24, 2025 18:00:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const diff = target - now;
+            if (diff < 0) return;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById("days").innerText = String(d).padStart(2, '0');
+            document.getElementById("hours").innerText = String(h).padStart(2, '0');
+            document.getElementById("mins").innerText = String(m).padStart(2, '0');
+            document.getElementById("secs").innerText = String(s).padStart(2, '0');
+        }, 1000);
+    </script>
+</body>
+</html>
