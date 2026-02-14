@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucía & Juan - Invitación de Boda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            background-color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            color: #1a1a1a;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- ESTILO SOBRE ANIMADO --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url("https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg");
+            background-size: cover;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+
+        #envelope-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .flap-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0px 0px 20px rgba(0,0,0,0.15));
+            z-index: 5;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 60%; 
+            height: 100%;
+            background-image: url("https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .flap-left {
+            left: 0;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            border-right: 1.5px solid rgba(0,0,0,0.08);
+        }
+
+        #envelope-container.open .flap-left {
+            transform: translateX(-100%);
+        }
+
+        #envelope-wrapper.hidden-envelope {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 60%; 
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .click-hint {
+            color: #000;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            animation: bounce-subtle 2s infinite;
+        }
+
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* --- ESTILO INVITACIÓN --- */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            background: white;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.05);
+        }
+
+        .main-content.visible {
+            opacity: 1;
+        }
+
+        .img-bw {
+            filter: grayscale(100%);
+            width: 100%;
+            display: block;
+        }
+
+        .btn-memories {
+            background-color: black;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-memories:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+
+        /* --- ANIMACIÓN SCROLL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- CONTADOR --- */
+        .countdown-number {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #000;
+        }
+
+        .countdown-tag {
+            font-size: 0.75rem;
+            text-transform: lowercase;
+            color: #333;
+        }
+
+        .date-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            margin: 30px auto;
+            width: 85%;
+        }
+
+        .date-display span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #333;
+        }
+
+        .date-display .big-day {
+            font-size: 2.2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+        }
+
+        section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .text-description {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4b5563;
+        }
+
+        .text-location-title {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: #000;
+        }
+
+        /* --- MÚSICA --- */
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(5px);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        #music-control.visible {
+            opacity: 1;
+        }
+
+        .music-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 15px;
+        }
+
+        .bar {
+            width: 3px;
+            background: black;
+            height: 100%;
+            animation: music-bar 1s infinite ease-in-out;
+            border-radius: 1px;
+        }
+        
+        .paused .bar {
+            animation-play-state: paused;
+            height: 3px;
+        }
+
+        @keyframes music-bar {
+            0%, 100% { height: 5px; }
+            50% { height: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MÚSICA DE FONDO -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-control" onclick="toggleMusic()">
+        <div id="music-bars-container" class="music-bars paused">
+            <div class="bar" style="animation-delay: 0s"></div>
+            <div class="bar" style="animation-delay: 0.2s"></div>
+            <div class="bar" style="animation-delay: 0.4s"></div>
+        </div>
+    </div>
+
+    <!-- SOBRE ANIMADO -->
+    <div id="envelope-wrapper">
+        <div id="envelope-container">
+            <div class="flap-container">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="click-hint">Abrir Invitación</div>
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Sello%20plata%20flor.png" 
+                     style="width:90px; animation: floating 4s infinite ease-in-out" 
+                     alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO DE LA INVITACIÓN -->
+    <div id="invitation-content" class="main-content">
+        
+        <!-- HEADER -->
+        <header class="bg-white">
+            <div class="h-[75vh] overflow-hidden">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
+                     alt="Hero" class="img-bw w-full h-full object-cover">
+            </div>
+            
+            <!-- Bloque de texto desplazado hacia arriba con margen negativo -->
+            <div class="text-center pt-2 pb-12 px-6 -mt-10 relative z-10 reveal active">
+                <p class="uppercase tracking-[0.4em] text-[10px] mb-6 font-medium text-gray-500">Nos Casamos</p>
+                <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
+                    Lucía<br>&<br>Juan
+                </h1>
+                <p class="text-[13px] tracking-[0.2em] text-black font-semibold">29 . 11 . 2026</p>
+            </div>
+        </header>
+
+        <!-- SECCIÓN 1: COUNTDOWN -->
+        <section class="bg-white pt-24 reveal">
+            <p class="uppercase tracking-[0.3em] text-[12px] text-gray-800 mb-8 font-semibold">Faltan:</p>
+            <div id="timer" class="flex justify-center gap-8 mb-12">
+                <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="countdown-tag">Días</span></div>
+                <div class="flex flex-col"><span id="hours" class="countdown-number">00</span><span class="countdown-tag">horas</span></div>
+                <div class="flex flex-col"><span id="minutes" class="countdown-number">00</span><span class="countdown-tag">minutos</span></div>
+                <div class="flex flex-col"><span id="seconds" class="countdown-number">00</span><span class="countdown-tag">segundos</span></div>
+            </div>
+            
+            <div class="px-8 mb-10">
+                <p class="text-[17px] text-gray-600 italic leading-relaxed">
+                    "Nuestra historia suma un nuevo capítulo y no sería lo mismo sin ti. ¡Acompáñanos a celebrar el inicio de nuestro para siempre!"
+                </p>
+            </div>
+            
+            <div class="date-display">
+                <span>Domingo</span>
+                <span class="big-day">29</span>
+                <span>Noviembre</span>
+            </div>
+
+            <!-- Ceremonia -->
+            <div class="reveal mt-20">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" 
+                     class="w-16 mx-auto mb-6" alt="Icono Iglesia">
+                <h3 class="text-location-title serif">Ceremonia</h3>
+                <p class="text-description mb-10">
+                    21:30 hs - Parroquia Nuestra<br>Señora de Lourdes.<br>Calle Reforma 123.
+                </p>
+                <a href="https://maps.google.com" target="_blank" class="btn-memories">Cómo llegar</a>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: FIESTA -->
+        <section class="pt-10 reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro.png" 
+                 class="w-16 mx-auto mb-6" alt="Icono Fiesta">
+            <h3 class="text-location-title serif">Fiesta</h3>
+            <p class="text-description mb-10">
+                21:30 hs - Salón Vista Hermosa.<br>Av. del Sol 456.
+            </p>
+            <a href="https://maps.google.com" target="_blank" class="btn-memories">Cómo llegar</a>
+        </section>
+
+        <!-- SEPARADOR 1 -->
+        <div class="reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Separador%20foto.png" 
+                 alt="Separador 1" class="img-bw w-full">
+        </div>
+
+        <!-- SECCIÓN 3: DRESS CODE -->
+        <section class="bg-white py-24 reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" 
+                 class="w-20 mx-auto mb-8" alt="Dress Code">
+            <h3 class="text-location-title serif">Dress Code</h3>
+            <p class="text-[14px] uppercase tracking-widest mb-4 font-semibold">Formal</p>
+            <p class="text-description italic px-10">
+                Nos encantará verte lucir tu mejor gala para celebrar con nosotros.
+            </p>
+        </section>
+
+        <!-- SEPARADOR 2 -->
+        <div class="reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Separador%20foto%202.png" 
+                 alt="Separador 2" class="img-bw w-full">
+        </div>
+
+        <!-- SECCIÓN 4: MESA DE REGALOS -->
+        <section class="bg-white py-24 reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Regalo%20negro.png" 
+                 class="w-16 mx-auto mb-8" alt="Regalo">
+            <h3 class="text-location-title serif">Mesa de Regalos</h3>
+            <p class="text-description mb-16 px-10">Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle, aquí te dejamos nuestras opciones:</p>
+            
+            <div class="flex flex-col gap-20 items-center justify-center grayscale opacity-90">
+                <a href="https://www.amazon.com.mx" target="_blank" class="block transition-transform hover:scale-110">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Amazon.png" 
+                         class="h-20 mx-auto" alt="Amazon Registry">
+                </a>
+                <a href="https://www.liverpool.com.mx" target="_blank" class="block transition-transform hover:scale-110">
+                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Liverpool.png" 
+                         class="h-20 mx-auto" alt="Liverpool Registry">
+                </a>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: RSVP -->
+        <section class="bg-white pb-28 reveal">
+            <h3 class="text-location-title serif italic">¿Nos acompañas?</h3>
+            <p class="text-[12px] text-gray-400 mb-12 uppercase tracking-[0.2em]">Confirmar antes del 1 de Noviembre</p>
+            <a href="https://wa.me/521234567890?text=Hola,%20confirmo%20asistencia%20a%20la%20boda" class="btn-memories">Confirmar Asistencia</a>
+            
+            <div class="mt-44">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda7.png" 
+                     class="w-28 h-28 mx-auto rounded-full img-bw border border-gray-100 object-cover mb-8" alt="Novios">
+                <p class="text-[10px] uppercase tracking-[0.5em] text-gray-300">DISEÑO MEMORIES</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        const musicControl = document.getElementById('music-control');
+        const bars = document.getElementById('music-bars-container');
+
+        function openEnvelope() {
+            const container = document.getElementById('envelope-container');
+            const wrapper = document.getElementById('envelope-wrapper');
+            const content = document.getElementById('invitation-content');
+            
+            container.classList.add('open');
+            
+            setTimeout(() => {
+                wrapper.classList.add('hidden-envelope');
+                content.classList.add('visible');
+                document.body.style.overflow = "auto";
+                musicControl.classList.add('visible');
+                
+                // Reproducir música automáticamente al abrir el sobre
+                audio.play().then(() => {
+                    bars.classList.remove('paused');
+                }).catch(e => console.log("Auto-play blocked, interaction required"));
+                
+                reveal();
+            }, 1200);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                bars.classList.remove('paused');
+            } else {
+                audio.pause();
+                bars.classList.add('paused');
+            }
+        }
+
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                const elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+
+        const targetDate = new Date("Nov 29, 2026 21:30:00").getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if (diff < 0) return;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById("days").innerText = d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        document.body.style.overflow = "hidden";
+    </script>
+</body>
+</html>
