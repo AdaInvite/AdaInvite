@@ -126,7 +126,7 @@
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
         }
 
         /* --- ESTILO INVITACIÓN --- */
@@ -177,19 +177,19 @@
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.5s ease-out; /* Velocidad aumentada de 1s a 0.5s */
+            transition: all 0.5s ease-out;
         }
 
         .reveal-left {
             opacity: 0;
             transform: translateX(-50px);
-            transition: all 0.6s ease-out; /* Velocidad aumentada de 1.2s a 0.6s */
+            transition: all 0.6s ease-out;
         }
 
         .reveal-right {
             opacity: 0;
             transform: translateX(50px);
-            transition: all 0.6s ease-out; /* Velocidad aumentada de 1.2s a 0.6s */
+            transition: all 0.6s ease-out;
         }
 
         .reveal.active, .reveal-left.active, .reveal-right.active {
@@ -342,12 +342,14 @@
         
         <!-- HEADER -->
         <header class="bg-white">
-            <div class="h-[70vh] md:h-[75vh] overflow-hidden">
+            <!-- Imagen de Hero con Reveal -->
+            <div class="h-[70vh] md:h-[75vh] overflow-hidden reveal">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
                      alt="Lucía y Juan" class="img-bw w-full h-full object-cover">
             </div>
             
-            <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal active">
+            <!-- Bloque de texto con Reveal (se quitó 'active' para que dependa del trigger) -->
+            <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal">
                 <p class="uppercase tracking-[0.4em] text-[13px] mb-6 font-medium text-gray-500">Nos Casamos</p>
                 <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
                     Lucía<br>&<br>Juan
@@ -378,6 +380,12 @@
                 <span>Noviembre</span>
             </div>
         </section>
+
+        <!-- DECORACIÓN (IMAGEN ABARCANDO TODA LA PANTALLA LATERAL) -->
+        <div class="reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Decoraci%C3%B3n%201.png" 
+                 class="w-full opacity-80" alt="Decoración de boda">
+        </div>
 
         <!-- SECCIÓN PADRES Y PADRINOS -->
         <section class="bg-gray-50/50 py-10 px-4" id="parents-section">
@@ -472,7 +480,7 @@
                 </div>
             </div>
             
-            <p class="text-[12px] text-gray-400 italic px-7 mt-12 leading-relaxed max-w-[320px] mx-auto reveal">
+            <p class="text-[13px] text-gray-400 italic px-7 mt-12 leading-relaxed max-w-[320px] mx-auto reveal">
                 Si deseas hacernos un presente en efectivo, contaremos con una urna para sobres el día de nuestra boda.
             </p>
         </section>
@@ -579,6 +587,7 @@
                 }
                 audio.play().catch(e => console.log("Audio play blocked"));
                 
+                // Disparar la comprobación inicial de visibilidad inmediatamente después de abrir
                 revealElements();
             }, 1200);
         }
@@ -606,7 +615,8 @@
             
             reveals.forEach(el => {
                 const elementTop = el.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 80) {
+                // Ajustado el umbral para que los elementos superiores aparezcan al abrir
+                if (elementTop < windowHeight - 50) {
                     el.classList.add("active");
                     
                     const innerTypers = el.querySelectorAll(".typing-effect");
