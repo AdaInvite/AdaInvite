@@ -173,7 +173,7 @@
             transform: scale(1.05);
         }
 
-        /* --- ANIMACIONES DE REVELADO (ACELERADAS) --- */
+        /* --- ANIMACIONES DE REVELADO --- */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -342,14 +342,12 @@
         
         <!-- HEADER -->
         <header class="bg-white">
-            <!-- Imagen de Hero con Reveal -->
-            <div class="h-[70vh] md:h-[75vh] overflow-hidden reveal">
+            <div class="h-[70vh] md:h-[75vh] overflow-hidden reveal" id="hero-image">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
                      alt="Lucía y Juan" class="img-bw w-full h-full object-cover">
             </div>
             
-            <!-- Bloque de texto con Reveal (se quitó 'active' para que dependa del trigger) -->
-            <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal">
+            <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal" id="header-names">
                 <p class="uppercase tracking-[0.4em] text-[13px] mb-6 font-medium text-gray-500">Nos Casamos</p>
                 <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
                     Lucía<br>&<br>Juan
@@ -359,7 +357,7 @@
         </header>
 
         <!-- SECCIÓN 1: COUNTDOWN -->
-        <section class="bg-white pt-16 pb-8 reveal">
+        <section class="bg-white pt-16 pb-8 reveal" id="countdown-section">
             <p class="uppercase tracking-[0.3em] text-[13px] text-gray-400 mb-8 font-bold">Faltan solo:</p>
             <div id="timer" class="flex justify-center gap-6 mb-12">
                 <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="countdown-tag">Días</span></div>
@@ -374,23 +372,24 @@
                 </p>
             </div>
             
-            <div class="date-display">
+            <!-- FECHA -->
+            <div class="date-display reveal" id="date-display-section">
                 <span>Domingo</span>
                 <span class="big-day">29</span>
                 <span>Noviembre</span>
             </div>
         </section>
 
-        <!-- DECORACIÓN (IMAGEN ABARCANDO TODA LA PANTALLA LATERAL) -->
-        <div class="reveal">
+        <!-- DECORACIÓN -->
+        <div class="reveal" id="rings-decoration">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Decoraci%C3%B3n%201.png" 
                  class="w-full opacity-80" alt="Decoración de boda">
         </div>
 
         <!-- SECCIÓN PADRES Y PADRINOS -->
-        <section class="bg-gray-50/50 py-10 px-4" id="parents-section">
+        <section class="bg-gray-50/50 py-10 px-4 reveal" id="parents-section">
             <div class="max-w-xs mx-auto mb-12">
-                <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-8 font-bold border-b border-gray-100 pb-2 reveal">Con la bendición de nuestros padres</p>
+                <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-8 font-bold border-b border-gray-100 pb-2">Con la bendición de nuestros padres</p>
                 <div class="grid grid-cols-2 gap-8 text-center overflow-hidden">
                     <div class="reveal-left">
                         <p class="text-[13px] uppercase tracking-widest text-gray-300 mb-6 font-semibold">De Ella</p>
@@ -415,7 +414,7 @@
         </div>
 
         <!-- SECCIÓN 2: UBICACIONES -->
-        <section class="bg-white reveal">
+        <section class="bg-white overflow-hidden">
             <div class="reveal-left">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" 
                      class="w-16 mx-auto mb-6" alt="Icono Iglesia">
@@ -438,7 +437,7 @@
         </section>
 
         <!-- SECCIÓN 3: DRESS CODE -->
-        <section class="bg-white py-24 border-t border-gray-50 reveal-left">
+        <section class="bg-white py-24 border-t border-gray-50 reveal-left overflow-hidden">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" 
                  class="w-20 mx-auto mb-8" alt="Dress Code">
             <h3 class="text-location-title serif">Dress Code</h3>
@@ -480,8 +479,8 @@
                 </div>
             </div>
             
-            <p class="text-[13px] text-gray-400 italic px-7 mt-12 leading-relaxed max-w-[320px] mx-auto reveal">
-                Si deseas hacernos un presente en efectivo, contaremos con una urna para sobres el día de nuestra boda.
+            <p class="text-[12px] text-gray-400 italic px-7 mt-12 leading-relaxed max-w-[320px] mx-auto reveal">
+                Si deseas hacernos un presente, contaremos con una urna para sobres el día de nuestra boda.
             </p>
         </section>
 
@@ -508,7 +507,8 @@
         let audioContext, analyser, dataArray, source;
         let animationId;
 
-        function runTypewriter(element) {
+        // Función de escritura con callback mejorado
+        function runTypewriter(element, callback) {
             if (element.getAttribute('data-typing-started')) return;
             element.setAttribute('data-typing-started', 'true');
             
@@ -529,6 +529,8 @@
                         i++;
                     }
                     setTimeout(type, speed);
+                } else {
+                    if (callback) callback();
                 }
             }
             type();
@@ -536,7 +538,6 @@
 
         function initAudioAnalyzer() {
             if (audioContext) return; 
-
             try {
                 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
                 audioContext = new AudioContextClass();
@@ -544,15 +545,10 @@
                 source = audioContext.createMediaElementSource(audio);
                 source.connect(analyser);
                 analyser.connect(audioContext.destination);
-
                 analyser.fftSize = 64; 
-                const bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
                 animateBars();
-            } catch (e) {
-                console.warn("Audio Context failed to initialize", e);
-            }
+            } catch (e) { console.warn(e); }
         }
 
         function animateBars() {
@@ -571,59 +567,72 @@
             const container = document.getElementById('envelope-container');
             const wrapper = document.getElementById('envelope-wrapper');
             const content = document.getElementById('invitation-content');
-            
             container.classList.add('open');
-            
             setTimeout(() => {
                 wrapper.classList.add('hidden-envelope');
                 content.classList.add('visible');
-                document.body.classList.remove('overflow-hidden');
                 document.body.style.overflow = "auto";
                 musicControl.classList.add('visible');
-                
                 initAudioAnalyzer();
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-                audio.play().catch(e => console.log("Audio play blocked"));
-                
-                // Disparar la comprobación inicial de visibilidad inmediatamente después de abrir
+                if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+                audio.play().catch(() => {});
                 revealElements();
             }, 1200);
         }
 
         function toggleMusic() {
             if (audio.paused) {
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
+                if (audioContext && audioContext.state === 'suspended') audioContext.resume();
                 audio.play();
                 if (!animationId) animateBars();
             } else {
                 audio.pause();
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
+                if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
                 barElements.forEach(b => b.style.height = '4px');
             }
         }
 
+        // Lógica de revelado mejorada para garantizar la aparición de fecha y anillos
         function revealElements() {
-            const reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+            const reveals = Array.from(document.querySelectorAll(".reveal, .reveal-left, .reveal-right"));
             const windowHeight = window.innerHeight;
             
-            reveals.forEach(el => {
-                const elementTop = el.getBoundingClientRect().top;
-                // Ajustado el umbral para que los elementos superiores aparezcan al abrir
-                if (elementTop < windowHeight - 50) {
+            const intro = document.getElementById('intro-text');
+            const dateSection = document.getElementById('date-display-section');
+            const rings = document.getElementById('rings-decoration');
+
+            // 1. Filtrar elementos que deben ser activados por posición
+            const elementsToReveal = reveals.filter(el => {
+                // Si es la fecha o los anillos, no los activamos por scroll normal todavía
+                if (el === dateSection || el === rings) return false;
+
+                const rect = el.getBoundingClientRect();
+                return !el.classList.contains("active") && rect.top < windowHeight - 50;
+            });
+
+            // Ordenar y activar
+            elementsToReveal.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+            elementsToReveal.forEach((el, index) => {
+                setTimeout(() => {
                     el.classList.add("active");
-                    
-                    const innerTypers = el.querySelectorAll(".typing-effect");
-                    innerTypers.forEach(t => {
-                        setTimeout(() => runTypewriter(t), 300);
-                    });
-                }
+                    // Iniciar escritura si aplica
+                    if (el.contains(intro)) {
+                        runTypewriter(intro, () => {
+                            // SECUENCIA FORZADA: Intro -> Fecha -> Anillos
+                            setTimeout(() => {
+                                dateSection.classList.add('active');
+                                setTimeout(() => {
+                                    rings.classList.add('active');
+                                    // Una vez mostrados, revisamos si hay algo más que mostrar debajo
+                                    setTimeout(revealElements, 400);
+                                }, 600);
+                            }, 400);
+                        });
+                    } else {
+                        const innerTypers = el.querySelectorAll(".typing-effect");
+                        innerTypers.forEach(t => setTimeout(() => runTypewriter(t), 300));
+                    }
+                }, index * 200);
             });
         }
 
@@ -641,21 +650,17 @@
             const now = new Date().getTime();
             const diff = targetDate - now;
             if (diff < 0) return;
-
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
-
             document.getElementById("days").innerText = String(d).padStart(3, '0');
             document.getElementById("hours").innerText = String(h).padStart(2, '0');
             document.getElementById("minutes").innerText = String(m).padStart(2, '0');
             document.getElementById("seconds").innerText = String(s).padStart(2, '0');
         }
-        
         setInterval(updateTimer, 1000);
         updateTimer();
-
         window.scrollTo(0, 0);
     </script>
 </body>
