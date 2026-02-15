@@ -126,7 +126,7 @@
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(3deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
         }
 
         /* --- ESTILO INVITACIÓN --- */
@@ -173,16 +173,28 @@
             transform: scale(1.05);
         }
 
-        /* --- ANIMACIÓN SCROLL --- */
+        /* --- ANIMACIONES DE REVELADO (ACELERADAS) --- */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 1s ease-out;
+            transition: all 0.5s ease-out; /* Velocidad aumentada de 1s a 0.5s */
         }
 
-        .reveal.active {
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s ease-out; /* Velocidad aumentada de 1.2s a 0.6s */
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s ease-out; /* Velocidad aumentada de 1.2s a 0.6s */
+        }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translate(0, 0);
         }
 
         /* --- CONTADOR --- */
@@ -205,8 +217,8 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            padding: 15px 0; /* Espaciado interno reducido */
-            margin: 20px auto 0px; /* Margen reducido */
+            padding: 15px 0;
+            margin: 20px auto 0px;
             width: 85%;
         }
 
@@ -336,7 +348,7 @@
             </div>
             
             <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal active">
-                <p class="uppercase tracking-[0.4em] text-[12px] mb-6 font-medium text-gray-500">Nos Casamos</p>
+                <p class="uppercase tracking-[0.4em] text-[13px] mb-6 font-medium text-gray-500">Nos Casamos</p>
                 <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
                     Lucía<br>&<br>Juan
                 </h1>
@@ -345,7 +357,7 @@
         </header>
 
         <!-- SECCIÓN 1: COUNTDOWN -->
-        <section class="bg-white pt-16 pb-8 reveal"> <!-- pb-8 para reducir espacio abajo -->
+        <section class="bg-white pt-16 pb-8 reveal">
             <p class="uppercase tracking-[0.3em] text-[13px] text-gray-400 mb-8 font-bold">Faltan solo:</p>
             <div id="timer" class="flex justify-center gap-6 mb-12">
                 <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="countdown-tag">Días</span></div>
@@ -355,7 +367,7 @@
             </div>
             
             <div class="px-8 mb-10 min-h-[80px]">
-                <p id="intro-text" class="text-[14px] text-gray-600 italic leading-relaxed typing-effect" data-type="true">
+                <p id="intro-text" class="text-[15px] text-gray-600 italic leading-relaxed typing-effect" data-type="true">
                     "Nuestra historia suma un nuevo capítulo y no sería lo mismo sin ti. ¡Acompáñanos a celebrar el inicio de nuestro para siempre!"
                 </p>
             </div>
@@ -368,21 +380,21 @@
         </section>
 
         <!-- SECCIÓN PADRES Y PADRINOS -->
-        <section class="bg-gray-50/50 py-10 px-4 reveal" id="parents-section"> <!-- py-10 para reducir espacio -->
+        <section class="bg-gray-50/50 py-10 px-4" id="parents-section">
             <div class="max-w-xs mx-auto mb-12">
-                <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-8 font-bold border-b border-gray-100 pb-2">Con la bendición de nuestros padres</p>
-                <div class="grid grid-cols-2 gap-8 text-center">
-                    <div>
+                <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-8 font-bold border-b border-gray-100 pb-2 reveal">Con la bendición de nuestros padres</p>
+                <div class="grid grid-cols-2 gap-8 text-center overflow-hidden">
+                    <div class="reveal-left">
                         <p class="text-[13px] uppercase tracking-widest text-gray-300 mb-6 font-semibold">De Ella</p>
                         <p class="serif italic text-[15px] leading-loose">Nombre Madre<br>&<br>Nombre Padre</p>
                     </div>
-                    <div>
+                    <div class="reveal-right">
                         <p class="text-[13px] uppercase tracking-widest text-gray-300 mb-4 font-semibold">De Él</p>
                         <p class="serif italic text-[15px] leading-loose">Nombre Madre<br>&<br>Nombre Padre</p>
                     </div>
                 </div>
             </div>
-            <div class="mt-12 pt-8 border-t border-gray-100 max-w-xs mx-auto">
+            <div class="mt-12 pt-8 border-t border-gray-100 max-w-xs mx-auto reveal-left">
                 <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-4 font-bold">Nuestros Padrinos</p>
                 <p class="serif italic text-[18px]">Nombre Padrino & Nombre Madrina</p>
             </div>
@@ -396,7 +408,7 @@
 
         <!-- SECCIÓN 2: UBICACIONES -->
         <section class="bg-white reveal">
-            <div class="reveal">
+            <div class="reveal-left">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" 
                      class="w-16 mx-auto mb-6" alt="Icono Iglesia">
                 <h3 class="text-location-title serif">Ceremonia</h3>
@@ -406,7 +418,7 @@
                 <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+Nuestra+Señora+de+Lourdes+Calle+Reforma+123" target="_blank" rel="noopener" class="btn-memories">Cómo llegar</a>
             </div>
 
-            <div class="reveal mt-20">
+            <div class="reveal-right mt-20">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro.png" 
                      class="w-16 mx-auto mb-6" alt="Icono Fiesta">
                 <h3 class="text-location-title serif">Recepción</h3>
@@ -418,7 +430,7 @@
         </section>
 
         <!-- SECCIÓN 3: DRESS CODE -->
-        <section class="bg-white py-24 reveal border-t border-gray-50">
+        <section class="bg-white py-24 border-t border-gray-50 reveal-left">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" 
                  class="w-20 mx-auto mb-8" alt="Dress Code">
             <h3 class="text-location-title serif">Dress Code</h3>
@@ -435,23 +447,25 @@
         </div>
 
         <!-- SECCIÓN 4: MESA DE REGALOS -->
-        <section class="bg-white py-24 reveal px-4">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Regalo%20negro.png" 
-                 class="w-16 mx-auto mb-8" alt="Regalo">
-            <h3 class="text-location-title serif">Mesa de Regalos</h3>
-            <p class="text-description mb-16 px-6">Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle, aquí te dejamos nuestras opciones:</p>
+        <section class="bg-white py-24 px-4 overflow-hidden">
+            <div class="reveal">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Regalo%20negro.png" 
+                     class="w-16 mx-auto mb-8" alt="Regalo">
+                <h3 class="text-location-title serif">Mesa de Regalos</h3>
+                <p class="text-description mb-16 px-6">Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle, aquí te dejamos nuestras opciones:</p>
+            </div>
             
             <div class="flex flex-row flex-wrap items-start justify-center gap-12 grayscale opacity-90">
-                <a href="https://www.amazon.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110">
+                <a href="https://www.amazon.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110 reveal-left">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Amazon.png" 
                          class="h-14 md:h-16 mx-auto" alt="Amazon">
                 </a>
-                <a href="https://www.liverpool.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110">
+                <a href="https://www.liverpool.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110 reveal-right">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Liverpool.png" 
                          class="h-14 md:h-16 mx-auto" alt="Liverpool">
                 </a>
                 
-                <div class="text-center reveal w-full sm:w-auto">
+                <div class="text-center reveal-left w-full sm:w-auto">
                     <svg class="h-12 mx-auto mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6ZM20 6L12 11L4 6H20ZM20 18H4V8L12 13L20 8V18Z" fill="black"/>
                     </svg>
@@ -587,13 +601,14 @@
         }
 
         function revealElements() {
-            const reveals = document.querySelectorAll(".reveal");
+            const reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
             const windowHeight = window.innerHeight;
             
             reveals.forEach(el => {
                 const elementTop = el.getBoundingClientRect().top;
                 if (elementTop < windowHeight - 80) {
                     el.classList.add("active");
+                    
                     const innerTypers = el.querySelectorAll(".typing-effect");
                     innerTypers.forEach(t => {
                         setTimeout(() => runTypewriter(t), 300);
