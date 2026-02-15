@@ -2,35 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lucía & Juan - Invitación de Boda</title>
-     <!-- 1. Icono para la pestaña del navegador -->
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
-
-    <!-- 2. Icono para Pantalla de Inicio en iOS -->
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
-    <!-- 3. Configuración PWA -->
+    <!-- Iconos y PWA -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Boda Plan Básico">
+    <meta name="apple-mobile-web-app-title" content="Boda Lucía y Juan">
 
-    <!-- 4. Metadatos -->
-    <meta name="theme-color" content="#9B8AA5">
-    <meta property="og:title" content="Boda Plan Básico">
-    <meta property="og:description" content="Te invitamos a celebrar este día especial con nosotros. Haz clic para ver los detalles.">
+    <!-- Metadatos -->
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:title" content="Boda de Lucía & Juan">
+    <meta property="og:description" content="Te invitamos a celebrar este día especial con nosotros.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobresWA/sobreblancoselloplata.png"> 
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         body {
             margin: 0;
-            background-color: #ffffff;
+            background-color: #f4f4f4; /* Fondo neutro para resaltar la tarjeta en PC */
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
             color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         h1, h2, h3, .serif {
@@ -77,11 +77,13 @@
             background-size: cover;
             background-repeat: no-repeat;
             transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
         }
 
         .flap-left {
             left: 0;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
             border-right: 1.5px solid rgba(0,0,0,0.08);
         }
 
@@ -127,15 +129,17 @@
             50% { transform: translateY(-10px) rotate(2deg); }
         }
 
-        /* --- ESTILO INVITACIÓN --- */
+        /* --- ESTILO INVITACIÓN (RESPONSIVE PC) --- */
         .main-content {
             opacity: 0;
             transition: opacity 1s ease-in;
             background: white;
-            max-width: 480px;
+            width: 100%;
+            max-width: 480px; /* Tamaño ideal para simular tarjeta */
             margin: 0 auto;
             min-height: 100vh;
-            box-shadow: 0 0 50px rgba(0,0,0,0.05);
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         .main-content.visible {
@@ -144,6 +148,7 @@
 
         .img-bw {
             filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
             width: 100%;
             display: block;
         }
@@ -158,11 +163,13 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             display: inline-block;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border: 1px solid black;
         }
 
         .btn-memories:hover {
-            background-color: #333;
+            background-color: transparent;
+            color: black;
             transform: scale(1.05);
         }
 
@@ -170,7 +177,7 @@
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 1.2s ease-out;
+            transition: all 1s ease-out;
         }
 
         .reveal.active {
@@ -183,6 +190,7 @@
             font-size: 2.2rem;
             font-weight: 400;
             color: #000;
+            line-height: 1;
         }
 
         .countdown-tag {
@@ -217,7 +225,7 @@
         }
 
         section {
-            padding: 4rem 2rem;
+            padding: 4rem 1.5rem;
             text-align: center;
         }
 
@@ -233,14 +241,14 @@
             color: #000;
         }
 
-        /* --- MÚSICA (ONDAS SIN FONDO) --- */
+        /* --- MÚSICA VISUALIZER --- */
         #music-control {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 50;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -251,7 +259,7 @@
         }
         
         #music-control.visible {
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .music-bars {
@@ -264,21 +272,23 @@
         .bar {
             width: 3px;
             background: black;
-            height: 4px; /* Altura base cuando está pausado */
+            height: 4px;
             border-radius: 10px;
-            transition: height 0.1s ease; /* Transición suave para el ritmo */
+            transition: height 0.1s ease-out;
+            will-change: height;
         }
         
     </style>
 </head>
-<body>
+<body class="overflow-hidden">
 
     <!-- MÚSICA DE FONDO -->
     <audio id="bg-music" loop crossorigin="anonymous">
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="music-control" onclick="toggleMusic()">
+    <!-- CONTROL DE MÚSICA -->
+    <div id="music-control" onclick="toggleMusic()" aria-label="Reproducir música">
         <div id="music-bars-container" class="music-bars">
             <div class="bar"></div>
             <div class="bar"></div>
@@ -298,7 +308,7 @@
                 <div class="click-hint">Abrir Invitación</div>
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Sello%20plata%20flor.png" 
                      style="width:90px; animation: floating 4s infinite ease-in-out" 
-                     alt="Sello">
+                     alt="Sello de cera">
             </div>
         </div>
     </div>
@@ -308,13 +318,12 @@
         
         <!-- HEADER -->
         <header class="bg-white">
-            <div class="h-[75vh] overflow-hidden">
+            <div class="h-[70vh] md:h-[75vh] overflow-hidden">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
-                     alt="Hero" class="img-bw w-full h-full object-cover">
+                     alt="Lucía y Juan" class="img-bw w-full h-full object-cover">
             </div>
             
-            <!-- Bloque de texto desplazado hacia arriba con margen negativo -->
-            <div class="text-center pt-2 pb-12 px-6 -mt-10 relative z-10 reveal active">
+            <div class="text-center pt-4 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal active">
                 <p class="uppercase tracking-[0.4em] text-[10px] mb-6 font-medium text-gray-500">Nos Casamos</p>
                 <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
                     Lucía<br>&<br>Juan
@@ -324,9 +333,9 @@
         </header>
 
         <!-- SECCIÓN 1: COUNTDOWN -->
-        <section class="bg-white pt-24 reveal">
-            <p class="uppercase tracking-[0.3em] text-[12px] text-gray-800 mb-8 font-semibold">Faltan:</p>
-            <div id="timer" class="flex justify-center gap-8 mb-12">
+        <section class="bg-white pt-16 reveal">
+            <p class="uppercase tracking-[0.3em] text-[11px] text-gray-400 mb-8 font-bold">Faltan:</p>
+            <div id="timer" class="flex justify-center gap-6 mb-12">
                 <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="countdown-tag">Días</span></div>
                 <div class="flex flex-col"><span id="hours" class="countdown-number">00</span><span class="countdown-tag">horas</span></div>
                 <div class="flex flex-col"><span id="minutes" class="countdown-number">00</span><span class="countdown-tag">minutos</span></div>
@@ -365,38 +374,39 @@
                     <p class="serif italic text-[18px]">Nombre Padrino & Nombre Madrina</p>
                 </div>
             </div>
+        </section>
 
-            <!-- SEPARADOR 1 -->
+        <!-- SEPARADOR 1 -->
+        <div class="reveal">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Separador%20foto.png" 
+                 alt="Separador" class="img-bw w-full">
+        </div>
+
+        <!-- SECCIÓN 2: UBICACIONES -->
+        <section class="bg-white reveal">
             <div class="reveal">
-                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Separador%20foto.png" 
-                     alt="Separador 1" class="img-bw w-full">
-            </div>
-
-            <!-- Ceremonia -->
-            <div class="reveal mt-20">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" 
                      class="w-16 mx-auto mb-6" alt="Icono Iglesia">
                 <h3 class="text-location-title serif">Ceremonia</h3>
                 <p class="text-description mb-10">
                     21:30 hs - Parroquia Nuestra<br>Señora de Lourdes.<br>Calle Reforma 123.
                 </p>
-                <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+Nuestra+Señora+de+Lourdes+Calle+Reforma+123" target="_blank" class="btn-memories">Cómo llegar</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Parroquia+Nuestra+Señora+de+Lourdes+Calle+Reforma+123" target="_blank" rel="noopener" class="btn-memories">Cómo llegar</a>
+            </div>
+
+            <div class="reveal mt-20">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro.png" 
+                     class="w-16 mx-auto mb-6" alt="Icono Fiesta">
+                <h3 class="text-location-title serif">Recepción</h3>
+                <p class="text-description mb-10">
+                    21:30 hs - Salón Vista Hermosa.<br>Av. del Sol 456.
+                </p>
+                <a href="https://www.google.com/maps/search/?api=1&query=Salón+Vista+Hermosa+Av.+del+Sol+456" target="_blank" rel="noopener" class="btn-memories">Cómo llegar</a>
             </div>
         </section>
 
-        <!-- SECCIÓN 2: FIESTA -->
-        <section class="pt-10 reveal">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro.png" 
-                 class="w-16 mx-auto mb-6" alt="Icono Fiesta">
-            <h3 class="text-location-title serif">Recepción</h3>
-            <p class="text-description mb-10">
-                21:30 hs - Salón Vista Hermosa.<br>Av. del Sol 456.
-            </p>
-            <a href="https://www.google.com/maps/search/?api=1&query=Salón+Vista+Hermosa+Av.+del+Sol+456" target="_blank" class="btn-memories">Cómo llegar</a>
-        </section>
-
         <!-- SECCIÓN 3: DRESS CODE -->
-        <section class="bg-white py-24 reveal">
+        <section class="bg-white py-24 reveal border-t border-gray-50">
             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" 
                  class="w-20 mx-auto mb-8" alt="Dress Code">
             <h3 class="text-location-title serif">Dress Code</h3>
@@ -420,13 +430,13 @@
             <p class="text-description mb-16 px-10">Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle, aquí te dejamos nuestras opciones:</p>
             
             <div class="flex flex-col gap-20 items-center justify-center grayscale opacity-90">
-                <a href="https://www.amazon.com.mx" target="_blank" class="block transition-transform hover:scale-110">
+                <a href="https://www.amazon.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Amazon.png" 
-                         class="h-20 mx-auto" alt="Amazon Registry">
+                         class="h-20 mx-auto" alt="Amazon">
                 </a>
-                <a href="https://www.liverpool.com.mx" target="_blank" class="block transition-transform hover:scale-110">
+                <a href="https://www.liverpool.com.mx" target="_blank" rel="noopener" class="block transition-transform hover:scale-110">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Liverpool.png" 
-                         class="h-20 mx-auto" alt="Liverpool Registry">
+                         class="h-20 mx-auto" alt="Liverpool">
                 </a>
             </div>
         </section>
@@ -434,13 +444,13 @@
         <!-- SECCIÓN 5: RSVP -->
         <section class="bg-white pb-28 reveal">
             <h3 class="text-location-title serif italic">¿Nos acompañas?</h3>
-            <p class="text-[12px] text-gray-400 mb-12 uppercase tracking-[0.2em]">Confirmar antes del 1 de Noviembre</p>
-            <a href="https://wa.me/521234567890?text=¡Hola!%20Confirmo%20con%20mucha%20alegría%20mi%20asistencia%20a%20la%20boda%20de%20Lucía%20y%20Juan." target="_blank" class="btn-memories">Confirmar Asistencia</a>
+            <p class="text-[12px] text-gray-400 mb-12 uppercase tracking-[0.2em] font-bold">Confirmar antes del 1 de Noviembre</p>
+            <a href="https://wa.me/521234567890?text=¡Hola!%20Confirmo%20con%20mucha%20alegría%20mi%20asistencia%20a%20la%20boda%20de%20Lucía%20y%20Juan." target="_blank" rel="noopener" class="btn-memories">Confirmar Asistencia</a>
             
             <div class="mt-44">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda7.png" 
-                     class="w-28 h-28 mx-auto rounded-full img-bw border border-gray-100 object-cover mb-8" alt="Novios">
-                <p class="text-[10px] uppercase tracking-[0.5em] text-gray-300">DISEÑO MEMORIES</p>
+                     class="w-28 h-28 mx-auto rounded-full img-bw border border-gray-100 object-cover mb-8 shadow-sm" alt="Novios">
+                <p class="text-[10px] uppercase tracking-[0.5em] text-gray-300 font-bold">DISEÑO MEMORIES</p>
             </div>
         </section>
 
@@ -454,31 +464,37 @@
         let audioContext, analyser, dataArray, source;
         let animationId;
 
+        // Inicialización compatible con todos los navegadores (Safari/Chrome/Firefox)
         function initAudioAnalyzer() {
             if (audioContext) return; 
 
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContextClass();
+                analyser = audioContext.createAnalyser();
+                source = audioContext.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
 
-            analyser.fftSize = 64; 
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
+                analyser.fftSize = 64; 
+                const bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
 
-            animateBars();
+                animateBars();
+            } catch (e) {
+                console.warn("Audio Context failed to initialize", e);
+            }
         }
 
         function animateBars() {
             animationId = requestAnimationFrame(animateBars);
-            analyser.getByteFrequencyData(dataArray);
-
-            for (let i = 0; i < barElements.length; i++) {
-                const value = dataArray[i * 2 + 2]; 
-                const percent = (value / 255) * 24; 
-                const height = Math.max(4, percent); 
-                barElements[i].style.height = `${height}px`;
+            if (analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                for (let i = 0; i < barElements.length; i++) {
+                    const value = dataArray[i * 2 + 2] || 0; 
+                    const height = Math.max(4, (value / 255) * 24); 
+                    barElements[i].style.height = `${height}px`;
+                }
             }
         }
 
@@ -492,13 +508,17 @@
             setTimeout(() => {
                 wrapper.classList.add('hidden-envelope');
                 content.classList.add('visible');
+                document.body.classList.remove('overflow-hidden');
                 document.body.style.overflow = "auto";
                 musicControl.classList.add('visible');
                 
                 initAudioAnalyzer();
-                audio.play().catch(e => console.log("Auto-play blocked"));
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                audio.play().catch(e => console.log("Auto-play requires user gesture"));
                 
-                reveal();
+                revealElements();
             }, 1200);
         }
 
@@ -511,44 +531,59 @@
                 if (!animationId) animateBars();
             } else {
                 audio.pause();
-                cancelAnimationFrame(animationId);
-                animationId = null;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
                 barElements.forEach(b => b.style.height = '4px');
             }
         }
 
-        function reveal() {
+        function revealElements() {
             const reveals = document.querySelectorAll(".reveal");
-            for (let i = 0; i < reveals.length; i++) {
-                const windowHeight = window.innerHeight;
-                const elementTop = reveals[i].getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            reveals.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
                 const elementVisible = 100;
                 if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
+                    el.classList.add("active");
                 }
-            }
+            });
         }
 
-        window.addEventListener("scroll", reveal);
+        // Optimización de scroll
+        let scrollTimeout;
+        window.addEventListener("scroll", () => {
+            if (scrollTimeout) return;
+            scrollTimeout = setTimeout(() => {
+                revealElements();
+                scrollTimeout = null;
+            }, 50);
+        });
 
+        // Countdown Preciso
         const targetDate = new Date("Nov 29, 2026 21:30:00").getTime();
         function updateTimer() {
             const now = new Date().getTime();
             const diff = targetDate - now;
             if (diff < 0) return;
+
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById("days").innerText = d;
-            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
-            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
-            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+
+            document.getElementById("days").innerText = String(d).padStart(2, '0');
+            document.getElementById("hours").innerText = String(h).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(m).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(s).padStart(2, '0');
         }
+        
         setInterval(updateTimer, 1000);
         updateTimer();
 
-        document.body.style.overflow = "hidden";
+        // Evitar scroll inicial
+        window.scrollTo(0, 0);
     </script>
 </body>
 </html>
