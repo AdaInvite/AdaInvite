@@ -303,6 +303,15 @@
             min-height: 1.2em;
         }
         
+        /* --- ESTILOS PARA EFECTO PANTALLA COMPLETA --- */
+        .fullscreen-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
     </style>
 </head>
 <body class="overflow-hidden">
@@ -340,8 +349,8 @@
     <!-- CONTENIDO DE LA INVITACIÓN -->
     <div id="invitation-content" class="main-content">
         
-        <!-- HEADER -->
-        <header class="bg-white">
+        <!-- HEADER (PRIMERA PANTALLA) -->
+        <header class="bg-white min-h-screen flex flex-col justify-center">
             <div class="h-[70vh] md:h-[75vh] overflow-hidden reveal" id="hero-image">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
                      alt="Lucía y Juan" class="img-bw w-full h-full object-cover">
@@ -356,8 +365,8 @@
             </div>
         </header>
 
-        <!-- SECCIÓN 1: COUNTDOWN -->
-        <section class="bg-white pt-16 pb-8 reveal" id="countdown-section">
+        <!-- SECCIÓN 1: PANTALLA DE FECHA Y DECORACIÓN (SEGUNDA PANTALLA) -->
+        <section class="bg-white fullscreen-section reveal" id="countdown-section">
             <p class="uppercase tracking-[0.3em] text-[13px] text-gray-400 mb-8 font-bold">Faltan solo:</p>
             <div id="timer" class="flex justify-center gap-6 mb-12">
                 <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="countdown-tag">Días</span></div>
@@ -378,16 +387,16 @@
                 <span class="big-day">29</span>
                 <span>Noviembre</span>
             </div>
+
+            <!-- DECORACIÓN (CENTRADA CON ESPACIO) -->
+            <div class="reveal w-full mt-12 mb-8" id="rings-decoration">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Decoraci%C3%B3n%201.png" 
+                     class="w-full opacity-80" alt="Decoración de boda">
+            </div>
         </section>
 
-        <!-- DECORACIÓN -->
-        <div class="reveal" id="rings-decoration">
-            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Decoraci%C3%B3n%201.png" 
-                 class="w-full opacity-80" alt="Decoración de boda">
-        </div>
-
-        <!-- SECCIÓN PADRES Y PADRINOS -->
-        <section class="bg-gray-50/50 py-10 px-4 reveal" id="parents-section">
+        <!-- SECCIÓN PADRES Y PADRINOS (TERCERA PANTALLA) -->
+        <section class="bg-gray-50/50 fullscreen-section reveal" id="parents-section">
             <div class="max-w-xs mx-auto mb-12">
                 <p class="uppercase tracking-[0.2em] text-[13px] text-gray-400 mb-8 font-bold border-b border-gray-100 pb-2">Con la bendición de nuestros padres</p>
                 <div class="grid grid-cols-2 gap-8 text-center overflow-hidden">
@@ -396,7 +405,7 @@
                         <p class="serif italic text-[15px] leading-loose">Nombre Madre<br>&<br>Nombre Padre</p>
                     </div>
                     <div class="reveal-right">
-                        <p class="text-[13px] uppercase tracking-widest text-gray-300 mb-4 font-semibold">De Él</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-4 font-semibold">De Él</p>
                         <p class="serif italic text-[15px] leading-loose">Nombre Madre<br>&<br>Nombre Padre</p>
                     </div>
                 </div>
@@ -507,7 +516,7 @@
         let audioContext, analyser, dataArray, source;
         let animationId;
 
-        // Función de escritura con callback mejorado
+        // Función de escritura con callback
         function runTypewriter(element, callback) {
             if (element.getAttribute('data-typing-started')) return;
             element.setAttribute('data-typing-started', 'true');
@@ -592,7 +601,6 @@
             }
         }
 
-        // Lógica de revelado mejorada para garantizar la aparición de fecha y anillos
         function revealElements() {
             const reveals = Array.from(document.querySelectorAll(".reveal, .reveal-left, .reveal-right"));
             const windowHeight = window.innerHeight;
@@ -601,29 +609,22 @@
             const dateSection = document.getElementById('date-display-section');
             const rings = document.getElementById('rings-decoration');
 
-            // 1. Filtrar elementos que deben ser activados por posición
             const elementsToReveal = reveals.filter(el => {
-                // Si es la fecha o los anillos, no los activamos por scroll normal todavía
                 if (el === dateSection || el === rings) return false;
-
                 const rect = el.getBoundingClientRect();
                 return !el.classList.contains("active") && rect.top < windowHeight - 50;
             });
 
-            // Ordenar y activar
             elementsToReveal.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
             elementsToReveal.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.add("active");
-                    // Iniciar escritura si aplica
                     if (el.contains(intro)) {
                         runTypewriter(intro, () => {
-                            // SECUENCIA FORZADA: Intro -> Fecha -> Anillos
                             setTimeout(() => {
                                 dateSection.classList.add('active');
                                 setTimeout(() => {
                                     rings.classList.add('active');
-                                    // Una vez mostrados, revisamos si hay algo más que mostrar debajo
                                     setTimeout(revealElements, 400);
                                 }, 600);
                             }, 400);
