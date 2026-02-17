@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Boda Plan Infinity</title>
     
     <!-- Iconos y PWA -->
@@ -23,6 +23,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --bg-texture: url("https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg");
+        }
+
         body {
             margin: 0;
             background-color: #f4f4f4;
@@ -31,6 +35,7 @@
             color: #1a1a1a;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            width: 100%;
         }
 
         h1, h2, h3, h4, .serif {
@@ -45,15 +50,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: url("https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg");
+            background-image: var(--bg-texture);
             background-size: cover;
             transition: opacity 1s ease-in-out, visibility 1s;
         }
 
         #envelope-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -71,9 +76,9 @@
         .flap {
             position: absolute;
             top: 0;
-            width: 60%; 
+            width: 70%; 
             height: 100%;
-            background-image: url("https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg");
+            background-image: var(--bg-texture);
             background-size: cover;
             background-repeat: no-repeat;
             transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
@@ -100,13 +105,19 @@
         .seal-wrapper {
             position: absolute;
             top: 50%; 
-            left: 60%; 
+            left: 70%; 
             transform: translate(-50%, -50%);
             z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s;
+        }
+        
+        #envelope-container.open .seal-wrapper {
+            transform: translate(-200%, -50%); 
+            opacity: 0;
         }
 
         .click-hint {
@@ -117,6 +128,7 @@
             text-transform: uppercase;
             font-weight: 700;
             animation: bounce-subtle 2s infinite;
+            white-space: nowrap;
         }
 
         @keyframes bounce-subtle {
@@ -135,11 +147,12 @@
             transition: opacity 1s ease-in;
             background: white;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             margin: 0 auto;
             min-height: 100vh;
             box-shadow: 0 0 50px rgba(0,0,0,0.1);
             position: relative;
+            overflow-x: hidden;
         }
 
         .main-content.visible {
@@ -156,9 +169,9 @@
         .btn-memories {
             background-color: black;
             color: white;
-            padding: 14px 40px;
+            padding: 14px 30px;
             border-radius: 999px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -167,30 +180,31 @@
             border: 1px solid black;
             cursor: pointer;
             text-align: center;
+            max-width: 90%;
         }
 
         .btn-memories:hover {
             background-color: transparent;
             color: black;
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         /* --- ANIMACIONES DE REVELADO --- */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             transition: all 0.8s ease-out;
         }
 
         .reveal-left {
             opacity: 0;
-            transform: translateX(-50px);
+            transform: translateX(-30px);
             transition: all 0.8s ease-out;
         }
 
         .reveal-right {
             opacity: 0;
-            transform: translateX(50px);
+            transform: translateX(30px);
             transition: all 0.8s ease-out;
         }
 
@@ -199,7 +213,6 @@
             transform: translate(0, 0);
         }
 
-        /* --- BLOQUEO DE CONTENIDO POSTERIOR --- */
         #locked-sections {
             opacity: 0;
             visibility: hidden;
@@ -216,7 +229,7 @@
         /* --- COUNTDOWN --- */
         .countdown-number {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 8vw, 2.8rem);
             font-weight: 400;
             color: #000;
             line-height: 1;
@@ -227,32 +240,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             padding: 20px 0;
             margin: 20px auto;
-            width: 90%;
+            width: 95%;
         }
 
         .date-display span:not(.big-day) {
-            font-size: 11px;
+            font-size: clamp(9px, 2.5vw, 11px);
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: #1a1a1a;
             border-top: 1px solid #000;
             border-bottom: 1px solid #000;
-            padding: 10px 0;
+            padding: 8px 0;
             font-weight: 500;
-            min-width: 80px;
+            min-width: 65px;
             text-align: center;
         }
 
         .date-display .big-day {
-            font-size: 4.5rem;
+            font-size: clamp(3rem, 12vw, 4.5rem);
             font-family: 'Playfair Display', serif;
             font-weight: 400;
             color: #000;
             border: none !important;
-            padding: 0 10px;
+            padding: 0 5px;
             line-height: 1;
         }
 
@@ -264,9 +277,16 @@
             gap: 12px;
             padding: 20px;
             scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
         }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
-        .gallery-item, .history-item, .inspo-item { flex: 0 0 85%; scroll-snap-align: center; border-radius: 4px; overflow: hidden; }
+        .gallery-item, .history-item, .inspo-item { 
+            flex: 0 0 85%; 
+            scroll-snap-align: center; 
+            border-radius: 4px; 
+            overflow: hidden; 
+        }
 
         /* --- MAPAS & CLIMA --- */
         .map-container {
@@ -276,12 +296,13 @@
             overflow: hidden;
             filter: grayscale(1);
             margin-top: 20px;
+            position: relative;
         }
 
         .weather-scroll {
             display: flex;
             overflow-x: auto;
-            gap: 20px;
+            gap: 15px;
             padding: 10px 0;
             scrollbar-width: none;
         }
@@ -292,31 +313,37 @@
         .timeline-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; padding: 20px 0; }
         .timeline-container::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #eee; transform: translateX(-50%); }
         .timeline-item { position: relative; width: 100%; margin-bottom: 50px; display: flex; align-items: center; }
-        .timeline-content { width: 42%; display: flex; flex-direction: column; }
+        .timeline-content { width: 45%; display: flex; flex-direction: column; }
         .timeline-item:nth-child(odd) { justify-content: flex-start; text-align: right; }
         .timeline-item:nth-child(even) { justify-content: flex-end; text-align: left; }
-        .timeline-item:nth-child(odd) .timeline-content { align-items: flex-end; padding-right: 20px; }
-        .timeline-item:nth-child(even) .timeline-content { align-items: flex-start; padding-left: 20px; }
+        .timeline-item:nth-child(odd) .timeline-content { align-items: flex-end; padding-right: 15px; }
+        .timeline-item:nth-child(even) .timeline-content { align-items: flex-start; padding-left: 15px; }
         .timeline-dot { position: absolute; left: 50%; top: 20px; width: 9px; height: 9px; background: #000; border-radius: 50%; transform: translateX(-50%); z-index: 1; }
 
         /* --- FORMS & MODALS --- */
         .rsvp-form input, .rsvp-form select, .rsvp-form textarea {
             width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 14px; font-family: 'Montserrat', sans-serif;
+            appearance: none;
         }
-        .success-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 20; border-radius: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
+        .success-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 20; border-radius: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; text-align: center; }
         .hidden { display: none; }
 
         /* --- MÚSICA VISUALIZER --- */
         #music-control {
-            position: fixed; bottom: 30px; right: 30px; z-index: 50; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.5s; background: rgba(255,255,255,0.8); backdrop-filter: blur(5px); border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: fixed; bottom: 20px; right: 20px; z-index: 50; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.5s; background: rgba(255,255,255,0.8); backdrop-filter: blur(5px); border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         #music-control.visible { opacity: 0.9; }
-        .music-bars { display: flex; align-items: center; gap: 3px; height: 24px; }
+        .music-bars { display: flex; align-items: center; gap: 3px; height: 20px; }
         .bar { width: 3px; background: black; height: 4px; border-radius: 10px; transition: height 0.1s ease-out; will-change: height; }
 
         .typing-effect { display: inline-block; overflow: hidden; white-space: normal; min-height: 1.2em; }
         .fullscreen-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        
+
+        @supports (-webkit-touch-callout: none) {
+            .fullscreen-section, #envelope-wrapper {
+                min-height: -webkit-fill-available;
+            }
+        }
     </style>
 </head>
 <body class="overflow-hidden">
@@ -345,7 +372,7 @@
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="click-hint">Toca para abrir</div>
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Sello%20plata%20flor.png" 
-                     style="width:90px; animation: floating 4s infinite ease-in-out" 
+                     style="width:80px; animation: floating 4s infinite ease-in-out" 
                      alt="Sello de cera">
             </div>
         </div>
@@ -356,32 +383,32 @@
         
         <!-- HEADER -->
         <header class="bg-white min-h-screen flex flex-col justify-center">
-            <div class="h-[70vh] overflow-hidden reveal" id="hero-image">
+            <div class="h-[65vh] md:h-[70vh] overflow-hidden reveal" id="hero-image">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/Hero%20foto.png" 
                      alt="Lucía y Juan" class="img-bw w-full h-full object-cover">
             </div>
             
-            <div class="text-center pt-8 pb-12 px-6 -mt-10 relative z-10 bg-white mx-4 shadow-sm reveal" id="header-names">
-                <p class="uppercase tracking-[0.4em] text-[12px] mb-6 font-medium text-gray-500">Nos Casamos</p>
-                <h1 class="text-3xl italic serif mb-6 font-light text-black leading-tight">
+            <div class="text-center pt-10 pb-12 px-6 relative z-10 bg-white reveal" id="header-names">
+                <p class="uppercase tracking-[0.4em] text-[10px] md:text-[12px] mb-4 font-medium text-gray-500">Nos Casamos</p>
+                <h1 class="text-3xl md:text-4xl italic serif mb-4 font-light text-black leading-tight">
                     Lucía<br>&<br>Juan
                 </h1>
-                <p class="text-[14px] tracking-[0.2em] text-black font-semibold">29 . 11 . 2026</p>
+                <p class="text-[13px] tracking-[0.2em] text-black font-semibold">29 . 11 . 2026</p>
             </div>
         </header>
 
         <!-- SECCIÓN: COUNTDOWN & INTRO -->
         <section class="bg-white py-16 reveal text-center" id="countdown-section">
-            <p class="uppercase tracking-[0.3em] text-[11px] text-gray-400 mb-8 font-bold">Faltan solo:</p>
-            <div id="timer" class="flex justify-center gap-6 mb-12">
-                <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="text-[10px] uppercase text-gray-400">Días</span></div>
-                <div class="flex flex-col"><span id="hours" class="countdown-number">00</span><span class="text-[10px] uppercase text-gray-400">horas</span></div>
-                <div class="flex flex-col"><span id="minutes" class="countdown-number">00</span><span class="text-[10px] uppercase text-gray-400">minutos</span></div>
-                <div class="flex flex-col"><span id="seconds" class="countdown-number">00</span><span class="text-[10px] uppercase text-gray-400">segundos</span></div>
+            <p class="uppercase tracking-[0.3em] text-[10px] text-gray-400 mb-8 font-bold">Faltan solo:</p>
+            <div id="timer" class="flex justify-center gap-3 md:gap-6 mb-12 px-4">
+                <div class="flex flex-col"><span id="days" class="countdown-number">000</span><span class="text-[9px] uppercase text-gray-400">Días</span></div>
+                <div class="flex flex-col"><span id="hours" class="countdown-number">00</span><span class="text-[9px] uppercase text-gray-400">horas</span></div>
+                <div class="flex flex-col"><span id="minutes" class="countdown-number">00</span><span class="text-[9px] uppercase text-gray-400">minutos</span></div>
+                <div class="flex flex-col"><span id="seconds" class="countdown-number">00</span><span class="text-[9px] uppercase text-gray-400">segundos</span></div>
             </div>
             
             <div class="px-8 mb-10">
-                <p id="intro-text" class="text-[15px] text-gray-600 italic leading-relaxed typing-effect">
+                <p id="intro-text" class="text-[14px] md:text-[15px] text-gray-600 italic leading-relaxed typing-effect">
                     "Nuestra historia suma un nuevo capítulo y no sería lo mismo sin ti. ¡Acompáñanos a celebrar el inicio de nuestro para siempre!"
                 </p>
             </div>
@@ -400,8 +427,10 @@
             </div>
 
             <!-- BOTÓN CALENDARIO -->
-            <a id="calendar-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Lucia+y+Juan&details=Celebración+de+boda+de+Lucía+y+Juan&location=Parroquia+Nuestra+Señora+de+Lourdes&dates=20261129T190000Z/20261130T040000Z" 
-               target="_blank" class="btn-memories text-[9px] mb-8 uppercase tracking-widest reveal" style="opacity: 0; pointer-events: none;">Añadir al Calendario</a>
+            <div class="px-6">
+                <a id="calendar-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Lucia+y+Juan&details=Celebración+de+boda+de+Lucía+y+Juan&location=Parroquia+Nuestra+Señora+de+Lourdes&dates=20261129T190000Z/20261130T040000Z" 
+                   target="_blank" class="btn-memories text-[9px] mb-8 uppercase tracking-widest reveal" style="opacity: 0; pointer-events: none;">Añadir al Calendario</a>
+            </div>
         </section>
 
         <!-- SECCIONES BLOQUEADAS HASTA QUE TERMINE LA ESCRITURA -->
@@ -434,31 +463,31 @@
             <section class="reveal text-center py-10 bg-white">
                 <h3 class="text-2xl serif mb-8 italic">Save the Date</h3>
                 <div class="aspect-video w-full px-4">
-                    <div class="w-full h-full bg-black flex items-center justify-center text-white text-[10px] uppercase tracking-widest border border-gray-200">
+                    <div class="w-full h-full bg-black flex items-center justify-center text-white text-[10px] uppercase tracking-widest border border-gray-200 text-center px-4">
                         Aquí va tu video de invitación
                     </div>
                 </div>
             </section>
 
             <!-- SECCIÓN PADRES Y PADRINOS -->
-            <section class="fullscreen-section reveal relative overflow-hidden bg-cover bg-center bg-no-repeat py-20 px-6" 
+            <section class="fullscreen-section reveal relative overflow-hidden bg-center bg-no-repeat py-20 px-6" 
                      id="parents-section" 
-                     style="background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/marcoblanco.png');">
+                     style="background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/marcoblanco.png'); background-size: 85% auto;">
                 <div class="max-w-xs mx-auto text-center">
-                    <p class="uppercase tracking-[0.2em] text-[12px] text-gray-700 mb-8 font-bold border-b border-gray-300 pb-2 reveal inline-block w-full">Con la bendición de nuestros padres</p>
-                    <div class="grid grid-cols-2 gap-8 text-center mt-6">
+                    <p class="uppercase tracking-[0.2em] text-[11px] text-gray-700 mb-8 font-bold border-b border-gray-300 pb-2 reveal inline-block w-full">Con la bendición de nuestros padres</p>
+                    <div class="grid grid-cols-2 gap-4 md:gap-8 text-center mt-6">
                         <div class="reveal-left">
-                            <p class="text-[11px] uppercase tracking-widest text-gray-500 mb-4 font-semibold">De Ella</p>
-                            <p class="serif italic text-[15px] leading-loose text-black font-medium">Nombre Madre<br>&<br>Nombre Padre</p>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-4 font-semibold">De Ella</p>
+                            <p class="serif italic text-[14px] leading-loose text-black font-medium">Nombre Madre<br>&<br>Nombre Padre</p>
                         </div>
                         <div class="reveal-right">
-                            <p class="text-[11px] uppercase tracking-widest text-gray-500 mb-4 font-semibold">De Él</p>
-                            <p class="serif italic text-[15px] leading-loose text-black font-medium">Nombre Madre<br>&<br>Nombre Padre</p>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-4 font-semibold">De Él</p>
+                            <p class="serif italic text-[14px] leading-loose text-black font-medium">Nombre Madre<br>&<br>Nombre Padre</p>
                         </div>
                     </div>
                     <div class="mt-14 pt-10 border-t border-gray-300 reveal-left">
-                        <p class="uppercase tracking-[0.2em] text-[12px] text-gray-700 mb-6 font-bold">Nuestros Padrinos</p>
-                        <p class="serif italic text-[17px] text-black font-medium">Nombre Padrino <br> & <br>Nombre Madrina</p>
+                        <p class="uppercase tracking-[0.2em] text-[11px] text-gray-700 mb-6 font-bold">Nuestros Padrinos</p>
+                        <p class="serif italic text-[16px] text-black font-medium">Nombre Padrino <br> & <br>Nombre Madrina</p>
                     </div>
                 </div>
             </section>
@@ -491,7 +520,7 @@
 
                 <!-- SECCIÓN PRONÓSTICO CLIMA -->
                 <div class="reveal p-6 bg-[#fcfcfc] border border-gray-100 rounded-lg text-center">
-                    <p class="text-[15px] uppercase tracking-widest text-gray-400 mb-6 font-bold">Pronóstico del Clima</p>
+                    <p class="text-[13px] uppercase tracking-widest text-gray-400 mb-6 font-bold">Pronóstico del Clima</p>
                     <div class="weather-scroll">
                         <div class="weather-hour">
                             <p class="text-[9px] mb-2 uppercase">19:00</p>
@@ -521,13 +550,13 @@
             <section class="bg-[#fafafa] py-20 px-6 reveal text-center">
                 <h3 class="text-3xl serif mb-16 italic">Itinerario</h3>
                 <div class="timeline-container">
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">19:00 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Ceremonia Religiosa</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">20:30 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Cóctel de Bienvenida</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Vals%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">21:30 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Brindis & Vals</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">22:30 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Banquete de Gala</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Pastel%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">23:30 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Corte de Pastel</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">00:00 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Apertura de Pista</p></div></div>
-                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Antojitos%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">02:00 Hs</p><p class="text-[10px] text-gray-500 italic uppercase">Snack de Desvelo</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">19:00 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Ceremonia Religiosa</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">20:30 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Cóctel de Bienvenida</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Vals%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">21:30 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Brindis & Vals</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">22:30 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Banquete de Gala</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Pastel%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">23:30 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Corte de Pastel</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">00:00 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Apertura de Pista</p></div></div>
+                    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-content"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Antojitos%20negro.png" class="w-12 mb-2 img-bw"><p class="font-bold text-sm">02:00 Hs</p><p class="text-[9px] text-gray-500 italic uppercase">Snack de Desvelo</p></div></div>
                 </div>
             </section>
 
@@ -536,10 +565,10 @@
                 <h3 class="text-3xl serif mb-4 italic">Galería</h3>
                 <p class="text-xs text-gray-400 mb-8 uppercase tracking-widest italic">Desliza para ver más</p>
                 <div class="horizontal-scroll">
-                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda2.png" class="img-bw h-96 object-cover"></div>
-                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda3.png" class="img-bw h-96 object-cover"></div>
-                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda5.png" class="img-bw h-96 object-cover"></div>
-                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda6.png" class="img-bw h-96 object-cover"></div>
+                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda2.png" class="img-bw h-96 object-cover w-full"></div>
+                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda3.png" class="img-bw h-96 object-cover w-full"></div>
+                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda5.png" class="img-bw h-96 object-cover w-full"></div>
+                    <div class="gallery-item"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda6.png" class="img-bw h-96 object-cover w-full"></div>
                 </div>
             </section>
 
@@ -550,12 +579,12 @@
                     <div class="reveal-left">
                         <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800" class="img-bw w-full h-48 object-cover rounded mb-4 shadow-sm" alt="Hotel 1">
                         <p class="font-bold text-sm uppercase">Grand Hotel Memories</p>
-                        <a href="https://www.booking.com" target="_blank" class="btn-memories text-[9px] px-8 uppercase mt-4 tracking-widest">Ver Hotel</a>
+                        <a href="https://www.booking.com/searchresults.es.html?ss=Parroquia+Nuestra+Señora+de+Lourdes+CDMX" target="_blank" class="btn-memories text-[9px] px-8 uppercase mt-4 tracking-widest">Ver Hotel</a>
                     </div>
                     <div class="reveal-right">
                         <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=800" class="img-bw w-full h-48 object-cover rounded mb-4 shadow-sm" alt="Hotel 2">
                         <p class="font-bold text-sm uppercase">Hotel Boutique El Sol</p>
-                        <a href="https://www.booking.com" target="_blank" class="btn-memories text-[9px] px-8 uppercase mt-4 tracking-widest">Ver Hotel</a>
+                        <a href="https://www.booking.com/searchresults.es.html?ss=Hoteles+Boutique+CDMX" target="_blank" class="btn-memories text-[9px] px-8 uppercase mt-4 tracking-widest">Ver Hotel</a>
                     </div>
                 </div>
             </section>
@@ -564,10 +593,10 @@
             <section class="reveal text-center py-24 bg-white px-10">
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/C%C3%A1mara%20negro.png" class="w-16 mx-auto mb-6 img-bw">
                 <h3 class="text-3xl serif mb-6 italic">Carga tus Fotos</h3>
-                <p class="text-[13px] text-gray-500 mb-10 italic">Escanea el código el día del evento para compartir tus capturas con nosotros.</p>
-                <div class="w-40 h-40 border-2 border-black mx-auto flex items-center justify-center p-4 bg-white shadow-sm">
-                    <div class="text-[8px] uppercase tracking-widest text-center font-bold">Código QR del Álbum</div>
-                </div>
+                <p class="text-[13px] text-gray-500 mb-10 italic">Haz clic o escanea el código el día del evento para compartir tus capturas con nosotros.</p>
+                <a href="https://photos.google.com" target="_blank" class="block w-40 h-40 border-2 border-black mx-auto flex items-center justify-center p-4 bg-white shadow-sm hover:scale-105 transition-transform">
+                    <div class="text-[8px] uppercase tracking-widest text-center font-bold">Abrir Álbum Compartido</div>
+                </a>
             </section>
 
             <!-- SEPARADOR -->
@@ -580,18 +609,18 @@
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" class="w-20 mx-auto mb-8 img-bw" alt="Dress Code">
                 <h3 class="text-3xl serif mb-4 italic">Dress Code</h3>
                 <p class="text-[14px] uppercase tracking-widest mb-6 font-bold">Formal</p>
-                <p class="text-gray-500 italic px-10 text-[14px] mb-12">Nos encantará verte lucir tu mejor gala para celebrar con nosotros.</p>
+                <p class="text-gray-500 italic px-6 md:px-10 text-[14px] mb-12">Nos encantará verte lucir tu mejor gala para celebrar con nosotros.</p>
                 <div class="horizontal-scroll mb-8">
-                    <div class="inspo-item"><img src="https://i.pinimg.com/1200x/8c/7c/0e/8c7c0e363833db137c2c384716745407.jpg" class="img-bw h-80 object-cover"></div>
-                    <div class="inspo-item"><img src="https://i.pinimg.com/736x/90/33/8f/90338f774152f1fc35731a5d404d773a.jpg" class="img-bw h-80 object-cover"></div>
-                    <div class="inspo-item"><img src="https://i.pinimg.com/1200x/18/9c/e3/189ce3b27923238adb4c52a566bf44b9.jpg" class="img-bw h-80 object-cover"></div>
+                    <div class="inspo-item"><img src="https://i.pinimg.com/1200x/8c/7c/0e/8c7c0e363833db137c2c384716745407.jpg" class="img-bw h-80 object-cover w-full"></div>
+                    <div class="inspo-item"><img src="https://i.pinimg.com/736x/90/33/8f/90338f774152f1fc35731a5d404d773a.jpg" class="img-bw h-80 object-cover w-full"></div>
+                    <div class="inspo-item"><img src="https://i.pinimg.com/1200x/18/9c/e3/189ce3b27923238adb4c52a566bf44b9.jpg" class="img-bw h-80 object-cover w-full"></div>
                 </div>
             </section>
 
             <!-- SECCIÓN: FAQ -->
             <section class="reveal text-center py-20 px-10 bg-[#fafafa] border-t border-gray-50">
                 <h3 class="text-3xl serif mb-12 italic">Preguntas Frecuentes</h3>
-                <div class="text-left space-y-8">
+                <div class="text-left space-y-8 max-w-xs mx-auto">
                     <div>
                         <p class="font-bold text-[11px] uppercase tracking-widest mb-2 border-b border-gray-100 pb-1">¿Puedo llevar niños?</p>
                         <p class="text-[13px] text-gray-500 italic">El evento es solo para adultos. Agradecemos tu comprensión.</p>
@@ -609,53 +638,53 @@
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Regalo%20negro.png" class="w-16 mx-auto mb-8 img-bw" alt="Regalo">
                     <h3 class="text-3xl serif mb-16 italic">Mesa de Regalos</h3>
                 </div>
-                <div class="flex flex-col gap-16 items-center justify-center grayscale opacity-80 mb-16">
-                    <a href="https://www.amazon.com.mx" target="_blank" class="block reveal-left"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Amazon.png" class="h-16 mx-auto"></a>
-                    <a href="https://www.liverpool.com.mx" target="_blank" class="block reveal-right"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Liverpool.png" class="h-14 mx-auto"></a>
+                <div class="flex flex-col gap-12 items-center justify-center grayscale opacity-80 mb-16">
+                    <a href="https://www.amazon.com.mx" target="_blank" class="block reveal-left"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Amazon.png" class="h-12 md:h-16 mx-auto"></a>
+                    <a href="https://www.liverpool.com.mx" target="_blank" class="block reveal-right"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Liverpool.png" class="h-10 md:h-14 mx-auto"></a>
                 </div>
-                <div class="px-10 py-12 bg-[#fafafa] border border-gray-100 rounded-lg mx-4 reveal">
-                    <svg class="w-12 h-12 mx-auto mb-6 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <div class="px-8 py-12 bg-[#fafafa] border border-gray-100 rounded-lg mx-4 reveal">
+                    <svg class="w-10 h-10 mx-auto mb-6 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                     <p class="text-[13px] text-gray-500 leading-relaxed italic">Si deseas tener un detalle en efectivo, contaremos con un cofre el día del evento.</p>
                 </div>
             </section>
 
             <!-- SECCIÓN RSVP -->
-            <section id="rsvp-section" class="py-24 reveal text-center px-10 bg-white border-t border-gray-50">
+            <section id="rsvp-section" class="py-24 reveal text-center px-6 md:px-10 bg-white border-t border-gray-50">
                 <h3 class="text-4xl serif mb-8 italic">¿Nos acompañas?</h3>
-                <p class="text-[12px] text-gray-400 mb-12 uppercase tracking-widest">Favor de confirmar antes del 1 de Noviembre</p>
-                <form id="rsvp-form" class="rsvp-form text-left space-y-6">
+                <p class="text-[11px] text-gray-400 mb-12 uppercase tracking-widest">Favor de confirmar antes del 1 de Noviembre</p>
+                <form id="rsvp-form" class="rsvp-form text-left space-y-6 max-w-sm mx-auto">
                     <input type="text" id="name" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" placeholder="Nombre Completo" required>
                     <select id="attendance" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" required>
                         <option value="Si">Sí, ¡con gusto!</option>
                         <option value="No">No podré asistir</option>
                     </select>
-                    <input type="number" id="guests" min="0" max="5" value="0" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" placeholder="Acompañantes">
-                    <textarea id="comments" rows="3" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" placeholder="Alergias, vegetariano, etc."></textarea>
-                    <button type="submit" class="btn-memories w-full py-5 text-[11px]">Confirmar por WhatsApp</button>
+                    <input type="number" id="guests" min="0" max="10" value="0" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" placeholder="Número de acompañantes">
+                    <textarea id="comments" rows="3" class="bg-[#fcfcfc] border-gray-100 p-4 w-full rounded" placeholder="Alergias, menú especial, etc."></textarea>
+                    <button type="submit" id="rsvp-submit-btn" class="btn-memories w-full py-5 text-[11px]">Confirmar</button>
                 </form>
             </section>
 
             <!-- SECCIÓN: LIBRO DE FIRMAS & PASES -->
             <section class="reveal text-center py-24 px-8 bg-[#fafafa] border-t border-gray-50 relative">
-                <div id="guestbook-section" class="relative mb-24">
+                <div id="guestbook-section" class="relative mb-24 max-w-sm mx-auto">
                     <h3 class="text-3xl serif mb-10 italic">Libro de Firmas</h3>
                     <textarea id="guest-msg" rows="4" class="w-full p-4 border border-gray-100 rounded text-sm mb-6 bg-white" placeholder="Déjanos un mensaje de cariño..."></textarea>
-                    <button onclick="sendGuestbook()" class="btn-memories w-full text-[10px] uppercase tracking-widest">Enviar Mensaje</button>
+                    <button id="guestbook-btn" onclick="sendGuestbook()" class="btn-memories w-full text-[10px] uppercase tracking-widest">Enviar Mensaje</button>
                     <div id="guestbook-success" class="success-overlay hidden">
-                        <p>¡Gracias por tu mensaje!</p>
+                        <p>¡Gracias por tu mensaje!<br>Lo guardaremos con mucho amor.</p>
                     </div>
                 </div>
 
-                <div class="reveal">
+                <div class="reveal max-w-sm mx-auto">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Sello%20plata%20flor.png" class="w-16 mx-auto mb-6 img-bw">
                     <h3 class="text-3xl serif mb-6 italic">Consulta tus Pases</h3>
-                    <p class="text-[12px] text-gray-400 mb-10 px-6 italic uppercase tracking-widest">Ingresa tu apellido para verificar tus pases.</p>
-                    <div class="max-w-xs mx-auto mb-10">
-                        <input type="text" id="guest-search" placeholder="Escribe tu apellido..." class="w-full p-4 mb-4 border border-gray-100 rounded text-sm bg-white focus:outline-none focus:border-black">
-                        <button onclick="searchPasses()" class="btn-memories w-full text-[11px] uppercase tracking-widest">Consultar</button>
+                    <p class="text-[11px] text-gray-400 mb-10 px-6 italic uppercase tracking-widest">Ingresa tu apellido para verificar tus pases.</p>
+                    <div class="mb-10">
+                        <input type="text" id="guest-search" placeholder="Escribe tu apellido..." class="w-full p-4 mb-4 border border-gray-100 rounded text-sm bg-white focus:outline-none focus:border-black" onkeydown="if(event.key === 'Enter') searchPasses()">
+                        <button id="search-btn" onclick="searchPasses()" class="btn-memories w-full text-[11px] uppercase tracking-widest">Consultar</button>
                         <div id="search-result" class="mt-8 p-6 border border-black rounded text-sm font-medium hidden bg-white">
                             <p id="passes-text" class="mb-6"></p>
-                            <div class="w-32 h-32 border border-gray-200 mx-auto flex items-center justify-center text-[7px] uppercase tracking-tighter text-center italic">QR Personalizado de Acceso</div>
+                            <div class="w-32 h-32 border border-gray-200 mx-auto flex items-center justify-center text-[7px] uppercase tracking-tighter text-center italic px-2">QR Personalizado de Acceso</div>
                         </div>
                     </div>
                 </div>
@@ -672,10 +701,10 @@
 
             <!-- FOOTER -->
             <footer class="pb-32 pt-16 text-center bg-white border-t border-gray-50">
-                <div class="reveal">
+                <div class="reveal px-6">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sesionpreboda/sesi%C3%B3npreboda7.png" 
-                         class="w-28 h-28 mx-auto rounded-full img-bw border-2 border-white shadow-xl object-cover mb-10">
-                    <p class="text-[10px] uppercase tracking-[0.5em] text-gray-300 font-bold">DISEÑO MEMORIES · PAQUETE INFINITY VIP</p>
+                         class="w-24 h-24 md:w-28 md:h-28 mx-auto rounded-full img-bw border-2 border-white shadow-xl object-cover mb-10">
+                    <p class="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-gray-400 font-bold leading-relaxed">DISEÑO MEMORIES · PAQUETE INFINITY VIP</p>
                 </div>
             </footer>
         </div>
@@ -690,7 +719,6 @@
         let audioContext, analyser, dataArray, source;
         let animationId;
 
-        // Typewriter Effect
         function runTypewriter(element, callback) {
             if (element.getAttribute('data-typing-started')) return;
             element.setAttribute('data-typing-started', 'true');
@@ -700,7 +728,7 @@
             element.innerHTML = '';
             
             let i = 0;
-            const speed = 40; 
+            const speed = 35; 
 
             function type() {
                 if (i < fullText.length) {
@@ -740,7 +768,7 @@
                 analyser.getByteFrequencyData(dataArray);
                 for (let i = 0; i < barElements.length; i++) {
                     const value = dataArray[i * 2 + 2] || 0; 
-                    const height = Math.max(4, (value / 255) * 24); 
+                    const height = Math.max(4, (value / 255) * 20); 
                     barElements[i].style.height = `${height}px`;
                 }
             }
@@ -751,14 +779,18 @@
             const wrapper = document.getElementById('envelope-wrapper');
             const content = document.getElementById('invitation-content');
             container.classList.add('open');
+            window.scrollTo(0, 0);
+
             setTimeout(() => {
                 wrapper.classList.add('hidden-envelope');
                 content.classList.add('visible');
                 document.body.style.overflow = "auto";
                 musicControl.classList.add('visible');
+                
                 initAudioAnalyzer();
                 if (audioContext && audioContext.state === 'suspended') audioContext.resume();
                 audio.play().catch(() => {});
+                
                 revealElements();
             }, 1200);
         }
@@ -788,7 +820,7 @@
                 if (el === dateSection || el === rings || el === calendarBtn) return;
 
                 const rect = el.getBoundingClientRect();
-                if (rect.top < windowHeight - 50) {
+                if (rect.top < windowHeight - 40) {
                     if (!el.classList.contains("active")) {
                         if (el.contains(intro)) {
                             el.classList.add("active");
@@ -808,10 +840,10 @@
                                             setTimeout(() => {
                                                 lockedContainer.classList.add('unlocked');
                                                 revealElements();
-                                            }, 800);
-                                        }, 600);
-                                    }, 600);
-                                }, 500);
+                                            }, 600);
+                                        }, 400);
+                                    }, 400);
+                                }, 300);
                             });
                         } else if (!lockedContainer.contains(el) || lockedContainer.classList.contains('unlocked')) {
                             el.classList.add("active");
@@ -821,37 +853,64 @@
             });
         }
 
+        // --- FUNCIONES DE BOTONES ACTIVADOS ---
+
         function sendGuestbook() {
+            const btn = document.getElementById('guestbook-btn');
             const msg = document.getElementById('guest-msg').value;
-            if(msg.length > 5) {
-                document.getElementById('guestbook-success').classList.remove('hidden');
+            
+            if(msg.trim().length > 3) {
+                btn.innerHTML = "Enviando...";
+                btn.disabled = true;
+                
                 setTimeout(() => {
-                    document.getElementById('guestbook-success').classList.add('hidden');
-                    document.getElementById('guest-msg').value = "";
-                }, 3000);
+                    document.getElementById('guestbook-success').classList.remove('hidden');
+                    btn.innerHTML = "Enviar Mensaje";
+                    btn.disabled = false;
+                    
+                    setTimeout(() => {
+                        document.getElementById('guestbook-success').classList.add('hidden');
+                        document.getElementById('guest-msg').value = "";
+                    }, 4000);
+                }, 1500);
             }
         }
 
         function searchPasses() {
+            const btn = document.getElementById('search-btn');
             const val = document.getElementById('guest-search').value.trim();
             const res = document.getElementById('search-result');
             const text = document.getElementById('passes-text');
+            
             if(val.length > 2) {
-                res.classList.remove('hidden');
-                text.innerHTML = `¡Hola Familia ${val}! Tienen <strong>2 pases adultos</strong> asignados. Presenten este código al llegar.`;
-                res.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                btn.innerHTML = "Consultando...";
+                res.classList.add('hidden');
+                
+                setTimeout(() => {
+                    btn.innerHTML = "Consultar";
+                    res.classList.remove('hidden');
+                    text.innerHTML = `¡Hola Familia ${val}! Tienen <strong>2 pases de adultos</strong> asignados para nuestra gran celebración.`;
+                    res.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 1200);
             }
         }
 
         document.getElementById('rsvp-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            const btn = document.getElementById('rsvp-submit-btn');
             const name = document.getElementById('name').value;
             const attendance = document.getElementById('attendance').value;
             const guests = document.getElementById('guests').value;
             const comments = document.getElementById('comments').value;
 
-            const message = `¡Hola Lucía y Juan! Confirmo mi asistencia a su boda:\n- Nombre: ${name}\n- Asistencia: ${attendance}\n- Acompañantes: ${guests}\n- Comentarios: ${comments || "Ninguno"}`;
-            window.open(`https://wa.me/521234567890?text=${encodeURIComponent(message)}`, '_blank');
+            btn.innerHTML = "Abriendo WhatsApp...";
+            
+            const message = `¡Hola Lucía y Juan! Confirmo mi asistencia a su boda:\n\n- *Nombre:* ${name}\n- *Asistencia:* ${attendance}\n- *Acompañantes:* ${guests}\n- *Notas/Alergias:* ${comments || "Ninguna"}`;
+            
+            setTimeout(() => {
+                window.open(`https://wa.me/521234567890?text=${encodeURIComponent(message)}`, '_blank');
+                btn.innerHTML = "Confirmar por WhatsApp";
+            }, 800);
         });
 
         window.addEventListener("scroll", revealElements);
@@ -869,8 +928,9 @@
         setInterval(updateTimer, 1000);
         updateTimer();
         
-        window.scrollTo(0, 0);
-        document.body.style.overflow = "hidden";
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        }
     </script>
 </body>
 </html>
