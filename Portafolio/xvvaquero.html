@@ -19,6 +19,7 @@
             --crema: #F5F5DC;
             --blanco-hueso: #FAF9F6;
             --bg-regina: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png');
+            --bg-floral: url('https://i.imgur.com/xUcgKBq.jpeg');
             --font-serif: 'Cormorant Garamond', serif;
             --font-script: 'Pinyon Script', cursive;
             --font-body: 'Montserrat', sans-serif;
@@ -106,12 +107,12 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            transition: all 0.6s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-100%); }
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(100%); }
-        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.5); pointer-events: none; }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
         /* --- SECCIÓN 2: PANTALLA INTRO --- */
         #section-intro {
@@ -161,7 +162,15 @@
             background: linear-gradient(to bottom, transparent, var(--beige), transparent);
         }
 
-        .parallax-section { background-attachment: fixed; background-position: center; background-size: cover; }
+        /* --- FONDO FLORAL (Corrección para textos blancos) --- */
+        .bg-floral-section {
+            /* Oscurecemos más el filtro (de 0.45 a 0.65) para que el texto blanco resalte al máximo */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), var(--bg-floral);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .parallax-section { background-position: center; background-size: cover; }
 
         .btn-calendar {
             border: 1px solid var(--beige);
@@ -200,9 +209,60 @@
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(2deg); }
         }
+
+        /* --- SECCIONES PREMIUM --- */
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: var(--cafe-oscuro);
+            color: var(--crema);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--beige);
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.08); }
+        .span-row-2 { grid-row: span 2; }
     </style>
 </head>
 <body>
+
+    <!-- REPRODUCTOR DE MÚSICA -->
+    <audio id="bg-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-wedding-march-classic-114.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <svg id="audio-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.236l8-1.6V11.114A4.369 4.369 0 0015 11c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+    </div>
 
     <!-- SECCIÓN 1: EL SOBRE -->
     <div id="envelope-wrapper">
@@ -214,7 +274,7 @@
                 <div class="flap flap-right"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce">Toca para abrir</div>
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-cafe-oscuro font-semibold">Toca para abrir</div>
                 <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/sellocaballodorado.png?raw=true" 
                      class="w-[100px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
@@ -260,24 +320,24 @@
             </div>
         </header>
 
-        <!-- Bienvenida -->
-        <section class="py-32 px-6 text-center bg-white relative">
+        <!-- Bienvenida (TEXTO SUBIDO pt-16 en lugar de py-32) -->
+        <section class="pt-16 pb-32 px-6 text-center bg-floral-section relative">
             <div class="bg-texture-main"></div>
             <div class="max-w-4xl mx-auto reveal">
-                <h2 class="text-6xl md:text-8xl mb-8 italic">Regina</h2>
-                <p class="serif text-xl md:text-3xl italic text-cafe-medio leading-relaxed font-light mb-16">
+                <h2 class="text-6xl md:text-8xl mb-8 italic text-white">Regina</h2>
+                <p class="serif text-xl md:text-3xl italic text-white leading-relaxed font-light mb-16">
                     "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
                 </p>
                 <div class="grid md:grid-cols-2 gap-16">
                     <div>
-                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-cafe-medio">Mis Padres</h3>
-                        <p class="text-2xl serif">Sr. Juan Carlos Pérez</p>
-                        <p class="text-2xl serif">Sra. María Elena Rodríguez</p>
+                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-white">Mis Padres</h3>
+                        <p class="text-2xl serif text-white">Sr. Juan Carlos Pérez</p>
+                        <p class="text-2xl serif text-white">Sra. María Elena Rodríguez</p>
                     </div>
                     <div>
-                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-cafe-medio">Mis Padrinos</h3>
-                        <p class="text-2xl serif">Sr. Ricardo Sánchez</p>
-                        <p class="text-2xl serif">Sra. Laura Estela Gómez</p>
+                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-white">Mis Padrinos</h3>
+                        <p class="text-2xl serif text-white">Sr. Ricardo Sánchez</p>
+                        <p class="text-2xl serif text-white">Sra. Laura Estela Gómez</p>
                     </div>
                 </div>
             </div>
@@ -327,19 +387,19 @@
         </section>
 
         <!-- Chambelanes -->
-        <section class="py-32 px-6 bg-white overflow-hidden relative">
+        <section class="py-32 px-6 bg-floral-section overflow-hidden relative">
             <div class="bg-texture-main"></div>
             <div class="max-w-6xl mx-auto reveal">
                 <div class="text-center mb-16">
-                    <h2 class="text-5xl italic mb-4">Corte de Honor</h2>
-                    <p class="text-[10px] uppercase tracking-[0.5em] text-cafe-medio">Mis Chambelanes</p>
+                    <h2 class="text-5xl italic mb-4 text-white">Corte de Honor</h2>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-white">Mis Chambelanes</p>
                 </div>
 
                 <div class="chambelanes-slider px-4">
                     <!-- Card 1 -->
                     <div class="chambelan-card">
                         <div class="h-80 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale-[30%]" alt="Mateo">
+                            <img src="https://i.imgur.com/JUbMPPA.jpeg" class="w-full h-full object-cover" alt="Mateo">
                         </div>
                         <div class="p-8 text-center">
                             <h4 class="text-2xl serif text-cafe-oscuro">Mateo García</h4>
@@ -349,7 +409,7 @@
                     <!-- Card 2 -->
                     <div class="chambelan-card">
                         <div class="h-80 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale" alt="Santiago">
+                            <img src="https://i.imgur.com/UG3sEsq.jpeg" class="w-full h-full object-cover" alt="Santiago">
                         </div>
                         <div class="p-8 text-center">
                             <h4 class="text-2xl serif text-cafe-oscuro">Santiago Ruíz</h4>
@@ -359,7 +419,7 @@
                     <!-- Card 3 -->
                     <div class="chambelan-card">
                         <div class="h-80 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale-[30%]" alt="Daniel">
+                            <img src="https://i.imgur.com/X5e5xCI.jpeg" class="w-full h-full object-cover" alt="Daniel">
                         </div>
                         <div class="p-8 text-center">
                             <h4 class="text-2xl serif text-cafe-oscuro">Daniel Ortiz</h4>
@@ -369,7 +429,7 @@
                     <!-- Card 4 -->
                     <div class="chambelan-card">
                         <div class="h-80 overflow-hidden">
-                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale" alt="Sebastián">
+                            <img src="https://i.imgur.com/5YWnZZM.jpeg" class="w-full h-full object-cover" alt="Sebastián">
                         </div>
                         <div class="p-8 text-center">
                             <h4 class="text-2xl serif text-cafe-oscuro">Sebastián Díaz</h4>
@@ -377,34 +437,121 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-gray-300 text-[10px] mt-8 uppercase tracking-[0.3em] font-light italic">Desliza para ver más →</p>
+                <p class="text-center text-white text-[10px] mt-8 uppercase tracking-[0.3em] font-light italic">Desliza para ver más →</p>
             </div>
         </section>
 
-        <!-- Ubicaciones -->
-        <section id="ubicaciones" class="py-32 px-6 bg-[#FAF9F6]">
-            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 mb-16">
-                <div class="bg-white p-12 border border-beige/10 shadow-sm reveal text-center">
-                    <h3 class="text-3xl serif mb-6">La Ceremonia</h3>
-                    <p class="text-gray-500 italic text-sm mb-8">Parroquia de Santa María de Guadalupe<br>Av. de la Paz 456, Centro.</p>
-                    <a href="https://maps.google.com" target="_blank" class="bg-cafe-oscuro text-crema px-8 py-3 text-[10px] tracking-widest uppercase">Cómo llegar</a>
+        <!-- Código de Vestimenta -->
+        <section class="py-32 px-6 bg-[#FAF9F6] relative text-center border-t border-b border-beige/20">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-3xl mx-auto reveal">
+                <div class="w-16 h-16 mx-auto mb-8 flex items-center justify-center rounded-full border border-cafe-medio text-cafe-medio bg-white shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 10.5h.375c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125H21M4.5 10.5h-.375C3.504 10.5 3 11.004 3 11.625v2.25C3 14.496 3.504 15 4.125 15h.375m16.5-4.5v5.25a3 3 0 01-3 3H6.5a3 3 0 01-3-3v-5.25m16.5-4.5v-3a3 3 0 00-3-3H6.5a3 3 0 00-3 3v3m16.5 4.5H4.5"></path></svg>
                 </div>
-                <div class="bg-white p-12 border border-beige/10 shadow-sm reveal text-center">
-                    <h3 class="text-3xl serif mb-6">La Fiesta</h3>
-                    <p class="text-gray-500 italic text-sm mb-8">Salón de Eventos "El Alcázar"<br>Calzada Dorada 789, Jardines.</p>
-                    <a href="https://maps.google.com" target="_blank" class="bg-cafe-oscuro text-crema px-8 py-3 text-[10px] tracking-widest uppercase">Cómo llegar</a>
+                <h2 class="text-5xl italic mb-4">Código de Vestimenta</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] text-cafe-medio mb-10 font-bold">Formal / Etiqueta</p>
+                <p class="serif text-xl md:text-2xl italic text-gray-500 mb-8 leading-relaxed">Por favor, reserva el color blanco y los tonos perla exclusivamente para la quinceañera.</p>
+                
+                <div class="flex justify-center gap-6 mt-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-300 shadow-sm relative after:content-['X'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-red-500 after:font-bold after:text-lg"></div>
+                        <span class="text-[8px] uppercase tracking-widest mt-3 text-gray-400">Blanco</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-[#F5F5DC] border border-gray-300 shadow-sm relative after:content-['X'] after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-red-500 after:font-bold after:text-lg"></div>
+                        <span class="text-[8px] uppercase tracking-widest mt-3 text-gray-400">Perla</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galería de Fotos -->
+        <section class="py-32 px-6 bg-white relative">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-5xl mx-auto reveal">
+                <div class="text-center mb-16">
+                    <h2 class="text-5xl italic mb-4">Mis Momentos</h2>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-cafe-medio">Sesión Previa</p>
+                </div>
+                <!-- Grid estilo Masonry -->
+                <div class="gallery-grid max-w-4xl mx-auto md:h-[600px] h-[450px]">
+                    <div class="gallery-item span-row-2">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/Hero%20foto.png" alt="Foto principal">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" alt="Foto detalle">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/Separador%20foto.png" alt="Foto ambiente">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ubicaciones Interactivas -->
+        <section id="ubicaciones" class="py-32 px-6 bg-cafe-oscuro relative">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+                <!-- Mapa Ceremonia -->
+                <div class="bg-white p-8 md:p-12 border border-beige/20 shadow-lg reveal flex flex-col h-full text-cafe-oscuro">
+                    <div class="text-center mb-8">
+                        <div class="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-cafe-oscuro text-crema">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"></path></svg>
+                        </div>
+                        <h3 class="text-3xl serif mb-2">La Ceremonia</h3>
+                        <p class="text-gray-500 italic text-sm">Templo Expiatorio del Sagrado Corazón de Jesús<br>Madero 721, Centro, León, Gto.</p>
+                    </div>
+                    
+                    <!-- Contenedor del Mapa -->
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-gray-200 mb-6">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.907715494294!2d-101.67756962386121!3d21.116262084772183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf61e3d36e89%3A0xc47e30d1e342a170!2sTemplo%20Expiatorio%20del%20Sagrado%20Coraz%C3%B3n%20de%20Jes%C3%BAs!5e0!3m2!1ses-419!2smx!4v1708833892790!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full text-center bg-cafe-oscuro text-crema px-8 py-4 text-[10px] tracking-widest uppercase hover:bg-cafe-medio transition-colors">Abrir en App de Mapas</a>
+                </div>
+
+                <!-- Mapa Fiesta -->
+                <div class="bg-white p-8 md:p-12 border border-beige/20 shadow-lg reveal flex flex-col h-full text-cafe-oscuro">
+                    <div class="text-center mb-8">
+                        <div class="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-cafe-oscuro text-crema">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"></path></svg>
+                        </div>
+                        <h3 class="text-3xl serif mb-2">La Recepción</h3>
+                        <p class="text-gray-500 italic text-sm">Hacienda del Conde Eventos<br>Blvd. Aeropuerto 123, León, Gto.</p>
+                    </div>
+                    
+                    <!-- Contenedor del Mapa -->
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-gray-200 mb-6">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.981882069818!2d-101.60334812386221!3d21.073386686252086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bb54c9e7845f1%3A0xc3af87c53d9223cb!2sPoliforum%20Le%C3%B3n!5e0!3m2!1ses-419!2smx!4v1708834032483!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full text-center bg-cafe-oscuro text-crema px-8 py-4 text-[10px] tracking-widest uppercase hover:bg-cafe-medio transition-colors">Abrir en App de Mapas</a>
                 </div>
             </div>
 
             <!-- Botones de Agendar -->
-            <div class="max-w-4xl mx-auto text-center reveal">
-                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-cafe-medio">Reserva el momento en tu calendario</p>
+            <div class="max-w-4xl mx-auto text-center reveal relative z-10 text-white">
+                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-beige">Reserva el momento en tu calendario</p>
                 <div class="flex flex-wrap justify-center gap-6">
-                    <button onclick="calendarLink('Misa Regina XV', 'Parroquia Sta María', '20261116T170000')" class="btn-calendar">
+                    <button onclick="calendarLink('Misa Regina XV', 'Parroquia Sta María', '20261116T170000')" class="btn-calendar text-white hover:bg-beige hover:text-cafe-oscuro border-beige">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
                         Agendar Misa
                     </button>
-                    <button onclick="calendarLink('Fiesta Regina XV', 'Salón El Alcázar', '20261116T193000')" class="btn-calendar">
+                    <button onclick="calendarLink('Fiesta Regina XV', 'Salón El Alcázar', '20261116T193000')" class="btn-calendar text-white hover:bg-beige hover:text-cafe-oscuro border-beige">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
                         Agendar Fiesta
                     </button>
@@ -415,11 +562,32 @@
         <!-- Separador Parallax -->
         <section class="h-[70vh] parallax-section" style="background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/Separador%20foto.png');"></section>
 
+        <!-- Hashtag / Redes Sociales (TEXTO MEJORADO) -->
+        <section class="py-32 px-6 bg-cafe-oscuro text-white text-center relative overflow-hidden">
+            <!-- Oscurecemos un poco el fondo para que la letra blanca contraste perfecto -->
+            <div class="absolute inset-0 bg-black/40 z-0"></div>
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            
+            <div class="max-w-3xl mx-auto reveal relative z-10">
+                <svg class="w-12 h-12 mx-auto mb-6 text-beige" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <h2 class="text-5xl italic mb-6 text-beige">#MisXVRegina</h2>
+                
+                <!-- Letra más gruesa y opacidad al 100% -->
+                <p class="text-sm md:text-base font-medium tracking-widest mb-10 leading-relaxed text-crema shadow-sm">
+                    Ayúdame a capturar los mejores momentos de esta noche inolvidable. <br>¡Sube tus fotos y videos usando nuestro hashtag oficial!
+                </p>
+                
+                <a href="https://instagram.com" target="_blank" class="inline-block border border-beige px-10 py-4 text-[10px] uppercase tracking-widest hover:bg-beige hover:text-cafe-oscuro transition-colors duration-300">
+                    Abrir Instagram
+                </a>
+            </div>
+        </section>
+
         <!-- Mesa de Regalos -->
-        <section class="py-32 px-6 bg-white text-center relative overflow-hidden">
+        <section class="py-32 px-6 bg-floral-section text-center relative overflow-hidden">
             <div class="bg-texture-main"></div>
             <div class="max-w-3xl mx-auto reveal">
-                <h2 class="text-4xl italic mb-12">Mesa de Regalos</h2>
+                <h2 class="text-4xl italic mb-12 text-white">Mesa de Regalos</h2>
                 <div class="flex flex-col md:flex-row gap-8">
                     <a href="#" class="flex-1 bg-white p-12 border border-crema group shadow-sm">
                         <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/regaloamazonplata.png" class="h-12 mx-auto filter grayscale group-hover:grayscale-0 transition duration-700">
@@ -434,8 +602,8 @@
         </section>
 
         <!-- RSVP -->
-        <section class="py-32 px-6 bg-[#4B3621] text-white text-center">
-            <div class="max-w-2xl mx-auto reveal">
+        <section class="py-32 px-6 bg-[#4B3621] text-white text-center relative">
+            <div class="max-w-2xl mx-auto reveal relative z-10">
                 <h2 class="text-5xl italic text-beige mb-6">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] opacity-50 mb-12">Confirmar antes del 10 de Noviembre de 2026</p>
                 <form id="rsvpForm" class="space-y-12 text-left">
@@ -473,8 +641,36 @@
             setTimeout(() => {
                 intro.style.display = 'none';
                 document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
                 initObserver();
+                playAudio(); 
             }, 1200);
+        }
+
+        // --- REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
         }
 
         // --- CONTADOR (16 Nov 2026) ---
@@ -518,5 +714,9 @@
     </script>
 </body>
 </html>
+
+
+
+
 
 
