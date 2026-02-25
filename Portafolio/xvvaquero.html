@@ -54,51 +54,47 @@
             transition: opacity 1s ease-in-out, visibility 1s;
         }
 
-        .flap {
+        .flap-wrapper {
             position: absolute;
             top: 0;
             width: 50%;
             height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.65));
+            -webkit-filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.65));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.5));
+            -webkit-filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.5));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
             background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/texturabeige.jpg?raw=true");
             background-size: cover;
-            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
         .flap-left {
-            left: 0;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
-            border-right: 1.5px solid rgba(0,0,0,0.08);
-            z-index: 6;
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
         }
-        /* Sombra borde izquierdo */
-.flap-left::after {
-    content: "";
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 25px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.35), transparent);
-    pointer-events: none;
-}
 
         .flap-right {
-            right: 0;
             clip-path: polygon(100% 0, 0 50%, 100% 100%);
-            border-left: 1.5px solid rgba(0,0,0,0.08);
-            z-index: 5;
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
         }
-        /* Sombra borde derecho */
-.flap-right::after {
-    content: "";
-    position: absolute;
-    left: -2px;
-    top: 0;
-    width: 25px;
-    height: 100%;
-    background: linear-gradient(to left, rgba(0,0,0,0.25), transparent);
-    pointer-events: none;
-}
 
         .seal-wrapper {
             position: absolute;
@@ -113,8 +109,8 @@
             transition: all 0.6s ease;
         }
 
-        #envelope-wrapper.open .flap-left { transform: translateX(-100%); }
-        #envelope-wrapper.open .flap-right { transform: translateX(100%); }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-100%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(100%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.5); pointer-events: none; }
 
         /* --- SECCIÓN 2: PANTALLA INTRO --- */
@@ -211,8 +207,12 @@
     <!-- SECCIÓN 1: EL SOBRE -->
     <div id="envelope-wrapper">
         <div id="envelope-container" class="w-full h-full relative">
-            <div class="flap flap-left"></div>
-            <div class="flap flap-right"></div>
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce">Toca para abrir</div>
                 <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/sellocaballodorado.png?raw=true" 
@@ -518,3 +518,5 @@
     </script>
 </body>
 </html>
+
+
