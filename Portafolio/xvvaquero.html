@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Mis XV Regina</title>
+    <!-- Scripts y Fuentes Elegantes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Pinyon Script, Cormorant Garamond, Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cafe-oscuro: #4B3621;
+            --cafe-medio: #8B5E3C;
+            --beige: #D2B48C;
+            --crema: #F5F5DC;
+            --blanco-hueso: #FAF9F6;
+            --bg-regina: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png');
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            background-color: var(--blanco-hueso);
+            overflow-x: hidden;
+            color: var(--cafe-oscuro);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/texturabeige.jpg?raw=true");
+            background-size: cover;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/texturabeige.jpg?raw=true");
+            background-size: cover;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .flap-left {
+            left: 0;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            border-right: 1.5px solid rgba(0,0,0,0.08);
+            z-index: 6;
+        }
+
+        .flap-right {
+            right: 0;
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            border-left: 1.5px solid rgba(0,0,0,0.08);
+            z-index: 5;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.6s ease;
+        }
+
+        #envelope-wrapper.open .flap-left { transform: translateX(-100%); }
+        #envelope-wrapper.open .flap-right { transform: translateX(100%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.5); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.4), rgba(0,0,0,0.9)), var(--bg-regina);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; }
+
+        .bg-texture-main {
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
+            background-size: 400px;
+            opacity: 0.1;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--beige), transparent);
+        }
+
+        .parallax-section { background-attachment: fixed; background-position: center; background-size: cover; }
+
+        .btn-calendar {
+            border: 1px solid var(--beige);
+            padding: 12px 24px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-calendar:hover { background: var(--crema); color: var(--cafe-oscuro); }
+
+        /* Slider de Chambelanes */
+        .chambelanes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding: 20px 0;
+            scrollbar-width: none;
+        }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            background: white;
+            border: 1px solid rgba(210, 180, 140, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+        .chambelan-card:hover { transform: translateY(-5px); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECCIÓN 1: EL SOBRE -->
+    <div id="envelope-wrapper">
+        <div id="envelope-container" class="w-full h-full relative">
+            <div class="flap flap-left"></div>
+            <div class="flap flap-right"></div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce">Toca para abrir</div>
+                <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/sellocaballodorado.png?raw=true" 
+                     class="w-[100px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: PANTALLA INTRO -->
+    <div id="section-intro" onclick="showMainContent()">
+        <header><h1 class="name-header">Regina</h1></header>
+        <div>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="serif text-xl tracking-[0.4em] uppercase opacity-80">Sábado</span>
+                    <span class="serif text-[8rem] leading-none font-light">16</span>
+                </div>
+                <div class="w-px h-24 bg-white/40"></div>
+                <div class="text-left">
+                    <span class="serif text-4xl tracking-widest block">NOV</span>
+                    <span class="serif text-2xl tracking-[0.6em] opacity-80">2026</span>
+                </div>
+            </section>
+            <p class="font-body text-[10px] tracking-[0.5em] uppercase animate-pulse">Toca para continuar</p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: CONTENIDO PRINCIPAL -->
+    <main id="section-main">
+        <!-- Hero -->
+        <header class="relative min-h-screen flex flex-col bg-white">
+            <div class="h-[60vh] w-full overflow-hidden relative">
+                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/Hero%20foto.png" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center text-center px-4 py-12 relative">
+                <div class="bg-texture-main"></div>
+                <h1 class="text-6xl md:text-6xl mb-8 text-cafe-oscuro italic">Mis XV</h1>
+                
+                <div id="countdown" class="flex gap-6 md:gap-12 bg-white/60 backdrop-blur-md p-8 border border-beige/20 shadow-sm">
+                    <div class="flex flex-col items-center"><span id="days" class="serif text-4xl md:text-6xl">00</span><span class="text-[9px] uppercase tracking-widest mt-2">Días</span></div>
+                    <div class="flex flex-col items-center"><span id="hours" class="serif text-4xl md:text-6xl">00</span><span class="text-[9px] uppercase tracking-widest mt-2">Hrs</span></div>
+                    <div class="flex flex-col items-center"><span id="minutes" class="serif text-4xl md:text-6xl">00</span><span class="text-[9px] uppercase tracking-widest mt-2">Min</span></div>
+                    <div class="flex flex-col items-center"><span id="seconds" class="serif text-4xl md:text-6xl text-beige">00</span><span class="text-[9px] uppercase tracking-widest mt-2">Seg</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Bienvenida -->
+        <section class="py-32 px-6 text-center bg-white relative">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-4xl mx-auto reveal">
+                <h2 class="text-6xl md:text-8xl mb-8 italic">Regina</h2>
+                <p class="serif text-xl md:text-3xl italic text-cafe-medio leading-relaxed font-light mb-16">
+                    "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
+                </p>
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-cafe-medio">Mis Padres</h3>
+                        <p class="text-2xl serif">Sr. Juan Carlos Pérez</p>
+                        <p class="text-2xl serif">Sra. María Elena Rodríguez</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] uppercase tracking-[0.4em] mb-6 font-bold text-cafe-medio">Mis Padrinos</h3>
+                        <p class="text-2xl serif">Sr. Ricardo Sánchez</p>
+                        <p class="text-2xl serif">Sra. Laura Estela Gómez</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Itinerario Detallado -->
+        <section class="py-32 px-6 bg-[#FAF9F6] relative overflow-hidden">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-4xl mx-auto reveal">
+                <div class="text-center mb-24">
+                    <h2 class="text-5xl italic mb-4">Itinerario</h2>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-cafe-medio">El Camino a mis sueños</p>
+                </div>
+
+                <div class="relative space-y-24">
+                    <div class="timeline-line"></div>
+                    
+                    <!-- Misa -->
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl serif">Ceremonia Religiosa</h3><p class="text-gray-400 italic text-sm">Acción de Gracias</p></div>
+                        <div class="bg-white p-4 border border-beige rounded-full"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" class="w-7"></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-cafe-medio">17:00 HRS</span><h3 class="text-2xl serif md:hidden">Ceremonia</h3></div>
+                    </div>
+
+                    <!-- Recepción -->
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-cafe-medio">19:30 HRS</span><h3 class="text-2xl serif md:hidden">Cóctel</h3></div>
+                        <div class="bg-white p-4 border border-beige rounded-full"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-7"></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl serif">Recepción</h3><p class="text-gray-400 italic text-sm">Cóctel de Bienvenida</p></div>
+                    </div>
+
+                    <!-- Cena -->
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl serif">Cena de Gala</h3><p class="text-gray-400 italic text-sm">Banquete Especial</p></div>
+                        <div class="bg-white p-4 border border-beige rounded-full"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png" class="w-7"></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-cafe-medio">21:00 HRS</span><h3 class="text-2xl serif md:hidden">Cena</h3></div>
+                    </div>
+
+                    <!-- Vals y Fiesta -->
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-cafe-medio">22:00 HRS</span><h3 class="text-2xl serif md:hidden">Vals</h3></div>
+                        <div class="bg-white p-4 border border-beige rounded-full"><img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-7"></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl serif">Vals y Baile</h3><p class="text-gray-400 italic text-sm">¡A celebrar!</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chambelanes -->
+        <section class="py-32 px-6 bg-white overflow-hidden relative">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-6xl mx-auto reveal">
+                <div class="text-center mb-16">
+                    <h2 class="text-5xl italic mb-4">Corte de Honor</h2>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-cafe-medio">Mis Chambelanes</p>
+                </div>
+
+                <div class="chambelanes-slider px-4">
+                    <!-- Card 1 -->
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale-[30%]" alt="Mateo">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-cafe-oscuro">Mateo García</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán de Honor</p>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale" alt="Santiago">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-cafe-oscuro">Santiago Ruíz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale-[30%]" alt="Daniel">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-cafe-oscuro">Daniel Ortiz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-full h-full object-cover grayscale" alt="Sebastián">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-cafe-oscuro">Sebastián Díaz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-gray-300 text-[10px] mt-8 uppercase tracking-[0.3em] font-light italic">Desliza para ver más →</p>
+            </div>
+        </section>
+
+        <!-- Ubicaciones -->
+        <section id="ubicaciones" class="py-32 px-6 bg-[#FAF9F6]">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 mb-16">
+                <div class="bg-white p-12 border border-beige/10 shadow-sm reveal text-center">
+                    <h3 class="text-3xl serif mb-6">La Ceremonia</h3>
+                    <p class="text-gray-500 italic text-sm mb-8">Parroquia de Santa María de Guadalupe<br>Av. de la Paz 456, Centro.</p>
+                    <a href="https://maps.google.com" target="_blank" class="bg-cafe-oscuro text-crema px-8 py-3 text-[10px] tracking-widest uppercase">Cómo llegar</a>
+                </div>
+                <div class="bg-white p-12 border border-beige/10 shadow-sm reveal text-center">
+                    <h3 class="text-3xl serif mb-6">La Fiesta</h3>
+                    <p class="text-gray-500 italic text-sm mb-8">Salón de Eventos "El Alcázar"<br>Calzada Dorada 789, Jardines.</p>
+                    <a href="https://maps.google.com" target="_blank" class="bg-cafe-oscuro text-crema px-8 py-3 text-[10px] tracking-widest uppercase">Cómo llegar</a>
+                </div>
+            </div>
+
+            <!-- Botones de Agendar -->
+            <div class="max-w-4xl mx-auto text-center reveal">
+                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-cafe-medio">Reserva el momento en tu calendario</p>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <button onclick="calendarLink('Misa Regina XV', 'Parroquia Sta María', '20261116T170000')" class="btn-calendar">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                        Agendar Misa
+                    </button>
+                    <button onclick="calendarLink('Fiesta Regina XV', 'Salón El Alcázar', '20261116T193000')" class="btn-calendar">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"></path></svg>
+                        Agendar Fiesta
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separador Parallax -->
+        <section class="h-[70vh] parallax-section" style="background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/Separador%20foto.png');"></section>
+
+        <!-- Mesa de Regalos -->
+        <section class="py-32 px-6 bg-white text-center relative overflow-hidden">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-3xl mx-auto reveal">
+                <h2 class="text-4xl italic mb-12">Mesa de Regalos</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <a href="#" class="flex-1 bg-white p-12 border border-crema group shadow-sm">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/regaloamazonplata.png" class="h-12 mx-auto filter grayscale group-hover:grayscale-0 transition duration-700">
+                        <p class="mt-8 text-[9px] font-bold uppercase tracking-[0.3em]">Amazon</p>
+                    </a>
+                    <a href="#" class="flex-1 bg-white p-12 border border-crema group shadow-sm">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/regaloliverpoolplata.png" class="h-12 mx-auto filter grayscale group-hover:grayscale-0 transition duration-700">
+                        <p class="mt-8 text-[9px] font-bold uppercase tracking-[0.3em]">Liverpool</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section class="py-32 px-6 bg-[#4B3621] text-white text-center">
+            <div class="max-w-2xl mx-auto reveal">
+                <h2 class="text-5xl italic text-beige mb-6">Confirmar Asistencia</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] opacity-50 mb-12">Confirmar antes del 10 de Noviembre de 2026</p>
+                <form id="rsvpForm" class="space-y-12 text-left">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="border-b border-beige/20"><label class="text-[9px] uppercase tracking-widest opacity-40">Nombre</label><input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl"></div>
+                        <div class="border-b border-beige/20"><label class="text-[9px] uppercase tracking-widest opacity-40">Personas</label><select class="w-full bg-transparent py-2 outline-none serif text-xl"><option class="text-black">1 Persona</option><option class="text-black">2 Personas</option><option class="text-black">Familia</option></select></div>
+                    </div>
+                    <button type="submit" class="w-full bg-beige text-cafe-oscuro font-bold py-5 uppercase tracking-[0.5em] text-[10px]">Confirmar Presencia</button>
+                </form>
+                <div id="successMessage" class="hidden p-12 border border-white/10 mt-10"><p class="text-3xl serif italic text-beige">¡Te espero con alegría!</p></div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-24 text-center bg-white">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/XVVAQUERASESION/pantalla2.png" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border border-crema shadow-sm">
+            <p class="text-4xl serif italic mb-2">Regina</p>
+            <p class="text-[9px] text-gray-300 uppercase tracking-[0.5em] mb-8">16 • Noviembre • 2026</p>
+            <p class="text-[8px] text-gray-300 uppercase tracking-[0.2em] font-light">AdaInvite © 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+                document.getElementById('section-intro').classList.add('active');
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                initObserver();
+            }, 1200);
+        }
+
+        // --- CONTADOR (16 Nov 2026) ---
+        const targetDate = new Date("November 16, 2026 17:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        document.getElementById('rsvpForm').onsubmit = (e) => {
+            e.preventDefault();
+            e.target.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        };
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
