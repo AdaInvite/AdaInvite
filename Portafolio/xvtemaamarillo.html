@@ -329,29 +329,33 @@
         }
         .gallery-item:hover img { transform: scale(1.08); }
         .span-row-2 { grid-row: span 2; }
-        /* Animación del carrusel infinito */
-@keyframes scrollHistoria {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-320px * 4)); } /* 4 es el número de tarjetas únicas */
-}
-
+/* --- ESTILOS HISTORIA (MANUAL + AUTO) --- */
 .slider-historia {
     display: flex;
-    width: calc(320px * 8); /* El doble de tarjetas (4 originales + 4 duplicadas) */
-    animation: scrollHistoria 25s linear infinite;
+    overflow-x: auto; /* Permite scroll manual */
+    scroll-snap-type: x mandatory; /* Ajuste magnético */
+    scroll-behavior: smooth; /* Movimiento suave */
+    gap: 20px;
+    padding: 20px 0;
+    scrollbar-width: none; /* Oculta barra en Firefox */
 }
 
-.slider-historia:hover {
-    animation-play-state: paused; /* Se detiene al tocar o pasar el mouse */
+.slider-historia::-webkit-scrollbar {
+    display: none; /* Oculta barra en Chrome/Safari */
 }
 
 .tarjeta-momento {
-    flex: 0 0 300px;
-    margin: 0 10px;
+    flex: 0 0 80%; /* En móvil se ve casi toda la tarjeta */
+    scroll-snap-align: center; /* Se imanta al centro */
     background: white;
-    border: 1px solid rgba(218, 165, 32, 0.2); /* Borde amarillo medio suave */
+    border: 1px solid rgba(218, 165, 32, 0.2);
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    border-radius: 4px; /* Un toque sutil, no tan redondeado para que sea elegante */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .tarjeta-momento { flex: 0 0 350px; } /* En PC son más pequeñas */
 }
     </style>
 </head>
@@ -447,61 +451,32 @@
         </section>
 
         <!-- 3. Historia de Vida -->
-      <section class="pt-32 pb-32 bg-white relative overflow-hidden corte-valle">
+   <section class="pt-32 pb-32 bg-white relative overflow-hidden corte-valle">
     <div class="bg-texture-main opacity-10"></div>
-    
-    <div class="max-w-5xl mx-auto relative z-10">
-        <div class="text-center mb-16 reveal">
+    <div class="max-w-5xl mx-auto relative z-10 px-4">
+        <div class="text-center mb-12">
             <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Mi Historia</h1>
-            <p class="text-[10px] uppercase tracking-[0.5em] text-amarillo-oscuro font-bold">Un viaje a través de los años</p>
+            <p class="text-[10px] uppercase tracking-[0.5em] text-amarillo-oscuro font-bold">Desliza para conocer más</p>
         </div>
 
-        <div class="w-full overflow-hidden">
-            <div class="slider-historia">
-                
-                <div class="tarjeta-momento">
-                    <img src="https://i.imgur.com/LSMQWWh.jpeg" class="w-full h-56 object-cover" alt="Infancia">
-                    <div class="p-6 text-center">
-                        <span class="serif text-amarillo-medio italic text-lg">2011</span>
-                        <h4 class="serif text-2xl text-black mt-1">Mis Inicios</h4>
-                        <p class="text-[11px] text-gray-500 mt-3 leading-relaxed font-light">Los primeros pasos de un camino lleno de risas y el amor de mi familia.</p>
-                    </div>
+        <div id="historia-container" class="slider-historia">
+            <div class="tarjeta-momento">
+                <img src="https://i.imgur.com/LSMQWWh.jpeg" class="w-full h-64 object-cover">
+                <div class="p-6 text-center">
+                    <span class="serif text-amarillo-medio text-lg">2011</span>
+                    <h4 class="serif text-2xl text-black">Mis Primeros Pasos</h4>
+                    <p class="text-[12px] text-gray-500 mt-2 font-light">El inicio de una vida llena de alegría.</p>
                 </div>
-
-                <div class="tarjeta-momento">
-                    <img src="https://i.imgur.com/L9yk5Ro.jpeg" class="w-full h-56 object-cover" alt="Niñez">
-                    <div class="p-6 text-center">
-                        <span class="serif text-amarillo-medio italic text-lg">2016</span>
-                        <h4 class="serif text-2xl text-black mt-1">Aventuras</h4>
-                        <p class="text-[11px] text-gray-500 mt-3 leading-relaxed font-light">Descubriendo el mundo con curiosidad y formando mis primeros grandes sueños.</p>
-                    </div>
-                </div>
-
-                <div class="tarjeta-momento">
-                    <img src="https://i.imgur.com/Qm9b75L.jpeg" class="w-full h-56 object-cover" alt="Crecimiento">
-                    <div class="p-6 text-center">
-                        <span class="serif text-amarillo-medio italic text-lg">2021</span>
-                        <h4 class="serif text-2xl text-black mt-1">Aprendizaje</h4>
-                        <p class="text-[11px] text-gray-500 mt-3 leading-relaxed font-light">Creciendo paso a paso, aprendiendo el valor de la amistad y la constancia.</p>
-                    </div>
-                </div>
-
-                <div class="tarjeta-momento">
-                    <img src="https://i.imgur.com/Oyyhtlc.png" class="w-full h-56 object-cover" alt="XV Años">
-                    <div class="p-6 text-center">
-                        <span class="serif text-amarillo-medio italic text-lg">2026</span>
-                        <h4 class="serif text-2xl text-black mt-1">Mis XV Años</h4>
-                        <p class="text-[11px] text-gray-500 mt-3 leading-relaxed font-light">El momento soñado ha llegado, lista para compartir esta noche mágica con ustedes.</p>
-                    </div>
-                </div>
-
-                <div class="tarjeta-momento"><img src="https://i.imgur.com/LSMQWWh.jpeg" class="w-full h-56 object-cover"><div class="p-6 text-center"><span class="serif text-amarillo-medio italic text-lg">2011</span><h4 class="serif text-2xl text-black mt-1">Mis Inicios</h4><p class="text-[11px] text-gray-500 mt-3">...</p></div></div>
-                <div class="tarjeta-momento"><img src="https://i.imgur.com/L9yk5Ro.jpeg" class="w-full h-56 object-cover"><div class="p-6 text-center"><span class="serif text-amarillo-medio italic text-lg">2016</span><h4 class="serif text-2xl text-black mt-1">Aventuras</h4><p class="text-[11px] text-gray-500 mt-3">...</p></div></div>
-                <div class="tarjeta-momento"><img src="https://i.imgur.com/Qm9b75L.jpeg" class="w-full h-56 object-cover"><div class="p-6 text-center"><span class="serif text-amarillo-medio italic text-lg">2021</span><h4 class="serif text-2xl text-black mt-1">Aprendizaje</h4><p class="text-[11px] text-gray-500 mt-3">...</p></div></div>
-                <div class="tarjeta-momento"><img src="https://i.imgur.com/Oyyhtlc.png" class="w-full h-56 object-cover"><div class="p-6 text-center"><span class="serif text-amarillo-medio italic text-lg">2026</span><h4 class="serif text-2xl text-black mt-1">Mis XV Años</h4><p class="text-[11px] text-gray-500 mt-3">...</p></div></div>
-
             </div>
-        </div>
+            <div class="tarjeta-momento">
+                <img src="https://i.imgur.com/L9yk5Ro.jpeg" class="w-full h-64 object-cover">
+                <div class="p-6 text-center">
+                    <span class="serif text-amarillo-medio text-lg">2016</span>
+                    <h4 class="serif text-2xl text-black">Grandes Sueños</h4>
+                    <p class="text-[12px] text-gray-500 mt-2">Descubriendo el mundo paso a paso.</p>
+                </div>
+            </div>
+            </div>
     </div>
 </section>
 
@@ -869,6 +844,32 @@
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
             window.open(url, '_blank');
         }
+        const historiaSlider = document.getElementById('historia-container');
+
+function iniciarAutoScroll() {
+    let scrollInterval = setInterval(() => {
+        // Si llegamos al final, vuelve al inicio
+        if (historiaSlider.scrollLeft + historiaSlider.offsetWidth >= historiaSlider.scrollWidth) {
+            historiaSlider.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            // Si no, avanza el ancho de una tarjeta
+            historiaSlider.scrollBy({ left: 300, behavior: 'smooth' });
+        }
+    }, 4000); // Cambia cada 4 segundos
+
+    // DETENER cuando el usuario interactúa (manual)
+    const detenerCualquierInteraccion = () => {
+        clearInterval(scrollInterval);
+        // Opcional: podrías reiniciarlo después de un tiempo sin tocar
+    };
+
+    historiaSlider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
+    historiaSlider.addEventListener('mousedown', detenerCualquierInteraccion);
+}
+
+// Iniciar el motor cuando se cargue el contenido principal
+// Puedes llamarlo dentro de tu función showMainContent()
+iniciarAutoScroll();
     </script>
 </body>
 </html>
