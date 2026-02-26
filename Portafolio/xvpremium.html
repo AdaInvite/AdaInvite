@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Mis XV Regina</title>
+    <!-- 1. Icono para la pestaña del navegador -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+
+    <!-- 2. Icono para Pantalla de Inicio en iOS -->
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <!-- 3. Configuración PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mis XV Regina">
+
+    <!-- 4. Metadatos -->
+    <meta name="theme-color" content="#B8860B">
+    <meta property="og:title" content="Mis XV Regina">
+    <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg">
+    
+    <!-- Scripts y Fuentes Elegantes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        amarillo: {
+                            oscuro: '#B8860B' /* Único tono amarillo/dorado utilizado */
+                        },
+                        blanco: {
+                            hueso: '#FAF9F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Pinyon Script, Cormorant Garamond, Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --amarillo-oscuro: #B8860B;
+            --blanco-hueso: #FAF9F6;
+            --bg-regina: url('https://i.imgur.com/EYjfsMz.jpeg');
+            --bg-floral: url('https://i.imgur.com/iQq76tF.jpeg');
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            background-color: var(--blanco-hueso);
+            overflow-x: hidden;
+            color: var(--amarillo-oscuro);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        .font-script {
+            font-family: var(--font-script);
+        }
+
+        /* --- CORTES EN TRIÁNGULO AL CENTRO --- */
+        .corte-pico {
+            clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        .corte-valle {
+            clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: visibility 1.8s;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura.jpg?raw=true");
+            background-size: cover;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.2));
+            -webkit-filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.2));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.3));
+            -webkit-filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.3));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura.jpg?raw=true");
+            background-size: cover;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.4), rgba(0,0,0,0.9)), var(--bg-regina);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; }
+
+        .bg-texture-main {
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
+            background-size: 400px;
+            opacity: 0.1;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--amarillo-oscuro), transparent);
+        }
+
+        .bg-floral-section {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.4), rgba(0,0,0,0.4)), var(--bg-floral);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
+
+        .btn-calendar {
+            border: 1px solid var(--amarillo-oscuro);
+            padding: 12px 24px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-calendar:hover { background: var(--amarillo-oscuro); color: var(--blanco-hueso); }
+
+        .chambelanes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            background: white;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+        .chambelan-card:hover { transform: translateY(-5px); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 35px; 
+            height: 35px; 
+            background: var(--blanco-hueso);
+            color: var(--amarillo-oscuro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--blanco-hueso);
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+       /* --- DISEÑO DE TARJETAS TIPO "MOMENTOS" --- */
+        .slider-historia {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 30px;
+            padding: 40px 20px;
+            scrollbar-width: none;
+        }
+
+        .slider-historia::-webkit-scrollbar { display: none; }
+
+        .tarjeta-nueva {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            position: relative;
+            background: white;
+            padding: 12px;
+            border-radius: 20px; /* Bordes muy redondeados */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: rotate(-1deg); /* Ligero giro tipo foto real */
+            transition: all 0.4s ease;
+        }
+
+        .tarjeta-nueva:nth-child(even) {
+            transform: rotate(1.5deg); /* Unas giran a un lado y otras al otro */
+        }
+
+        .tarjeta-nueva:hover {
+            transform: rotate(0deg) scale(1.03);
+            z-index: 20;
+        }
+
+        .img-historia {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .info-flotante {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .año-badge {
+            position: absolute;
+            top: -20px;
+            right: 15px;
+            background: var(--amarillo-oscuro);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: var(--font-serif);
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* --- NUEVO CONTADOR MINIMALISTA --- */
+        #countdown {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #countdown span {
+            font-family: var(--font-body) !important; /* Montserrat */
+            font-weight: 300; 
+            color: var(black);
+            line-height: 1;
+        }
+
+        #countdown .text-[9px] {
+            color: rgba(0,0,0,0.4); /* Gris suave para las etiquetas */
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REPRODUCTOR DE MÚSICA -->
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/Sw3ov4v.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <!-- SECCIÓN 1: EL SOBRE -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-black font-semibold">Toca para abrir</div>
+                <img src="https://i.imgur.com/3SAR6TC.png" 
+                     class="w-[100px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: PANTALLA INTRO -->
+    <div id="section-intro" onclick="showMainContent()">
+        <header><h1 class="name-header text-white">Regina</h1></header>
+        <div>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="serif text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
+                    <span class="serif text-[6rem] leading-none font-light text-white drop-shadow-md">16</span>
+                </div>
+                <div class="w-px h-24 bg-white/80 shadow-sm"></div>
+                <div class="text-left">
+                    <span class="serif text-4xl tracking-widest block text-white drop-shadow-md">NOV</span>
+                    <span class="serif text-2xl tracking-[0.6em] text-white drop-shadow-md">2026</span>
+                </div>
+            </section>
+            <p class="font-body text-[10px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para continuar</p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: CONTENIDO PRINCIPAL -->
+    <main id="section-main">
+        
+        <!-- 1. Hero (Imagen) -->
+        <header class="relative min-h-screen flex flex-col bg-white pb-12">
+            <div class="h-[60vh] w-full overflow-hidden relative">
+                <img src="https://i.imgur.com/XLcUojy.jpeg" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt- 5 relative">
+                <div class="bg-texture-main"></div>
+                <h1 class="text-6xl md:text-8xl mb-5 text-amarillo-oscuro font-script reveal-scale pr-6">Mis XV</h1>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-black pb-5">Faltan solo...</p>
+                
+                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="serif text-3xl md:text-7xl text-black">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-amarillo-oscuro/50 font-bold">Días</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="serif text-3xl md:text-7xl text-black">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-amarillo-oscuro/50 font-bold">Horas</span>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="serif text-3xl md:text-7xl text-black">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-amarillo-oscuro/50 font-bold">Min</span>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="serif text-3xl md:text-7xl text-black">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-amarillo-oscuro/50 font-bold">Seg</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. Bienvenida -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-[#FAF9F6] relative corte-pico">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Regina</h1>
+                <p class="serif text-xl md:text-3xl italic text-black leading-relaxed font-light mb-16">
+                    "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
+                </p>
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <h3 class="text-[14px] md:text-[16px] uppercase tracking-[0.4em] mb-6 font-bold text-amarillo-oscuro drop-shadow-sm">Mis Padres</h3>
+                        <p class="text-2xl serif text-black">Sr. Juan Carlos Pérez</p>
+                        <p class="text-2xl serif text-black">Sra. María Elena Rodríguez</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[14px] md:text-[16px] uppercase tracking-[0.4em] mb-6 font-bold text-amarillo-oscuro drop-shadow-sm">Mis Padrinos</h3>
+                        <p class="text-2xl serif text-black">Sr. Ricardo Sánchez</p>
+                        <p class="text-2xl serif text-black">Sra. Laura Estela Gómez</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Historia de Vida -->
+
+        <section class="pt-32 lg:pt-40 pb-32 bg-white relative overflow-hidden corte-valle">
+            <div class="bg-texture-main opacity-10"></div>
+            <div class="max-w-6xl mx-auto relative z-10">
+                
+                <div class="text-center mb-8 reveal">
+                    <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Mi Historia</h1>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-black font-bold">Un viaje inolvidable</p>
+                </div>
+
+                <div id="historia-container" class="slider-historia">
+                    
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2011</div>
+                        <img src="https://i.imgur.com/l3kbBVT.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Mis Inicios</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">El primer capítulo de una vida llena de luz.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2014</div>
+                        <img src="https://i.imgur.com/FDMZmDZ.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Aventuras</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">Mis primeros pasos descubriendo el mundo.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2017</div>
+                        <img src="https://i.imgur.com/OeVc9oe.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Escuela</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">Días de juegos y mis primeras letras.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2020</div>
+                        <img src="https://i.imgur.com/GNOpVBW.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Creciendo</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">Aprendiendo a soñar cada día más alto.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2023</div>
+                        <img src="https://i.imgur.com/s6m4LPH.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Ilusiones</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">Cerca de vivir mi noche más mágica.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge">2026</div>
+                        <img src="https://i.imgur.com/q2er8Dq.jpeg" class="img-historia">
+                        <div class="info-flotante">
+                            <h4 class="serif text-xl text-black">Mis XV</h4>
+                            <p class="text-[11px] text-gray-600 mt-1 leading-tight">¡Hoy el sueño se hace realidad!</p>
+                        </div>
+                    </div>
+
+                </div>
+                <p class="text-center text-gray-400 text-[9px] mt-2 uppercase tracking-[0.4em]">Arrastra para ver más →</p>
+            </div>
+        </section>
+
+        <!-- 4. Chambelanes -->
+        <section class="pt-20 lg:pt-40 pb-32 px-6 bg-floral-section overflow-hidden relative corte-pico">
+            <div class="bg-texture-main opacity-10"></div>
+            <div class="max-w-6xl mx-auto reveal">
+                <div class="text-center mb-16">
+                    <h2 class="text-5xl md:text-9xl mb-8 font-script text-white drop-shadow-lg">Mis Chambelanes</h2>
+                </div>
+                <div class="chambelanes-slider px-2">
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Mateo">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-amarillo-oscuro">Mateo García</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán de Honor</p>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Santiago">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-amarillo-oscuro">Santiago Ruíz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Daniel">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-amarillo-oscuro">Daniel Ortiz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-80 overflow-hidden">
+                            <img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián">
+                        </div>
+                        <div class="p-8 text-center">
+                            <h4 class="text-2xl serif text-amarillo-oscuro">Sebastián Díaz</h4>
+                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-2">Chambelán</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-white text-[10px] mt-5 uppercase tracking-[0.3em] font-light italic drop-shadow-md">Desliza para ver más →</p>
+            </div>
+        </section>
+
+        <!-- Separador Parallax 1 -->
+        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/7JRbpKp.jpeg');"></section>
+
+        <!-- 5. Ubicaciones -->
+        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-[#FAF9F6] relative text-black corte-pico">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+                <!-- Mapa Ceremonia -->
+                <div class="bg-transparent p-4 md:p-8 border border-amarillo-oscuro/40 shadow-none reveal flex flex-col h-full text-white">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center">
+                            <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png?raw=true" class="w-16 h-16 md:w-20 md:h-20" alt="Ceremonia">
+                        </div>
+                        <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Ceremonia</h1>
+                        <p class="text-black italic text-sm">Templo Expiatorio del Sagrado Corazón de Jesús<br>Madero 721, Centro, León, Gto.</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-amarillo-oscuro/40 mb-6">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.907715494294!2d-101.67756962386121!3d21.116262084772183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf61e3d36e89%3A0xc47e30d1e342a170!2sTemplo%20Expiatorio%20del%20Sagrado%20Coraz%C3%B3n%20de%20Jes%C3%BAs!5e0!3m2!1ses-419!2smx!4v1708833892790!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full block text-center bg-amarillo-oscuro border border-amarillo-oscuro text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-white hover:text-amarillo-oscuro shadow-md transition-transform hover:-translate-y-1 active:scale-95 duration-300">Abrir en App de Mapas</a>
+                </div>
+
+                <!-- Mapa Fiesta -->
+                <div class="bg-transparent p-4 md:p-8 border border-amarillo-oscuro/40 shadow-none reveal flex flex-col h-full text-black">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center">
+                            <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png?raw=true" class="w-16 h-16 md:w-20 md:h-20 " alt="Recepción">
+                        </div>
+                        <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Recepción</h1>
+                        <p class="text-black italic text-sm">Hacienda del Conde Eventos<br>Blvd. Aeropuerto 123, León, Gto.</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-amarillo-oscuro/40 mb-6">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.981882069818!2d-101.60334812386221!3d21.073386686252086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bb54c9e7845f1%3A0xc3af87c53d9223cb!2sPoliforum%20Le%C3%B3n!5e0!3m2!1ses-419!2smx!4v1708834032483!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full block text-center bg-amarillo-oscuro border border-amarillo-oscuro text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-white hover:text-amarillo-oscuro shadow-md transition-transform hover:-translate-y-1 active:scale-95 duration-300">Abrir en App de Mapas</a>
+                </div>
+            </div>
+
+            <!-- Botón Calendario -->
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
+                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-black">Reserva el momento en tu calendario</p>
+                <div class="flex justify-center">
+                    <button onclick="calendarLink('Mis XV Regina', 'Templo Expiatorio del Sagrado Corazón', '20261116T170000')" class="btn-calendar bg-amarillo-oscuro text-white border border-amarillo-oscuro hover:bg-white hover:text-amarillo-oscuro font-bold rounded-sm transition-all duration-300 px-10 py-4 justify-center">
+                        Agregar al calendario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Itinerario Detallado -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white relative overflow-hidden text-black corte-valle">
+            <div class="bg-texture-main opacity-10 z-0"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <div class="text-center mb-24">
+                    <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Itinerario</h1>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-black">Los momentos que tendremos</p>
+                </div>
+
+                <div class="relative space-y-24">
+                    <div class="timeline-line"></div>
+                    
+                    <!-- Misa -->
+                    <div class="flex items-center justify-between relative z-10 reveal-left">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl serif">Ceremonia Religiosa</h3><p class="text-gray-500 italic text-sm">Acción de Gracias</p></div>
+                        <div class="bg-transparent p-2 reveal-scale delay-200">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Iglesia%20negro%20ceremonia.png" class="w-20 md:w-24 object-contain drop-shadow-sm opacity-90">
+                        </div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-black">17:00 HRS</span><h3 class="text-2xl serif md:hidden">Ceremonia</h3></div>
+                    </div>
+
+                    <!-- Recepción -->
+                    <div class="flex items-center justify-between relative z-10 reveal-right">
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-black">19:30 HRS</span><h3 class="text-2xl serif md:hidden">Cóctel</h3></div>
+                        <div class="bg-transparent p-2 reveal-scale delay-200">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-20 md:w-24 object-contain drop-shadow-sm opacity-90">
+                        </div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl serif">Recepción</h3><p class="text-gray-500 italic text-sm">Cóctel de Bienvenida</p></div>
+                    </div>
+
+                    <!-- Cena -->
+                    <div class="flex items-center justify-between relative z-10 reveal-left">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl serif">Cena de Gala</h3><p class="text-gray-500 italic text-sm">Banquete Especial</p></div>
+                        <div class="bg-transparent p-2 reveal-scale delay-200">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png" class="w-20 md:w-24 object-contain drop-shadow-sm opacity-90">
+                        </div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-black">21:00 HRS</span><h3 class="text-2xl serif md:hidden">Cena</h3></div>
+                    </div>
+
+                    <!-- Vals y Fiesta -->
+                    <div class="flex items-center justify-between relative z-10 reveal-right">
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-black">22:00 HRS</span><h3 class="text-2xl serif md:hidden">Vals</h3></div>
+                        <div class="bg-transparent p-2 reveal-scale delay-200">
+                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-20 md:w-24 object-contain drop-shadow-sm opacity-90">
+                        </div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl serif">Vals y Baile</h3><p class="text-gray-500 italic text-sm">¡A celebrar!</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Código de Vestimenta -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section relative text-center corte-pico">
+            <div class="max-w-3xl mx-auto reveal-scale">
+                <div class="mx-auto mb-8 flex items-center justify-center">
+                    <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png?raw=true" class="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-sm invert opacity-90" alt="Código de Vestimenta">
+                </div>
+                <h2 class="text-5xl md:text-9xl mb-8 font-script text-white drop-shadow-lg">Código de Vestimenta</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] text-white mb-10 font-bold drop-shadow-md">Formal / Etiqueta</p>
+                <p class="serif text-xl md:text-2xl italic text-white drop-shadow-md mb-8 leading-relaxed">Por favor, reserva el color blanco y los tonos perla exclusivamente para la quinceañera.</p>
+                
+                <div class="flex justify-center gap-6 mt-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-300 shadow-sm relative"></div>
+                        <span class="text-[8px] uppercase tracking-widest mt-3 text-white drop-shadow-md font-bold">Blanco</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-[#FDEBD0] border border-gray-300 shadow-sm relative"></div>
+                        <span class="text-[8px] uppercase tracking-widest mt-3 text-white drop-shadow-md font-bold">Perla</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separador Parallax 2 -->
+        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/jSqQhf2.jpeg');"></section>
+
+        <!-- 8. Álbum Compartido (QR) -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#FAF9F6] text-black text-center relative overflow-hidden corte-pico">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            
+            <div class="max-w-3xl mx-auto reveal-scale relative z-10">
+                <svg class="w-12 h-12 mx-auto mb-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
+                </svg>
+                
+                <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Álbum Compartido</h1>
+                
+                <p class="text-xs md:text-base font-medium tracking-widest mb-10 leading-relaxed text-black shadow-sm">
+                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
+                </p>
+
+                <!-- Caja del Código QR -->
+                <div class="mx-auto bg-white p-4 rounded-xl shadow-lg inline-block mb-10 border-2 border-amarillo-oscuro/50">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-40 h-40 object-contain">
+                </div>
+                <br>
+                
+                <a href="#" target="_blank" class="inline-block bg-amarillo-oscuro text-white border border-amarillo-oscuro px-10 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-amarillo-oscuro transition-all hover:-translate-y-1 hover:shadow-lg active:scale-95 duration-300">
+                    Subir fotos aquí
+                </a>
+            </div>
+        </section>
+
+        <!-- 9. Mesa de Regalos -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white text-center relative overflow-hidden corte-valle">
+            <div class="bg-texture-main opacity-10"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Mesa de Regalos</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-black drop-shadow-md font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
+                <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+                    <!-- Tarjeta Amazon -->
+                    <a href="#" class="flex-1 bg-white p-6 md:p-8 border border-gray-200 group shadow-sm h-40 md:h-48 flex flex-col items-center justify-center reveal-left delay-100 transition-transform hover:-translate-y-2 hover:shadow-xl hover:border-amarillo-oscuro duration-500">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/regaloamazonplata.png" class="h-12 md:h-16 mb-4 object-contain filter grayscale group-hover:grayscale-0 transition duration-700" alt="Amazon">
+                        <p class="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-400 group-hover:text-amarillo-oscuro transition duration-700">Amazon</p>
+                    </a>
+                    
+                    <!-- Tarjeta Liverpool -->
+                    <a href="#" class="flex-1 bg-white p-6 md:p-8 border border-gray-200 group shadow-sm h-48md:h-48 flex flex-col items-center justify-center reveal-scale delay-200 transition-transform hover:-translate-y-2 hover:shadow-xl hover:border-amarillo-oscuro duration-500">
+                        <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/regaloliverpoolplata.png" class="h-12 md:h-16 mb-4 object-contain filter grayscale group-hover:grayscale-0 transition duration-700" alt="Liverpool">
+                        <p class="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-400 group-hover:text-amarillo-oscuro transition duration-700">Liverpool</p>
+                    </a>
+
+                    <!-- Tarjeta Lluvia de Sobres -->
+                    <div class="flex-1 bg-white p-6 md:p-8 border border-gray-200 group shadow-sm h-48 md:h-48 flex flex-col items-center justify-center reveal-right delay-300 transition-transform hover:-translate-y-2 hover:shadow-xl hover:border-amarillo-oscuro duration-500 cursor-default">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mb-4 text-gray-400 group-hover:text-amarillo-oscuro transition-colors duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path></svg>
+                        <p class="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-400 group-hover:text-amarillo-oscuro transition duration-700">Lluvia de Sobres</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. RSVP -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
+                <form id="rsvpForm" class="space-y-12 text-left bg-black/40 p-8 rounded-lg backdrop-blur-sm border border-white/10">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="border-b border-amarillo-oscuro/50"><label class="text-[9px] uppercase tracking-widest opacity-80">Nombre</label><input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white"></div>
+                        <div class="border-b border-amarillo-oscuro/50"><label class="text-[9px] uppercase tracking-widest opacity-80">Personas</label><select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none"><option class="text-black">1 Persona</option><option class="text-black">2 Personas</option><option class="text-black">Familia</option></select></div>
+                    </div>
+                    <button type="submit" class="w-full bg-white text-amarillo-oscuro font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-amarillo-oscuro hover:text-black transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300">Confirmar</button>
+                </form>
+                <div id="successMessage" class="hidden p-12 border border-white/20 mt-10 bg-black/40 backdrop-blur-sm"><p class="text-4xl font-script text-amarillo-oscuro">¡Te espero con alegría!</p></div>
+            </div>
+        </section>
+
+        <!-- 11. Footer -->
+        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white corte-valle relative z-10">
+            <img src="https://i.imgur.com/iycPPx9.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border border-amarillo-oscuro shadow-sm">
+            <p class="text-6xl font-script mb-2 text-amarillo-oscuro">Regina</p>
+            <p class="text-[9px] text-gray-400 uppercase tracking-[0.5em] mb-8">16 • Noviembre • 2026</p>
+            <p class="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-light">AdaInvite © 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-intro').classList.add('active');
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            
+            playAudio(); 
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                initObserver();
+            }, 1200);
+        }
+
+        // --- REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR (16 Nov 2026) ---
+        const targetDate = new Date("November 16, 2026 17:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        document.getElementById('rsvpForm').onsubmit = (e) => {
+            e.preventDefault();
+            e.target.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        };
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+        const historiaSlider = document.getElementById('historia-container');
+
+        function iniciarAutoScroll() {
+            let scrollInterval = setInterval(() => {
+                // Si llegamos al final, vuelve al inicio
+                if (historiaSlider.scrollLeft + historiaSlider.offsetWidth >= historiaSlider.scrollWidth) {
+                    historiaSlider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    // Si no, avanza el ancho de una tarjeta
+                    historiaSlider.scrollBy({ left: 300, behavior: 'smooth' });
+                }
+            }, 4000); // Cambia cada 4 segundos
+
+            // DETENER cuando el usuario interactúa (manual)
+            const detenerCualquierInteraccion = () => {
+                clearInterval(scrollInterval);
+                // Opcional: podrías reiniciarlo después de un tiempo sin tocar
+            };
+
+            historiaSlider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
+            historiaSlider.addEventListener('mousedown', detenerCualquierInteraccion);
+        }
+
+        // Iniciar el motor cuando se cargue el contenido principal
+        // Puedes llamarlo dentro de tu función showMainContent()
+        iniciarAutoScroll();
+    </script>
+</body>
+</html>
