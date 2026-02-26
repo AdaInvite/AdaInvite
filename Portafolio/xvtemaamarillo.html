@@ -310,52 +310,70 @@
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(241, 196, 15, 0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.7s ease;
-        }
-        .gallery-item:hover img { transform: scale(1.08); }
-        .span-row-2 { grid-row: span 2; }
-/* --- ESTILOS HISTORIA (MANUAL + AUTO) --- */
+       /* --- DISEÑO DE TARJETAS TIPO "MOMENTOS" --- */
 .slider-historia {
     display: flex;
-    overflow-x: auto; /* Permite scroll manual */
-    scroll-snap-type: x mandatory; /* Ajuste magnético */
-    scroll-behavior: smooth; /* Movimiento suave */
-    gap: 20px;
-    padding: 20px 0;
-    scrollbar-width: none; /* Oculta barra en Firefox */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    gap: 30px;
+    padding: 40px 20px;
+    scrollbar-width: none;
 }
 
-.slider-historia::-webkit-scrollbar {
-    display: none; /* Oculta barra en Chrome/Safari */
-}
+.slider-historia::-webkit-scrollbar { display: none; }
 
-.tarjeta-momento {
-    flex: 0 0 80%; /* En móvil se ve casi toda la tarjeta */
-    scroll-snap-align: center; /* Se imanta al centro */
+.tarjeta-nueva {
+    flex: 0 0 280px;
+    scroll-snap-align: center;
+    position: relative;
     background: white;
-    border: 1px solid rgba(218, 165, 32, 0.2);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    border-radius: 8px;
-    overflow: hidden;
+    padding: 12px;
+    border-radius: 20px; /* Bordes muy redondeados */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transform: rotate(-1deg); /* Ligero giro tipo foto real */
+    transition: all 0.4s ease;
 }
 
-@media (min-width: 768px) {
-    .tarjeta-momento { flex: 0 0 350px; } /* En PC son más pequeñas */
+.tarjeta-nueva:nth-child(even) {
+    transform: rotate(1.5deg); /* Unas giran a un lado y otras al otro */
+}
+
+.tarjeta-nueva:hover {
+    transform: rotate(0deg) scale(1.03);
+    z-index: 20;
+}
+
+.img-historia {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.info-flotante {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+}
+
+.año-badge {
+    position: absolute;
+    top: -20px;
+    right: 15px;
+    background: var(--amarillo-oscuro);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
     </style>
 </head>
@@ -451,72 +469,74 @@
         </section>
 
         <!-- 3. Historia de Vida -->
-<section class="pt-32 pb-32 bg-white relative overflow-hidden corte-valle">
+
+       <section class="pt-24 pb-32 bg-white relative overflow-hidden">
     <div class="bg-texture-main opacity-10"></div>
-    <div class="max-w-6xl mx-auto relative z-10 px-4">
-        <div class="text-center mb-12 reveal">
-             <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Mi Historia</h1>
-            <p class="text-[10px] uppercase tracking-[0.5em] text-black font-bold">Un viaje a través de los años</p>
+    <div class="max-w-6xl mx-auto relative z-10">
+        
+        <div class="text-center mb-8 reveal">
+            <h1 class="text-5xl md:text-8xl mb-6 text-amarillo-oscuro font-script reveal-scale">Mi Historia</h1>
+            <p class="text-[10px] uppercase tracking-[0.5em] text-amarillo-oscuro font-bold">Un viaje inolvidable</p>
         </div>
 
         <div id="historia-container" class="slider-historia">
             
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/l3kbBVT.jpeg" class="w-full h-64 object-cover" alt="Bebé">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2011</span>
-                    <h4 class="serif text-2xl text-black">Mis Inicios</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Llegué al mundo para llenar de luz y alegría el corazón de mi familia.</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2011</div>
+                <img src="https://i.imgur.com/l3kbBVT.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Mis Inicios</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">El primer capítulo de una vida llena de luz.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/FDMZmDZ.jpeg" class="w-full h-64 object-cover" alt="Primeros pasos">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2014</span>
-                    <h4 class="serif text-2xl text-black">Primeros Pasos</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Con curiosidad y energía, comencé a descubrir cada rincón de mi pequeño mundo.</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2014</div>
+                <img src="https://i.imgur.com/FDMZmDZ.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Aventuras</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">Mis primeros pasos descubriendo el mundo.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/OeVc9oe.jpeg" class="w-full h-64 object-cover" alt="Escuela">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2017</span>
-                    <h4 class="serif text-2xl text-black">Días de Escuela</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Mis primeras letras, juegos infinitos y amistades que empezaban a florecer.</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2017</div>
+                <img src="https://i.imgur.com/OeVc9oe.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Escuela</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">Días de juegos y mis primeras letras.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/GNOpVBW.jpeg" class="w-full h-64 object-cover" alt="Creciendo">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2020</span>
-                    <h4 class="serif text-2xl text-black">Creciendo</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Aprendiendo que cada reto es una oportunidad para volar más alto.</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2020</div>
+                <img src="https://i.imgur.com/GNOpVBW.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Creciendo</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">Aprendiendo a soñar cada día más alto.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/s6m4LPH.jpeg" class="w-full h-64 object-cover" alt="Ilusiones">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2023</span>
-                    <h4 class="serif text-2xl text-black">Nuevos Sueños</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Cerca de cumplir mi gran sueño, con la emoción a flor de piel.</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2023</div>
+                <img src="https://i.imgur.com/s6m4LPH.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Ilusiones</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">Cerca de vivir mi noche más mágica.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-momento">
-                <img src="https://i.imgur.com/q2er8Dq.jpeg" class="w-full h-64 object-cover" alt="Mis XV">
-                <div class="p-6 text-center">
-                    <span class="serif text-amarillo-medio text-lg">2026</span>
-                    <h4 class="serif text-2xl text-black">Mis Dulces XV</h4>
-                    <p class="text-[12px] text-gray-500 mt-2 font-light">Hoy celebro la vida rodeada de las personas que más amo. ¡Bienvenidos!</p>
+            <div class="tarjeta-nueva">
+                <div class="año-badge">2026</div>
+                <img src="https://i.imgur.com/q2er8Dq.jpeg" class="img-historia">
+                <div class="info-flotante">
+                    <h4 class="serif text-xl text-black">Mis XV</h4>
+                    <p class="text-[11px] text-gray-600 mt-1 leading-tight">¡Hoy el sueño se hace realidad!</p>
                 </div>
             </div>
 
         </div>
-        <p class="text-center text-gray-400 text-[9px] mt-6 uppercase tracking-[0.4em] animate-pulse">Desliza para explorar ← →</p>
+        <p class="text-center text-gray-400 text-[9px] mt-2 uppercase tracking-[0.4em]">Arrastra para ver más →</p>
     </div>
 </section>
 
