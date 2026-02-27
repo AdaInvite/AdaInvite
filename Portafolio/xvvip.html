@@ -1099,8 +1099,11 @@
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             const folio = `XV-${randomCode}`;
             
-            btnSubmit.innerText = "Generando..."; 
-            btnSubmit.disabled = true;
+            // --- ESTADO DE CARGA (LOADING) ---
+            const textoOriginal = btnSubmit.innerText; // Guardamos el texto original
+            btnSubmit.innerText = "GENERANDO PASE..."; // Cambiamos el texto
+            btnSubmit.classList.add('opacity-75', 'cursor-not-allowed'); // Lo hacemos un poco transparente
+            btnSubmit.disabled = true; // Bloqueamos el botón para evitar doble clic
             
             const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
             
@@ -1116,8 +1119,8 @@
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
 
-                   // --- CREAR EL QR HACIA LA PÁGINA INDEPENDIENTE DE ACCESO ---
-                    const urlBase = 'https://adainvite.com/Portafolio/acceso'; // Tu página de seguridad
+                    // --- CREAR EL QR HACIA LA PÁGINA INDEPENDIENTE DE ACCESO ---
+                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; 
                     const linkEscaneo = `${urlBase}?folio=${folio}`;
                     
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
@@ -1127,7 +1130,9 @@
                 }
             } catch (error) {
                 alert("Hubo un error al guardar. Intenta nuevamente.");
-                btnSubmit.innerText = "Confirmar y Generar Pase"; 
+                // Si hay un error, restauramos el botón a la normalidad
+                btnSubmit.innerText = textoOriginal; 
+                btnSubmit.classList.remove('opacity-75', 'cursor-not-allowed');
                 btnSubmit.disabled = false;
             }
         });
