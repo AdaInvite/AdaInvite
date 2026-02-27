@@ -249,16 +249,16 @@
         /* INVERSIÓN DE ICONOS A BLANCO EN MODO OSCURO */
         .icono-tema { transition: filter 0.5s ease; }
         body.dark-mode .icono-tema { filter: invert(1); }
-        /* Ocultar barra de scroll en el clima */
+       /* Ocultar barra de scroll en el clima */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        
         /* Ajustes modo oscuro para el clima */
         body.dark-mode .weather-card { 
-            background-color: #1A1A1A !important; 
+            background-color: rgba(26, 26, 26, 0.95) !important; 
             border-color: rgba(181, 115, 122, 0.4) !important; 
         }
         body.dark-mode .weather-card .hora-clima { color: #A0A0A0 !important; }
+        body.dark-mode .weather-card .temp-texto { color: #EAEAEA !important; }
         
     </style>
 </head>
@@ -545,14 +545,13 @@
             </div>
         </section>
 
-        <section class="pt-24 pb-24 px-6 relative text-center corte-valle bg-white dark:bg-[#121212]">
-            <div class="bg-texture-main opacity-10"></div>
-            <div class="max-w-4xl mx-auto reveal relative z-10">
-                <h1 class="text-5xl md:text-8xl mb-4 text-rosa-elegante font-script reveal-scale">Clima del Día</h1>
-                <p class="text-[10px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold mb-10">Pronóstico por hora. León, Gto.</p>
+       <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section text-center relative overflow-hidden corte-pico">
+            <div class="max-w-4xl mx-auto reveal-scale relative z-10">
+                <h2 class="text-5xl md:text-8xl mb-6 font-script text-white drop-shadow-lg">Clima del Día</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white drop-shadow-md font-bold">Pronóstico por hora. León, Gto.</p>
                 
-                <div id="weather-container" class="flex overflow-x-auto gap-4 pb-6 scrollbar-hide px-4" style="scroll-snap-type: x mandatory;">
-                    <p class="text-sm text-rosa-elegante w-full animate-pulse">Cargando pronóstico...</p>
+                <div id="weather-container" class="flex overflow-x-auto gap-6 pb-6 scrollbar-hide px-4" style="scroll-snap-type: x mandatory;">
+                    <p class="text-sm text-white w-full animate-pulse italic drop-shadow-md">Cargando pronóstico...</p>
                 </div>
             </div>
         </section>
@@ -831,7 +830,6 @@
         async function fetchWeather() {
             const lat = 21.1219; // Latitud León, Gto
             const lon = -101.6826; // Longitud León, Gto
-            // Descarga el clima de hoy y mañana
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
             
             try {
@@ -839,32 +837,18 @@
                 const data = await response.json();
                 renderWeather(data);
             } catch (error) {
-                document.getElementById('weather-container').innerHTML = '<p class="text-sm text-rosa-elegante w-full">El clima no está disponible en este momento.</p>';
+                document.getElementById('weather-container').innerHTML = '<p class="text-sm text-white drop-shadow-md w-full">El clima no está disponible en este momento.</p>';
             }
         }
 
-        // Función que devuelve Íconos SVG minimalistas en lugar de emojis
         function getWeatherIcon(code) {
-            const baseClass = "w-8 h-8 mx-auto mb-3 text-rosa-elegante transition-colors duration-500";
+            const baseClass = "w-10 h-10 mx-auto mb-4 text-rosa-elegante transition-colors duration-500";
             
-            // Sol (Despejado)
-            if (code === 0) {
-                return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
-            }
-            // Nublado / Parcialmente nublado / Niebla
-            if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) {
-                return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-            }
-            // Lluvia / Chubascos / Nieve
-            if ((code >= 51 && code <= 77) || (code >= 80 && code <= 82)) {
-                return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 19l-2 3m6-3l-2 3"></path></svg>`;
-            }
-            // Tormenta
-            if (code >= 95 && code <= 99) {
-                return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
-            }
+            if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
+            if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+            if ((code >= 51 && code <= 77) || (code >= 80 && code <= 82)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 19l-2 3m6-3l-2 3"></path></svg>`;
+            if (code >= 95 && code <= 99) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
             
-            // Por defecto (Nube)
             return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
         }
 
@@ -879,18 +863,17 @@
             for (let i = 0; i < data.hourly.time.length; i++) {
                 const forecastDate = new Date(data.hourly.time[i]);
                 
-                // Muestra desde la hora actual en adelante (máximo 12 horas)
                 if (forecastDate >= now && hoursShown < 12) {
                     const temp = Math.round(data.hourly.temperature_2m[i]);
                     const weatherCode = data.hourly.weathercode[i];
-                    const iconSVG = getWeatherIcon(weatherCode); // Aquí llamamos al ícono dibujado
+                    const iconSVG = getWeatherIcon(weatherCode);
                     const hourFormatted = forecastDate.getHours().toString().padStart(2, '0') + ':00';
                     
                     cardsHTML += `
-                        <div class="weather-card min-w-[100px] flex-shrink-0 bg-white border border-rosa-elegante/20 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm transition-colors duration-500" style="scroll-snap-align: center;">
-                            <span class="hora-clima text-sm font-bold text-[#2C2A2A] opacity-60 uppercase tracking-widest mb-3">${hourFormatted}</span>
+                        <div class="weather-card w-32 flex-shrink-0 bg-white/95 backdrop-blur-sm border border-rosa-elegante/30 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl transition-all duration-500 hover:-translate-y-1" style="scroll-snap-align: center;">
+                            <span class="hora-clima text-[10px] font-bold text-[#2C2A2A] opacity-60 uppercase tracking-[0.2em] mb-3">${hourFormatted}</span>
                             ${iconSVG}
-                            <span class="serif text-2xl text-rosa-elegante">${temp}°C</span>
+                            <span class="temp-texto serif text-3xl text-[#2C2A2A]">${temp}°C</span>
                         </div>
                     `;
                     hoursShown++;
