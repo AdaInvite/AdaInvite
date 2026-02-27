@@ -767,11 +767,14 @@
                         <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
                         
                         <p class="text-4xl font-script text-rosa-elegante mb-2">¡Pase Confirmado!</p>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Guarda este folio para tu entrada</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Muestra este código al llegar</p>
                         
-                        <div class="bg-white/10 p-4 rounded-lg mb-6">
-                            <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-1">Folio</p>
-                            <p id="ticketFolio" class="text-4xl font-body font-light tracking-widest text-white">XV-0000</p>
+                        <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
+                            <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
+                            
+                            <img id="ticketQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
+                            
+                            <p id="ticketFolio" class="text-2xl font-body font-light tracking-widest text-white">XV-0000</p>
                         </div>
                         
                         <p id="ticketName" class="serif text-2xl text-white mb-1">Nombre</p>
@@ -801,7 +804,7 @@
                 </div>
             </div>
         </section>
-
+        
         <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white corte-valle relative z-10">
             <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-rosa-elegante shadow-md">
             <p class="text-6xl font-script mb-2 text-rosa-elegante">Regina</p>
@@ -1083,30 +1086,26 @@
             document.getElementById("trivia-result").classList.add("hidden");
             loadQuestion();
         }
-        // --- CONEXIÓN CON GOOGLE SHEETS (RSVP Y PASES) ---
+       // --- 9. CONEXIÓN CON GOOGLE SHEETS (RSVP Y PASES CON QR) ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec'; 
 
-        // Enviar RSVP
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const btnSubmit = document.getElementById('btnSubmitRSVP');
             const name = document.getElementById('rsvpName').value;
             const pax = document.getElementById('rsvpPax').value;
             
-            // Generar un folio aleatorio (Ej. XV-4829)
+            // Generar folio aleatorio
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             const folio = `XV-${randomCode}`;
             
-            // Estado de carga
-            btnSubmit.innerText = "Generando...";
+            btnSubmit.innerText = "Generando..."; 
             btnSubmit.disabled = true;
-
-            // Enviar a Google Sheets
+            
             const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
             
             try {
-                const response = await fetch(requestUrl);
+                const response = await fetch(requestUrl); 
                 const result = await response.json();
                 
                 if(result.status === "success") {
@@ -1118,31 +1117,33 @@
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
+
+                    // Generar y mostrar el QR
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${folio}`;
+                    const qrImg = document.getElementById('ticketQR');
+                    qrImg.src = qrUrl;
+                    qrImg.classList.remove('hidden');
                 }
             } catch (error) {
                 alert("Hubo un error al guardar. Intenta nuevamente.");
-                btnSubmit.innerText = "Confirmar y Generar Pase";
+                btnSubmit.innerText = "Confirmar y Generar Pase"; 
                 btnSubmit.disabled = false;
             }
         });
 
-        // Consultar Pase
         async function consultarPase() {
             const folioInput = document.getElementById('searchFolio').value.trim();
             const resultDiv = document.getElementById('consultaResult');
             const errorDiv = document.getElementById('consultaError');
             
             if (!folioInput) return;
-
-            resultDiv.classList.add('hidden');
+            resultDiv.classList.add('hidden'); 
             errorDiv.classList.add('hidden');
             
             const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folioInput)}`;
-            
             try {
-                const response = await fetch(requestUrl);
+                const response = await fetch(requestUrl); 
                 const result = await response.json();
-                
                 if (result.status === "found") {
                     document.getElementById('consultaName').innerText = result.name;
                     document.getElementById('consultaPax').innerText = result.pax;
@@ -1150,8 +1151,8 @@
                 } else {
                     errorDiv.classList.remove('hidden');
                 }
-            } catch (error) {
-                alert("Error al buscar el pase. Intenta de nuevo.");
+            } catch (error) { 
+                alert("Error al buscar el pase. Intenta de nuevo."); 
             }
         }
     </script>
