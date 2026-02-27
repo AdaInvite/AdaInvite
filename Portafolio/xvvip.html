@@ -738,18 +738,67 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
+        <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10">
                 <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
-                <form id="rsvpForm" class="space-y-12 text-left bg-black/50 p-8 rounded-xl backdrop-blur-md border border-rosa-elegante/30 shadow-2xl">
+                
+                <form id="rsvpForm" class="space-y-12 text-left bg-black/50 p-8 rounded-xl backdrop-blur-md border border-rosa-elegante/30 shadow-2xl transition-all duration-500">
                     <div class="grid md:grid-cols-2 gap-10">
-                        <div class="border-b border-rosa-elegante/50 pb-2"><label class="text-[9px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Nombre</label><input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white"></div>
-                        <div class="border-b border-rosa-elegante/50 pb-2"><label class="text-[9px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Personas</label><select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none"><option class="text-black">1 Persona</option><option class="text-black">2 Personas</option><option class="text-black">Familia</option></select></div>
+                        <div class="border-b border-rosa-elegante/50 pb-2">
+                            <label class="text-[9px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Nombre Completo</label>
+                            <input type="text" id="rsvpName" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white">
+                        </div>
+                        <div class="border-b border-rosa-elegante/50 pb-2">
+                            <label class="text-[9px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Personas</label>
+                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none">
+                                <option class="text-black" value="1 Persona">1 Persona</option>
+                                <option class="text-black" value="2 Personas">2 Personas</option>
+                                <option class="text-black" value="Familia">Familia</option>
+                            </select>
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-rosa-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-white hover:text-rosa-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">Confirmar</button>
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-white hover:text-rosa-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">Confirmar y Generar Pase</button>
                 </form>
-                <div id="successMessage" class="hidden p-12 border border-rosa-elegante/40 mt-10 bg-black/60 backdrop-blur-md rounded-xl"><p class="text-4xl font-script text-rosa-elegante">¡Te espero con alegría!</p></div>
+
+                <div id="successMessage" class="hidden mt-10 transition-all duration-500">
+                    <div class="bg-black/60 backdrop-blur-md border-2 border-dashed border-rosa-elegante p-8 rounded-xl relative overflow-hidden">
+                        <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        
+                        <p class="text-4xl font-script text-rosa-elegante mb-2">¡Pase Confirmado!</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Guarda este folio para tu entrada</p>
+                        
+                        <div class="bg-white/10 p-4 rounded-lg mb-6">
+                            <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-1">Folio</p>
+                            <p id="ticketFolio" class="text-4xl font-body font-light tracking-widest text-white">XV-0000</p>
+                        </div>
+                        
+                        <p id="ticketName" class="serif text-2xl text-white mb-1">Nombre</p>
+                        <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400">0 Personas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-20 pb-32 px-6 bg-floral-section text-white text-center relative overflow-hidden">
+            <div class="max-w-xl mx-auto reveal relative z-10 border-t border-rosa-elegante/30 pt-16">
+                <h3 class="text-3xl font-script text-white mb-4">Ya tengo mi pase</h3>
+                <p class="text-[9px] uppercase tracking-[0.3em] mb-8 text-gray-300">Consulta los detalles de tu acceso</p>
+                
+                <div class="flex gap-4">
+                    <input type="text" id="searchFolio" placeholder="Ej. XV-1234" class="w-full bg-black/40 border border-rosa-elegante/50 rounded-md px-6 py-3 outline-none serif text-xl text-center text-white uppercase" maxlength="7">
+                    <button onclick="consultarPase()" class="bg-rosa-elegante text-white px-8 py-3 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-rosa-elegante transition-all duration-300">Buscar</button>
+                </div>
+                
+                <div id="consultaResult" class="hidden mt-6 bg-black/60 backdrop-blur-sm border border-rosa-elegante/30 p-6 rounded-xl">
+                    <p class="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-2">Pase Encontrado</p>
+                    <p id="consultaName" class="serif text-2xl text-white"></p>
+                    <p id="consultaPax" class="text-[11px] uppercase tracking-widest text-gray-300 mt-1"></p>
+                </div>
+                <div id="consultaError" class="hidden mt-6 bg-red-900/40 border border-red-500/30 p-4 rounded-xl">
+                    <p class="text-xs text-red-200 uppercase tracking-widest">No encontramos un pase con ese folio.</p>
+                </div>
             </div>
         </section>
 
@@ -1033,6 +1082,77 @@
             document.getElementById("trivia-question-container").classList.remove("hidden");
             document.getElementById("trivia-result").classList.add("hidden");
             loadQuestion();
+        }
+        // --- CONEXIÓN CON GOOGLE SHEETS (RSVP Y PASES) ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec'; 
+
+        // Enviar RSVP
+        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnSubmit = document.getElementById('btnSubmitRSVP');
+            const name = document.getElementById('rsvpName').value;
+            const pax = document.getElementById('rsvpPax').value;
+            
+            // Generar un folio aleatorio (Ej. XV-4829)
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            const folio = `XV-${randomCode}`;
+            
+            // Estado de carga
+            btnSubmit.innerText = "Generando...";
+            btnSubmit.disabled = true;
+
+            // Enviar a Google Sheets
+            const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
+            
+            try {
+                const response = await fetch(requestUrl);
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    // Ocultar formulario y mostrar Ticket
+                    document.getElementById('rsvpForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    
+                    // Llenar los datos del ticket
+                    document.getElementById('ticketFolio').innerText = folio;
+                    document.getElementById('ticketName').innerText = name;
+                    document.getElementById('ticketPax').innerText = pax;
+                }
+            } catch (error) {
+                alert("Hubo un error al guardar. Intenta nuevamente.");
+                btnSubmit.innerText = "Confirmar y Generar Pase";
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // Consultar Pase
+        async function consultarPase() {
+            const folioInput = document.getElementById('searchFolio').value.trim();
+            const resultDiv = document.getElementById('consultaResult');
+            const errorDiv = document.getElementById('consultaError');
+            
+            if (!folioInput) return;
+
+            resultDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            
+            const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folioInput)}`;
+            
+            try {
+                const response = await fetch(requestUrl);
+                const result = await response.json();
+                
+                if (result.status === "found") {
+                    document.getElementById('consultaName').innerText = result.name;
+                    document.getElementById('consultaPax').innerText = result.pax;
+                    resultDiv.classList.remove('hidden');
+                } else {
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                alert("Error al buscar el pase. Intenta de nuevo.");
+            }
         }
     </script>
 </body>
