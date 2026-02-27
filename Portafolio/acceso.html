@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Acceso - XV Regina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #121212; color: white; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="resultadoCard" class="w-full max-w-sm bg-gray-900 rounded-2xl shadow-2xl p-8 text-center border border-gray-700 transition-all duration-300">
+        
+        <div id="estadoCargando" class="animate-pulse">
+            <div class="w-16 h-16 border-4 border-[#B5737A] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+            <p class="text-gray-400 uppercase tracking-widest text-xs font-bold">Verificando pase...</p>
+        </div>
+
+        <div id="estadoAprobado" class="hidden">
+            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-3xl font-bold text-green-400 mb-2">ACCESO APROBADO</h2>
+            <p id="mostrarFolio" class="text-gray-500 tracking-widest mb-6">XV-0000</p>
+            
+            <div class="bg-gray-800 rounded-lg p-4 text-left">
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Nombre del Invitado</p>
+                <p id="mostrarNombre" class="text-xl font-bold text-white mb-4">Cargando...</p>
+                
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pases Válidos</p>
+                <p id="mostrarPersonas" class="text-xl font-bold text-white">0 Personas</p>
+            </div>
+        </div>
+
+        <div id="estadoDenegado" class="hidden">
+            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+            <h2 class="text-3xl font-bold text-red-500 mb-2">PASE NO VÁLIDO</h2>
+            <p class="text-gray-400 text-sm mt-4">El folio escaneado no existe o fue escrito incorrectamente.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // LA MISMA URL DE TU GOOGLE SHEETS
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec';
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Leer el folio de la URL (ej. ?folio=XV-1234)
+            const urlParams = new URLSearchParams(window.location.search);
+            const folio = urlParams.get('folio');
+
+            if (!folio) {
+                mostrarDenegado();
+                return;
+            }
+
+            try {
+                // Consultar a Google Sheets
+                const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folio)}`;
+                const response = await fetch(requestUrl);
+                const result = await response.json();
+
+                document.getElementById('estadoCargando').classList.add('hidden');
+
+                if (result.status === "found") {
+                    document.getElementById('mostrarFolio').innerText = folio;
+                    document.getElementById('mostrarNombre').innerText = result.name;
+                    document.getElementById('mostrarPersonas').innerText = result.pax;
+                    document.getElementById('estadoAprobado').classList.remove('hidden');
+                    document.getElementById('resultadoCard').classList.add('border-green-500');
+                } else {
+                    mostrarDenegado();
+                }
+            } catch (error) {
+                mostrarDenegado();
+            }
+        });
+
+        function mostrarDenegado() {
+            document.getElementById('estadoCargando').classList.add('hidden');
+            document.getElementById('estadoDenegado').classList.remove('hidden');
+            document.getElementById('resultadoCard').classList.add('border-red-600');
+        }
+    </script>
+</body>
+</html>
