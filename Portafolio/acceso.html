@@ -3,117 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Acceso - XV Regina</title>
+    <title>Punto de Acceso VIP - AdaInvite</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #121212; color: white; }
-        #qr-reader { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 1rem; overflow: hidden; border: 2px solid #B5737A; }
-        #qr-reader__scan_region img { display: none !important; }
-        #qr-reader__dashboard_section_csr button { background-color: #B5737A; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin-top: 10px; cursor: pointer; }
+        :root {
+            --rosa-elegante: #B5737A;
+            --bg-floral: url('https://i.imgur.com/1jA6vDL.jpeg'); /* El mismo fondo de la invitación */
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.95)), var(--bg-floral); 
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: white; 
+        }
+
+        h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
+        .font-script { font-family: 'Pinyon Script', cursive; }
+
+        /* Estilos Premium para el lector QR */
+        #qr-reader { 
+            width: 100%; max-width: 350px; margin: 0 auto; 
+            border-radius: 20px; overflow: hidden; 
+            border: 2px solid rgba(181, 115, 122, 0.4); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            background-color: black;
+        }
+        /* Ocultar botones feos por defecto de la librería */
+        #qr-reader__dashboard_section_csr button,
+        #qr-reader__camera_selection {
+            background-color: #1a1a1a; color: white; border: 1px solid rgba(181, 115, 122, 0.5); 
+            padding: 8px 15px; border-radius: 6px; font-size: 11px; text-transform: uppercase; 
+            letter-spacing: 1px; margin: 5px; cursor: pointer; transition: all 0.3s;
+        }
+        #qr-reader__dashboard_section_csr button:hover { background-color: var(--rosa-elegante); }
+        #qr-reader__scan_region img { display: none !important; } /* Ocultar el logo de la librería */
+
+        /* Animación de escaneo (Línea rosa) */
+        .scan-region-highlight { border: 3px solid var(--rosa-elegante) !important; border-radius: 15px; outline: none !important;}
+        
+        /* Ajuste para el video en móviles */
+        #qr-reader video { object-fit: cover !important; }
+
+        .btn-premium {
+            background-color: transparent; border: 1px solid var(--rosa-elegante);
+            color: var(--rosa-elegante); font-size: 10px; letter-spacing: 2px;
+            text-transform: uppercase; padding: 12px 24px; transition: all 0.4s;
+            border-radius: 4px; font-weight: bold;
+        }
+        .btn-premium:hover { background-color: var(--rosa-elegante); color: white; box-shadow: 0 5px 15px rgba(181, 115, 122, 0.3); }
+
+        .cargando-spinner {
+            width: 14px; h-14; border: 2px border-[#B5737A]; border-t-transparent rounded-full;
+            animate-spin inline-block mr-2;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-6 text-center border border-gray-700 transition-all duration-300" id="mainContainer">
+    <div class="w-full max-w-md bg-black/70 backdrop-blur-lg rounded-2xl shadow-2xl p-6 text-center border border-rosa-elegante/20 transition-all duration-500" id="mainContainer">
         
         <div id="vistaCamara" class="hidden">
-            <h2 class="text-2xl font-bold text-[#B5737A] mb-2">Escáner de Acceso</h2>
-            <p class="text-gray-400 text-xs uppercase tracking-widest mb-6">Apunta la cámara al código QR</p>
-            <div id="qr-reader"></div>
+            <p class="text-[11px] uppercase tracking-[0.4em] text-gray-400 mb-2 font-bold">Control de Acceso</p>
+            <h1 class="text-6xl text-rosa-elegante font-script mb-6 drop-shadow-lg">AdaInvite VIP</h1>
+            
+            <div id="qr-reader" class="mb-6"></div>
+            
+            <p class="serif text-lg italic text-white/80 leading-relaxed px-4">Por favor, enfoca el código QR que se generó en tu invitación para validar tu entrada.</p>
         </div>
 
-        <div id="vistaCargando" class="hidden py-10">
-            <div class="w-16 h-16 border-4 border-[#B5737A] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-gray-400 uppercase tracking-widest text-xs font-bold">Verificando pase en la base de datos...</p>
+        <div id="vistaCargando" class="hidden py-16">
+            <div class="inline-block cargando-spinner mb-6 w-16 h-16 border-4"></div>
+            <p class="text-gray-300 uppercase tracking-[0.3em] text-xs font-bold animate-pulse">Consultando Lista de Invitados...</p>
         </div>
 
         <div id="vistaAprobado" class="hidden py-6">
-            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h2 class="text-3xl font-bold text-green-400 mb-2">ACCESO APROBADO</h2>
-            <p id="mostrarFolio" class="text-gray-500 tracking-widest mb-6">XV-0000</p>
-            
-            <div class="bg-gray-800 rounded-lg p-4 text-left mb-6">
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Nombre del Invitado</p>
-                <p id="mostrarNombre" class="text-xl font-bold text-white mb-4">...</p>
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pases Válidos</p>
-                <p id="mostrarPersonas" class="text-xl font-bold text-white">...</p>
+            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border-2 border-green-500 shadow-[0_0_40px_rgba(34,197,94,0.3)] bg-green-950/50">
+                <svg class="w-12 h-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
             </div>
             
-            <button onclick="reiniciarEscaner()" class="w-full border border-gray-500 text-gray-300 py-3 rounded-md uppercase tracking-widest text-xs font-bold hover:bg-gray-800 transition-colors">Escanear otro pase</button>
+            <p class="text-[11px] uppercase tracking-[0.4em] text-green-400 mb-2 font-bold">Autorizado</p>
+            <h1 class="text-6xl text-rosa-elegante font-script mb-2 drop-shadow-lg">¡Bienvenido!</h1>
+            <p id="mostrarFolio" class="text-sm tracking-[0.5em] font-light text-gray-500 mb-8">XV-0000</p>
+            
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
+                <p class="serif text-3xl text-white mb-1" id="mostrarNombre">Nombre Completo</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold">Titular del Pase</p>
+                
+                <div class="w-full h-px bg-white/10 my-4"></div>
+                
+                <p class="serif text-3xl text-rosa-elegante" id="mostrarPersonas">0</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold">Accesos Válidos</p>
+            </div>
+            
+            <button onclick="reiniciarEscaner()" class="btn-premium w-full mt-4">Validar otro invitado</button>
         </div>
 
         <div id="vistaDenegado" class="hidden py-6">
-            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(220,38,38,0.4)]">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border-2 border-red-600 shadow-[0_0_40px_rgba(220,38,38,0.3)] bg-red-950/50">
+                <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </div>
-            <h2 class="text-3xl font-bold text-red-500 mb-2">PASE NO VÁLIDO</h2>
-            <p id="mensajeError" class="text-gray-400 text-sm mt-4 mb-8">El folio escaneado no existe o no se pudo verificar.</p>
             
-            <button onclick="reiniciarEscaner()" class="w-full bg-red-600/20 border border-red-600 text-red-400 py-3 rounded-md uppercase tracking-widest text-xs font-bold hover:bg-red-600/40 transition-colors">Intentar de nuevo</button>
+            <p class="text-[11px] uppercase tracking-[0.4em] text-red-500 mb-2 font-bold">Error</p>
+            <h1 class="text-6xl text-rosa-elegante font-script mb-8 drop-shadow-lg">No Registrado</h1>
+            <p id="mensajeError" class="serif text-xl italic text-red-200/80 mb-10 leading-relaxed px-4">El folio escaneado no existe en nuestra base de datos o es incorrecto.</p>
+            
+            <button onclick="reiniciarEscaner()" class="btn-premium w-full mt-4 !border-red-600 !text-red-500 hover:!bg-red-600 hover:!text-white">Volver a escanear</button>
         </div>
 
     </div>
+
+    <footer class="absolute bottom-6 text-center w-full z-0">
+        <p class="text-[9px] uppercase tracking-[0.3em] text-white/40">AdaInvite © Sistema de Portafolio VIP</p>
+    </footer>
 
     <script>
         // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec';
         let html5QrcodeScanner;
 
-        // Lógica inteligente de inicio
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const folio = urlParams.get('folio') || urlParams.get('pase');
 
-            // Si hay un folio en la URL (porque escanearon con la app normal del cel), lo verificamos.
             if (folio) {
                 verificarFolioEnGoogle(folio);
             } else {
-                // Si no hay folio (porque entraron a acceso.html directamente), abrimos la cámara.
                 iniciarCamara();
             }
         });
 
+        // --- SOLUCIÓN AL PROBLEMA DE ESCANEO (Optimización) ---
         function iniciarCamara() {
             ocultarTodasLasVistas();
             document.getElementById('vistaCamara').classList.remove('hidden');
+            // Quitamos los bordes de color si veníamos de una vista anterior
             document.getElementById('mainContainer').classList.remove('border-green-500', 'border-red-600');
 
             if (!html5QrcodeScanner) {
-                html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: {width: 250, height: 250}, aspectRatio: 1.0 });
+                // fps: 15 para más rapidez. qrbox: 250x250 para mejor enfoque.
+                html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
+                    fps: 15, 
+                    qrbox: {width: 250, height: 250},
+                    aspectRatio: 1.0, 
+                    rememberLastUsedCamera: true,
+                    // Preferimos la cámara trasera de fábrica
+                    supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+                });
                 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
             }
         }
 
         function onScanSuccess(decodedText) {
+            // El lector encontró un código. Detenemos la cámara INMEDIATAMENTE para evitar escaneos dobles mientras carga.
             html5QrcodeScanner.clear().then(() => {
                 html5QrcodeScanner = null;
                 
                 let folioExtraido = decodedText;
+                // Si el QR escaneado es una URL completa, extraemos solo el folio.
                 try {
                     let url = new URL(decodedText);
+                    // Busca tanto si el parámetro es "pase=" como "folio="
                     folioExtraido = url.searchParams.get('pase') || url.searchParams.get('folio') || decodedText;
-                } catch(e) {}
+                } catch(e) { /* Si no es una URL, asume que es el texto plano */ }
 
                 if(folioExtraido) {
                     verificarFolioEnGoogle(folioExtraido);
                 } else {
-                    mostrarDenegado("El QR escaneado no tiene un formato válido.");
+                    mostrarDenegado("El QR escaneado no contiene un folio válido.");
                 }
+            }).catch(error => {
+                console.error("Error al limpiar el escáner:", error);
             });
         }
 
-        function onScanFailure(error) { /* Ignorado intencionalmente */ }
+        function onScanFailure(error) {
+            // Se ejecuta mientras la cámara está encendida buscando códigos. Lo dejamos vacío para no saturar la consola.
+        }
 
         async function verificarFolioEnGoogle(folio) {
             ocultarTodasLasVistas();
             document.getElementById('vistaCargando').classList.remove('hidden');
-            document.getElementById('mainContainer').classList.remove('border-green-500', 'border-red-600');
 
             try {
+                // Consultamos a tu Google Sheet
                 const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folio)}`;
                 const response = await fetch(requestUrl);
                 const result = await response.json();
@@ -125,12 +206,13 @@
                     document.getElementById('mostrarNombre').innerText = result.name;
                     document.getElementById('mostrarPersonas').innerText = result.pax;
                     document.getElementById('vistaAprobado').classList.remove('hidden');
-                    document.getElementById('mainContainer').classList.add('border-green-500');
+                    // Cambiamos el borde a verde (Rosa elegante no resalta bien sobre verde)
+                    document.getElementById('mainContainer').style.borderColor = "#22C55E";
                 } else {
-                    mostrarDenegado("Ese pase no se encuentra en la base de datos.");
+                    mostrarDenegado("Ese folio no existe en la lista de invitados.");
                 }
             } catch (error) {
-                mostrarDenegado("Error de conexión con la base de datos.");
+                mostrarDenegado("Error de conexión con la base de datos de Google.");
             }
         }
 
@@ -138,7 +220,8 @@
             ocultarTodasLasVistas();
             document.getElementById('mensajeError').innerText = mensaje || "El folio escaneado no existe o fue escrito incorrectamente.";
             document.getElementById('vistaDenegado').classList.remove('hidden');
-            document.getElementById('mainContainer').classList.add('border-red-600');
+            // Cambiamos el borde a rojo
+            document.getElementById('mainContainer').style.borderColor = "#DC2626";
         }
 
         function ocultarTodasLasVistas() {
@@ -146,10 +229,12 @@
             document.getElementById('vistaCargando').classList.add('hidden');
             document.getElementById('vistaAprobado').classList.add('hidden');
             document.getElementById('vistaDenegado').classList.add('hidden');
+            // Reseteamos el borde al original
+            document.getElementById('mainContainer').style.borderColor = "rgba(181, 115, 122, 0.2)";
         }
 
         function reiniciarEscaner() {
-            // Limpiar la URL para que no se quede trabado en el mismo pase
+            // Limpiamos la URL para que no se quede trabado en el mismo pase al reiniciar
             window.history.replaceState({}, document.title, window.location.pathname);
             iniciarCamara();
         }
