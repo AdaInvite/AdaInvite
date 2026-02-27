@@ -263,6 +263,34 @@
         }
         body.dark-mode .weather-card .hora-clima { color: #A0A0A0 !important; }
         body.dark-mode .weather-card .temp-texto { color: #EAEAEA !important; }
+        /* Estilos y Modo Oscuro para Trivia */
+        body.dark-mode #trivia-container { 
+            background-color: #1A1A1A; 
+            border-color: rgba(181, 115, 122, 0.4); 
+        }
+        body.dark-mode #trivia-q-text, 
+        body.dark-mode #trivia-result p.serif { color: #EAEAEA !important; }
+        
+        .btn-trivia { 
+            transition: all 0.3s ease; 
+        }
+        body.dark-mode .btn-trivia {
+            color: #EAEAEA !important;
+        }
+        
+        /* Colores de acierto y error */
+        .btn-trivia.correct { 
+            background-color: #10B981 !important; /* Verde */
+            color: white !important; 
+            border-color: #10B981 !important; 
+        }
+        .btn-trivia.incorrect { 
+            background-color: #EF4444 !important; /* Rojo */
+            color: white !important; 
+            border-color: #EF4444 !important; 
+        }
+        /* Desactivar hover cuando ya se respondió */
+        .btn-trivia:disabled { cursor: not-allowed; opacity: 0.9; }
         
     </style>
 </head>
@@ -489,7 +517,34 @@
         </section>
 
         <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/VseF79Z.jpeg');"></section>
+        
+<section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-center relative overflow-hidden corte-valle">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-4 text-rosa-elegante font-script">Trivia</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
+                
+                <div id="trivia-container" class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-rosa-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                    
+                    <div id="trivia-question-container">
+                        <p class="text-[9px] uppercase tracking-widest text-gray-400 mb-4 font-bold">Pregunta <span id="trivia-current-num">1</span> de <span id="trivia-total-num">3</span></p>
+                        <h3 id="trivia-q-text" class="serif text-2xl md:text-3xl text-[#2C2A2A] mb-8">Pregunta aquí</h3>
+                        <div id="trivia-options" class="flex flex-col gap-4">
+                            </div>
+                    </div>
 
+                    <div id="trivia-result" class="hidden">
+                        <h3 class="font-script text-6xl text-rosa-elegante mb-4">¡Terminaste!</h3>
+                        <p class="serif text-2xl text-[#2C2A2A] mb-2">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold text-rosa-elegante mb-8"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
+                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-500 mb-8 font-bold"></p>
+                        <button onclick="resetTrivia()" class="bg-transparent text-rosa-elegante border border-rosa-elegante px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-rosa-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
         <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla relative text-[#2C2A2A] corte-pico">
             <div class="bg-texture-main opacity-20 z-0"></div>
             <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
@@ -728,6 +783,7 @@
                 document.getElementById('theme-btn').classList.remove('hidden'); 
                 initObserver();
                 fetchWeather();
+                loadQuestion();
             }, 1200);
         }
 
@@ -884,6 +940,99 @@
                 }
             }
             container.innerHTML = cardsHTML;
+        }
+        // --- TRIVIA DE LA QUINCEAÑERA ---
+        // Aquí puedes editar las preguntas, las opciones y cuál es la correcta
+        const triviaData = [
+            {
+                question: "¿Cuál es mi postre favorito?",
+                options: ["Helado de vainilla", "Pastel de Chocolate", "Crepas dulces", "Fresas con crema"],
+                answer: 1 // El 1 equivale a "Pastel de Chocolate" (se cuenta desde el 0)
+            },
+            {
+                question: "¿A dónde me gustaría viajar?",
+                options: ["París", "Tokio", "Nueva York", "Londres"],
+                answer: 0 // El 0 equivale a "París"
+            },
+            {
+                question: "¿Cuál es mi serie favorita?",
+                options: ["Stranger Things", "Bridgerton", "Friends", "Gossip Girl"],
+                answer: 3 // El 3 equivale a "Gossip Girl"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const qText = document.getElementById("trivia-q-text");
+            const optionsContainer = document.getElementById("trivia-options");
+            
+            document.getElementById("trivia-current-num").innerText = currentQuestion + 1;
+            document.getElementById("trivia-total-num").innerText = triviaData.length;
+            
+            qText.innerText = triviaData[currentQuestion].question;
+            optionsContainer.innerHTML = "";
+
+            triviaData[currentQuestion].options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.innerText = opt;
+                btn.className = "btn-trivia w-full text-left px-6 py-4 rounded-xl border border-rosa-elegante/40 text-[#2C2A2A] bg-transparent hover:bg-rosa-elegante hover:text-white font-body text-sm tracking-wide";
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            const correctIndex = triviaData[currentQuestion].answer;
+            const allBtns = document.querySelectorAll('.btn-trivia');
+            
+            // Bloqueamos los botones para que no hagan doble clic
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('incorrect');
+                // Iluminamos la correcta para que sepan cuál era
+                allBtns[correctIndex].classList.add('correct');
+            }
+
+            // Pasamos a la siguiente pregunta después de 1.5 segundos
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < triviaData.length) {
+                    loadQuestion();
+                } else {
+                    showTriviaResults();
+                }
+            }, 1500);
+        }
+
+        function showTriviaResults() {
+            document.getElementById("trivia-question-container").classList.add("hidden");
+            document.getElementById("trivia-result").classList.remove("hidden");
+            
+            document.getElementById("trivia-score").innerText = score;
+            document.getElementById("trivia-total-score").innerText = triviaData.length;
+
+            const feedback = document.getElementById("trivia-feedback");
+            if (score === triviaData.length) {
+                feedback.innerText = "¡Wow! Me conoces a la perfección ❤️";
+            } else if (score >= triviaData.length / 2) {
+                feedback.innerText = "¡Nada mal! Me conoces bastante bien ✨";
+            } else {
+                feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta 😅";
+            }
+        }
+
+        function resetTrivia() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById("trivia-question-container").classList.remove("hidden");
+            document.getElementById("trivia-result").classList.add("hidden");
+            loadQuestion();
         }
     </script>
 </body>
