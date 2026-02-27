@@ -1156,25 +1156,14 @@
                 alert("Error al buscar el pase. Intenta de nuevo."); 
             }
         }
-
-        // --- 10. LÓGICA DE ESCANEO AUTOMÁTICO AL ABRIR EL LINK DEL QR ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paseFolio = urlParams.get('pase');
-            
-            if (paseFolio) {
-                document.getElementById('envelope-wrapper').style.display = 'none';
-                document.getElementById('section-intro').style.display = 'none';
-                document.getElementById('section-main').style.display = 'block';
-                
-                document.getElementById('searchFolio').value = paseFolio;
-                consultarPase();
-                
-                setTimeout(() => {
-                    document.getElementById('searchFolio').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 800);
-            }
-        });
+        // --- CREAR EL QR HACIA LA PÁGINA INDEPENDIENTE DE ACCESO ---
+                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; // Nueva página
+                    const linkEscaneo = `${urlBase}?folio=${folio}`;
+                    
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
+                    const qrImg = document.getElementById('ticketQR');
+                    qrImg.src = qrUrl;
+                    qrImg.classList.remove('hidden');
     </script>
 </body>
 </html>
