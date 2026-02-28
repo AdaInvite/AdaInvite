@@ -761,6 +761,18 @@
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-white hover:text-rosa-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">Confirmar y Generar Pase</button>
                 </form>
 
+                <div id="loadingMessage" class="hidden mt-10 bg-black/60 backdrop-blur-md border border-rosa-elegante/30 p-12 rounded-xl flex-col items-center justify-center transition-all duration-500">
+                    <div class="w-16 h-16 border-4 border-[#B5737A] border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                    <p class="text-3xl font-script text-rosa-elegante mb-2">Generando Pase...</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Creando folio y validando datos</p>
+                </div>
+
+                <div id="errorMessage" class="hidden mt-10 bg-red-950/60 backdrop-blur-md border border-red-500/30 p-8 rounded-xl transition-all duration-500">
+                    <p class="text-2xl serif text-white mb-2">Parece que ya estás en la lista</p>
+                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">El nombre ingresado ya generó un pase anteriormente.</p>
+                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-6 py-3 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors">Intentar con otro nombre</button>
+                </div>
+
                 <div id="successMessage" class="hidden mt-10 transition-all duration-500">
                     <div class="bg-black/60 backdrop-blur-md border-2 border-dashed border-rosa-elegante p-8 rounded-xl relative overflow-hidden">
                         <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
@@ -771,40 +783,47 @@
                         
                         <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
                             <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
-                            
                             <img id="ticketQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
-                            
-                            <p id="ticketFolio" class="text-2xl font-body font-light tracking-widest text-white">XV-0000</p>
+                            <p id="ticketFolio" class="text-2xl font-body font-light tracking-widest text-white"></p>
                         </div>
                         
-                        <p id="ticketName" class="serif text-2xl text-white mb-1">Nombre</p>
-                        <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400">0 Personas</p>
+                        <p id="ticketName" class="serif text-2xl text-white mb-1"></p>
+                        <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
                     </div>
                 </div>
             </div>
         </section>
-
         <section class="pt-20 pb-32 px-6 bg-floral-section text-white text-center relative overflow-hidden">
             <div class="max-w-xl mx-auto reveal relative z-10 border-t border-rosa-elegante/30 pt-16">
-                <h3 class="text-3xl font-script text-white mb-4">Ya tengo mi pase</h3>
-                <p class="text-[9px] uppercase tracking-[0.3em] mb-8 text-gray-300">Consulta los detalles de tu acceso</p>
+                <h3 class="text-3xl font-script text-white mb-4">Recuperar mi Pase</h3>
+                <p class="text-[9px] uppercase tracking-[0.3em] mb-8 text-gray-300">Ingresa tu nombre para ver tu código QR</p>
                 
                 <div class="flex gap-4">
-                    <input type="text" id="searchFolio" placeholder="Ej. XV-1234" class="w-full bg-black/40 border border-rosa-elegante/50 rounded-md px-6 py-3 outline-none serif text-xl text-center text-white uppercase" maxlength="7">
-                    <button onclick="consultarPase()" class="bg-rosa-elegante text-white px-8 py-3 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-rosa-elegante transition-all duration-300">Buscar</button>
+                    <input type="text" id="searchName" placeholder="Ej. María Pérez" class="w-full bg-black/40 border border-rosa-elegante/50 rounded-md px-6 py-3 outline-none serif text-xl text-center text-white uppercase">
+                    <button onclick="consultarPase()" id="btnConsultar" class="bg-rosa-elegante text-white px-8 py-3 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-rosa-elegante transition-all duration-300 flex-shrink-0">Buscar</button>
                 </div>
                 
-                <div id="consultaResult" class="hidden mt-6 bg-black/60 backdrop-blur-sm border border-rosa-elegante/30 p-6 rounded-xl">
-                    <p class="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-2">Pase Encontrado</p>
-                    <p id="consultaName" class="serif text-2xl text-white"></p>
-                    <p id="consultaPax" class="text-[11px] uppercase tracking-widest text-gray-300 mt-1"></p>
+                <div id="consultaResult" class="hidden mt-8 bg-black/60 backdrop-blur-md border-2 border-dashed border-rosa-elegante p-8 rounded-xl flex-col items-center transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                    <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                    
+                    <p class="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-4">Pase Encontrado</p>
+                    
+                    <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center w-full max-w-[250px] mx-auto">
+                        <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
+                        <img id="consultaQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
+                        <p id="consultaFolio" class="text-2xl font-body font-light tracking-widest text-white"></p>
+                    </div>
+
+                    <p id="consultaNameDisplay" class="serif text-2xl text-white mb-1"></p>
+                    <p id="consultaPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
                 </div>
+
                 <div id="consultaError" class="hidden mt-6 bg-red-900/40 border border-red-500/30 p-4 rounded-xl">
-                    <p class="text-xs text-red-200 uppercase tracking-widest">No encontramos un pase con ese folio.</p>
+                    <p class="text-xs text-red-200 uppercase tracking-widest">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando confirmaste.</p>
                 </div>
             </div>
         </section>
-        
         <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white corte-valle relative z-10">
             <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-rosa-elegante shadow-md">
             <p class="text-6xl font-script mb-2 text-rosa-elegante">Regina</p>
@@ -1087,23 +1106,22 @@
             loadQuestion();
         }
                // --- 9. CONEXIÓN CON GOOGLE SHEETS (RSVP Y PASES CON QR DE ADAINVITE) ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec'; 
+        // Pega aquí la NUEVA URL que generaste en el Paso 1
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btnSubmit = document.getElementById('btnSubmitRSVP');
-            const name = document.getElementById('rsvpName').value;
+            const name = document.getElementById('rsvpName').value.trim();
             const pax = document.getElementById('rsvpPax').value;
             
             // Generar folio aleatorio
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             const folio = `XV-${randomCode}`;
             
-            // --- ESTADO DE CARGA (LOADING) ---
-            const textoOriginal = btnSubmit.innerText; // Guardamos el texto original
-            btnSubmit.innerText = "GENERANDO PASE..."; // Cambiamos el texto
-            btnSubmit.classList.add('opacity-75', 'cursor-not-allowed'); // Lo hacemos un poco transparente
-            btnSubmit.disabled = true; // Bloqueamos el botón para evitar doble clic
+            // --- MOSTRAR PANTALLA DE CARGA ---
+            document.getElementById('rsvpForm').classList.add('hidden');
+            document.getElementById('loadingMessage').classList.remove('hidden');
+            document.getElementById('loadingMessage').classList.add('flex'); // Forzamos Flexbox para centrar
             
             const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
             
@@ -1111,64 +1129,103 @@
                 const response = await fetch(requestUrl); 
                 const result = await response.json();
                 
+                // --- OCULTAR CARGA ---
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('loadingMessage').classList.remove('flex');
+                
                 if(result.status === "success") {
-                    document.getElementById('rsvpForm').classList.add('hidden');
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    
+                    // Llenar los datos ANTES de mostrar el ticket (Adiós parpadeos)
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
 
-                    // --- CREAR EL QR HACIA LA PÁGINA INDEPENDIENTE DE ACCESO ---
                     const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; 
                     const linkEscaneo = `${urlBase}?folio=${folio}`;
                     
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
                     const qrImg = document.getElementById('ticketQR');
+                    
+                    // Esperamos a que la imagen cargue internamente para mostrarla
+                    qrImg.onload = () => {
+                        qrImg.classList.remove('hidden');
+                        document.getElementById('successMessage').classList.remove('hidden');
+                    };
                     qrImg.src = qrUrl;
-                    qrImg.classList.remove('hidden');
+
+                } else if (result.status === "exists") {
+                    // MOSTRAR ERROR DE DUPLICADO
+                    document.getElementById('errorMessage').classList.remove('hidden');
                 }
             } catch (error) {
-                alert("Hubo un error al guardar. Intenta nuevamente.");
-                // Si hay un error, restauramos el botón a la normalidad
-                btnSubmit.innerText = textoOriginal; 
-                btnSubmit.classList.remove('opacity-75', 'cursor-not-allowed');
-                btnSubmit.disabled = false;
+                alert("Hubo un error de conexión. Revisa tu internet e intenta de nuevo.");
+                resetForm(); // Regresamos al formulario
             }
         });
 
+        // Función para botón "Intentar con otro nombre"
+        function resetForm() {
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('loadingMessage').classList.add('hidden');
+            document.getElementById('loadingMessage').classList.remove('flex');
+            document.getElementById('rsvpForm').classList.remove('hidden');
+            document.getElementById('rsvpName').value = ''; // Limpiamos el nombre
+        }
+
         async function consultarPase() {
-            const folioInput = document.getElementById('searchFolio').value.trim();
+            const searchInput = document.getElementById('searchName').value.trim();
             const resultDiv = document.getElementById('consultaResult');
             const errorDiv = document.getElementById('consultaError');
+            const btnConsultar = document.getElementById('btnConsultar');
             
-            if (!folioInput) return;
+            if (!searchInput) return;
+
+            // Mostrar estado de carga en el botón
+            const textoOriginal = btnConsultar.innerText;
+            btnConsultar.innerText = "⏳...";
+            btnConsultar.disabled = true;
+
             resultDiv.classList.add('hidden'); 
+            resultDiv.classList.remove('flex'); // Quitamos flex para ocultar
             errorDiv.classList.add('hidden');
             
-            const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folioInput)}`;
+            // Mandamos el nombre en lugar del folio
+            const requestUrl = `${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`;
+            
             try {
                 const response = await fetch(requestUrl); 
                 const result = await response.json();
+                
+                // Restaurar botón
+                btnConsultar.innerText = textoOriginal;
+                btnConsultar.disabled = false;
+
                 if (result.status === "found") {
-                    document.getElementById('consultaName').innerText = result.name;
+                    document.getElementById('consultaNameDisplay').innerText = result.name;
                     document.getElementById('consultaPax').innerText = result.pax;
-                    resultDiv.classList.remove('hidden');
+                    document.getElementById('consultaFolio').innerText = result.folio;
+
+                    // --- GENERAR EL QR NUEVAMENTE ---
+                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; 
+                    const linkEscaneo = `${urlBase}?folio=${result.folio}`;
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
+                    
+                    const qrImg = document.getElementById('consultaQR');
+                    qrImg.onload = () => {
+                        qrImg.classList.remove('hidden');
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.classList.add('flex'); // Usamos flex para centrar los elementos del ticket
+                    };
+                    qrImg.src = qrUrl;
+
                 } else {
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) { 
-                alert("Error al buscar el pase. Intenta de nuevo."); 
+                alert("Error de conexión. Intenta de nuevo."); 
+                btnConsultar.innerText = textoOriginal;
+                btnConsultar.disabled = false;
             }
         }
-        // --- CREAR EL QR HACIA LA PÁGINA INDEPENDIENTE DE ACCESO ---
-                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; // Nueva página
-                    const linkEscaneo = `${urlBase}?folio=${folio}`;
-                    
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
-                    const qrImg = document.getElementById('ticketQR');
-                    qrImg.src = qrUrl;
-                    qrImg.classList.remove('hidden');
     </script>
 </body>
 </html>
