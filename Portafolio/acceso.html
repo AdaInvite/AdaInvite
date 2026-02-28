@@ -41,8 +41,8 @@
     <div class="w-full max-w-md bg-black/70 backdrop-blur-lg rounded-2xl shadow-2xl p-6 text-center border border-rosa-elegante/20 transition-all duration-300" id="mainContainer">
         
         <div id="vistaCamara" class="hidden">
-            <p class="text-[11px] uppercase tracking-[0.4em] text-gray-400 mb-1 font-bold">Staff de Acceso</p>
-            <h1 class="text-5xl text-rosa-elegante font-script mb-4">AdaInvite VIP</h1>
+            <p class="text-[9px] uppercase tracking-[0.4em] text-gray-400 mb-1 font-bold">Staff de Acceso</p>
+            <h1 class="text-3xl text-rosa-elegante font-script mb-4">AdaInvite VIP</h1>
             
             <div id="qr-reader" class="mb-4 shadow-lg"></div>
             <p class="text-[10px] text-gray-400 mb-6 uppercase tracking-widest">Aleja el celular 15cm para enfocar</p>
@@ -194,6 +194,24 @@
         function reiniciarEscaner() {
             window.history.replaceState({}, document.title, window.location.pathname);
             iniciarCamara();
+        }
+        function iniciarCamara() {
+            ocultarTodasLasVistas();
+            document.getElementById('vistaCamara').classList.remove('hidden');
+            document.getElementById('mainContainer').classList.remove('border-green-500', 'border-red-600');
+            document.getElementById('manualFolio').value = '';
+
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
+                    fps: 20, // Aumentamos la rapidez de captura
+                    qrbox: {width: 250, height: 250},
+                    aspectRatio: 1.0, 
+                    rememberLastUsedCamera: true,
+                    disableFlip: true, // Desactiva la lectura en espejo (Acelera el proceso x2)
+                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] // SOLO busca códigos QR, ignora los de barras (Acelera x5)
+                }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
         }
     </script>
 </body>
