@@ -279,51 +279,35 @@
             50% { transform: translateY(-10px) rotate(1deg); }
         }
 
-.audio-btn {
+/* --- BOTÓN DE MÚSICA FLOTANTE (Sin fondo ni bordes) --- */
+        .audio-btn {
             position: fixed;
             bottom: 30px;
-            right: 20px;
-            width: 44px; 
-            height: 44px; 
-            background: var(--crema-suave);
-            border-radius: 50%;
+            right: 30px; 
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 90;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             cursor: pointer;
             transition: transform 0.3s;
-            border: 2px solid var(--verde-olivo);
         }
-        .audio-btn:hover { transform: scale(1.1); }
+        .audio-btn:hover { transform: scale(1.2); } 
 
-        /* --- ANIMACIÓN DE ONDAS DE AUDIO --- */
+        /* --- CONTENEDOR MÁS ALTO PARA ONDAS MÁS GRANDES --- */
         .wave-container {
             display: flex;
-            align-items: center;
+            align-items: flex-end; /* Se alinean abajo para crecer hacia arriba */
             justify-content: center;
             gap: 3px;
-            height: 20px;
+            height: 40px; 
+            padding: 5px;
         }
         .wave {
             width: 3px;
-            height: 6px;
+            height: 4px; /* Altura en reposo */
             background-color: var(--verde-olivo);
             border-radius: 3px;
-            transition: height 0.3s ease;
-        }
-        .wave-container.playing .wave {
-            animation: wave-bounce 1s infinite ease-in-out;
-        }
-        .wave-container.playing .wave:nth-child(1) { animation-delay: 0s; }
-        .wave-container.playing .wave:nth-child(2) { animation-delay: 0.15s; animation-duration: 0.8s; }
-        .wave-container.playing .wave:nth-child(3) { animation-delay: 0.3s; animation-duration: 1.2s; }
-        .wave-container.playing .wave:nth-child(4) { animation-delay: 0.1s; animation-duration: 0.9s; }
-
-        @keyframes wave-bounce {
-            0%, 100% { height: 6px; }
-            50% { height: 20px; }
+            transition: height 0.05s linear; /* Transición rápida para sincronía perfecta */
         }
 
        /* --- DISEÑO DE TARJETAS TIPO "MOMENTOS" --- */
@@ -876,12 +860,11 @@
             }, 1200);
         }
 
-// --- REPRODUCTOR DE MÚSICA CON ONDAS REALES ---
+// --- REPRODUCTOR DE MÚSICA CON ONDAS DRAMÁTICAS ---
         const audio = document.getElementById("bg-music");
         const waves = document.querySelectorAll(".wave");
         let isPlaying = false;
         
-        // Variables para la Web Audio API
         let audioCtx;
         let analyser;
         let dataArray;
@@ -891,11 +874,8 @@
         function initAudio() {
             if (isAudioInitialized) return;
             
-            // Creamos el contexto de audio
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
-            
-            // fftSize determina cuántas bandas de frecuencia obtenemos (32 es un buen tamaño para 4 ondas)
             analyser.fftSize = 32; 
 
             const source = audioCtx.createMediaElementSource(audio);
@@ -912,7 +892,6 @@
             animationId = requestAnimationFrame(renderFrame);
             analyser.getByteFrequencyData(dataArray);
 
-            // Dividimos las frecuencias entre nuestras 4 barritas
             const step = Math.floor(dataArray.length / waves.length);
 
             waves.forEach((wave, index) => {
@@ -922,41 +901,40 @@
                 }
                 let average = sum / step;
 
-                // Mapeamos el volumen (0 a 255) a una altura en píxeles (de 6px a 24px)
-                let height = 6 + (average / 255) * 18;
+                // Factor para hacer que salten mucho más (puedes subirlo a 2.0 si quieres aún más)
+                const sensitivityFactor = 1.8;
+                let amplifiedAverage = average * sensitivityFactor;
+
+                if (amplifiedAverage > 255) amplifiedAverage = 255;
+
+                // Crecen desde 4px hasta 40px dependiendo del volumen
+                let height = 4 + (amplifiedAverage / 255) * 36;
                 wave.style.height = `${height}px`;
             });
         }
 
         function playAudio() {
             initAudio();
-            
-            // Los navegadores a veces suspenden el contexto hasta que hay interacción
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             
             audio.play().then(() => {
                 isPlaying = true;
-                renderFrame(); // Iniciamos la animación
+                renderFrame(); 
             }).catch(error => {
-                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
             });
         }
 
         function toggleAudio() {
             initAudio();
-            
             if (isPlaying) {
                 audio.pause();
                 isPlaying = false;
                 cancelAnimationFrame(animationId);
-                // Regresamos las ondas a su tamaño original al pausar
-                waves.forEach(wave => wave.style.height = '6px');
+                // Regresan a 4px al pausar
+                waves.forEach(wave => wave.style.height = '4px');
             } else {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
                 audio.play().then(() => {
                     isPlaying = true;
                     renderFrame();
