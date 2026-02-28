@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Boda - Lucía & Juan</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Boda L & J">
+
+    <meta name="theme-color" content="#9EACA2">
+    <meta property="og:title" content="Nuestra Boda - Lucía & Juan">
+    <meta property="og:description" content="Tenemos el honor de invitarles a celebrar nuestra unión. Haz clic para ver los detalles.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/Textura.jpg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nupcial: {
+                            principal: '#9EACA2', /* Verde Salvia / Sage Green (Tendencia) */
+                            secundario: '#D4AF37', /* Acento Oro Suave */
+                            texto: '#3A403C' /* Gris oscuro verdoso para legibilidad */
+                        },
+                        blanco: {
+                            marfil: '#FCFBF8' /* Blanco marfil cálido */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-principal: #9EACA2;
+            --color-secundario: #D4AF37;
+            --color-texto: #3A403C;
+            --blanco-marfil: #FCFBF8;
+            
+            --bg-boda: url('https://i.imgur.com/EYjfsMz.jpeg');
+            --bg-floral: url('https://i.imgur.com/1jA6vDL.jpeg'); 
+            
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            background-color: var(--blanco-marfil);
+            overflow-x: hidden;
+            color: var(--color-texto);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        .font-script {
+            font-family: var(--font-script);
+        }
+
+        /* --- CORTES EN TRIÁNGULO AL CENTRO --- */
+        .corte-pico {
+            clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        .corte-valle {
+            clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: visibility 1.8s;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura.jpg?raw=true");
+            background-size: cover;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
+            -webkit-filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
+            -webkit-filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://github.com/AdaInvite/AdaInvite/blob/main/Assets/sobreelementos/Textura.jpg?raw=true");
+            background-size: cover;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3), rgba(0,0,0,0.8)), var(--bg-boda);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-script); font-size: clamp(5rem, 18vw, 10rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.6); line-height: 1; margin-bottom: 20px;}
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; }
+
+        .bg-texture-main {
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
+            background-size: 400px;
+            opacity: 0.08;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        .bg-floral-section {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.40), rgba(0,0,0,0.6), rgba(0,0,0,0.5)), var(--bg-floral);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
+
+        .btn-calendar {
+            border: 1px solid var(--color-principal);
+            padding: 12px 28px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 4px;
+        }
+        .btn-calendar:hover { background: var(--color-principal); color: var(--blanco-marfil); box-shadow: 0 10px 20px rgba(158, 172, 162, 0.3); }
+
+        .chambelanes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            background: var(--blanco-marfil);
+            border: 1px solid rgba(158, 172, 162, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(158, 172, 162, 0.2); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 40px; 
+            height: 40px; 
+            background: var(--blanco-marfil);
+            color: var(--color-principal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--color-principal);
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        #countdown {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #countdown span {
+            font-family: var(--font-body) !important; 
+            font-weight: 300; 
+            color: var(--color-texto);
+            line-height: 1;
+        }
+
+        #countdown .text-[9px] {
+            color: var(--color-principal); 
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/DxCMVS8.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-nupcial-texto font-semibold">Toca para abrir</div>
+                <img src="https://i.imgur.com/uVECUte.png" 
+                     class="w-[100px]" style="animation: floating 6s infinite ease-in-out; filter: hue-rotate(120deg) saturate(0.5);" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <div id="section-intro" onclick="showMainContent()">
+        <header>
+            <h1 class="name-header text-white">Lucía</h1>
+            <span class="text-4xl md:text-6xl font-script text-nupcial-secundario block mb-2">&</span>
+            <h1 class="name-header text-white">Juan</h1>
+        </header>
+        <div>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="serif text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
+                    <span class="serif text-[6rem] leading-none font-light text-white drop-shadow-md">29</span>
+                </div>
+                <div class="w-px h-24 bg-white/60 shadow-sm"></div>
+                <div class="text-left">
+                    <span class="serif text-4xl tracking-widest block text-white drop-shadow-md">NOV</span>
+                    <span class="serif text-2xl tracking-[0.6em] text-white drop-shadow-md">2026</span>
+                </div>
+            </section>
+            <p class="font-body text-[8px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para acompañarnos</p>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <header class="relative min-h-screen flex flex-col bg-blanco-marfil pb-12">
+            <div class="h-[60vh] w-full overflow-hidden relative">
+                <img src="https://i.imgur.com/muVJu2c.png" class="w-full h-full object-cover" alt="Nuestra Foto">
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-5 relative">
+                <div class="bg-texture-main"></div>
+                <h1 class="text-5xl md:text-7xl mb-5 text-nupcial-principal font-script reveal-scale">Nuestra Boda</h1>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-nupcial-texto pb-5 font-light">Comienza en...</p>
+                
+                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="serif text-3xl md:text-7xl text-nupcial-texto">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-nupcial-principal font-bold">Días</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="serif text-3xl md:text-7xl text-nupcial-texto">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-nupcial-principal font-bold">Hrs</span>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="serif text-3xl md:text-7xl text-nupcial-texto">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-nupcial-principal font-bold">Min</span>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="serif text-3xl md:text-7xl text-nupcial-texto">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-nupcial-principal font-bold">Seg</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-blanco-marfil relative corte-pico">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h2 class="text-4xl md:text-6xl mb-6 text-nupcial-principal font-script reveal-scale">Con la bendición de Dios<br>y nuestros padres</h2>
+                <p class="serif text-xl md:text-3xl italic text-nupcial-texto leading-relaxed font-light mb-16 mt-8">
+                    "Dos historias que hoy se unen en una sola. Tenemos el honor de invitarles a celebrar el inicio de nuestra vida juntos."
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <h3 class="text-[12px] md:text-[14px] uppercase tracking-[0.4em] mb-6 font-bold text-nupcial-principal drop-shadow-sm">Padres de la Novia</h3>
+                        <p class="text-2xl serif text-nupcial-texto">Sr. Cristian Nolasco Villanueva</p>
+                        <p class="text-2xl serif text-nupcial-texto">Sra. [Nombre de la madre]</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[12px] md:text-[14px] uppercase tracking-[0.4em] mb-6 font-bold text-nupcial-principal drop-shadow-sm">Padres del Novio</h3>
+                        <p class="text-2xl serif text-nupcial-texto">Sr. [Nombre del padre]</p>
+                        <p class="text-2xl serif text-nupcial-texto">Sra. [Nombre de la madre]</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-20 lg:pt-40 pb-32 px-6 bg-floral-section overflow-hidden relative corte-pico">
+            <div class="bg-texture-main opacity-10"></div>
+            <div class="max-w-6xl mx-auto reveal">
+                <div class="text-center mb-16">
+                    <h2 class="text-5xl md:text-7xl mb-4 font-script text-white drop-shadow-lg">Nuestros Momentos</h2>
+                    <p class="text-white text-sm tracking-widest uppercase font-light drop-shadow-md">Un vistazo a nuestra historia</p>
+                </div>
+                <div class="chambelanes-slider px-2">
+                    <div class="chambelan-card">
+                        <div class="h-96 overflow-hidden">
+                            <img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Momento 1">
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-96 overflow-hidden">
+                            <img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Momento 2">
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-96 overflow-hidden">
+                            <img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Momento 3">
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-white text-[10px] mt-5 uppercase tracking-[0.3em] font-light italic drop-shadow-md">Desliza para ver más →</p>
+            </div>
+        </section>
+
+        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/VseF79Z.jpeg'); filter: saturate(0.8);"></section>
+
+        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-marfil relative text-nupcial-texto corte-pico">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+                <div class="bg-transparent p-4 md:p-8 border border-nupcial-principal/30 shadow-none reveal flex flex-col h-full rounded-xl">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center opacity-80">
+                            <svg class="w-16 h-16 text-nupcial-principal" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <h1 class="text-5xl md:text-6xl mb-4 text-nupcial-principal font-script reveal-scale">Ceremonia Religiosa</h1>
+                        <p class="text-nupcial-texto font-bold uppercase tracking-widest text-xs mb-2">17:00 Hrs</p>
+                        <p class="text-nupcial-texto italic text-sm">[Nombre de la Iglesia/Templo]<br>[Dirección de la Iglesia]</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-nupcial-principal/30 mb-6 shadow-sm">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <a href="#" target="_blank" class="w-full block text-center bg-nupcial-principal border border-nupcial-principal text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-transparent hover:text-nupcial-principal shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Ver en Maps</a>
+                </div>
+
+                <div class="bg-transparent p-4 md:p-8 border border-nupcial-principal/30 shadow-none reveal flex flex-col h-full rounded-xl">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center opacity-80">
+                            <svg class="w-16 h-16 text-nupcial-principal" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
+                        </div>
+                        <h1 class="text-5xl md:text-6xl mb-4 text-nupcial-principal font-script reveal-scale">Recepción</h1>
+                        <p class="text-nupcial-texto font-bold uppercase tracking-widest text-xs mb-2">19:30 Hrs</p>
+                        <p class="text-nupcial-texto italic text-sm">[Nombre del Salón/Hacienda]<br>[Dirección del Salón]</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-nupcial-principal/30 mb-6 shadow-sm">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <a href="#" target="_blank" class="w-full block text-center bg-nupcial-principal border border-nupcial-principal text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-transparent hover:text-nupcial-principal shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Ver en Maps</a>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
+                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-nupcial-texto">Reserva nuestro día especial</p>
+                <div class="flex justify-center">
+                    <button onclick="calendarLink('Boda Lucía y Juan', '[Lugar de Boda]', '20261129T170000')" class="btn-calendar bg-transparent text-nupcial-principal border border-nupcial-principal font-bold rounded-md transition-all duration-300 px-10 py-4 justify-center">
+                        Agregar al calendario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/VNDH9vM.jpeg'); filter: sepia(0.2);"></section>
+        
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h2 class="text-5xl md:text-6xl font-script text-white mb-6 drop-shadow-md">Confirmación</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Por favor, confirma tu asistencia</p>
+                
+                <form id="rsvpForm" class="space-y-12 text-left bg-black/40 p-8 rounded-xl backdrop-blur-sm border border-white/20 shadow-2xl">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[9px] uppercase tracking-widest opacity-80 text-white font-bold">Nombre Completo</label>
+                            <input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white placeholder-white/30" placeholder="Ej. Familia Pérez">
+                        </div>
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[9px] uppercase tracking-widest opacity-80 text-white font-bold">Boletos Necesarios</label>
+                            <select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none">
+                                <option class="text-black" value="1">1 Boleto</option>
+                                <option class="text-black" value="2">2 Boletos</option>
+                                <option class="text-black" value="0">No podré asistir</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-white text-nupcial-texto font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-nupcial-principal hover:text-white transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">Enviar Confirmación</button>
+                </form>
+                <div id="successMessage" class="hidden p-12 border border-white/40 mt-10 bg-black/50 backdrop-blur-md rounded-xl">
+                    <p class="text-4xl font-script text-white">¡Gracias por confirmar!<br>Nos vemos pronto.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-blanco-marfil corte-valle relative z-10">
+            <div class="w-24 h-24 rounded-full mx-auto mb-8 border border-nupcial-principal flex items-center justify-center bg-white shadow-sm">
+                <span class="font-script text-4xl text-nupcial-principal">L&J</span>
+            </div>
+            <p class="text-5xl font-script mb-4 text-nupcial-principal">Lucía & Juan</p>
+            <p class="text-[9px] text-nupcial-texto uppercase tracking-[0.5em] mb-8 font-bold">29 • Noviembre • 2026</p>
+            <p class="text-[8px] text-gray-400 uppercase tracking-[0.2em] font-light">AdaInvite © 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-intro').classList.add('active');
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            
+            playAudio(); 
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                initObserver();
+            }, 1200);
+        }
+
+        // --- REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR ---
+        const targetDate = new Date("November 29, 2026 17:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "<span class='font-script text-4xl text-nupcial-principal'>¡Hoy es el gran día!</span>";
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        document.getElementById('rsvpForm').onsubmit = (e) => {
+            e.preventDefault();
+            e.target.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        };
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
