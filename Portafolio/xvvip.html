@@ -739,7 +739,8 @@
         </section>
 
         <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[400px]"> <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[500px] flex flex-col justify-start"> 
+                <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
                 
                 <form id="rsvpForm" class="space-y-12 text-left bg-black/50 p-8 rounded-xl backdrop-blur-md border border-rosa-elegante/30 shadow-2xl transition-all duration-500">
@@ -762,31 +763,28 @@
 
                 <div id="loadingMessage" class="hidden mt-10 bg-black/60 backdrop-blur-md border border-rosa-elegante/30 p-12 rounded-xl flex-col items-center justify-center transition-all duration-500">
                     <div class="w-16 h-16 border-4 border-[#B5737A] border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                    <p class="text-3xl font-script text-rosa-elegante mb-2">Generando Pase VIP...</p>
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Validando datos en la lista de invitados</p>
+                    <p class="text-3xl font-script text-rosa-elegante mb-2">Generando Pase...</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold">Validando tu registro</p>
                 </div>
 
-                <div id="errorMessage" class="hidden mt-10 bg-red-950/60 backdrop-blur-md border border-red-500/30 p-8 rounded-xl transition-all duration-500 flex-col items-center">
-                    <p class="text-2xl serif text-white mb-2">Parece que ya estás en la lista</p>
-                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">El nombre ingresado ya tiene un pase asignado.</p>
-                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-6 py-3 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors">Intentar con otro nombre</button>
+                <div id="errorMessage" class="hidden mt-10 bg-red-900/40 backdrop-blur-md border border-red-500/30 p-8 rounded-xl flex-col items-center transition-all duration-500">
+                    <p class="text-2xl serif text-white mb-2">Ya estás en la lista</p>
+                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">Este nombre ya generó un pase anteriormente.</p>
+                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-6 py-3 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors">Intentar otro nombre</button>
                 </div>
 
                 <div id="successMessage" class="hidden mt-10 transition-all duration-500">
                     <div class="bg-black/60 backdrop-blur-md border-2 border-dashed border-rosa-elegante p-8 rounded-xl relative overflow-hidden">
                         <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
                         <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
-                        
                         <p class="text-4xl font-script text-rosa-elegante mb-2">¡Pase Confirmado!</p>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Toma captura y muestra este código al llegar al salón</p>
-                        
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Toma captura y muestra este código en la entrada del salón</p>
                         <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
-                            <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
-                            <img id="ticketQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
+                            <p class="text-[10px] uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
+                            <img id="ticketQR" src="" alt="QR" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
                             <p id="ticketFolio" class="text-2xl font-body font-light tracking-widest text-white"></p>
                         </div>
-                        
-                        <p id="ticketName" class="serif text-2xl text-white mb-1"></p>
+                        <p id="ticketName" class="serif text-3xl text-white mb-1"></p>
                         <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
                     </div>
                 </div>
@@ -1104,126 +1102,104 @@
             document.getElementById("trivia-result").classList.add("hidden");
             loadQuestion();
         }
-               // --- 9. CONEXIÓN CON GOOGLE SHEETS (CORREGIDO) ---
+              // --- 9. LÓGICA DE ENVÍO Y CARGA MEJORADA ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('rsvpName').value.trim();
             const pax = document.getElementById('rsvpPax').value;
+            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
             
-            const randomCode = Math.floor(1000 + Math.random() * 9000);
-            const folio = `XV-${randomCode}`;
-            
-            // --- 1. OCULTAR FORMULARIO Y MOSTRAR CARGA ---
-            document.getElementById('rsvpForm').classList.add('hidden');
-            document.getElementById('loadingMessage').classList.remove('hidden');
-            document.getElementById('loadingMessage').classList.add('flex'); // Activa el centrado
-            
-            const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
-            
+            // Ocultar formulario y mostrar carga
+            document.getElementById('rsvpForm').style.display = 'none';
+            const loader = document.getElementById('loadingMessage');
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
             try {
-                const response = await fetch(requestUrl); 
+                const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
                 const result = await response.json();
                 
-                // --- 2. OCULTAR CARGA ---
-                document.getElementById('loadingMessage').classList.add('hidden');
-                document.getElementById('loadingMessage').classList.remove('flex');
-                
+                // Ocultar carga
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+
                 if(result.status === "success") {
-                    // Llenamos los datos en el ticket antes de mostrarlo
+                    // Llenar datos en el ticket
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
 
-                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; 
-                    const linkEscaneo = `${urlBase}?folio=${folio}`;
-                    
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
                     const qrImg = document.getElementById('ticketQR');
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
                     
-                    // Esperamos a que el QR cargue para mostrar el ticket final
                     qrImg.onload = () => {
                         qrImg.classList.remove('hidden');
                         document.getElementById('successMessage').classList.remove('hidden');
                     };
-                    qrImg.src = qrUrl;
-
                 } else if (result.status === "exists") {
-                    // Si el nombre ya existe en Google Sheets
+                    // Mostrar error de duplicado
                     document.getElementById('errorMessage').classList.remove('hidden');
                     document.getElementById('errorMessage').classList.add('flex');
                 }
             } catch (error) {
-                alert("Hubo un error de conexión. Intenta de nuevo.");
+                alert("Hubo un problema de conexión. Intenta de nuevo.");
                 resetForm();
             }
         });
 
-        // Función para volver al formulario si hubo error o duplicado
+        // Función para volver a intentar
         function resetForm() {
             document.getElementById('errorMessage').classList.add('hidden');
             document.getElementById('errorMessage').classList.remove('flex');
             document.getElementById('loadingMessage').classList.add('hidden');
-            document.getElementById('loadingMessage').classList.remove('flex');
-            document.getElementById('successMessage').classList.add('hidden');
-            document.getElementById('rsvpForm').classList.remove('hidden');
-            document.getElementById('rsvpName').value = ''; 
+            document.getElementById('rsvpForm').style.display = 'block';
+            document.getElementById('rsvpName').value = '';
         }
 
+        // --- RECUPERAR PASE POR NOMBRE ---
         async function consultarPase() {
             const searchInput = document.getElementById('searchName').value.trim();
             const resultDiv = document.getElementById('consultaResult');
             const errorDiv = document.getElementById('consultaError');
-            const btnConsultar = document.getElementById('btnConsultar');
+            const btn = document.getElementById('btnConsultar');
             
             if (!searchInput) return;
 
-            // Mostrar estado de carga en el botón
-            const textoOriginal = btnConsultar.innerText;
-            btnConsultar.innerText = "...";
-            btnConsultar.disabled = true;
-
+            btn.innerText = "...";
+            btn.disabled = true;
             resultDiv.classList.add('hidden'); 
-            resultDiv.classList.remove('flex'); // Quitamos flex para ocultar
+            resultDiv.classList.remove('flex');
             errorDiv.classList.add('hidden');
             
-            // Mandamos el nombre en lugar del folio
-            const requestUrl = `${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`;
-            
             try {
-                const response = await fetch(requestUrl); 
+                const response = await fetch(`${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`);
                 const result = await response.json();
                 
-                // Restaurar botón
-                btnConsultar.innerText = textoOriginal;
-                btnConsultar.disabled = false;
+                btn.innerText = "Buscar";
+                btn.disabled = false;
 
                 if (result.status === "found") {
                     document.getElementById('consultaNameDisplay').innerText = result.name;
                     document.getElementById('consultaPax').innerText = result.pax;
                     document.getElementById('consultaFolio').innerText = result.folio;
 
-                    // --- GENERAR EL QR NUEVAMENTE ---
-                    const urlBase = 'https://adainvite.com/Portafolio/acceso.html'; 
-                    const linkEscaneo = `${urlBase}?folio=${result.folio}`;
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
-                    
                     const qrImg = document.getElementById('consultaQR');
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
+                    
                     qrImg.onload = () => {
                         qrImg.classList.remove('hidden');
                         resultDiv.classList.remove('hidden');
-                        resultDiv.classList.add('flex'); // Usamos flex para centrar los elementos del ticket
+                        resultDiv.classList.add('flex');
                     };
-                    qrImg.src = qrUrl;
-
                 } else {
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) { 
-                alert("Error de conexión. Intenta de nuevo."); 
-                btnConsultar.innerText = textoOriginal;
-                btnConsultar.disabled = false;
+                alert("Error al buscar. Revisa tu conexión.");
+                btn.innerText = "Buscar";
+                btn.disabled = false;
             }
         }
     </script>
