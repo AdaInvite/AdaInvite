@@ -739,8 +739,7 @@
         </section>
 
         <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
-                <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[400px]"> <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
                 
                 <form id="rsvpForm" class="space-y-12 text-left bg-black/50 p-8 rounded-xl backdrop-blur-md border border-rosa-elegante/30 shadow-2xl transition-all duration-500">
@@ -763,13 +762,13 @@
 
                 <div id="loadingMessage" class="hidden mt-10 bg-black/60 backdrop-blur-md border border-rosa-elegante/30 p-12 rounded-xl flex-col items-center justify-center transition-all duration-500">
                     <div class="w-16 h-16 border-4 border-[#B5737A] border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                    <p class="text-3xl font-script text-rosa-elegante mb-2">Generando Pase...</p>
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Creando folio y validando datos</p>
+                    <p class="text-3xl font-script text-rosa-elegante mb-2">Generando Pase VIP...</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Validando datos en la lista de invitados</p>
                 </div>
 
-                <div id="errorMessage" class="hidden mt-10 bg-red-950/60 backdrop-blur-md border border-red-500/30 p-8 rounded-xl transition-all duration-500">
+                <div id="errorMessage" class="hidden mt-10 bg-red-950/60 backdrop-blur-md border border-red-500/30 p-8 rounded-xl transition-all duration-500 flex-col items-center">
                     <p class="text-2xl serif text-white mb-2">Parece que ya estás en la lista</p>
-                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">El nombre ingresado ya generó un pase anteriormente.</p>
+                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">El nombre ingresado ya tiene un pase asignado.</p>
                     <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-6 py-3 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors">Intentar con otro nombre</button>
                 </div>
 
@@ -779,7 +778,7 @@
                         <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
                         
                         <p class="text-4xl font-script text-rosa-elegante mb-2">¡Pase Confirmado!</p>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Toma captura de pantalla y muestra este código al llegar al salón</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Toma captura y muestra este código al llegar al salón</p>
                         
                         <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
                             <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
@@ -1105,8 +1104,7 @@
             document.getElementById("trivia-result").classList.add("hidden");
             loadQuestion();
         }
-               // --- 9. CONEXIÓN CON GOOGLE SHEETS (RSVP Y PASES CON QR DE ADAINVITE) ---
-        // Pega aquí la NUEVA URL que generaste en el Paso 1
+               // --- 9. CONEXIÓN CON GOOGLE SHEETS (CORREGIDO) ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
@@ -1114,14 +1112,13 @@
             const name = document.getElementById('rsvpName').value.trim();
             const pax = document.getElementById('rsvpPax').value;
             
-            // Generar folio aleatorio
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             const folio = `XV-${randomCode}`;
             
-            // --- MOSTRAR PANTALLA DE CARGA ---
+            // --- 1. OCULTAR FORMULARIO Y MOSTRAR CARGA ---
             document.getElementById('rsvpForm').classList.add('hidden');
             document.getElementById('loadingMessage').classList.remove('hidden');
-            document.getElementById('loadingMessage').classList.add('flex'); // Forzamos Flexbox para centrar
+            document.getElementById('loadingMessage').classList.add('flex'); // Activa el centrado
             
             const requestUrl = `${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`;
             
@@ -1129,12 +1126,12 @@
                 const response = await fetch(requestUrl); 
                 const result = await response.json();
                 
-                // --- OCULTAR CARGA ---
+                // --- 2. OCULTAR CARGA ---
                 document.getElementById('loadingMessage').classList.add('hidden');
                 document.getElementById('loadingMessage').classList.remove('flex');
                 
                 if(result.status === "success") {
-                    // Llenar los datos ANTES de mostrar el ticket (Adiós parpadeos)
+                    // Llenamos los datos en el ticket antes de mostrarlo
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
@@ -1145,7 +1142,7 @@
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(linkEscaneo)}`;
                     const qrImg = document.getElementById('ticketQR');
                     
-                    // Esperamos a que la imagen cargue internamente para mostrarla
+                    // Esperamos a que el QR cargue para mostrar el ticket final
                     qrImg.onload = () => {
                         qrImg.classList.remove('hidden');
                         document.getElementById('successMessage').classList.remove('hidden');
@@ -1153,22 +1150,25 @@
                     qrImg.src = qrUrl;
 
                 } else if (result.status === "exists") {
-                    // MOSTRAR ERROR DE DUPLICADO
+                    // Si el nombre ya existe en Google Sheets
                     document.getElementById('errorMessage').classList.remove('hidden');
+                    document.getElementById('errorMessage').classList.add('flex');
                 }
             } catch (error) {
-                alert("Hubo un error de conexión. Revisa tu internet e intenta de nuevo.");
-                resetForm(); // Regresamos al formulario
+                alert("Hubo un error de conexión. Intenta de nuevo.");
+                resetForm();
             }
         });
 
-        // Función para botón "Intentar con otro nombre"
+        // Función para volver al formulario si hubo error o duplicado
         function resetForm() {
             document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('errorMessage').classList.remove('flex');
             document.getElementById('loadingMessage').classList.add('hidden');
             document.getElementById('loadingMessage').classList.remove('flex');
+            document.getElementById('successMessage').classList.add('hidden');
             document.getElementById('rsvpForm').classList.remove('hidden');
-            document.getElementById('rsvpName').value = ''; // Limpiamos el nombre
+            document.getElementById('rsvpName').value = ''; 
         }
 
         async function consultarPase() {
