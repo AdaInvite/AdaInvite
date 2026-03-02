@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitación Bella y Bestia </title>
+    <title>Invitación - Mis XV Regina</title>
     
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
@@ -659,8 +659,8 @@
 
         <footer class="pt-32 lg:pt-40 pb-24 text-center bg-cover bg-center relative z-10" style="background-image: url('https://i.imgur.com/VBju3Lm.jpeg');">
             <div class="relative z-10">
-                <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-dorado-elegante shadow-md">
-                <p class="text-6xl font-script mb-2 text-dorado-elegante drop-shadow-md">Regina</p>
+                <p class="text-6xl font-script mb-8 text-dorado-elegante drop-shadow-md">¡No Faltes!</p>
+                <img src="https://i.imgur.com/zixliyS.png" class="w-60 h-auto mx-auto mb-8 object-contain shadow-lg" alt="Bella y Bestia">
                 <p class="text-[9px] text-white uppercase tracking-[0.5em] mb-8 font-bold drop-shadow-md">16 • Noviembre • 2026</p>
                 <p class="text-[8px] text-white/70 uppercase tracking-[0.2em] font-light drop-shadow-md">AdaInvite © 2026</p>
             </div>
@@ -802,24 +802,24 @@
             document.getElementById("trivia-current-num").innerText = currentQuestion + 1;
             document.getElementById("trivia-total-num").innerText = triviaData.length;
             
-            qText.innerText = triviaData[currentQuestion].question;
-            optionsContainer.innerHTML = "";
+            if (qText && optionsContainer) {
+                qText.innerText = triviaData[currentQuestion].question;
+                optionsContainer.innerHTML = "";
 
-            triviaData[currentQuestion].options.forEach((opt, index) => {
-                const btn = document.createElement("button");
-                btn.innerText = opt;
-                // Clases adaptadas al estilo dorado y negro
-                btn.className = "btn-trivia w-full text-left px-6 py-4 rounded-xl border border-dorado-elegante/40 text-white bg-transparent hover:bg-dorado-elegante hover:text-white font-body text-sm tracking-wide";
-                btn.onclick = () => checkAnswer(index, btn);
-                optionsContainer.appendChild(btn);
-            });
+                triviaData[currentQuestion].options.forEach((opt, index) => {
+                    const btn = document.createElement("button");
+                    btn.innerText = opt;
+                    btn.className = "btn-trivia w-full text-left px-6 py-4 rounded-xl border border-dorado-elegante/40 text-white bg-transparent hover:bg-dorado-elegante hover:text-white font-body text-sm tracking-wide";
+                    btn.onclick = () => checkAnswer(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            }
         }
 
         function checkAnswer(selectedIndex, btnElement) {
             const correctIndex = triviaData[currentQuestion].answer;
             const allBtns = document.querySelectorAll('.btn-trivia');
             
-            // Bloqueamos los botones para evitar clics dobles
             allBtns.forEach(b => b.disabled = true);
 
             if (selectedIndex === correctIndex) {
@@ -830,7 +830,6 @@
                 allBtns[correctIndex].classList.add('correct');
             }
 
-            // Pausa antes de la siguiente pregunta
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < triviaData.length) {
@@ -842,87 +841,113 @@
         }
 
         function showTriviaResults() {
-            document.getElementById("trivia-question-container").classList.add("hidden");
-            document.getElementById("trivia-result").classList.remove("hidden");
-            
-            document.getElementById("trivia-score").innerText = score;
-            document.getElementById("trivia-total-score").innerText = triviaData.length;
-
+            const qContainer = document.getElementById("trivia-question-container");
+            const rContainer = document.getElementById("trivia-result");
+            const scoreSpan = document.getElementById("trivia-score");
+            const totalSpan = document.getElementById("trivia-total-score");
             const feedback = document.getElementById("trivia-feedback");
-            if (score === triviaData.length) {
-                feedback.innerText = "¡Wow! Me conoces a la perfección";
-            } else if (score >= triviaData.length / 2) {
-                feedback.innerText = "¡Nada mal! Me conoces bastante bien";
-            } else {
-                feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
+
+            if (qContainer && rContainer && scoreSpan && totalSpan && feedback) {
+                qContainer.classList.add("hidden");
+                rContainer.classList.remove("hidden");
+                
+                scoreSpan.innerText = score;
+                totalSpan.innerText = triviaData.length;
+
+                if (score === triviaData.length) {
+                    feedback.innerText = "¡Wow! Me conoces a la perfección";
+                } else if (score >= triviaData.length / 2) {
+                    feedback.innerText = "¡Nada mal! Me conoces bastante bien";
+                } else {
+                    feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
+                }
             }
         }
 
         function resetTrivia() {
             currentQuestion = 0;
             score = 0;
-            document.getElementById("trivia-question-container").classList.remove("hidden");
-            document.getElementById("trivia-result").classList.add("hidden");
-            loadQuestion();
+            const qContainer = document.getElementById("trivia-question-container");
+            const rContainer = document.getElementById("trivia-result");
+            if (qContainer && rContainer) {
+                qContainer.classList.remove("hidden");
+                rContainer.classList.add("hidden");
+                loadQuestion();
+            }
         }
 
         // --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA Y PASES QR ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('rsvpName').value.trim();
-            const adults = document.getElementById('rsvpAdults').value;
-            const children = document.getElementById('rsvpChildren').value;
-            
-            // Unimos adultos y niños en el formato que espera tu base de datos
-            const pax = `${adults} Adultos, ${children} Niños`;
-            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
-            
-            // Ocultar formulario y mostrar estado de carga
-            document.getElementById('rsvpForm').style.display = 'none';
-            const loader = document.getElementById('loadingMessage');
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
-
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
-                const result = await response.json();
+        const rsvpForm = document.getElementById('rsvpForm');
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('rsvpName').value.trim();
+                const adults = document.getElementById('rsvpAdults').value;
+                const children = document.getElementById('rsvpChildren').value;
                 
-                // Ocultar carga
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
-
-                if(result.status === "success") {
-                    // Llenar datos en el ticket virtual
-                    document.getElementById('ticketFolio').innerText = folio;
-                    document.getElementById('ticketName').innerText = name;
-                    document.getElementById('ticketPax').innerText = pax;
-
-                    const qrImg = document.getElementById('ticketQR');
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
-                    
-                    qrImg.onload = () => {
-                        qrImg.classList.remove('hidden');
-                        document.getElementById('successMessage').classList.remove('hidden');
-                    };
-                } else if (result.status === "exists") {
-                    // Mostrar error de pase duplicado
-                    document.getElementById('errorMessage').classList.remove('hidden');
-                    document.getElementById('errorMessage').classList.add('flex');
+                const pax = `${adults} Adultos, ${children} Niños`;
+                const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
+                
+                rsvpForm.style.display = 'none';
+                const loader = document.getElementById('loadingMessage');
+                if (loader) {
+                    loader.classList.remove('hidden');
+                    loader.classList.add('flex');
                 }
-            } catch (error) {
-                alert("Hubo un problema de conexión. Intenta de nuevo.");
-                resetForm();
-            }
-        });
+
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
+                    const result = await response.json();
+                    
+                    if (loader) {
+                        loader.classList.add('hidden');
+                        loader.classList.remove('flex');
+                    }
+
+                    if(result.status === "success") {
+                        const tFolio = document.getElementById('ticketFolio');
+                        const tName = document.getElementById('ticketName');
+                        const tPax = document.getElementById('ticketPax');
+                        const tQR = document.getElementById('ticketQR');
+                        const sMsg = document.getElementById('successMessage');
+
+                        if (tFolio && tName && tPax && tQR && sMsg) {
+                            tFolio.innerText = folio;
+                            tName.innerText = name;
+                            tPax.innerText = pax;
+                            tQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
+                            
+                            tQR.onload = () => {
+                                tQR.classList.remove('hidden');
+                                sMsg.classList.remove('hidden');
+                            };
+                        }
+                    } else if (result.status === "exists") {
+                        const eMsg = document.getElementById('errorMessage');
+                        if (eMsg) {
+                            eMsg.classList.remove('hidden');
+                            eMsg.classList.add('flex');
+                        }
+                    }
+                } catch (error) {
+                    alert("Hubo un problema de conexión. Intenta de nuevo.");
+                    resetForm();
+                }
+            });
+        }
 
         function resetForm() {
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('errorMessage').classList.remove('flex');
-            document.getElementById('loadingMessage').classList.add('hidden');
-            document.getElementById('rsvpForm').style.display = 'block';
-            document.getElementById('rsvpName').value = '';
+            const eMsg = document.getElementById('errorMessage');
+            const loader = document.getElementById('loadingMessage');
+            const rForm = document.getElementById('rsvpForm');
+            const rName = document.getElementById('rsvpName');
+
+            if (eMsg) { eMsg.classList.add('hidden'); eMsg.classList.remove('flex'); }
+            if (loader) { loader.classList.add('hidden'); }
+            if (rForm) { rForm.style.display = 'block'; }
+            if (rName) { rName.value = ''; }
         }
 
         // --- RECUPERAR PASE (Consulta) ---
@@ -932,7 +957,7 @@
             const errorDiv = document.getElementById('consultaError');
             const btn = document.getElementById('btnConsultar');
             
-            if (!searchInput) return;
+            if (!searchInput || !resultDiv || !errorDiv || !btn) return;
 
             btn.innerText = "...";
             btn.disabled = true;
@@ -948,18 +973,23 @@
                 btn.disabled = false;
 
                 if (result.status === "found") {
-                    document.getElementById('consultaNameDisplay').innerText = result.name;
-                    document.getElementById('consultaPax').innerText = result.pax;
-                    document.getElementById('consultaFolio').innerText = result.folio;
+                    const cName = document.getElementById('consultaNameDisplay');
+                    const cPax = document.getElementById('consultaPax');
+                    const cFolio = document.getElementById('consultaFolio');
+                    const cQR = document.getElementById('consultaQR');
 
-                    const qrImg = document.getElementById('consultaQR');
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
-                    
-                    qrImg.onload = () => {
-                        qrImg.classList.remove('hidden');
-                        resultDiv.classList.remove('hidden');
-                        resultDiv.classList.add('flex');
-                    };
+                    if (cName && cPax && cFolio && cQR) {
+                        cName.innerText = result.name;
+                        cPax.innerText = result.pax;
+                        cFolio.innerText = result.folio;
+                        cQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
+                        
+                        cQR.onload = () => {
+                            cQR.classList.remove('hidden');
+                            resultDiv.classList.remove('hidden');
+                            resultDiv.classList.add('flex');
+                        };
+                    }
                 } else {
                     errorDiv.classList.remove('hidden');
                 }
