@@ -103,12 +103,15 @@
         .btn-calendar { border: 1px solid var(--dorado-elegante); padding: 12px 28px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease; display: inline-flex; align-items: center; gap: 10px; border-radius: 4px; }
         .btn-calendar:hover { background: var(--dorado-elegante); color: white; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
 
+        /* --- TRIVIA CSS --- */
+        .btn-trivia { transition: all 0.3s ease; }
+        .btn-trivia.correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; }
+        .btn-trivia.incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; }
+        .btn-trivia:disabled { cursor: not-allowed; opacity: 0.9; }
+
         /* --- CARRUSELES --- */
-        .chambelanes-slider, .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-        .chambelanes-slider::-webkit-scrollbar, .slider-historia::-webkit-scrollbar { display: none; }
-        
-        .chambelan-card { flex: 0 0 280px; scroll-snap-align: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.4s ease; border-radius: 8px; overflow: hidden; }
-        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4); }
+        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .slider-historia::-webkit-scrollbar { display: none; }
 
         .slider-historia { gap: 30px; padding: 40px 10px; }
         .tarjeta-nueva { flex: 0 0 280px; scroll-snap-align: center; position: relative; background: rgba(0,0,0,0.5); padding: 12px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); transform: rotate(-1deg); transition: all 0.4s ease; border: 1px solid rgba(212, 175, 55, 0.3); }
@@ -323,29 +326,28 @@
             <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
             <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
 
-            <div class="max-w-6xl mx-auto reveal relative z-10">
-                <div class="text-center mb-16">
-                    <h2 class="text-5xl md:text-9xl mb-8 font-script text-dorado-elegante drop-shadow-lg">Mis Chambelanes</h2>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 text-center">
+                <h1 class="text-5xl md:text-8xl mb-4 text-dorado-elegante font-script drop-shadow-md">Trivia</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
+                
+                <div id="trivia-container" class="bg-black/40 backdrop-blur-sm p-6 md:p-10 rounded-2xl shadow-xl border border-dorado-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                    
+                    <div id="trivia-question-container">
+                        <p class="text-[9px] uppercase tracking-widest text-gray-300 mb-4 font-bold">Pregunta <span id="trivia-current-num">1</span> de <span id="trivia-total-num">3</span></p>
+                        <h3 id="trivia-q-text" class="serif text-2xl md:text-3xl text-white mb-8 drop-shadow-md">Pregunta aquí</h3>
+                        <div id="trivia-options" class="flex flex-col gap-4">
+                            </div>
+                    </div>
+
+                    <div id="trivia-result" class="hidden">
+                        <h3 class="font-script text-6xl text-dorado-elegante mb-4 drop-shadow-md">¡Terminaste!</h3>
+                        <p class="serif text-2xl text-white mb-2">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold text-dorado-elegante mb-8 drop-shadow-md"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
+                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-300 mb-8 font-bold"></p>
+                        <button onclick="resetTrivia()" class="bg-transparent text-dorado-elegante border border-dorado-elegante px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-dorado-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
+                    </div>
+
                 </div>
-                <div class="chambelanes-slider gap-6 pb-6">
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden"><img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Mateo"></div>
-                        <div class="p-8 text-center"><h4 class="text-2xl serif text-dorado-elegante drop-shadow-md">Mateo García</h4><p class="text-[9px] text-white/80 uppercase tracking-widest mt-2 font-medium">Chambelán de Honor</p></div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden"><img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Santiago"></div>
-                        <div class="p-8 text-center"><h4 class="text-2xl serif text-dorado-elegante drop-shadow-md">Santiago Ruíz</h4><p class="text-[9px] text-white/80 uppercase tracking-widest mt-2 font-medium">Chambelán</p></div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden"><img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Daniel"></div>
-                        <div class="p-8 text-center"><h4 class="text-2xl serif text-dorado-elegante drop-shadow-md">Daniel Ortiz</h4><p class="text-[9px] text-white/80 uppercase tracking-widest mt-2 font-medium">Chambelán</p></div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden"><img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián"></div>
-                        <div class="p-8 text-center"><h4 class="text-2xl serif text-dorado-elegante drop-shadow-md">Sebastián Díaz</h4><p class="text-[9px] text-white/80 uppercase tracking-widest mt-2 font-medium">Chambelán</p></div>
-                    </div>
-                </div>
-                <p class="text-center text-white text-[10px] mt-2 uppercase tracking-[0.3em] font-bold italic drop-shadow-md">Desliza para ver más →</p>
             </div>
         </section>
 
@@ -568,33 +570,90 @@
             <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
             <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
 
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 flex flex-col justify-start">
                 <h2 class="text-5xl md:text-6xl font-script text-dorado-elegante mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
                 
-                <form id="rsvpForm" class="space-y-12 text-left p-8 rounded-2xl bg-black/40 backdrop-blur-sm border border-dorado-elegante/30">
-                    <div class="grid md:grid-cols-2 gap-10">
+                <form id="rsvpForm" class="space-y-12 text-left bg-black/40 p-8 rounded-2xl backdrop-blur-sm border border-dorado-elegante/30 shadow-2xl transition-all duration-500">
+                    <div class="border-b border-dorado-elegante/50 pb-2">
+                        <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Nombre Completo</label>
+                        <input type="text" id="rsvpName" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white">
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-10 mt-8">
                         <div class="border-b border-dorado-elegante/50 pb-2">
-                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Nombre</label>
-                            <input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white">
+                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Cantidad de Adultos</label>
+                            <input type="number" id="rsvpAdults" min="1" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none" value="1">
                         </div>
                         <div class="border-b border-dorado-elegante/50 pb-2">
-                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Personas</label>
-                            <select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none">
-                                <option class="text-black">1 Persona</option>
-                                <option class="text-black">2 Personas</option>
-                                <option class="text-black">Familia</option>
-                            </select>
+                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Cantidad de Niños</label>
+                            <input type="number" id="rsvpChildren" min="0" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none" value="0">
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-dorado-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-black/50 hover:text-dorado-elegante hover:border hover:border-dorado-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">
-                        Confirmar
+                    
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-dorado-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-black/50 hover:text-dorado-elegante hover:border hover:border-dorado-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">
+                        Confirmar y Generar Pase
                     </button>
                 </form>
 
-                <div id="successMessage" class="hidden p-12 mt-10 rounded-xl bg-black/40 backdrop-blur-sm border border-dorado-elegante/30">
-                    <p class="text-4xl font-script text-dorado-elegante drop-shadow-md">¡Te espero con alegría!</p>
+                <div id="loadingMessage" class="hidden mt-10 bg-black/60 backdrop-blur-md border border-dorado-elegante/30 p-12 rounded-xl flex-col items-center justify-center transition-all duration-500">
+                    <div class="w-16 h-16 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                    <p class="text-3xl font-script text-dorado-elegante mb-2">Generando Pase...</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 font-bold">Validando tu registro</p>
                 </div>
+
+                <div id="errorMessage" class="hidden mt-10 bg-red-900/40 backdrop-blur-md border border-red-500/30 p-8 rounded-xl flex-col items-center transition-all duration-500">
+                    <p class="text-2xl serif text-white mb-2">Ya estás en la lista</p>
+                    <p class="text-[10px] uppercase tracking-widest text-red-200 mb-8">Este nombre ya generó un pase anteriormente.</p>
+                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-6 py-3 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-colors">Intentar otro nombre</button>
+                </div>
+
+                <div id="successMessage" class="hidden mt-10 transition-all duration-500">
+                    <div class="bg-black/60 backdrop-blur-md border-2 border-dashed border-dorado-elegante p-8 rounded-xl relative overflow-hidden">
+                        <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        <p class="text-4xl font-script text-dorado-elegante mb-2">¡Pase Confirmado!</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-300 mb-6">Toma captura y muestra este código en la entrada del salón</p>
+                        <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
+                            <p class="text-[10px] uppercase tracking-widest text-dorado-elegante font-bold mb-4">Código de Acceso</p>
+                            <img id="ticketQR" src="" alt="QR" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
+                            <p id="ticketFolio" class="text-2xl font-body font-light tracking-widest text-white"></p>
+                        </div>
+                        <p id="ticketName" class="serif text-3xl text-white mb-1"></p>
+                        <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
+                    </div>
+                </div>
+
+                <div class="mt-16 border-t border-dorado-elegante/30 pt-16">
+                    <h3 class="text-4xl font-script text-dorado-elegante mb-4">Recuperar mi Pase</h3>
+                    <p class="text-[9px] uppercase tracking-[0.3em] mb-8 text-gray-300">Ingresa tu nombre para ver tu código QR</p>
+                    
+                    <div class="flex gap-4">
+                        <input type="text" id="searchName" placeholder="Ej. María Pérez" class="w-full bg-black/40 border border-dorado-elegante/50 rounded-md px-6 py-3 outline-none serif text-xl text-center text-white uppercase">
+                        <button onclick="consultarPase()" id="btnConsultar" class="bg-dorado-elegante text-white px-8 py-3 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-black/50 hover:text-dorado-elegante border border-dorado-elegante transition-all duration-300 flex-shrink-0">Buscar</button>
+                    </div>
+                    
+                    <div id="consultaResult" class="hidden mt-8 bg-black/60 backdrop-blur-md border-2 border-dashed border-dorado-elegante p-8 rounded-xl flex-col items-center transition-all duration-500 relative overflow-hidden">
+                        <div class="absolute -left-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        <div class="absolute -right-4 top-1/2 w-8 h-8 bg-floral-section rounded-full transform -translate-y-1/2"></div>
+                        
+                        <p class="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-4">Pase Encontrado</p>
+                        
+                        <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center w-full max-w-[250px] mx-auto">
+                            <p class="text-sm uppercase tracking-widest text-dorado-elegante font-bold mb-4">Código de Acceso</p>
+                            <img id="consultaQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
+                            <p id="consultaFolio" class="text-2xl font-body font-light tracking-widest text-white"></p>
+                        </div>
+
+                        <p id="consultaNameDisplay" class="serif text-2xl text-white mb-1"></p>
+                        <p id="consultaPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
+                    </div>
+
+                    <div id="consultaError" class="hidden mt-6 bg-red-900/40 border border-red-500/30 p-4 rounded-xl">
+                        <p class="text-xs text-red-200 uppercase tracking-widest">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando confirmaste.</p>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -619,6 +678,7 @@
             document.body.classList.remove('locked');
             
             initObserver();
+            loadQuestion(); // Iniciar la trivia
             
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
@@ -685,13 +745,6 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // --- LÓGICA DEL FORMULARIO DE CONFIRMACIÓN (RSVP) ---
-        document.getElementById('rsvpForm').onsubmit = (e) => {
-            e.preventDefault(); 
-            e.target.classList.add('hidden'); 
-            document.getElementById('successMessage').classList.remove('hidden'); 
-        };
-
         // --- LÓGICA PARA AGREGAR EVENTO A GOOGLE CALENDAR ---
         function calendarLink(title, loc, date) {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
@@ -719,6 +772,203 @@
         }
 
         iniciarAutoScroll();
+
+        // --- LÓGICA DE TRIVIA ---
+        const triviaData = [
+            {
+                question: "¿Cuál es mi postre favorito?",
+                options: ["Helado de vainilla", "Pastel de Chocolate", "Crepas dulces", "Fresas con crema"],
+                answer: 1 
+            },
+            {
+                question: "¿A dónde me gustaría viajar?",
+                options: ["París", "Tokio", "Nueva York", "Londres"],
+                answer: 0 
+            },
+            {
+                question: "¿Cuál es mi serie favorita?",
+                options: ["Stranger Things", "Bridgerton", "Friends", "Gossip Girl"],
+                answer: 3 
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const qText = document.getElementById("trivia-q-text");
+            const optionsContainer = document.getElementById("trivia-options");
+            
+            document.getElementById("trivia-current-num").innerText = currentQuestion + 1;
+            document.getElementById("trivia-total-num").innerText = triviaData.length;
+            
+            qText.innerText = triviaData[currentQuestion].question;
+            optionsContainer.innerHTML = "";
+
+            triviaData[currentQuestion].options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.innerText = opt;
+                // Clases adaptadas al estilo dorado y negro
+                btn.className = "btn-trivia w-full text-left px-6 py-4 rounded-xl border border-dorado-elegante/40 text-white bg-transparent hover:bg-dorado-elegante hover:text-white font-body text-sm tracking-wide";
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            const correctIndex = triviaData[currentQuestion].answer;
+            const allBtns = document.querySelectorAll('.btn-trivia');
+            
+            // Bloqueamos los botones para evitar clics dobles
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('incorrect');
+                allBtns[correctIndex].classList.add('correct');
+            }
+
+            // Pausa antes de la siguiente pregunta
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < triviaData.length) {
+                    loadQuestion();
+                } else {
+                    showTriviaResults();
+                }
+            }, 1500);
+        }
+
+        function showTriviaResults() {
+            document.getElementById("trivia-question-container").classList.add("hidden");
+            document.getElementById("trivia-result").classList.remove("hidden");
+            
+            document.getElementById("trivia-score").innerText = score;
+            document.getElementById("trivia-total-score").innerText = triviaData.length;
+
+            const feedback = document.getElementById("trivia-feedback");
+            if (score === triviaData.length) {
+                feedback.innerText = "¡Wow! Me conoces a la perfección";
+            } else if (score >= triviaData.length / 2) {
+                feedback.innerText = "¡Nada mal! Me conoces bastante bien";
+            } else {
+                feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
+            }
+        }
+
+        function resetTrivia() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById("trivia-question-container").classList.remove("hidden");
+            document.getElementById("trivia-result").classList.add("hidden");
+            loadQuestion();
+        }
+
+        // --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA Y PASES QR ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
+
+        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const adults = document.getElementById('rsvpAdults').value;
+            const children = document.getElementById('rsvpChildren').value;
+            
+            // Unimos adultos y niños en el formato que espera tu base de datos
+            const pax = `${adults} Adultos, ${children} Niños`;
+            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
+            
+            // Ocultar formulario y mostrar estado de carga
+            document.getElementById('rsvpForm').style.display = 'none';
+            const loader = document.getElementById('loadingMessage');
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
+                const result = await response.json();
+                
+                // Ocultar carga
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+
+                if(result.status === "success") {
+                    // Llenar datos en el ticket virtual
+                    document.getElementById('ticketFolio').innerText = folio;
+                    document.getElementById('ticketName').innerText = name;
+                    document.getElementById('ticketPax').innerText = pax;
+
+                    const qrImg = document.getElementById('ticketQR');
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
+                    
+                    qrImg.onload = () => {
+                        qrImg.classList.remove('hidden');
+                        document.getElementById('successMessage').classList.remove('hidden');
+                    };
+                } else if (result.status === "exists") {
+                    // Mostrar error de pase duplicado
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                    document.getElementById('errorMessage').classList.add('flex');
+                }
+            } catch (error) {
+                alert("Hubo un problema de conexión. Intenta de nuevo.");
+                resetForm();
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('errorMessage').classList.remove('flex');
+            document.getElementById('loadingMessage').classList.add('hidden');
+            document.getElementById('rsvpForm').style.display = 'block';
+            document.getElementById('rsvpName').value = '';
+        }
+
+        // --- RECUPERAR PASE (Consulta) ---
+        async function consultarPase() {
+            const searchInput = document.getElementById('searchName').value.trim();
+            const resultDiv = document.getElementById('consultaResult');
+            const errorDiv = document.getElementById('consultaError');
+            const btn = document.getElementById('btnConsultar');
+            
+            if (!searchInput) return;
+
+            btn.innerText = "...";
+            btn.disabled = true;
+            resultDiv.classList.add('hidden'); 
+            resultDiv.classList.remove('flex');
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`);
+                const result = await response.json();
+                
+                btn.innerText = "Buscar";
+                btn.disabled = false;
+
+                if (result.status === "found") {
+                    document.getElementById('consultaNameDisplay').innerText = result.name;
+                    document.getElementById('consultaPax').innerText = result.pax;
+                    document.getElementById('consultaFolio').innerText = result.folio;
+
+                    const qrImg = document.getElementById('consultaQR');
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
+                    
+                    qrImg.onload = () => {
+                        qrImg.classList.remove('hidden');
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.classList.add('flex');
+                    };
+                } else {
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) { 
+                alert("Error al buscar. Revisa tu conexión.");
+                btn.innerText = "Buscar";
+                btn.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
