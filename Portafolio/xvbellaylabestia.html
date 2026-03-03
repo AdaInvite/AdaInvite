@@ -83,18 +83,40 @@
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
         /* --- EFECTOS DE APARICIÓN Y ANIMACIONES --- */
-        .name-header { font-family: var(--font-script); font-size: clamp(4rem, 16vw, 10rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
-        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .reveal { transform: translateY(40px); }
-        .reveal-left { transform: translateX(-50px); }
-        .reveal-right { transform: translateX(50px); }
-        .reveal-scale { transform: scale(0.85); }
-        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
+.name-header { font-family: var(--font-script); font-size: clamp(4rem, 16vw, 10rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
 
-        @keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
-        .floating-element { animation: floating 6s infinite ease-in-out; }
+/* Transición con efecto de rebote suave (cubic-bezier) y más duración */
+.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur, .reveal-rotate { 
+    opacity: 0; 
+    transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    will-change: transform, opacity, filter;
+}
+
+/* Distancias mucho más exageradas */
+.reveal { transform: translateY(120px); } 
+.reveal-left { transform: translateX(-120px) rotate(-10deg); } 
+.reveal-right { transform: translateX(120px) rotate(10deg); } 
+.reveal-scale { transform: scale(0.3); } 
+.reveal-blur { transform: translateY(80px); filter: blur(15px); }
+.reveal-rotate { transform: rotate(-180deg) scale(0.2); }
+
+/* Estado Activo (cuando ya están en pantalla) */
+.reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active, .reveal-blur.active, .reveal-rotate.active { 
+    opacity: 1; 
+    transform: translate(0) scale(1) rotate(0deg); 
+    filter: blur(0);
+}
+
+/* Tiempos de retraso para crear efecto "cascada" */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-600 { transition-delay: 600ms; }
+.delay-800 { transition-delay: 800ms; }
+
+@keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+.floating-element { animation: floating 6s infinite ease-in-out; }
 
         /* --- LINEA DE TIEMPO --- */
         .timeline-line { position: absolute; left: 50%; transform: translateX(-50%); width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--dorado-elegante), transparent); }
@@ -735,17 +757,22 @@
         updateCountdown();
 
         // --- LÓGICA DE APARICIÓN AL HACER SCROLL (FADE IN) ---
-        function initObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
-        }
+function initObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            } else {
+                // Opcional: Si quieres que la animación se repita CADA VEZ que subes y bajas,
+                // descomenta la siguiente línea. Si solo quieres que ocurra una vez, déjala así.
+                // entry.target.classList.remove('active'); 
+            }
+        });
+    }, { threshold: 0.15 }); // 0.15 significa que espera a que el 15% del elemento sea visible
+    
+    // Agregamos las nuevas clases al observador
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur, .reveal-rotate').forEach(el => observer.observe(el));
+}
 
         // --- LÓGICA PARA AGREGAR EVENTO A GOOGLE CALENDAR ---
         function calendarLink(title, loc, date) {
