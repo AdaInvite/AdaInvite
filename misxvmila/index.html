@@ -610,19 +610,34 @@
                 </form>
 <div class="mt-16 border-t border-dorado-elegante/30 pt-10 text-center">
                     <h3 class="text-3xl md:text-5xl font-script text-dorado-elegante mb-4 drop-shadow-md">Consulta tus pases</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-6 font-bold leading-relaxed">Ingresa tu nombre exactamente como confirmaste para verificar cuántos pases tienes asignados.</p>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-6 font-bold leading-relaxed">Ingresa tu nombre exactamente como confirmaste para generar tu acceso.</p>
                     
-                    <div class="space-y-4 text-left bg-black/40 p-6 rounded-2xl backdrop-blur-sm border border-dorado-elegante/30 shadow-2xl">
+                    <div class="text-left bg-black/40 p-6 rounded-2xl backdrop-blur-sm border border-dorado-elegante/30 shadow-2xl">
                         <div class="border-b border-dorado-elegante/50 pb-1">
                             <input type="text" id="consultaNombre" placeholder="Tu nombre completo" class="w-full bg-transparent py-1 outline-none serif text-xl text-white placeholder-white/40">
                         </div>
-                        <button id="btnConsultarPases" class="bg-transparent text-dorado-elegante border border-dorado-elegante w-full font-bold py-3 uppercase tracking-[0.5em] text-[11px] hover:bg-dorado-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95 shadow-lg mt-4">
-                            Consultar
+                        <button id="btnConsultarPases" class="bg-transparent text-dorado-elegante border border-dorado-elegante w-full font-bold py-3 uppercase tracking-[0.5em] text-[11px] hover:bg-dorado-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95 shadow-lg mt-6">
+                            Generar Pase
                         </button>
-                        <p id="resultadoPases" class="serif text-lg text-white font-bold mt-4 drop-shadow-md min-h-[30px] text-center"></p>
+                        
+                        <p id="mensajeErrorPases" class="text-[10px] uppercase tracking-widest text-red-400 font-bold mt-4 drop-shadow-md text-center hidden"></p>
+                    </div>
+
+                    <div id="tarjetaPaseDigital" class="hidden mt-8 relative bg-black/80 backdrop-blur-md border border-dorado-elegante/60 rounded-2xl p-8 shadow-[0_0_30px_rgba(212,175,55,0.2)] text-center overflow-hidden transform transition-all duration-500 scale-95">
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-dorado-elegante to-transparent"></div>
+                        <img src="https://i.imgur.com/H3DS04B.png" class="w-16 mx-auto mb-4 opacity-80" alt="Corona">
+                        
+                        <p class="text-[9px] uppercase tracking-[0.4em] text-dorado-elegante font-bold mb-2 drop-shadow-md">Pase de Acceso VIP</p>
+                        <h4 id="paseNombre" class="font-script text-4xl md:text-5xl text-white drop-shadow-md mb-6 leading-tight capitalize">Nombre</h4>
+                        
+                        <div class="inline-block border-t border-b border-dorado-elegante/40 py-4 px-10 mb-6">
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 font-bold mb-1">Pases Asignados</p>
+                            <p id="paseCantidad" class="serif text-5xl md:text-6xl text-dorado-elegante font-bold drop-shadow-md">0</p>
+                        </div>
+                        
+                        <p class="text-[8px] uppercase tracking-[0.2em] text-white/60">Toma captura de pantalla y muestra<br>esta tarjeta en recepción</p>
                     </div>
                 </div>
-            </div>
         </section>
         <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
             <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
@@ -909,38 +924,66 @@ if (rsvpForm) {
             });
     });
 }
-        // --- LÓGICA DE CONSULTA DE PASES ---
+       // --- LÓGICA DE CONSULTA DE PASES Y GENERACIÓN DE TARJETA ---
         const btnConsultar = document.getElementById('btnConsultarPases');
-        const resultadoPases = document.getElementById('resultadoPases');
+        const mensajeError = document.getElementById('mensajeErrorPases');
+        const tarjetaPase = document.getElementById('tarjetaPaseDigital');
+        const paseNombre = document.getElementById('paseNombre');
+        const paseCantidad = document.getElementById('paseCantidad');
         
+        // ASEGÚRATE DE QUE ESTA VARIABLE TENGA TU URL REAL DE APPS SCRIPT
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwyhEZ5V-WLdijSZkTDcMwXW9c7M8I6lQhDdi8JiVp7rSBIq3l0588nuoyZ_Cec3EsLhQ/exec'; 
+
         if (btnConsultar) {
             btnConsultar.addEventListener('click', () => {
                 const nombreConsulta = document.getElementById('consultaNombre').value.trim();
                 
                 if (!nombreConsulta) {
-                    resultadoPases.innerText = "Por favor, escribe tu nombre.";
+                    mensajeError.innerText = "Por favor, escribe tu nombre.";
+                    mensajeError.classList.remove('hidden');
+                    tarjetaPase.classList.add('hidden');
                     return;
                 }
                 
-                // Cambiamos el estado del botón
+                // Cambiamos el estado del botón a "cargando"
                 btnConsultar.innerText = "Buscando...";
                 btnConsultar.disabled = true;
-                resultadoPases.innerText = "";
+                mensajeError.classList.add('hidden');
+                tarjetaPase.classList.add('hidden');
+                tarjetaPase.classList.remove('scale-100'); // Reinicia animación
                 
-                // IMPORTANTE: Asegúrate de que la variable scriptURL esté definida arriba con tu enlace de Google Apps Script
                 const urlConsulta = scriptURL + "?nombre=" + encodeURIComponent(nombreConsulta);
                 
                 fetch(urlConsulta)
                     .then(response => response.text())
                     .then(data => {
-                        resultadoPases.innerText = data;
-                        resultadoPases.classList.add("text-dorado-elegante"); // Resalta el texto
                         btnConsultar.innerText = "Consultar de nuevo";
                         btnConsultar.disabled = false;
+
+                        // Buscamos si la respuesta de Google Sheets contiene un número
+                        const matchNumero = data.match(/\d+/);
+                        
+                        if (data.includes("Aún no") || !matchNumero) {
+                            // Mostrar error si no hay pases
+                            mensajeError.innerText = "No encontramos pases asignados. Revisa que tu nombre esté escrito exactamente igual a tu confirmación.";
+                            mensajeError.classList.remove('hidden');
+                        } else {
+                            // Llenar la tarjeta con los datos y mostrarla
+                            paseNombre.innerText = nombreConsulta;
+                            paseCantidad.innerText = matchNumero[0]; // Extrae solo el número
+                            
+                            tarjetaPase.classList.remove('hidden');
+                            
+                            // Pequeño retraso para que la animación de escala se active suavemente
+                            setTimeout(() => {
+                                tarjetaPase.classList.add('scale-100');
+                            }, 50);
+                        }
                     })
                     .catch(error => {
-                        resultadoPases.innerText = "Hubo un problema de conexión. Intenta más tarde.";
-                        btnConsultar.innerText = "Consultar";
+                        mensajeError.innerText = "Hubo un problema de conexión. Intenta más tarde.";
+                        mensajeError.classList.remove('hidden');
+                        btnConsultar.innerText = "Generar Pase";
                         btnConsultar.disabled = false;
                     });
             });
