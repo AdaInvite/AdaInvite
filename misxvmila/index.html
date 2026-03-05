@@ -29,6 +29,8 @@
             }
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -533,7 +535,7 @@
             <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
         </div>
 
-         <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section relative text-center overflow-hidden">
+         <section class="min-h-[50vh] flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section text-center relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <h1 class="text-5xl md:text-7xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Álbum Compartido</h1>
                 <p class="serif text-xs md:text-md italic text-white drop-shadow-md mb-8 leading-relaxed font-medium">Ayúdame a capturar cada instante. <br> Escanea y sube tus fotos aquí:</p>
@@ -608,7 +610,8 @@
                         Confirmar Asistencia
                     </button>
                 </form>
-<div class="mt-16 border-t border-dorado-elegante/30 pt-10 text-center">
+                
+                <div class="mt-16 border-t border-dorado-elegante/30 pt-10 text-center">
                     <h3 class="text-3xl md:text-5xl font-script text-dorado-elegante mb-4 drop-shadow-md">Consulta tus pases</h3>
                     <p class="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-6 font-bold leading-relaxed">Ingresa tu nombre exactamente como confirmaste para generar tu acceso.</p>
                     
@@ -623,20 +626,29 @@
                         <p id="mensajeErrorPases" class="text-[10px] uppercase tracking-widest text-red-400 font-bold mt-4 drop-shadow-md text-center hidden"></p>
                     </div>
 
-                    <div id="tarjetaPaseDigital" class="hidden mt-8 relative bg-black/80 backdrop-blur-md border border-dorado-elegante/60 rounded-2xl p-8 shadow-[0_0_30px_rgba(212,175,55,0.2)] text-center overflow-hidden transform transition-all duration-500 scale-95">
-                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-dorado-elegante to-transparent"></div>
-                        <img src="https://i.imgur.com/H3DS04B.png" class="w-16 mx-auto mb-4 opacity-80" alt="Corona">
+                    <div id="contenedorPaseCompleto" class="hidden mt-8 flex flex-col items-center transform transition-all duration-500 scale-95">
                         
-                        <p class="text-[9px] uppercase tracking-[0.4em] text-dorado-elegante font-bold mb-2 drop-shadow-md">Pase de Acceso VIP</p>
-                        <h4 id="paseNombre" class="font-script text-4xl md:text-5xl text-white drop-shadow-md mb-6 leading-tight capitalize">Nombre</h4>
-                        
-                        <div class="inline-block border-t border-b border-dorado-elegante/40 py-4 px-10 mb-6">
-                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 font-bold mb-1">Pases Asignados</p>
-                            <p id="paseCantidad" class="serif text-5xl md:text-6xl text-dorado-elegante font-bold drop-shadow-md">0</p>
+                        <div id="tarjetaPaseDigital" class="relative w-full bg-[#111111] border border-dorado-elegante/60 rounded-2xl p-8 shadow-[0_0_30px_rgba(212,175,55,0.2)] text-center overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-dorado-elegante to-transparent"></div>
+                            <img src="https://i.imgur.com/H3DS04B.png" class="w-16 mx-auto mb-4 opacity-80" alt="Corona">
+                            
+                            <p class="text-[9px] uppercase tracking-[0.4em] text-dorado-elegante font-bold mb-2 drop-shadow-md">Pase de Acceso VIP</p>
+                            <h4 id="paseNombre" class="font-script text-4xl md:text-5xl text-white drop-shadow-md mb-6 leading-tight capitalize">Nombre</h4>
+                            
+                            <div class="inline-block border-t border-b border-dorado-elegante/40 py-4 px-10 mb-6">
+                                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 font-bold mb-1">Pases Asignados</p>
+                                <p id="paseCantidad" class="serif text-5xl md:text-6xl text-dorado-elegante font-bold drop-shadow-md">0</p>
+                            </div>
+                            
+                            <p class="text-[8px] uppercase tracking-[0.2em] text-white/60">Muestra esta tarjeta en recepción</p>
                         </div>
                         
-                        <p class="text-[8px] uppercase tracking-[0.2em] text-white/60">Toma captura de pantalla y muestra<br>esta tarjeta en recepción</p>
+                        <button id="btnDescargarPase" class="mt-6 bg-dorado-elegante text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-dorado-elegante transition-all duration-300 rounded-full shadow-[0_4px_15px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Descargar Imagen
+                        </button>
                     </div>
+
                 </div>
         </section>
         <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
@@ -874,63 +886,64 @@
         }
 
        // --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA VÍA WHATSAPP Y GOOGLE SHEETS ---
-const rsvpForm = document.getElementById('rsvpForm');
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwyhEZ5V-WLdijSZkTDcMwXW9c7M8I6lQhDdi8JiVp7rSBIq3l0588nuoyZ_Cec3EsLhQ/exec'; // <--- Reemplaza esto con tu URL
+        const rsvpForm = document.getElementById('rsvpForm');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwyhEZ5V-WLdijSZkTDcMwXW9c7M8I6lQhDdi8JiVp7rSBIq3l0588nuoyZ_Cec3EsLhQ/exec'; 
 
-if (rsvpForm) {
-    rsvpForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Obtenemos los valores
-        const name = document.getElementById('rsvpName').value.trim();
-        const adults = document.getElementById('rsvpAdults').value;
-        const children = document.getElementById('rsvpChildren').value;
-        
-        // Cambiamos el texto del botón para que el usuario sepa que está cargando
-        const btnSubmit = document.getElementById('btnSubmitRSVP');
-        const originalText = btnSubmit.innerText;
-        btnSubmit.innerText = "Enviando...";
-        btnSubmit.disabled = true;
-
-        // Preparamos los datos para Google Sheets
-        let formData = new FormData();
-        formData.append('nombre', name);
-        formData.append('adultos', adults);
-        formData.append('ninos', children);
-
-        // 1. Enviamos a Google Sheets
-        fetch(scriptURL, { method: 'POST', body: formData })
-            .then(response => {
-                // 2. Una vez guardado, abrimos WhatsApp
-                const phoneNumber = "525637992667";
-                const message = `¡Hola! Confirmo mi asistencia a los XV de Mila.%0A%0A*Nombre:* ${name}%0A*Adultos:* ${adults}%0A*Niños:* ${children}`;
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
                 
-                window.open(whatsappUrl, '_blank');
+                // Obtenemos los valores
+                const name = document.getElementById('rsvpName').value.trim();
+                const adults = document.getElementById('rsvpAdults').value;
+                const children = document.getElementById('rsvpChildren').value;
                 
-                // Restauramos el formulario
-                rsvpForm.reset();
-                btnSubmit.innerText = "¡Confirmación Enviada!";
-                setTimeout(() => {
-                    btnSubmit.innerText = originalText;
-                    btnSubmit.disabled = false;
-                }, 3000);
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert("Hubo un error al guardar la confirmación, pero aún puedes confirmar por WhatsApp.");
-                btnSubmit.innerText = originalText;
-                btnSubmit.disabled = false;
+                // Cambiamos el texto del botón para que el usuario sepa que está cargando
+                const btnSubmit = document.getElementById('btnSubmitRSVP');
+                const originalText = btnSubmit.innerText;
+                btnSubmit.innerText = "Enviando...";
+                btnSubmit.disabled = true;
+
+                // Preparamos los datos para Google Sheets
+                let formData = new FormData();
+                formData.append('nombre', name);
+                formData.append('adultos', adults);
+                formData.append('ninos', children);
+
+                // 1. Enviamos a Google Sheets
+                fetch(scriptURL, { method: 'POST', body: formData })
+                    .then(response => {
+                        // 2. Una vez guardado, abrimos WhatsApp
+                        const phoneNumber = "525637992667";
+                        const message = `¡Hola! Confirmo mi asistencia a los XV de Mila.%0A%0A*Nombre:* ${name}%0A*Adultos:* ${adults}%0A*Niños:* ${children}`;
+                        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                        
+                        window.open(whatsappUrl, '_blank');
+                        
+                        // Restauramos el formulario
+                        rsvpForm.reset();
+                        btnSubmit.innerText = "¡Confirmación Enviada!";
+                        setTimeout(() => {
+                            btnSubmit.innerText = originalText;
+                            btnSubmit.disabled = false;
+                        }, 3000);
+                    })
+                    .catch(error => {
+                        console.error('Error!', error.message);
+                        alert("Hubo un error al guardar la confirmación, pero aún puedes confirmar por WhatsApp.");
+                        btnSubmit.innerText = originalText;
+                        btnSubmit.disabled = false;
+                    });
             });
-    });
-}
+        }
+        
        // --- LÓGICA DE CONSULTA DE PASES Y GENERACIÓN DE TARJETA ---
         const btnConsultar = document.getElementById('btnConsultarPases');
         const mensajeError = document.getElementById('mensajeErrorPases');
-        const tarjetaPase = document.getElementById('tarjetaPaseDigital');
+        const contenedorPase = document.getElementById('contenedorPaseCompleto');
         const paseNombre = document.getElementById('paseNombre');
         const paseCantidad = document.getElementById('paseCantidad');
-
+        
         if (btnConsultar) {
             btnConsultar.addEventListener('click', () => {
                 const nombreConsulta = document.getElementById('consultaNombre').value.trim();
@@ -938,7 +951,7 @@ if (rsvpForm) {
                 if (!nombreConsulta) {
                     mensajeError.innerText = "Por favor, escribe tu nombre.";
                     mensajeError.classList.remove('hidden');
-                    tarjetaPase.classList.add('hidden');
+                    contenedorPase.classList.add('hidden');
                     return;
                 }
                 
@@ -946,8 +959,8 @@ if (rsvpForm) {
                 btnConsultar.innerText = "Buscando...";
                 btnConsultar.disabled = true;
                 mensajeError.classList.add('hidden');
-                tarjetaPase.classList.add('hidden');
-                tarjetaPase.classList.remove('scale-100'); // Reinicia animación
+                contenedorPase.classList.add('hidden');
+                contenedorPase.classList.remove('scale-100'); // Reinicia animación
                 
                 const urlConsulta = scriptURL + "?nombre=" + encodeURIComponent(nombreConsulta);
                 
@@ -969,11 +982,11 @@ if (rsvpForm) {
                             paseNombre.innerText = nombreConsulta;
                             paseCantidad.innerText = matchNumero[0]; // Extrae solo el número
                             
-                            tarjetaPase.classList.remove('hidden');
+                            contenedorPase.classList.remove('hidden');
                             
                             // Pequeño retraso para que la animación de escala se active suavemente
                             setTimeout(() => {
-                                tarjetaPase.classList.add('scale-100');
+                                contenedorPase.classList.add('scale-100');
                             }, 50);
                         }
                     })
@@ -983,6 +996,33 @@ if (rsvpForm) {
                         btnConsultar.innerText = "Generar Pase";
                         btnConsultar.disabled = false;
                     });
+            });
+        }
+
+        // --- LÓGICA PARA DESCARGAR LA TARJETA COMO IMAGEN ---
+        const btnDescargarPase = document.getElementById('btnDescargarPase');
+        if (btnDescargarPase) {
+            btnDescargarPase.addEventListener('click', () => {
+                const tarjeta = document.getElementById('tarjetaPaseDigital');
+                const originalText = btnDescargarPase.innerHTML;
+                btnDescargarPase.innerText = "Generando imagen...";
+                
+                html2canvas(tarjeta, {
+                    backgroundColor: "#111111", // Fondo oscuro sólido para evitar problemas de transparencia
+                    scale: 3 // Alta resolución
+                }).then(canvas => {
+                    const enlace = document.createElement('a');
+                    enlace.download = 'Pase_VIP_Mila.png';
+                    enlace.href = canvas.toDataURL('image/png');
+                    enlace.click();
+                    btnDescargarPase.innerHTML = originalText;
+                }).catch(error => {
+                    console.error("Error al generar la imagen: ", error);
+                    btnDescargarPase.innerHTML = "Error al descargar";
+                    setTimeout(() => {
+                        btnDescargarPase.innerHTML = originalText;
+                    }, 2000);
+                });
             });
         }
     </script>
