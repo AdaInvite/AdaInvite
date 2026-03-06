@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Fotos - XV Mila</title>
+    <meta name="theme-color" content="#D4AF37">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dorado: { elegante: '#D4AF37' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
+            font-family: 'Cinzel', serif;
+            color: #D4AF37;
+            background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .font-script { font-family: 'Great Vibes', cursive; }
+        .bg-overlay { background-color: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-overlay p-8 md:p-12 rounded-3xl border border-dorado-elegante/40 shadow-2xl text-center max-w-2xl w-full relative">
+        
+        <a href="index.html" class="absolute top-4 left-4 text-dorado-elegante hover:text-white transition-colors text-sm font-bold tracking-widest uppercase flex items-center gap-1">
+            ← Volver
+        </a>
+
+        <img src="https://i.imgur.com/H3DS04B.png" class="w-24 mx-auto mb-6 opacity-90 drop-shadow-md" alt="Corona">
+        
+        <h1 class="text-5xl md:text-7xl font-script text-dorado-elegante drop-shadow-lg mb-2">Recuerdos</h1>
+        <p class="text-xs tracking-[0.3em] uppercase text-white font-light mb-8">XV Mila</p>
+
+        <p class="text-sm italic text-white/90 leading-relaxed mb-8">
+            Selecciona las fotos que quieras compartir. Puedes revisarlas y quitar las que no te convenzan antes de subirlas.
+        </p>
+
+        <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+        
+        <button id="btnSelectFotos" onclick="document.getElementById('fileInput').click()" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md transition-all duration-300 px-8 py-3 mx-auto shadow-lg hover:bg-black/50 hover:text-dorado-elegante active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 mb-6">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            Elegir Fotos
+        </button>
+
+        <div id="previewContainer" class="flex flex-wrap gap-4 justify-center w-full my-6 max-h-[40vh] overflow-y-auto p-2">
+            </div>
+
+        <button id="btnConfirmUpload" class="hidden bg-green-600 text-white border border-green-600 font-bold rounded-md transition-all duration-300 px-8 py-3 mx-auto shadow-[0_0_15px_rgba(22,163,74,0.4)] hover:bg-green-700 active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 w-full max-w-xs">
+            Confirmar y Subir
+        </button>
+
+        <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-4 drop-shadow-md hidden"></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const btnSelectFotos = document.getElementById('btnSelectFotos');
+        const btnConfirmUpload = document.getElementById('btnConfirmUpload');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadMessage = document.getElementById('uploadMessage');
+
+        // ¡IMPORTANTE! PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
+        const UPLOAD_SCRIPT_URL = 'PEGA_AQUI_LA_URL_DE_TU_SCRIPT'; 
+
+        let selectedFiles = []; // Arreglo para guardar las fotos seleccionadas
+
+        if(fileInput) {
+            // Cuando eligen fotos
+            fileInput.addEventListener('change', function(event) {
+                const newFiles = Array.from(event.target.files);
+                
+                // Agregamos las fotos nuevas al arreglo existente (por si le dan "elegir fotos" varias veces)
+                selectedFiles = selectedFiles.concat(newFiles);
+                
+                // Limpiamos el input para que detecte si suben la misma foto después
+                fileInput.value = ""; 
+                
+                renderPreviews();
+            });
+
+            // Función para dibujar las miniaturas con la "X"
+            function renderPreviews() {
+                previewContainer.innerHTML = '';
+                
+                if(selectedFiles.length > 0) {
+                    btnSelectFotos.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Agregar más`;
+                    btnConfirmUpload.classList.remove('hidden');
+                    btnConfirmUpload.innerHTML = `Subir ${selectedFiles.length} foto(s)`;
+                    uploadMessage.classList.add('hidden');
+
+                    selectedFiles.forEach((file, index) => {
+                        // Contenedor de la miniatura
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'relative inline-block animate-[pulse_0.3s_ease-out_1]'; // Pequeña animación al aparecer
+
+                        // Imagen
+                        const img = document.createElement('img');
+                        img.className = 'w-24 h-24 object-cover rounded-xl border border-dorado-elegante/60 shadow-lg';
+                        const reader = new FileReader();
+                        reader.onload = (e) => img.src = e.target.result;
+                        reader.readAsDataURL(file);
+
+                        // Botón de eliminar (X roja)
+                        const removeBtn = document.createElement('button');
+                        removeBtn.innerHTML = '✕';
+                        removeBtn.className = 'absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold shadow-lg hover:scale-110 active:scale-95 border border-white/20 transition-transform';
+                        
+                        // Lógica al hacer clic en la "X"
+                        removeBtn.onclick = () => {
+                            selectedFiles.splice(index, 1); // Quita el archivo del arreglo
+                            renderPreviews(); // Vuelve a dibujar todo
+                        };
+
+                        wrapper.appendChild(img);
+                        wrapper.appendChild(removeBtn);
+                        previewContainer.appendChild(wrapper);
+                    });
+                } else {
+                    btnConfirmUpload.classList.add('hidden');
+                    btnSelectFotos.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Elegir Fotos`;
+                }
+            }
+
+            // Cuando le dan clic a "Confirmar y Subir"
+            btnConfirmUpload.addEventListener('click', async function() {
+                if(selectedFiles.length === 0) return;
+
+                btnSelectFotos.classList.add('hidden');
+                btnConfirmUpload.innerHTML = "Subiendo...";
+                btnConfirmUpload.disabled = true;
+                btnConfirmUpload.classList.replace('bg-green-600', 'bg-gray-600');
+                
+                // Escondemos los botones de eliminar (X) mientras sube para que no borren nada accidentalmente
+                const deleteButtons = previewContainer.querySelectorAll('button');
+                deleteButtons.forEach(btn => btn.style.display = 'none');
+
+                uploadMessage.classList.remove('hidden', 'text-green-400', 'text-red-400');
+                uploadMessage.innerText = `Subiendo ${selectedFiles.length} foto(s)... Por favor no cierres esta página.`;
+                uploadMessage.classList.add('text-dorado-elegante', 'animate-pulse');
+
+                let successCount = 0;
+                let errorCount = 0;
+
+                for(let i = 0; i < selectedFiles.length; i++) {
+                    const file = selectedFiles[i];
+                    try {
+                        const base64 = await getBase64(file);
+                        const base64Data = base64.split(',')[1]; 
+
+                        const obj = {
+                            filename: file.name,
+                            mimeType: file.type,
+                            fileData: base64Data
+                        };
+
+                        await fetch(UPLOAD_SCRIPT_URL, {
+                            method: "POST",
+                            body: JSON.stringify(obj),
+                            headers: { "Content-Type": "text/plain;charset=utf-8" }
+                        });
+                        successCount++;
+                    } catch(e) {
+                        console.error("Error al subir foto:", e);
+                        errorCount++;
+                    }
+                }
+
+                // Finalizar proceso
+                btnConfirmUpload.classList.add('hidden');
+                btnConfirmUpload.disabled = false;
+                btnConfirmUpload.classList.replace('bg-gray-600', 'bg-green-600');
+                btnSelectFotos.classList.remove('hidden');
+                
+                selectedFiles = [];
+                renderPreviews(); // Esto borrará las imágenes de la pantalla
+                
+                uploadMessage.classList.remove('animate-pulse', 'text-dorado-elegante');
+                if(errorCount === 0) {
+                    uploadMessage.innerText = "¡Fotos subidas con éxito! Muchas gracias.";
+                    uploadMessage.classList.add('text-green-400');
+                } else {
+                    uploadMessage.innerText = `Se subieron ${successCount}. Hubo problema con ${errorCount} foto(s) por tamaño.`;
+                    uploadMessage.classList.add('text-red-400');
+                }
+
+            });
+        }
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+    </script>
+</body>
+</html>
