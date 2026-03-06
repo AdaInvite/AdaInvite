@@ -1,0 +1,1131 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XV Mila</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/OONuNTG.png">
+    
+    <meta name="theme-color" content="#D4AF37">
+    <meta property="og:title" content="XV Mila">
+    <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/GIWvPqa.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dorado: { elegante: '#D4AF37' },
+                        blanco: { perla: '#FDFBFB' },
+                        azul: { real: '#002366' },
+                        rojo: { intenso: '#C41E3A' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES GENERALES --- */
+        :root {
+            --dorado-elegante: #D4AF37;
+            --font-serif: 'Cinzel', serif;
+            --font-script: 'Great Vibes', cursive;
+            --font-body: var(--font-serif);
+            --bg-floral: url('https://i.imgur.com/VBju3Lm.jpeg');
+        }
+
+        /* --- ESTILOS BÁSICOS --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            color: var(--dorado-elegante);
+            scroll-behavior: smooth;
+        }
+
+        body.locked { overflow: hidden; height: 100vh; }
+
+        h1, h2, h3, h4, .serif { font-family: var(--font-serif); font-weight: 400; }
+        .font-script { font-family: var(--font-script); }
+
+        /* --- FONDO FLORAL GLOBAL --- */
+        .bg-floral-section {
+            background-image: var(--bg-floral);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* --- ANIMACIÓN DEL SOBRE --- */
+        #envelope-wrapper { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; transition: visibility 1.8s; }
+        .envelope-bg { position: absolute; inset: 0; background-image: url("https://i.imgur.com/6X5kgmC.jpeg"); background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1; }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.50)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.50)); }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/6X5kgmC.jpeg"); background-size: cover; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        .seal-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease; }
+        
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-100%); opacity: 0; transition: transform 1.8s ease, opacity 1.5s ease 0.3s; }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(100%); opacity: 0; transition: transform 1.8s ease, opacity 1.5s ease 0.3s; }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- EFECTOS DE APARICIÓN Y ANIMACIONES --- */
+        .name-header { font-family: var(--font-script); font-size: clamp(4rem, 16vw, 10rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
+        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        @keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+        .floating-element { animation: floating 6s infinite ease-in-out; }
+
+        /* --- TRIVIA CSS --- */
+        .btn-trivia { transition: all 0.3s ease; }
+        .btn-trivia.correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; }
+        .btn-trivia.incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; }
+        .btn-trivia:disabled { cursor: not-allowed; opacity: 0.9; }
+
+        /* --- CARRUSELES --- */
+        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .slider-historia::-webkit-scrollbar { display: none; }
+
+        .slider-historia { gap: 30px; padding: 40px 10px; }
+        .tarjeta-nueva { flex: 0 0 280px; scroll-snap-align: center; position: relative; background: rgba(0,0,0,0); padding: 12px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0); transform: rotate(-1deg); transition: all 0.4s ease; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
+        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(212, 175, 55, 0.4); }
+        .img-historia { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; }
+        
+        /* Modificación: Textos abajo y arriba */
+        .info-flotante { position: absolute; bottom: 25px; left: 10px; right: 10px; padding: 10px; text-align: center; text-shadow: 2px 2px 8px rgba(0,0,0,0.9); pointer-events: none; }
+        .info-flotante-top { position: absolute; top: 25px; left: 10px; right: 10px; padding: 10px; text-align: center; text-shadow: 2px 2px 8px rgba(0,0,0,0.9); pointer-events: none; }
+        
+        .año-badge { position: absolute; top: -15px; right: 15px; background: var(--dorado-elegante); color: white; padding: 6px 18px; border-radius: 20px; font-family: var(--font-serif); font-size: 15px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+
+        /* --- MÚSICA --- */
+        .audio-btn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: white; color: var(--dorado-elegante); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 90; box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer; transition: transform 0.3s; border: 2px solid var(--dorado-elegante); }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- CONTADOR --- */
+        #countdown { display: flex; justify-content: center; align-items: center; }
+        #countdown span { font-serif: var(--font-serif) !important; font-weight: 300; color: white; line-height: 1; }
+    </style>
+</head>
+<body class="locked">
+
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/bellaybestiason%20(mp3cut.net).mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/jKGXeBy.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-serif text-[9px] tracking-[3px] uppercase mb-4 animate-bounce text-dorado-elegante font-semibold shadow-black drop-shadow-md">Toca para abrir</div>
+                <img src="https://i.imgur.com/V9rFd3W.png" class="w-[130px] floating-element" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed top-0 left-0 w-8 md:w-16 h-full z-40 pointer-events-none bg-repeat-y bg-contain bg-top" style="background-image: url('https://i.imgur.com/Kniphu6.png');"></div>
+    <div class="fixed top-0 right-0 w-8 md:w-16 h-full z-40 pointer-events-none bg-repeat-y bg-contain bg-top" style="background-image: url('https://i.imgur.com/Kniphu6.png'); transform: scaleX(-1);"></div>
+
+    <main id="section-main">
+        
+        <section class="relative flex flex-col min-h-screen items-center bg-cover bg-center text-white overflow-hidden pb-12" style="background-image: url('https://i.imgur.com/VBju3Lm.jpeg');">
+        
+        <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+        <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+        <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+        <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+        <img src="https://i.imgur.com/Kbxj3Gk.png" class="absolute top-[30%] md:top-[25%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Reloj">
+        <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+        <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[30%] md:top-[25%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
+        <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+        
+        <img src="https://i.imgur.com/o0ihkK3.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-auto z-20 pointer-events-none drop-shadow-sm" alt="Decoración Superior">
+        
+        <div class="relative z-10 flex flex-col items-center justify-center w-full mt-28 md:mt-32 px-12 md:px-24 pb-20">
+            
+            <img src="https://i.imgur.com/H3DS04B.png" class="w-44 md:w-60 mb-20 z-50 pointer-events-none drop-shadow-md reveal-scale" alt="Corona">
+            <h1 class="name-header text-dorado-elegante reveal-scale mb-4">Mis XV</h1>
+            
+            <div class="reveal delay-100 flex-col items-center justify-center mt-12 mb-20">
+                <section class="flex items-center gap-8 justify-center">
+                    <div class="flex flex-col items-center">
+                        <span class="serif text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
+                        <span class="serif text-[5rem] leading-none font-light text-dorado-elegante drop-shadow-md">18</span>
+                    </div>
+                    <div class="w-px h-24 bg-dorado-elegante/60 shadow-sm"></div>
+                    <div class="text-left">
+                        <span class="serif text-4xl tracking-widest block text-white drop-shadow-md">ABR</span>
+                        <span class="serif text-2xl tracking-[0.6em] text-white drop-shadow-md">2026</span>
+                    </div>
+                </section>
+            </div>
+
+            <p class="reveal delay-200 font-body text-[8px] tracking-[0.5em] uppercase animate-bounce text-dorado-elegante drop-shadow-md font-bold mt-5 text-center">Desliza hacia abajo</p>
+        </div>
+    </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="relative flex flex-col min-h-screen items-center justify-center py-20 bg-floral-section overflow-hidden pt-14">
+            
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md" alt="Rosa Top">
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md rotate-180" alt="Rosa Bottom">
+
+            <div class="flex flex-col items-center justify-center text-center px-12 md:px-24 relative z-10 gap-8">
+                
+                <div class="relative w-[280px] h-[280px] md:w-[350px] md:h-[350px] reveal-scale">
+                    <div class="absolute inset-0 bg-cover bg-center rounded-full pointer-events-none" style="background-image: url('https://i.imgur.com/wcEc569.gif');"></div>
+                    <img src="https://i.imgur.com/Vn5aUsG.jpeg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[82%] h-[84%] object-cover rounded-full shadow-xl" alt="Mila">
+                    
+                    <img src="https://i.imgur.com/vSxH4tW.png" class="absolute -top-5 -left-5 w-16 md:w-20 z-50 floating-element pointer-events-none drop-shadow-md" alt="Mariposa">
+                    <img src="https://i.imgur.com/vSxH4tW.png" class="absolute -top-5 -right-5 w-16 md:w-20 z-50 floating-element pointer-events-none drop-shadow-md" alt="Mariposa">
+                    <img src="https://i.imgur.com/vSxH4tW.png" class="absolute -bottom-5 -left-5 w-16 md:w-20 z-50 floating-element pointer-events-none drop-shadow-md" alt="Mariposa">
+                    <img src="https://i.imgur.com/vSxH4tW.png" class="absolute -bottom-5 -right-5 w-16 md:w-20 z-50 floating-element pointer-events-none drop-shadow-md" alt="Mariposa">
+                </div>
+
+                <div class="reveal-scale delay-100">
+                    <h1 class="text-8xl md:text-8xl text-dorado-elegante font-script drop-shadow-lg">Mila</h1>
+                    <p class="text-[11px] uppercase tracking-[0.3em] text-white drop-shadow-md pb-5 font-light mt-4">Faltan solo...</p>
+                </div>
+                
+                <div id="countdown" class="flex gap-6 md:gap-14 justify-center reveal-scale delay-200 drop-shadow-lg">
+                    <div class="flex flex-col items-center"><span id="days" class="serif text-4xl md:text-7xl">00</span><span class="text-[10px] uppercase tracking-[0.3em] mt-2 text-dorado-elegante font-bold">Días</span></div>
+                    <div class="flex flex-col items-center"><span id="hours" class="serif text-4xl md:text-7xl">00</span><span class="text-[10px] uppercase tracking-[0.3em] mt-2 text-dorado-elegante font-bold">Horas</span></div>
+                    <div class="flex flex-col items-center"><span id="minutes" class="serif text-4xl md:text-7xl">00</span><span class="text-[10px] uppercase tracking-[0.3em] mt-2 text-dorado-elegante font-bold">Min</span></div>
+                    <div class="flex flex-col items-center"><span id="seconds" class="serif text-4xl md:text-7xl">00</span><span class="text-[10px] uppercase tracking-[0.3em] mt-2 text-dorado-elegante font-bold">Seg</span></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 text-center bg-floral-section relative overflow-hidden">
+            
+            <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/Kbxj3Gk.png" class="absolute top-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Reloj">
+            <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+            <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
+            <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+
+            <div class="max-w-4xl mx-auto reveal relative z-10 pt-5">
+                <p class="serif text-md italic text-white drop-shadow-md leading-relaxed font-light mb-8 px-6">"Hoy comienzo una nueva etapa. Quiero compartir este momento tan especial con las personas que más amo."
+            </p>
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <h3 class="text-[14px] md:text-[16px] uppercase tracking-[0.4em] mb-6 font-bold text-dorado-elegante drop-shadow-sm">Mis Padres</h3>
+                        <p class="text-md serif text-white drop-shadow-md">Jessyca Ramírez Sierra</p>
+                        <p class="text-md serif text-white drop-shadow-md">Sergio Alejandro Flores Carlon</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[14px] md:text-[16px] uppercase tracking-[0.4em] mb-6 font-bold text-dorado-elegante drop-shadow-sm">Mis Padrinos</h3>
+                        <p class="text-md serif text-white drop-shadow-md">Alejandra Carlon Bojórquez</p>
+                        <p class="text-md serif text-white drop-shadow-md">José Luis Flores Tamayo</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section relative overflow-hidden">
+            
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md" alt="Rosa Top">
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md rotate-180" alt="Rosa Bottom">
+            
+            <div class="max-w-6xl mx-auto relative z-10">
+                <div class="text-center mb-8 reveal">
+                    <h1 class="text-5xl md:text-8xl mb-6 text-dorado-elegante font-script reveal-scale">Mi Historia</h1>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-white drop-shadow-md font-bold">Un viaje inolvidable</p>
+                </div>
+
+                <div id="historia-container" class="slider-historia">
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/nMUdfe7.png" class="img-historia">
+                        <div class="info-flotante"><h4 class="serif text-xl text-white">BABY MILA👶🏻</h4></div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/h9yZEwc.jpeg" class="img-historia">
+                        <div class="info-flotante"><h4 class="serif text-xl text-white">PRIMER DÍA DE ESCUELA 👧🏻🏫</h4></div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/jnSLSSQ.jpeg" class="img-historia">
+                        <div class="info-flotante"><h4 class="serif text-xl text-white">PRINCESA👸🏻</h4></div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/F5JEqd1.jpeg" class="img-historia">
+                        <div class="info-flotante-top"><h4 class="serif text-xl text-white">VANIDOSA🙆🏻‍♀️💅🏻</h4></div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/fWnYQKw.jpeg" class="img-historia">
+                        <div class="info-flotante-top"><h4 class="serif text-xl text-white">SUNSET🌅🏝️</h4></div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/uQsKSCF.jpeg" class="img-historia">
+                        <div class="info-flotante-top"><h4 class="serif text-xl text-white">CONSENTIDA👩🏻🛍️</h4></div>
+                    </div>
+                </div>
+                <p class="text-center text-dorado-elegante/90 text-[9px] mt-2 uppercase tracking-[0.4em] font-bold drop-shadow-md">Arrastra para ver más →</p>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section overflow-hidden relative">
+            
+            <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/Kbxj3Gk.png" class="absolute top-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Reloj">
+            <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+            <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
+            <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 text-center">
+                <h1 class="text-5xl md:text-10xl mb-4 text-dorado-elegante font-script drop-shadow-md">Trivia</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
+                
+                <div id="trivia-container" class="bg-black/40 backdrop-blur-sm p-6 md:p-10 rounded-2xl shadow-xl border border-dorado-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                    
+                    <div id="trivia-question-container">
+                        <p class="text-[9px] uppercase tracking-widest text-gray-300 mb-4 font-bold">Pregunta <span id="trivia-current-num">1</span> de <span id="trivia-total-num">3</span></p>
+                        <h3 id="trivia-q-text" class="serif text-2xl md:text-3xl text-white mb-8 drop-shadow-md">Pregunta aquí</h3>
+                        <div id="trivia-options" class="flex flex-col gap-4">
+                            </div>
+                    </div>
+
+                    <div id="trivia-result" class="hidden">
+                        <h3 class="font-script text-6xl text-dorado-elegante mb-4 drop-shadow-md">¡Terminaste!</h3>
+                        <p class="serif text-2xl text-white mb-2">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold text-dorado-elegante mb-8 drop-shadow-md"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
+                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-300 mb-8 font-bold"></p>
+                        <button onclick="resetTrivia()" class="bg-dorado-elegante text-white border border-dorado-elegante px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-black/50 hover:text-dorado-elegante transition-all duration-300 rounded-md active:scale-95 shadow-lg">Jugar de nuevo</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section id="ubicaciones" class="pt-24 pb-24 px-12 md:px-24 bg-floral-section relative text-white overflow-hidden">
+            
+          <img src="https://i.imgur.com/69cPCo1.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md" alt="Rosa Top">
+          <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md rotate-180" alt="Rosa Bottom">
+
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+                <div class="p-4 md:p-8 reveal flex flex-col h-full rounded-xl z-10">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-6 flex items-center justify-center">
+                            <img src="https://i.imgur.com/shJEZgz.png" class="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-lg" alt="Ceremonia">
+                        </div>
+                        <h1 class="text-5xl md:text-10xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Ceremonia</h1>
+                        
+                        <h3 class="text-xl md:text-2xl text-dorado-elegante font-bold mb-3 drop-shadow-md">Parroquia San Martín de Porres</h3>
+                        <p class="text-xs md:text-sm text-white/80 drop-shadow-md">Ignacio Allende Manzana 015, San Martin de Porres, 55050 Ecatepec de Morelos, Méx.</p>
+                        
+                        <p class="serif text-xl italic text-dorado-elegante font-bold drop-shadow-md mt-6">16:30 HRS</p>
+                    </div>
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-dorado-elegante/30 mb-6 shadow-sm">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3758.634404838439!2d-99.02442429999999!3d19.600157499999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f1c331685c49%3A0xbbac0205f213b4d1!2sParroquia%20de%20San%20Martin%20de%20Porres%20Di%C3%B3cesis%20de%20Ecatepec!5e0!3m2!1ses-419!2smx!4v1772739029638!5m2!1ses-419!2smx" class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div class="p-4 md:p-4 reveal flex flex-col h-full rounded-xl z-10">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-6 flex items-center justify-center">
+                            <img src="https://i.imgur.com/p25lnQ1.png" class="w-28 h-28 md:w-40 md:h-40 object-contain drop-shadow-lg" alt="Recepción">
+                        </div>
+                        <h1 class="text-5xl md:text-10xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Recepción</h1>
+                        
+                        <h3 class="text-xl md:text-2xl text-dorado-elegante font-bold mb-3 drop-shadow-md">Salón Cronia</h3>
+                        <p class="text-xs md:text-sm text-white/80 drop-shadow-md">Av. José López Portillo 206, Sta Maria Cuautepec, 54949 Fuentes del Valle, Méx.</p>
+                        
+                        <p class="serif text-xl italic text-dorado-elegante font-bold drop-shadow-md mt-6">19:30 HRS</p>
+                    </div>
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-dorado-elegante/30 mb-6 shadow-sm">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3757.9679880805124!2d-99.1357902!3d19.6286663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f42f478c6b53%3A0x88fad24db9c0f6bd!2sSalon%20CRONIA!5e0!3m2!1ses-419!2smx!4v1772739136650!5m2!1ses-419!2smx" class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
+                <p class="text-[10px] uppercase tracking-[0.4em] mb-8 text-white font-bold drop-shadow-md">Reserva el momento en tu calendario</p>
+                <div class="flex justify-center">
+                    <button onclick="calendarLink('Mis XV Mila', 'Parroquia San Martín de Porres', '20260418T163000')" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md transition-all duration-300 px-10 py-4 justify-center shadow-lg hover:bg-black/50 hover:text-dorado-elegante hover:scale-105 active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center gap-2">
+                        Agregar al calendario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="pt-24 pb-24 px-12 md:px-24 bg-floral-section relative overflow-hidden text-white">
+            
+            <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/Kbxj3Gk.png" class="absolute top-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Reloj">
+            <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+            <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
+            <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+    <div class="text-center mb-8"> <h1 class="text-5xl md:text-8xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Itinerario</h1>
+        <p class="text-[10px] uppercase tracking-[0.5em] font-bold drop-shadow-md">Los momentos que tendremos</p>
+    </div>
+
+    <div class="relative space-y-12 md:space-y-20 pb-10 pt-2 w-full max-w-5xl mx-auto flex flex-col items-center">
+                    
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-gradient-to-b from-transparent via-dorado-elegante to-transparent opacity-50"></div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-left group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16">
+                            <img src="https://i.imgur.com/shJEZgz.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Iglesia">
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">Misa de Acción de Gracias</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-right group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16 text-right">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">Cena</p>
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <img src="https://i.imgur.com/p25lnQ1.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Cena">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-left group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16">
+                            <img src="https://i.imgur.com/yvazEkw.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Vals">
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">Vals</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-right group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16 text-right">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">¡A bailar!</p>
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <img src="https://i.imgur.com/QXkzMjK.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Baile">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-left group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16">
+                            <img src="https://i.imgur.com/tP471fk.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Pastel">
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">Pastel</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full relative z-10 reveal-right group">
+                        <div class="w-1/2 flex justify-end pr-6 md:pr-16 text-right">
+                            <p class="serif text-lg md:text-3xl text-dorado-elegante drop-shadow-md font-semibold">Batucada</p>
+                        </div>
+                        <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-dorado-elegante shadow-[0_0_15px_rgba(212,175,55,0.8)] absolute left-1/2 transform -translate-x-1/2"></div>
+                        <div class="w-1/2 flex justify-start pl-6 md:pl-16">
+                            <img src="https://i.imgur.com/uHXTog3.png" class="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" alt="Batucada">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section relative text-center overflow-hidden">
+            
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md" alt="Rosa Top">
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md rotate-180" alt="Rosa Bottom">
+
+            <div class="max-w-3xl mx-auto reveal-scale p-10 rounded-2xl relative z-10">
+                <div class="mx-auto mb-8 flex items-center justify-center">
+                    <img src="https://i.imgur.com/wmO9ljv.png" class="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-sm" alt="Código de Vestimenta">
+                </div>
+                <h2 class="text-5xl md:text-8xl mb-8 font-script text-dorado-elegante drop-shadow-lg">Código de Vestimenta</h2>
+                <p class="text-[9px] uppercase tracking-[0.5em] text-dorado-elegante mb-8 font-bold drop-shadow-md bg-black/50 backdrop-blur-md inline-block px-6 py-2 rounded-full border border-dorado-elegante/30">Guapos y guapas</p>
+                <p class="serif text-xs md:text-xs italic text-white drop-shadow-md mb-8 leading-relaxed font-medium">Por favor, reserva estos colores exclusivamente para la quinceañera.</p>
+                
+                <div class="flex justify-center gap-6 mt-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-[#D4AF37] border-2 border-dorado-elegante/50 shadow-md relative"></div>
+                        <span class="text-[9px] uppercase tracking-widest mt-3 text-white drop-shadow-md font-bold">Dorado</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-[#C41E3A] border-2 border-dorado-elegante/50 shadow-md relative"></div>
+                        <span class="text-[9px] uppercase tracking-widest mt-3 text-white drop-shadow-md font-bold">Rojo</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-[#002366] border-2 border-dorado-elegante/50 shadow-md relative"></div>
+                        <span class="text-[9px] uppercase tracking-widest mt-3 text-white drop-shadow-md font-bold">Azul Real</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+         <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section relative text-center overflow-hidden">
+             <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+             <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+    
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h1 class="text-5xl md:text-7xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Álbum Compartido</h1>
+                <p class="serif text-xs md:text-md italic text-white drop-shadow-md mb-8 leading-relaxed font-medium">Ayúdame a capturar cada instante. <br> Escanea y sube tus fotos aquí:</p>
+                <div class="flex flex-col items-center justify-center reveal-scale delay-200 gap-8">
+    <img src="https://i.imgur.com/y4Ixane.png" class="w-64 md:w-72 h-auto object-contain shadow-xl rounded-2xl border border-dorado-elegante/30 transition-transform duration-500 hover:scale-105" alt="Código Álbum Compartido">
+    
+    <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+    
+    <button id="btnUploadFotos" onclick="document.getElementById('fileInput').click()" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md transition-all duration-300 px-10 py-4 justify-center text-center shadow-lg hover:bg-black/50 hover:text-dorado-elegante hover:scale-105 active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center gap-2">
+        Seleccionar y Subir Fotos
+    </button>
+    <p id="uploadMessage" class="text-[9px] uppercase tracking-widest text-white font-bold mt-2 drop-shadow-md text-center hidden"></p>
+</div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="min-h-screen flex flex-col justify-center pt-24 pb-24 px-12 md:px-24 bg-floral-section text-center relative overflow-hidden">
+            
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md" alt="Rosa Top">
+            <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 md:w-20 z-50 pointer-events-none drop-shadow-md rotate-180" alt="Rosa Bottom">
+            
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <div class="mx-auto mb-6 flex items-center justify-center reveal-scale">
+    <img src="https://i.imgur.com/UZOCgVS.png" class="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-lg" alt="Icono Regalo"> </div>
+                <h1 class="text-5xl md:text-8xl mb-6 text-dorado-elegante font-script reveal-scale drop-shadow-md">Mesa de Regalos</h1>
+                <p class="serif text-md md:text-xl italic text-white drop-shadow-md mb-8 leading-relaxed font-medium">Tu presencia es mi mayor regalo, pero si gustas tener un presente, haz clic aquí:</p>
+                <div class="flex flex-col md:flex-row gap-6 md:gap-8 justify-center">
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-center w-full">
+                        <a href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51939313" target="_blank" class="mx-auto my-1 bg-white border border-gray-100 group shadow-lg rounded-xl h-38 w-64 overflow-hidden flex items-center justify-center reveal-scale delay-200 transition-all hover:-translate-y-1 hover:border-dorado-elegante/50 duration-500">
+                            <img src="https://i.imgur.com/LZFjO4y.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Liverpool">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+
+        <section class="pt-24 pb-32 px-12 md:px-24 bg-floral-section text-white text-center relative overflow-hidden">
+            
+            <img src="https://i.imgur.com/xEbevuC.png" class="absolute top-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/9YwKDaK.png" class="absolute top-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/WUg5o6X.png" class="absolute bottom-0 left-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/6lTlIns.png" class="absolute bottom-0 right-0 w-40 md:w-64 z-50 pointer-events-none drop-shadow-md" alt="Esquina">
+            <img src="https://i.imgur.com/Kbxj3Gk.png" class="absolute top-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Reloj">
+            <img src="https://i.imgur.com/a7OYNcR.png" class="absolute bottom-[20%] left-2 md:left-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Taza">
+            <img src="https://i.imgur.com/BpqRiZ9.png" class="absolute top-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Jarrón">
+            <img src="https://i.imgur.com/OweIPRy.png" class="absolute bottom-[20%] right-2 md:right-8 w-16 md:w-28 z-50 pointer-events-none drop-shadow-md" alt="Ropero">
+
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 flex flex-col justify-start">
+                <h2 class="text-5xl md:text-6xl font-script text-dorado-elegante mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+                <p class="serif text-md md:text-xl italic text-white drop-shadow-md mb-8 leading-relaxed font-medium">Por favor, confirmar antes del <br> 1 de Abril de 2026</p>
+                
+                <form id="rsvpForm" class="space-y-6 text-left bg-black/40 p-6 rounded-2xl backdrop-blur-sm border border-dorado-elegante/30 shadow-2xl transition-all duration-500">
+                    <div class="border-b border-dorado-elegante/50 pb-1">
+                        <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Nombre Completo</label>
+                        <input type="text" id="rsvpName" required class="w-full bg-transparent py-1 outline-none serif text-xl text-white">
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mt-4">
+                        <div class="border-b border-dorado-elegante/50 pb-1">
+                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Cantidad de Adultos</label>
+                            <input type="number" id="rsvpAdults" min="1" required class="w-full bg-transparent py-1 outline-none serif text-xl text-white appearance-none" value="1">
+                        </div>
+                        <div class="border-b border-dorado-elegante/50 pb-1">
+                            <label class="text-[9px] uppercase tracking-widest text-dorado-elegante font-bold drop-shadow-md">Cantidad de Niños</label>
+                            <input type="number" id="rsvpChildren" min="0" required class="w-full bg-transparent py-1 outline-none serif text-xl text-white appearance-none" value="0">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-dorado-elegante text-white font-bold py-3 uppercase tracking-[0.5em] text-[11px] hover:bg-black/50 hover:text-dorado-elegante border border-dorado-elegante transition-all duration-300 rounded-md shadow-lg mt-6 active:scale-95 hover:scale-105">
+                        Confirmar
+                    </button>
+                </form>
+                
+                <div class="mt-16 border-t border-dorado-elegante/30 pt-10 text-center">
+                    <h3 class="text-5xl md:text-6xl font-script text-dorado-elegante mb-4 drop-shadow-md">Consulta tus pases</h3>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-6 font-bold leading-relaxed">Ingresa tu nombre exactamente como confirmaste para generar tu acceso.</p>
+                    
+                    <div class="text-left bg-black/40 p-6 rounded-2xl backdrop-blur-sm border border-dorado-elegante/30 shadow-2xl">
+                        <div class="border-b border-dorado-elegante/50 pb-1">
+                            <input type="text" id="consultaNombre" placeholder="Tu nombre completo" class="w-full bg-transparent py-1 outline-none serif text-xl text-white placeholder-white/40">
+                        </div>
+                        <button id="btnConsultarPases" class="bg-dorado-elegante text-white border border-dorado-elegante w-full font-bold py-3 uppercase tracking-[0.5em] text-[11px] hover:bg-black/50 hover:text-dorado-elegante transition-all duration-300 rounded-md active:scale-95 shadow-lg mt-6">
+                            Generar Pase
+                        </button>
+                        
+                        <p id="mensajeErrorPases" class="text-[10px] uppercase tracking-widest text-red-400 font-bold mt-4 drop-shadow-md text-center hidden"></p>
+                    </div>
+
+                    <div id="contenedorPaseCompleto" class="hidden mt-8 flex flex-col items-center transform transition-all duration-500 scale-95">
+                        
+                        <div id="tarjetaPaseDigital" class="relative w-full bg-[#002D62] border border-dorado-elegante/60 rounded-2xl p-8 shadow-[0_0_30px_rgba(212,175,55,0.2)] text-center overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-dorado-elegante to-transparent"></div>
+                            <img src="https://i.imgur.com/H3DS04B.png" crossorigin="anonymous" class="w-16 mx-auto mb-4 opacity-80" alt="Corona">
+                            
+                            <p class="text-[9px] uppercase tracking-[0.4em] text-dorado-elegante font-bold mb-2 drop-shadow-md">Pase de Acceso</p>
+                            <h4 id="paseNombre" class="font-script text-4xl md:text-5xl text-white drop-shadow-md mb-6 leading-tight capitalize">Nombre</h4>
+                            
+                            <div class="inline-block border-t border-b border-dorado-elegante/40 py-4 px-10 mb-6">
+                                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 font-bold mb-1">Pases Asignados</p>
+                                <p id="paseCantidad" class="serif text-5xl md:text-6xl text-dorado-elegante font-bold drop-shadow-md">0</p>
+                            </div>
+                            
+                            <p class="text-[8px] uppercase tracking-[0.2em] text-white/60">Muestra esta tarjeta en recepción</p>
+                        </div>
+                        
+                        <button id="btnDescargarPase" class="mt-6 bg-dorado-elegante text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-black/50 hover:text-dorado-elegante border border-dorado-elegante transition-all duration-300 rounded-md shadow-[0_4px_15px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Descargar Pase
+                        </button>
+                    </div>
+
+                </div>
+        </section>
+        <div class="relative w-full z-20 -my-8 md:-my-12 flex justify-center pointer-events-none">
+            <img src="https://i.imgur.com/o0ihkK3.png" class="w-full max-w-5xl h-auto object-contain drop-shadow-sm" alt="Separador">
+        </div>
+        
+        <footer class="pt-8 lg:pt-10 pb-24 text-center bg-cover bg-center relative z-10 flex flex-col items-center justify-center overflow-hidden" style="background-image: url('https://i.imgur.com/VBju3Lm.jpeg');">
+            <div class="relative z-10 flex flex-col items-center w-full">
+                
+                <div class="relative w-[220px] h-[220px] md:w-[280px] md:h-[280px] mb-8 mt-8 reveal-scale">
+                    <div class="absolute inset-0 bg-cover bg-center rounded-full pointer-events-none" style="background-image: url('https://i.imgur.com/wcEc569.gif');"></div>
+                    <img src="https://i.imgur.com/3oSerOo.jpeg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[82%] h-[84%] object-cover rounded-full shadow-xl" alt="Mila Footer">
+                </div>
+
+                <p class="text-6xl font-script mb-8 text-dorado-elegante drop-shadow-md">¡No Faltes!</p>
+                <img src="https://i.imgur.com/zixliyS.png" class="w-60 h-auto mx-auto mb-8 object-contain shadow-lg" alt="Bella y Bestia">
+                <p class="text-[9px] text-white uppercase tracking-[0.5em] mb-2 font-bold drop-shadow-md">18 • Abril • 2026</p>
+            </div>
+            
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-5xl z-20 pointer-events-none">
+                <img src="https://i.imgur.com/o0ihkK3.png" class="w-full h-auto rotate-180 drop-shadow-sm" alt="Decoración Inferior">
+                
+                <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-[10%] left-[4%] w-16 md:w-20 z-30 drop-shadow-md rotate-180" alt="Rosa Inferior Izquierda">
+                
+                <img src="https://i.imgur.com/69cPCo1.png" class="absolute bottom-[10%] right-[4%] w-16 md:w-20 z-30 drop-shadow-md rotate-180" alt="Rosa Inferior Derecha">
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // --- LÓGICA PARA ABRIR EL SOBRE ---
+        function openEnvelope() {
+            playAudio();
+            
+            document.getElementById('envelope-wrapper').classList.add('open');
+            document.body.classList.remove('locked');
+            
+            initObserver();
+            loadQuestion(); // Iniciar la trivia
+            
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+            }, 1800);
+        }
+
+        // --- LÓGICA DEL REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe interactuar más.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- LÓGICA DEL CONTADOR DE TIEMPO (CUENTA REGRESIVA) ---
+        const targetDate = new Date("April 18, 2026 16:30:00").getTime();
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- LÓGICA DE APARICIÓN AL HACER SCROLL (FADE IN) ---
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        // --- LÓGICA PARA AGREGAR EVENTO A GOOGLE CALENDAR ---
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+        
+        // --- LÓGICA PARA QUE LAS FOTOS DE "MI HISTORIA" SE MUEVAN SOLAS ---
+        const historiaSlider = document.getElementById('historia-container');
+        let autoScrollInterval;
+
+        function iniciarAutoScroll() {
+            autoScrollInterval = setInterval(() => {
+                if (historiaSlider.scrollLeft + historiaSlider.offsetWidth >= historiaSlider.scrollWidth) {
+                    historiaSlider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    historiaSlider.scrollBy({ left: 300, behavior: 'smooth' });
+                }
+            }, 4000); 
+
+            const detenerCualquierInteraccion = () => {
+                clearInterval(autoScrollInterval);
+            };
+
+            historiaSlider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
+            historiaSlider.addEventListener('mousedown', detenerCualquierInteraccion);
+        }
+
+        // Observador específico para el carrusel de Mi Historia
+        const observerHistoria = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    iniciarAutoScroll();
+                    observerHistoria.disconnect(); // Desconecta para que no se duplique
+                }
+            });
+        }, { threshold: 0.3 });
+
+        if (historiaSlider) {
+            observerHistoria.observe(historiaSlider);
+        }
+
+        // --- LÓGICA DE TRIVIA ---
+        const triviaData = [
+            {
+                question: "¿Cuál es mi postre favorito?",
+                options: ["Helado", "Pastel", "Fresas con crema", "Crepas"],
+                answer: 2 
+            },
+            {
+                question: "¿Cuál es mi color preferido?",
+                options: ["Rosa", "Azul", "Morado", "Amarillo"],
+                answer: 1 
+            },
+            {
+                question: "¿Quién es mi artista favorito?",
+                options: ["Luis Miguel", "Michael Jackson", "Bad Bunny", "Taylor Swift"],
+                answer: 1 
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const qText = document.getElementById("trivia-q-text");
+            const optionsContainer = document.getElementById("trivia-options");
+            
+            document.getElementById("trivia-current-num").innerText = currentQuestion + 1;
+            document.getElementById("trivia-total-num").innerText = triviaData.length;
+            
+            if (qText && optionsContainer) {
+                qText.innerText = triviaData[currentQuestion].question;
+                optionsContainer.innerHTML = "";
+
+                triviaData[currentQuestion].options.forEach((opt, index) => {
+                    const btn = document.createElement("button");
+                    btn.innerText = opt;
+                    // Actualizado para fondo dorado sólido
+                    btn.className = "btn-trivia w-full text-left px-6 py-4 rounded-xl border border-dorado-elegante text-white bg-dorado-elegante hover:bg-black/50 hover:text-dorado-elegante font-body text-sm tracking-wide shadow-md transition-all duration-300";
+                    btn.onclick = () => checkAnswer(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            }
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            const correctIndex = triviaData[currentQuestion].answer;
+            const allBtns = document.querySelectorAll('.btn-trivia');
+            
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('incorrect');
+                allBtns[correctIndex].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < triviaData.length) {
+                    loadQuestion();
+                } else {
+                    showTriviaResults();
+                }
+            }, 1500);
+        }
+
+        function showTriviaResults() {
+            const qContainer = document.getElementById("trivia-question-container");
+            const rContainer = document.getElementById("trivia-result");
+            const scoreSpan = document.getElementById("trivia-score");
+            const totalSpan = document.getElementById("trivia-total-score");
+            const feedback = document.getElementById("trivia-feedback");
+
+            if (qContainer && rContainer && scoreSpan && totalSpan && feedback) {
+                qContainer.classList.add("hidden");
+                rContainer.classList.remove("hidden");
+                
+                scoreSpan.innerText = score;
+                totalSpan.innerText = triviaData.length;
+
+                if (score === triviaData.length) {
+                    feedback.innerText = "¡Wow! Me conoces a la perfección";
+                } else if (score >= triviaData.length / 2) {
+                    feedback.innerText = "¡Nada mal! Me conoces bastante bien";
+                } else {
+                    feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
+                }
+            }
+        }
+
+        function resetTrivia() {
+            currentQuestion = 0;
+            score = 0;
+            const qContainer = document.getElementById("trivia-question-container");
+            const rContainer = document.getElementById("trivia-result");
+            if (qContainer && rContainer) {
+                qContainer.classList.remove("hidden");
+                rContainer.classList.add("hidden");
+                loadQuestion();
+            }
+        }
+
+       // --- LÓGICA DE CONFIRMACIÓN DE ASISTENCIA VÍA WHATSAPP Y GOOGLE SHEETS ---
+        const rsvpForm = document.getElementById('rsvpForm');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwyhEZ5V-WLdijSZkTDcMwXW9c7M8I6lQhDdi8JiVp7rSBIq3l0588nuoyZ_Cec3EsLhQ/exec'; 
+
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Obtenemos los valores
+                const name = document.getElementById('rsvpName').value.trim();
+                const adults = document.getElementById('rsvpAdults').value;
+                const children = document.getElementById('rsvpChildren').value;
+                
+                // Cambiamos el texto del botón para que el usuario sepa que está cargando
+                const btnSubmit = document.getElementById('btnSubmitRSVP');
+                const originalText = btnSubmit.innerText;
+                btnSubmit.innerText = "Enviando...";
+                btnSubmit.disabled = true;
+
+                // Preparamos los datos para Google Sheets
+                let formData = new FormData();
+                formData.append('nombre', name);
+                formData.append('adultos', adults);
+                formData.append('ninos', children);
+
+                // 1. Enviamos a Google Sheets
+                fetch(scriptURL, { method: 'POST', body: formData })
+                    .then(response => {
+                        // 2. Una vez guardado, abrimos WhatsApp
+                        const phoneNumber = "525637992667";
+                        const message = `¡Hola! Confirmo mi asistencia a los XV de Mila.%0A%0A*Nombre:* ${name}%0A*Adultos:* ${adults}%0A*Niños:* ${children}`;
+                        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                        
+                        window.open(whatsappUrl, '_blank');
+                        
+                        // Restauramos el formulario
+                        rsvpForm.reset();
+                        btnSubmit.innerText = "¡Confirmación Enviada!";
+                        setTimeout(() => {
+                            btnSubmit.innerText = originalText;
+                            btnSubmit.disabled = false;
+                        }, 3000);
+                    })
+                    .catch(error => {
+                        console.error('Error!', error.message);
+                        alert("Hubo un error al guardar la confirmación, pero aún puedes confirmar por WhatsApp.");
+                        btnSubmit.innerText = originalText;
+                        btnSubmit.disabled = false;
+                    });
+            });
+        }
+        
+       // --- LÓGICA DE CONSULTA DE PASES Y GENERACIÓN DE TARJETA ---
+        const btnConsultar = document.getElementById('btnConsultarPases');
+        const mensajeError = document.getElementById('mensajeErrorPases');
+        const contenedorPase = document.getElementById('contenedorPaseCompleto');
+        const paseNombre = document.getElementById('paseNombre');
+        const paseCantidad = document.getElementById('paseCantidad');
+        
+        if (btnConsultar) {
+            btnConsultar.addEventListener('click', () => {
+                const nombreConsulta = document.getElementById('consultaNombre').value.trim();
+                
+                if (!nombreConsulta) {
+                    mensajeError.innerText = "Por favor, escribe tu nombre.";
+                    mensajeError.classList.remove('hidden');
+                    contenedorPase.classList.add('hidden');
+                    return;
+                }
+                
+                // Cambiamos el estado del botón a "cargando"
+                btnConsultar.innerText = "Buscando...";
+                btnConsultar.disabled = true;
+                mensajeError.classList.add('hidden');
+                contenedorPase.classList.add('hidden');
+                contenedorPase.classList.remove('scale-100'); // Reinicia animación
+                
+                const urlConsulta = scriptURL + "?nombre=" + encodeURIComponent(nombreConsulta);
+                
+                fetch(urlConsulta)
+                    .then(response => response.text())
+                    .then(data => {
+                        btnConsultar.innerText = "Consultar de nuevo";
+                        btnConsultar.disabled = false;
+
+                        // Buscamos si la respuesta de Google Sheets contiene un número
+                        const matchNumero = data.match(/\d+/);
+                        
+                        if (data.includes("Aún no") || !matchNumero) {
+                            // Mostrar error si no hay pases
+                            mensajeError.innerText = "No encontramos pases asignados. Revisa que tu nombre esté escrito exactamente igual a tu confirmación.";
+                            mensajeError.classList.remove('hidden');
+                        } else {
+                            // Llenar la tarjeta con los datos y mostrarla
+                            paseNombre.innerText = nombreConsulta;
+                            paseCantidad.innerText = matchNumero[0]; // Extrae solo el número
+                            
+                            contenedorPase.classList.remove('hidden');
+                            
+                            // Pequeño retraso para que la animación de escala se active suavemente
+                            setTimeout(() => {
+                                contenedorPase.classList.add('scale-100');
+                            }, 50);
+                        }
+                    })
+                    .catch(error => {
+                        mensajeError.innerText = "Hubo un problema de conexión. Intenta más tarde.";
+                        mensajeError.classList.remove('hidden');
+                        btnConsultar.innerText = "Generar Pase";
+                        btnConsultar.disabled = false;
+                    });
+            });
+        }
+
+        // --- LÓGICA PARA DESCARGAR LA TARJETA COMO IMAGEN ---
+        const btnDescargarPase = document.getElementById('btnDescargarPase');
+        if (btnDescargarPase) {
+            btnDescargarPase.addEventListener('click', () => {
+                const tarjeta = document.getElementById('tarjetaPaseDigital');
+                const originalText = btnDescargarPase.innerHTML;
+                btnDescargarPase.innerText = "Generando imagen...";
+                
+                html2canvas(tarjeta, {
+                    backgroundColor: "#002D62", // Fondo oscuro sólido para evitar problemas de transparencia
+                    scale: 3, // Alta resolución 
+                    useCORS: true  // <--- ESTA LÍNEA ES LA QUE HACE LA MAGIA
+                }).then(canvas => {
+                    const enlace = document.createElement('a');
+                    enlace.download = 'Pase_XV_Mila.png';
+                    enlace.href = canvas.toDataURL('image/png');
+                    enlace.click();
+                    btnDescargarPase.innerHTML = originalText;
+                }).catch(error => {
+                    console.error("Error al generar la imagen: ", error);
+                    btnDescargarPase.innerHTML = "Error al descargar";
+                    setTimeout(() => {
+                        btnDescargarPase.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+        }
+      // --- LÓGICA PARA SUBIR FOTOS DIRECTO A DRIVE ---
+        const fileInput = document.getElementById('fileInput');
+        const btnUploadFotos = document.getElementById('btnUploadFotos');
+        const uploadMessage = document.getElementById('uploadMessage');
+
+        // Pega aquí la URL que te dio Google Apps Script en el Paso 9
+        const UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwd4ExKnwRR8gKdS1rw_5bvrhRyAPw5Bg4rxzA9DJ0s59qb7p_St2QjFWozeiOxaUHd/exec';
+
+        if(fileInput) {
+            fileInput.addEventListener('change', async function() {
+                const files = fileInput.files;
+                if(files.length === 0) return;
+
+                // Cambiamos el texto del botón mientras sube
+                const originalBtnText = btnUploadFotos.innerHTML;
+                btnUploadFotos.innerHTML = "Subiendo...";
+                btnUploadFotos.disabled = true;
+                
+                uploadMessage.classList.remove('hidden');
+                uploadMessage.innerText = `Subiendo ${files.length} foto(s)... No cierres la página.`;
+                uploadMessage.className = "text-[9px] uppercase tracking-widest text-dorado-elegante font-bold mt-2 drop-shadow-md text-center animate-pulse";
+
+                let successCount = 0;
+                let errorCount = 0;
+
+                // Subimos foto por foto para que no se sature
+                for(let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    try {
+                        const base64 = await getBase64(file);
+                        const base64Data = base64.split(',')[1]; 
+
+                        const obj = {
+                            filename: file.name,
+                            mimeType: file.type,
+                            fileData: base64Data
+                        };
+
+                        await fetch(UPLOAD_SCRIPT_URL, {
+                            method: "POST",
+                            body: JSON.stringify(obj),
+                            headers: { "Content-Type": "text/plain;charset=utf-8" }
+                        });
+                        successCount++;
+                    } catch(e) {
+                        console.error("Error al subir foto:", e);
+                        errorCount++;
+                    }
+                }
+
+                // Restauramos el botón
+                btnUploadFotos.innerHTML = originalBtnText;
+                btnUploadFotos.disabled = false;
+                fileInput.value = ""; 
+
+                if(errorCount === 0) {
+                    uploadMessage.innerText = "¡Fotos subidas con éxito! Muchas gracias.";
+                    uploadMessage.className = "text-[10px] uppercase tracking-widest text-green-400 font-bold mt-2 drop-shadow-md text-center";
+                } else {
+                    uploadMessage.innerText = `Se subieron ${successCount}. Hubo problema con ${errorCount} foto(s) por ser muy pesadas.`;
+                    uploadMessage.className = "text-[10px] uppercase tracking-widest text-red-400 font-bold mt-2 drop-shadow-md text-center";
+                }
+
+                // Ocultar mensaje después de 6 segundos
+                setTimeout(() => {
+                    uploadMessage.classList.add('hidden');
+                }, 6000);
+            });
+        }
+
+        // Función auxiliar para transformar la foto
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+    </script>
+</body>
+</html>
