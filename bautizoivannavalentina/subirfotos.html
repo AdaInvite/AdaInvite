@@ -23,7 +23,7 @@
             border: 2px dashed #E5B0C2;
             transition: all 0.3s ease;
         }
-        .upload-area.dragover {
+        .upload-area:hover {
             background-color: #F7E9ED;
             border-color: #BF6A8A;
         }
@@ -41,13 +41,17 @@
             margin-right: 8px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Ocultar barra de scroll en miniaturas */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6 bg-[url('https://i.imgur.com/G6A8bSJ.jpeg')] bg-cover bg-center bg-fixed">
     
     <div class="fixed inset-0 bg-white/70 backdrop-blur-sm z-0"></div>
 
-    <div class="relative z-10 bg-white/90 backdrop-blur-md p-8 md:p-12 rounded-[40px] shadow-2xl max-w-lg w-full text-center border border-white">
+    <div class="relative z-10 bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-[40px] shadow-2xl max-w-lg w-full text-center border border-white">
         <h1 class="text-4xl md:text-5xl font-script text-[#5F6F52] mb-2">Compartir Fotos</h1>
         <p class="text-[10px] tracking-[0.3em] text-pink-400 font-extrabold uppercase mb-8">Bautizo de Ivanna Valentina</p>
         
@@ -62,57 +66,107 @@
             <input type="file" id="fileInput" class="hidden" multiple accept="image/*">
         </div>
 
-        <div id="previewArea" class="hidden mb-6 text-left bg-gray-50 p-4 rounded-2xl max-h-40 overflow-y-auto">
-            <p class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider" id="fileCount">0 fotos seleccionadas</p>
-            <ul id="fileList" class="text-sm text-gray-600 space-y-1"></ul>
+        <div id="previewArea" class="hidden mb-6 text-left bg-gray-50 p-5 rounded-3xl max-h-60 overflow-y-auto hide-scrollbar shadow-inner">
+            <p class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-widest text-center" id="fileCount">0 fotos seleccionadas</p>
+            <div id="fileList" class="flex flex-wrap gap-4 justify-center"></div>
         </div>
 
         <div id="statusMessage" class="hidden mb-4 text-sm font-bold rounded-xl p-3"></div>
 
-        <button id="uploadBtn" onclick="uploadFiles()" class="w-full bg-[#5F6F52] text-white py-4 rounded-full text-sm uppercase tracking-widest font-bold shadow-lg hover:bg-[#4A5740] transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden">
+        <button id="uploadBtn" onclick="uploadFiles()" class="w-full bg-[#5F6F52] text-white py-4 rounded-full text-sm uppercase tracking-widest font-bold shadow-lg hover:bg-[#4A5740] transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden mb-8">
             Subir Fotos
         </button>
 
-        <a href="index.html" class="inline-block mt-8 text-[11px] uppercase tracking-[0.2em] text-gray-400 hover:text-pink-400 transition-colors font-bold">Volver a la invitación</a>
+        <div class="flex items-center justify-center mb-8">
+            <div class="h-px bg-gray-200 w-full"></div>
+            <span class="px-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest">O</span>
+            <div class="h-px bg-gray-200 w-full"></div>
+        </div>
+
+        <div class="bg-[#fef8f9] rounded-3xl p-6 mb-8 border border-pink-50 shadow-sm">
+            <svg class="w-10 h-10 mx-auto text-[#BF6A8A] mb-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            <h3 class="text-sm font-bold text-gray-700 mb-2">¿Tienes videos del evento?</h3>
+            <p class="text-xs text-gray-500 mb-5 leading-relaxed">Los videos son muy pesados para subirlos por aquí. Por favor, compártelos directamente usando la app de Google Drive.</p>
+            <a href="https://drive.google.com/drive/folders/1YYCaRC_SFx7u1gom18OSRUJu4gXKdHFf" target="_blank" class="block w-full border-2 border-[#5F6F52] text-[#5F6F52] py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-[#5F6F52] hover:text-white transition-colors">
+                Abrir app de Drive
+            </a>
+        </div>
+
+        <a href="index.html" class="inline-block text-[11px] uppercase tracking-[0.2em] text-gray-400 hover:text-pink-400 transition-colors font-bold">Volver a la invitación</a>
     </div>
 
     <script>
-        // AQUÍ PEGARÁS LA URL DE TU SCRIPT DE GOOGLE EN EL PASO 2
+        // NO OLVIDES PEGAR AQUÍ TU URL DE GOOGLE SCRIPT
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9Uoe-rO_IrSa9cTEacS7tVdZULBkIC7JfOrmQf1ytx7vsbOjYR_fBeN4_DFd0Aykc/exec"; 
 
         const fileInput = document.getElementById('fileInput');
-        const dropZone = document.getElementById('dropZone');
         const previewArea = document.getElementById('previewArea');
         const fileList = document.getElementById('fileList');
         const fileCount = document.getElementById('fileCount');
         const uploadBtn = document.getElementById('uploadBtn');
         const statusMessage = document.getElementById('statusMessage');
-        let selectedFiles = [];
+        
+        let selectedFiles = []; // Arreglo maestro de archivos
 
-        // Manejo visual de selección de archivos
-        fileInput.addEventListener('change', handleFiles);
+        // Evento cuando seleccionan fotos
+        fileInput.addEventListener('change', (e) => {
+            const newFiles = Array.from(e.target.files);
+            // Acumulamos las fotos nuevas con las que ya estaban
+            selectedFiles = selectedFiles.concat(newFiles);
+            // Limpiamos el input para permitir seleccionar la misma carpeta/fotos de nuevo si quieren
+            fileInput.value = ""; 
+            renderPreviews();
+        });
 
-        function handleFiles(e) {
-            selectedFiles = Array.from(e.target.files);
+        // Función para dibujar las miniaturas
+        function renderPreviews() {
+            fileList.innerHTML = '';
+            
             if (selectedFiles.length > 0) {
                 previewArea.classList.remove('hidden');
                 uploadBtn.classList.remove('hidden');
-                fileCount.textContent = `${selectedFiles.length} foto(s) seleccionada(s)`;
+                fileCount.textContent = `${selectedFiles.length} foto(s) lista(s) para subir`;
                 
-                fileList.innerHTML = '';
-                selectedFiles.forEach(file => {
-                    const li = document.createElement('li');
-                    li.className = "truncate text-xs";
-                    li.textContent = `📷 ${file.name}`;
-                    fileList.appendChild(li);
+                selectedFiles.forEach((file, index) => {
+                    // Contenedor de la miniatura
+                    const div = document.createElement('div');
+                    div.className = "relative inline-block";
+
+                    // Imagen en miniatura
+                    const img = document.createElement('img');
+                    img.className = "w-20 h-20 object-cover rounded-xl shadow-sm border border-gray-200";
+                    
+                    // Leer archivo para mostrarlo (Base64 local)
+                    const reader = new FileReader();
+                    reader.onload = (e) => { img.src = e.target.result; };
+                    reader.readAsDataURL(file);
+
+                    // Botón de eliminar (X)
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = `
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    `;
+                    removeBtn.className = "absolute -top-2 -right-2 bg-red-400 hover:bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md transition-transform hover:scale-110";
+                    // Al hacer clic, borramos esta foto del arreglo y volvemos a dibujar
+                    removeBtn.onclick = () => {
+                        selectedFiles.splice(index, 1);
+                        renderPreviews();
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    fileList.appendChild(div);
                 });
             } else {
+                // Si borraron todas, ocultamos la zona de subida
                 previewArea.classList.add('hidden');
                 uploadBtn.classList.add('hidden');
             }
         }
 
-        // Función para leer el archivo como Base64
+        // Convertir a Base64 para Google Script
         const getBase64 = (file) => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -120,14 +174,20 @@
             reader.onerror = error => reject(error);
         });
 
+        // Función para subir a Google Drive
         async function uploadFiles() {
             if (GOOGLE_SCRIPT_URL === "PEGAR_URL_AQUI") {
-                showStatus("Falta configurar la URL del servidor.", "error");
+                showStatus("Falta configurar la URL de Google Script en el código.", "error");
                 return;
             }
 
+            // Bloquear botones durante la subida
             uploadBtn.disabled = true;
             uploadBtn.innerHTML = '<span class="loader"></span> Subiendo... No cierres la página';
+            // Ocultar los botones de "X" para que no borren fotos mientras se suben
+            const deleteButtons = fileList.querySelectorAll('button');
+            deleteButtons.forEach(btn => btn.style.display = 'none');
+            
             showStatus("", "");
 
             let successCount = 0;
@@ -156,12 +216,10 @@
 
             if (successCount === selectedFiles.length) {
                 showStatus(`¡Listo! ${successCount} fotos subidas con éxito. ¡Gracias!`, "success");
-                selectedFiles = [];
-                fileInput.value = "";
-                previewArea.classList.add('hidden');
-                uploadBtn.classList.add('hidden');
+                selectedFiles = []; // Vaciar memoria
+                renderPreviews(); // Redibujar (ocultará el área)
             } else {
-                showStatus(`Se subieron ${successCount} de ${selectedFiles.length} fotos. Intenta de nuevo con las que faltan.`, "warning");
+                showStatus(`Se subieron ${successCount} de ${selectedFiles.length} fotos. Por favor, recarga la página e intenta de nuevo con las que faltan.`, "warning");
             }
             
             uploadBtn.disabled = false;
