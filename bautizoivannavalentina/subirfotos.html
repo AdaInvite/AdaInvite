@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Ivanna Valentina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sage-green: #5F6F52; 
+            --cream: #FAF9F6;
+        }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--cream);
+            color: #4A4A4A;
+        }
+        .font-script { font-family: 'Dancing Script', cursive; }
+        
+        .upload-area {
+            border: 2px dashed #E5B0C2;
+            transition: all 0.3s ease;
+        }
+        .upload-area.dragover {
+            background-color: #F7E9ED;
+            border-color: #BF6A8A;
+        }
+        
+        /* Spinner de carga */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #BF6A8A;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6 bg-[url('https://i.imgur.com/G6A8bSJ.jpeg')] bg-cover bg-center bg-fixed">
+    
+    <div class="fixed inset-0 bg-white/70 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 bg-white/90 backdrop-blur-md p-8 md:p-12 rounded-[40px] shadow-2xl max-w-lg w-full text-center border border-white">
+        <h1 class="text-4xl md:text-5xl font-script text-[#5F6F52] mb-2">Compartir Fotos</h1>
+        <p class="text-[10px] tracking-[0.3em] text-pink-400 font-extrabold uppercase mb-8">Bautizo de Ivanna Valentina</p>
+        
+        <p class="text-sm text-gray-500 mb-8 font-medium px-4">Ayúdanos a capturar los mejores momentos de este día. Sube aquí tus fotos favoritas.</p>
+
+        <div id="dropZone" class="upload-area bg-white rounded-3xl p-8 cursor-pointer mb-6" onclick="document.getElementById('fileInput').click()">
+            <svg class="w-12 h-12 mx-auto text-pink-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+            <p class="text-sm font-bold text-gray-600">Toca aquí para elegir fotos</p>
+            <p class="text-xs text-gray-400 mt-2">Puedes seleccionar varias a la vez</p>
+            <input type="file" id="fileInput" class="hidden" multiple accept="image/*">
+        </div>
+
+        <div id="previewArea" class="hidden mb-6 text-left bg-gray-50 p-4 rounded-2xl max-h-40 overflow-y-auto">
+            <p class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider" id="fileCount">0 fotos seleccionadas</p>
+            <ul id="fileList" class="text-sm text-gray-600 space-y-1"></ul>
+        </div>
+
+        <div id="statusMessage" class="hidden mb-4 text-sm font-bold rounded-xl p-3"></div>
+
+        <button id="uploadBtn" onclick="uploadFiles()" class="w-full bg-[#5F6F52] text-white py-4 rounded-full text-sm uppercase tracking-widest font-bold shadow-lg hover:bg-[#4A5740] transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden">
+            Subir Fotos
+        </button>
+
+        <a href="index.html" class="inline-block mt-8 text-[11px] uppercase tracking-[0.2em] text-gray-400 hover:text-pink-400 transition-colors font-bold">Volver a la invitación</a>
+    </div>
+
+    <script>
+        // AQUÍ PEGARÁS LA URL DE TU SCRIPT DE GOOGLE EN EL PASO 2
+        const GOOGLE_SCRIPT_URL = "PEGAR_URL_AQUI"; 
+
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const previewArea = document.getElementById('previewArea');
+        const fileList = document.getElementById('fileList');
+        const fileCount = document.getElementById('fileCount');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        let selectedFiles = [];
+
+        // Manejo visual de selección de archivos
+        fileInput.addEventListener('change', handleFiles);
+
+        function handleFiles(e) {
+            selectedFiles = Array.from(e.target.files);
+            if (selectedFiles.length > 0) {
+                previewArea.classList.remove('hidden');
+                uploadBtn.classList.remove('hidden');
+                fileCount.textContent = `${selectedFiles.length} foto(s) seleccionada(s)`;
+                
+                fileList.innerHTML = '';
+                selectedFiles.forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = "truncate text-xs";
+                    li.textContent = `📷 ${file.name}`;
+                    fileList.appendChild(li);
+                });
+            } else {
+                previewArea.classList.add('hidden');
+                uploadBtn.classList.add('hidden');
+            }
+        }
+
+        // Función para leer el archivo como Base64
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
+
+        async function uploadFiles() {
+            if (GOOGLE_SCRIPT_URL === "PEGAR_URL_AQUI") {
+                showStatus("Falta configurar la URL del servidor.", "error");
+                return;
+            }
+
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<span class="loader"></span> Subiendo... No cierres la página';
+            showStatus("", "");
+
+            let successCount = 0;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                try {
+                    const base64Data = await getBase64(file);
+                    
+                    const payload = {
+                        fileName: file.name,
+                        mimeType: file.type,
+                        data: base64Data
+                    };
+
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: "POST",
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    successCount++;
+                } catch (error) {
+                    console.error("Error al subir " + file.name, error);
+                }
+            }
+
+            if (successCount === selectedFiles.length) {
+                showStatus(`¡Listo! ${successCount} fotos subidas con éxito. ¡Gracias!`, "success");
+                selectedFiles = [];
+                fileInput.value = "";
+                previewArea.classList.add('hidden');
+                uploadBtn.classList.add('hidden');
+            } else {
+                showStatus(`Se subieron ${successCount} de ${selectedFiles.length} fotos. Intenta de nuevo con las que faltan.`, "warning");
+            }
+            
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = 'Subir Fotos';
+        }
+
+        function showStatus(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700', 'bg-yellow-100', 'text-yellow-700');
+            
+            if (type === "success") statusMessage.classList.add('bg-green-100', 'text-green-700');
+            if (type === "error") statusMessage.classList.add('bg-red-100', 'text-red-700');
+            if (type === "warning") statusMessage.classList.add('bg-yellow-100', 'text-yellow-700');
+            if (!text) statusMessage.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
