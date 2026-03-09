@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XV Mila - Subir Fotos</title>
+    <title>XV Mila - Subir Recuerdos</title>
     
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <link rel="apple-touch-icon" href="https://i.imgur.com/OONuNTG.png">
@@ -12,38 +11,39 @@
     <meta name="theme-color" content="#D4AF37">
     <meta property="og:title" content="XV Mila">
     <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.imgur.com/GIWvPqa.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dorado: { elegante: '#D4AF37' }
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { colors: { dorado: { elegante: '#D4AF37' } } } } }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     
+    <script type="module">
+        import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.js";
+        LR.registerBlocks(LR);
+    </script>
+
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; min-height: 100%;
-            font-family: 'Cinzel', serif;
-            color: #D4AF37;
+            font-family: 'Cinzel', serif; color: #D4AF37;
         }
         .font-script { font-family: 'Great Vibes', cursive; }
         .bg-floral-section {
             background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
         }
-        /* Para que las opciones del select se vean legibles en celulares */
         select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
+        
+        /* Personalizando el botón oficial de Uploadcare con tus colores dorados */
+        lr-file-uploader-regular {
+            --ctx-name: uploader-mila;
+            --darkmode: 1;
+            --primary: #D4AF37;
+            --text-primary: #D4AF37;
+            display: none; /* Lo mantenemos oculto hasta que elijan una categoría */
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body class="bg-floral-section relative flex flex-col items-center justify-center min-h-screen overflow-x-hidden p-4">
@@ -58,12 +58,11 @@
     <div class="relative z-20 text-center max-w-2xl w-full flex flex-col items-center pt-8 pb-16">
         
         <img src="https://i.imgur.com/H3DS04B.png" class="w-24 mx-auto mb-10 drop-shadow-lg" alt="Corona">
-        
         <h1 class="text-6xl md:text-8xl font-script text-dorado-elegante drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-8">Recuerdos</h1>
         <p class="text-[15px] tracking-[0.4em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mb-8">XV Mila</p>
 
         <p class="text-sm italic text-white leading-relaxed mb-6 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] px-4">
-            Selecciona el momento de la fiesta y sube tus fotos favoritas.
+            Selecciona el momento de la fiesta y sube tus fotos o videos favoritos.
         </p>
 
         <select id="folderSelect" class="bg-black/50 backdrop-blur-sm border border-dorado-elegante text-dorado-elegante text-[10px] tracking-[2px] uppercase font-bold rounded-md px-6 py-3 outline-none mb-6 text-center shadow-lg w-full max-w-xs cursor-pointer">
@@ -75,19 +74,24 @@
             <option value="El baile">El baile</option>
             <option value="El pastel">El pastel</option>
         </select>
-
-        <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
         
-        <button id="btnSelectFotos" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md transition-all duration-300 px-8 py-3 mx-auto shadow-lg hover:bg-black/50 hover:text-dorado-elegante active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 mb-4 w-full max-w-xs">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            Elegir Fotos
-        </button>
+        <lr-config
+            ctx-name="uploader-mila"
+            pubkey="d06366b119e257d9800b"
+            multiple="true"
+            source-list="local, camera"
+            locale-name="es"
+        ></lr-config>
 
-        <div id="previewContainer" class="flex flex-wrap gap-4 justify-center w-full my-4 max-h-[35vh] overflow-y-auto p-2">
-        </div>
+        <lr-file-uploader-regular
+            ctx-name="uploader-mila"
+            css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
+            id="uploaderWidget"
+        ></lr-file-uploader-regular>
 
-        <button id="btnConfirmUpload" class="hidden bg-green-600 text-white border border-green-600 font-bold rounded-md transition-all duration-300 px-8 py-3 mx-auto shadow-[0_0_15px_rgba(22,163,74,0.4)] hover:bg-green-700 active:scale-95 text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 w-full max-w-xs">
-            Confirmar y Subir
+        <button id="fakeButton" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md px-8 py-3 mx-auto shadow-lg text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 mb-4 w-full max-w-xs opacity-50 cursor-not-allowed">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            Elige un momento primero
         </button>
 
         <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] hidden"></p>
@@ -95,170 +99,20 @@
 
     <script>
         const folderSelect = document.getElementById('folderSelect');
-        const fileInput = document.getElementById('fileInput');
-        const btnSelectFotos = document.getElementById('btnSelectFotos');
-        const btnConfirmUpload = document.getElementById('btnConfirmUpload');
-        const previewContainer = document.getElementById('previewContainer');
-        const uploadMessage = document.getElementById('uploadMessage');
+        const uploaderWidget = document.getElementById('uploaderWidget');
+        const fakeButton = document.getElementById('fakeButton');
+        const lrConfig = document.querySelector('lr-config');
 
-        // TU SCRIPT ACTUALIZADO
-        const UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzq3ZoUV6IUrW7rDN1ikq7bNKT6mtphgdKTxRQag815priFus9eWXhKEevGAJ8wqmU/exec'; 
-
-        // Límite de tamaño para fotos: 10 MB (muy seguro para celulares)
-        const MAX_FILE_SIZE_MB = 10; 
-        const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-
-        let selectedFiles = []; 
-
-        // Validar que elijan una categoría antes de abrir la galería
-        btnSelectFotos.addEventListener('click', () => {
-            if (folderSelect.value === "") {
-                uploadMessage.innerText = "Por favor, elige un momento de la lista primero.";
-                uploadMessage.classList.remove('hidden', 'text-green-400', 'text-dorado-elegante');
-                uploadMessage.classList.add('text-red-400');
+        // Cuando eligen una categoría, ocultamos el botón falso y mostramos el uploader real
+        folderSelect.addEventListener('change', (e) => {
+            if (e.target.value !== "") {
+                fakeButton.style.display = 'none';
+                uploaderWidget.style.display = 'block';
                 
-                setTimeout(() => uploadMessage.classList.add('hidden'), 4000);
-                return;
+                // Guardamos la categoría elegida como un metadato invisible
+                lrConfig.setAttribute('metadata', JSON.stringify({ momento: e.target.value }));
             }
-            fileInput.click();
         });
-
-        if(fileInput) {
-            fileInput.addEventListener('change', function(event) {
-                const newFiles = Array.from(event.target.files);
-                let validFiles = [];
-                let overSizeCount = 0;
-
-                // Filtramos fotos muy pesadas
-                newFiles.forEach(file => {
-                    if(file.size <= MAX_FILE_SIZE_BYTES) {
-                        validFiles.push(file);
-                    } else {
-                        overSizeCount++;
-                    }
-                });
-
-                if(overSizeCount > 0) {
-                    uploadMessage.innerText = `${overSizeCount} foto(s) supera el límite de ${MAX_FILE_SIZE_MB}MB y no se añadió.`;
-                    uploadMessage.classList.remove('hidden', 'text-green-400', 'text-dorado-elegante');
-                    uploadMessage.classList.add('text-red-400');
-                    setTimeout(() => uploadMessage.classList.add('hidden'), 6000);
-                }
-
-                selectedFiles = selectedFiles.concat(validFiles);
-                fileInput.value = ""; 
-                renderPreviews();
-            });
-
-            function renderPreviews() {
-                previewContainer.innerHTML = '';
-                
-                if(selectedFiles.length > 0) {
-                    btnSelectFotos.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Agregar más`;
-                    btnConfirmUpload.classList.remove('hidden');
-                    btnConfirmUpload.innerHTML = `Subir ${selectedFiles.length} foto(s)`;
-                    
-                    selectedFiles.forEach((file, index) => {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'relative inline-block animate-[pulse_0.3s_ease-out_1] w-24 h-24'; 
-
-                        const mediaPreview = document.createElement('img');
-                        mediaPreview.src = URL.createObjectURL(file);
-                        mediaPreview.className = 'w-full h-full object-cover rounded-xl border border-dorado-elegante shadow-[0_5px_15px_rgba(0,0,0,0.5)]';
-
-                        const removeBtn = document.createElement('button');
-                        removeBtn.innerHTML = '✕';
-                        removeBtn.className = 'absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold shadow-lg hover:scale-110 active:scale-95 border border-white/20 transition-transform z-10';
-                        
-                        removeBtn.onclick = () => {
-                            selectedFiles.splice(index, 1); 
-                            renderPreviews(); 
-                        };
-
-                        wrapper.appendChild(mediaPreview);
-                        wrapper.appendChild(removeBtn);
-                        previewContainer.appendChild(wrapper);
-                    });
-                } else {
-                    btnConfirmUpload.classList.add('hidden');
-                    btnSelectFotos.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Elegir Fotos`;
-                }
-            }
-
-            btnConfirmUpload.addEventListener('click', async function() {
-                if(selectedFiles.length === 0) return;
-
-                const selectedCategory = folderSelect.value;
-
-                btnSelectFotos.classList.add('hidden');
-                btnConfirmUpload.innerHTML = "Subiendo...";
-                btnConfirmUpload.disabled = true;
-                btnConfirmUpload.classList.replace('bg-green-600', 'bg-gray-600');
-                
-                const deleteButtons = previewContainer.querySelectorAll('button');
-                deleteButtons.forEach(btn => btn.style.display = 'none');
-
-                uploadMessage.classList.remove('hidden', 'text-green-400', 'text-red-400');
-                uploadMessage.innerText = `Enviando a "${selectedCategory}"... No cierres esta página.`;
-                uploadMessage.classList.add('text-dorado-elegante', 'animate-pulse');
-
-                let successCount = 0;
-                let errorCount = 0;
-
-                for(let i = 0; i < selectedFiles.length; i++) {
-                    const file = selectedFiles[i];
-                    try {
-                        const base64 = await getBase64(file);
-                        const base64Data = base64.split(',')[1]; 
-
-                        const obj = {
-                            filename: file.name,
-                            mimeType: file.type,
-                            fileData: base64Data,
-                            folderName: selectedCategory 
-                        };
-
-                        // Añadimos mode: "no-cors" para que los celulares no bloqueen la subida
-                        await fetch(UPLOAD_SCRIPT_URL, {
-                            method: "POST",
-                            mode: "no-cors",
-                            body: JSON.stringify(obj),
-                            headers: { "Content-Type": "text/plain;charset=utf-8" }
-                        });
-                        successCount++;
-                    } catch(e) {
-                        console.error("Error al subir foto:", e);
-                        errorCount++;
-                    }
-                }
-
-                btnConfirmUpload.classList.add('hidden');
-                btnConfirmUpload.disabled = false;
-                btnConfirmUpload.classList.replace('bg-gray-600', 'bg-green-600');
-                btnSelectFotos.classList.remove('hidden');
-                
-                selectedFiles = [];
-                renderPreviews(); 
-                
-                uploadMessage.classList.remove('animate-pulse', 'text-dorado-elegante');
-                if(errorCount === 0) {
-                    uploadMessage.innerText = "¡Fotos subidas con éxito! Muchas gracias.";
-                    uploadMessage.classList.add('text-green-400');
-                } else {
-                    uploadMessage.innerText = `Se subieron ${successCount}. Hubo problema con ${errorCount} foto(s).`;
-                    uploadMessage.classList.add('text-red-400');
-                }
-            });
-        }
-
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
     </script>
 </body>
 </html>
