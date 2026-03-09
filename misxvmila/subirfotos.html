@@ -94,7 +94,7 @@
             Elige un momento primero
         </button>
 
-        <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] hidden"></p>
+        <p id="uploadMessage" class="text-[12px] uppercase tracking-widest font-bold mt-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] hidden text-[#D4AF37] bg-black/60 p-4 rounded-lg border border-[#D4AF37]"></p>
     </div>
 
     <script>
@@ -102,16 +102,41 @@
         const uploaderWidget = document.getElementById('uploaderWidget');
         const fakeButton = document.getElementById('fakeButton');
         const lrConfig = document.querySelector('lr-config');
+        const uploadMessage = document.getElementById('uploadMessage');
 
-        // Cuando eligen una categoría, ocultamos el botón falso y mostramos el uploader real
+        // 1. Mostrar el uploader real cuando eligen la categoría
         folderSelect.addEventListener('change', (e) => {
             if (e.target.value !== "") {
                 fakeButton.style.display = 'none';
                 uploaderWidget.style.display = 'block';
                 
-                // Guardamos la categoría elegida como un metadato invisible
+                // Guardamos la categoría elegida
                 lrConfig.setAttribute('metadata', JSON.stringify({ momento: e.target.value }));
+                
+                // Ocultamos el mensaje si eligen una nueva categoría
+                uploadMessage.classList.add('hidden');
             }
+        });
+
+        // 2. Lógica para evitar que cierren la pestaña mientras suben archivos
+        let subidasEnProgreso = 0;
+
+        window.addEventListener('LR-upload-start', () => { subidasEnProgreso++; });
+        window.addEventListener('LR-upload-finish', () => { subidasEnProgreso--; });
+        window.addEventListener('LR-upload-failed', () => { subidasEnProgreso--; });
+
+        window.addEventListener('beforeunload', (e) => {
+            if (subidasEnProgreso > 0) {
+                e.preventDefault();
+                // El navegador mostrará su propia alerta de advertencia en español
+                e.returnValue = 'Tus archivos se están subiendo. ¿Seguro que quieres salir y cancelar la subida?';
+            }
+        });
+
+        // 3. Mostrar mensaje de éxito cuando terminan de subir los archivos y le dan a "Hecho/Terminar"
+        uploaderWidget.addEventListener('done-flow', () => {
+            uploadMessage.innerText = "¡Tus archivos se han subido correctamente, gracias por compartir estos recuerdos!";
+            uploadMessage.classList.remove('hidden');
         });
     </script>
 </body>
