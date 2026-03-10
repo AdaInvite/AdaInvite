@@ -67,23 +67,6 @@
         h1, h2, h3, h4, .serif { font-family: var(--font-serif); font-weight: 400; }
         .font-script { font-family: var(--font-script); }
 
-        /* --- CORTES EN TRIÁNGULO AL CENTRO --- */
-        .corte-pico {
-            clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
-            -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
-            margin-top: -5.9vw;
-            position: relative;
-            z-index: 10;
-        }
-
-        .corte-valle {
-            clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
-            -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
-            margin-top: -5.9vw;
-            position: relative;
-            z-index: 10;
-        }
-
         /* --- SECCIÓN 1: SOBRE --- */
         #envelope-wrapper {
             position: fixed; inset: 0; z-index: 100;
@@ -219,6 +202,10 @@
         #countdown span { font-family: var(--font-body) !important; font-weight: 300; line-height: 1; transition: color 0.5s ease;}
         #countdown .text-[9px] { color: rgba(181, 115, 122, 0.7); font-weight: 700; }
 
+        /* Capas protectoras adaptables Hero */
+        .hero-overlay { background-color: rgba(255, 255, 255, 0.5); transition: background-color 0.5s ease; }
+        .countdown-label { background-color: rgba(255, 255, 255, 0.8); transition: background-color 0.5s ease; }
+
         /* =========================================
            CONFIGURACIÓN DEL MODO OSCURO (NIGHT MODE)
            ========================================= */
@@ -249,6 +236,9 @@
 
         body.dark-mode .bg-white\/90 { background-color: rgba(26, 26, 26, 0.9) !important; }
         body.dark-mode select option { color: #121212 !important; }
+
+        body.dark-mode .hero-overlay { background-color: rgba(18, 18, 18, 0.6); }
+        body.dark-mode .countdown-label { background-color: rgba(26, 26, 26, 0.8); }
 
         /* INVERSIÓN DE ICONOS A BLANCO EN MODO OSCURO */
         .icono-tema { transition: filter 0.5s ease; }
@@ -346,37 +336,36 @@
 
     <main id="section-main">
         
-        <header class="relative min-h-screen flex flex-col bg-white pb-12">
-            <div class="h-[60vh] w-full overflow-hidden relative">
-                <img src="https://i.imgur.com/muVJu2c.png" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-5 relative">
-                <div class="bg-texture-main"></div>
+        <header class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 py-20 bg-cover bg-center" style="background-image: url('https://i.imgur.com/muVJu2c.png');">
+            <div class="absolute inset-0 hero-overlay"></div>
+            <div class="bg-texture-main"></div>
+            
+            <div class="relative z-10 w-full">
                 <h1 class="text-6xl md:text-8xl mb-5 text-rosa-elegante font-script reveal-scale pr-6">Mis XV</h1>
-                <p class="text-[10px] uppercase tracking-[0.3em] text-[#2C2A2A] pb-5 font-light">Faltan solo...</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-[#2C2A2A] pb-5 font-light font-bold">Faltan solo...</p>
                 
                 <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100">
                     <div class="flex flex-col items-center">
                         <span id="days" class="serif text-3xl md:text-7xl text-[#2C2A2A]">00</span>
-                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold">Días</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold countdown-label px-2 rounded">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <span id="hours" class="serif text-3xl md:text-7xl text-[#2C2A2A]">00</span>
-                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold">Horas</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold countdown-label px-2 rounded">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <span id="minutes" class="serif text-3xl md:text-7xl text-[#2C2A2A]">00</span>
-                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold">Min</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold countdown-label px-2 rounded">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <span id="seconds" class="serif text-3xl md:text-7xl text-[#2C2A2A]">00</span>
-                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold">Seg</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-rosa-elegante font-bold countdown-label px-2 rounded">Seg</span>
                     </div>
                 </div>
             </div>
         </header>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-blanco-perla relative corte-pico">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-blanco-perla relative">
             <div class="bg-texture-main opacity-20 z-0"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Regina</h1>
@@ -398,7 +387,7 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 bg-white relative overflow-hidden corte-valle">
+        <section class="pt-32 lg:pt-40 pb-32 bg-white relative overflow-hidden">
             <div class="bg-texture-main opacity-10"></div>
             <div class="max-w-6xl mx-auto relative z-10">
                 
@@ -468,7 +457,7 @@
             </div>
         </section>
 
-        <section class="pt-20 lg:pt-40 pb-32 px-6 bg-floral-section overflow-hidden relative corte-pico">
+        <section class="pt-20 lg:pt-40 pb-32 px-6 bg-floral-section overflow-hidden relative">
             <div class="bg-texture-main opacity-10"></div>
             <div class="max-w-6xl mx-auto reveal">
                 <div class="text-center mb-16">
@@ -516,7 +505,7 @@
             </div>
         </section>
         
-<section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-center relative overflow-hidden corte-valle">
+<section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-center relative overflow-hidden">
             <div class="bg-texture-main opacity-20 z-0"></div>
             <div class="max-w-2xl mx-auto reveal-scale relative z-10">
                 <h1 class="text-5xl md:text-8xl mb-4 text-rosa-elegante font-script">Trivia</h1>
@@ -543,9 +532,9 @@
             </div>
         </section>
         
-        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/VseF79Z.jpeg');"></section>
+        <section class="h-[70vh] parallax-section" style="background-image: url('https://i.imgur.com/VseF79Z.jpeg');"></section>
         
-        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla relative text-[#2C2A2A] corte-pico">
+        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla relative text-[#2C2A2A]">
             <div class="bg-texture-main opacity-20 z-0"></div>
             <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
                 <div class="bg-transparent p-4 md:p-8 border border-rosa-elegante/30 shadow-none reveal flex flex-col h-full rounded-xl">
@@ -604,7 +593,7 @@
             </div>
         </section>
 
-       <section class="pt-32 lg:pt-40 pb-32 px-6 bg-clima-section text-center relative overflow-hidden corte-pico">
+       <section class="pt-32 lg:pt-40 pb-32 px-6 bg-clima-section text-center relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal-scale relative z-10">
                 <h2 class="text-5xl md:text-8xl mb-6 font-script text-white drop-shadow-lg">Clima del Día</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white drop-shadow-md font-bold">Pronóstico por hora. León, Gto.</p>
@@ -615,7 +604,7 @@
             </div>
         </section>
         
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white relative overflow-hidden text-[#2C2A2A] corte-valle">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white relative overflow-hidden text-[#2C2A2A]">
             <div class="bg-texture-main opacity-10 z-0"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <div class="text-center mb-24">
@@ -661,7 +650,7 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section relative text-center corte-pico">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section relative text-center">
             <div class="max-w-3xl mx-auto reveal-scale">
                 <div class="mx-auto mb-8 flex items-center justify-center">
                     <img src="https://i.imgur.com/ruhzeF1.png" class="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-sm invert opacity-90" alt="Código de Vestimenta">
@@ -683,9 +672,9 @@
             </div>
         </section>
 
-        <section class="h-[70vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/VNDH9vM.jpeg');"></section>
+        <section class="h-[70vh] parallax-section" style="background-image: url('https://i.imgur.com/VNDH9vM.jpeg');"></section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-[#2C2A2A] text-center relative overflow-hidden corte-pico">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-[#2C2A2A] text-center relative overflow-hidden">
             <div class="bg-texture-main opacity-20 z-0"></div>
             
             <div class="max-w-3xl mx-auto reveal-scale relative z-10">
@@ -711,7 +700,7 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white text-center relative overflow-hidden corte-valle">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-white text-center relative overflow-hidden">
             <div class="bg-texture-main opacity-10"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Mesa de Regalos</h1>
@@ -738,7 +727,7 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden corte-pico">
+        <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[500px] flex flex-col justify-start"> 
                 <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
@@ -821,7 +810,7 @@
                 </div>
             </div>
         </section>
-        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white corte-valle relative z-10">
+        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white relative z-10">
             <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-rosa-elegante shadow-md">
             <p class="text-6xl font-script mb-2 text-rosa-elegante">Regina</p>
             <p class="text-[9px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-8 font-bold">16 • Noviembre • 2026</p>
