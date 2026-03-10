@@ -56,7 +56,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: var(--font-elegant);
+            font-family: var(--font-elegant); /* Fuente elegante para todo el cuerpo */
             background-color: var(--blanco-perla);
             overflow-x: hidden;
             color: var(--rosa-elegante);
@@ -72,83 +72,194 @@
         .font-numbers {
             font-family: var(--font-numbers) !important;
         }
-        
+
         body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 700; }
         .font-script { font-family: var(--font-script); font-weight: 400; }
 
         /* --- SECCIÓN 1: SOBRE --- */
         #envelope-wrapper {
-            position: fixed; inset: 0; z-index: 100;
-            display: flex; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: visibility 1.8s;
         }
+
         .envelope-bg {
-            position: absolute; inset: 0;
-            background-image: url("https://i.imgur.com/uMJBDav.jpeg");
-            background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
+            position: absolute;
+            inset: 0;
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
+            background-size: cover;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
         }
-        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15)); }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2)); }
-        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/uMJBDav.jpeg"); background-size: cover; }
-        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
-        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
+            -webkit-filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
+            -webkit-filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
+            background-size: cover;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
+        }
+
         .seal-wrapper {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 10; display: flex; flex-direction: column; align-items: center;
-            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
+
         #envelope-wrapper.open .envelope-bg { opacity: 0; }
         #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        /* Estilo para el Nombre Gigante del Hero */
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3), rgba(0,0,0,0.8)), var(--bg-regina);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
         .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.6); }
 
-        /* --- SECCIÓN PRINCIPAL --- */
+        /* --- SECCIÓN 3: CONTENIDO --- */
         #section-main { display: none; }
 
         .bg-texture-main {
             background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
-            background-size: 400px; opacity: 0.08; position: absolute; inset: 0; pointer-events: none;
+            background-size: 400px;
+            opacity: 0.08;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
         }
 
-        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
         .reveal { transform: translateY(40px); }
         .reveal-left { transform: translateX(-50px); }
         .reveal-right { transform: translateX(50px); }
         .reveal-scale { transform: scale(0.85); }
-        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
 
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
 
         .timeline-line {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--rosa-elegante), transparent);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--rosa-elegante), transparent);
         }
 
-        .bg-floral-section { background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-floral); background-size: cover; background-position: center; }
+        .bg-floral-section {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-floral);
+            background-size: cover;
+            background-position: center;
+        }
+
         .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
-        
-        .bg-clima-section { background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-clima); background-size: cover; background-position: center; }
-        
+
         .btn-calendar {
-            border: 1px solid var(--rosa-elegante); padding: 12px 28px; font-size: 11px;
-            letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease;
-            display: inline-flex; align-items: center; gap: 10px; border-radius: 4px;
+            border: 1px solid var(--rosa-elegante);
+            padding: 12px 28px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 4px;
         }
         .btn-calendar:hover { background: var(--rosa-elegante); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(181, 115, 122, 0.2); }
 
-        .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 24px; padding: 10px 0; scrollbar-width: none; }
+        .chambelanes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
         .chambelanes-slider::-webkit-scrollbar { display: none; }
         .chambelan-card {
-            flex: 0 0 280px; scroll-snap-align: center; background: var(--blanco-perla);
-            border: 1px solid rgba(181, 115, 122, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.5s ease; border-radius: 8px; overflow: hidden;
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            background: var(--blanco-perla);
+            border: 1px solid rgba(181, 115, 122, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border-radius: 8px;
+            overflow: hidden;
         }
         .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(181, 115, 122, 0.15); }
 
@@ -157,54 +268,128 @@
             50% { transform: translateY(-10px) rotate(1deg); }
         }
 
-        /* Botones Flotantes */
-        .floating-btn {
-            position: fixed; width: 40px; height: 40px;
-            background: var(--blanco-perla); color: var(--rosa-elegante);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            z-index: 90; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            cursor: pointer; transition: transform 0.3s, background-color 0.5s ease;
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 40px; 
+            height: 40px; 
+            background: var(--blanco-perla);
+            color: var(--rosa-elegante);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: transform 0.3s;
             border: 2px solid var(--rosa-elegante);
         }
-        .floating-btn:hover { transform: scale(1.1); }
-        .audio-btn { bottom: 30px; right: 20px; }
-        .theme-btn { bottom: 85px; right: 20px; } 
-        
+        .audio-btn:hover { transform: scale(1.1); }
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- DISEÑO DE TARJETAS TIPO "MOMENTOS" --- */
-        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 30px; padding: 40px 20px; scrollbar-width: none; }
-        .slider-historia::-webkit-scrollbar { display: none; }
-        .tarjeta-nueva {
-            flex: 0 0 280px; scroll-snap-align: center; position: relative;
-            background: var(--blanco-perla); padding: 12px; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.06); transform: rotate(-1deg); 
-            transition: all 0.4s ease; border: 1px solid rgba(181, 115, 122, 0.1);
-        }
-        .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
-        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(181, 115, 122, 0.15); }
-        .img-historia { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; }
-        .info-flotante {
-            position: absolute; bottom: 25px; left: 25px; right: 25px;
-            background: rgba(253, 251, 251, 0.9); backdrop-filter: blur(8px);
-            padding: 15px; border-radius: 12px; border: 1px solid rgba(181, 115, 122, 0.2);
-            transition: background-color 0.5s ease;
-        }
-        .año-badge {
-            position: absolute; top: -15px; right: 15px; background: var(--rosa-elegante);
-            color: white; padding: 6px 18px; border-radius: 20px;
-            font-size: 15px; box-shadow: 0 4px 12px rgba(181, 115, 122, 0.3); letter-spacing: 1px;
-            font-family: var(--font-numbers); font-weight: 500;
+       /* --- DISEÑO DE TARJETAS TIPO "MOMENTOS" --- */
+        .slider-historia {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 30px;
+            padding: 40px 20px;
+            scrollbar-width: none;
         }
 
-        /* Contador Minimalista en Portada Oscura */
-        #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
-        #countdown span.time-num { font-family: var(--font-numbers); font-weight: 400; line-height: 1; transition: color 0.5s ease; color: white; }
-        #countdown .time-label { color: rgba(255, 255, 255, 0.7); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); }
+        .slider-historia::-webkit-scrollbar { display: none; }
+
+        .tarjeta-nueva {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            position: relative;
+            background: var(--blanco-perla);
+            padding: 12px;
+            border-radius: 16px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            transform: rotate(-1deg); 
+            transition: all 0.4s ease;
+            border: 1px solid rgba(181, 115, 122, 0.1);
+        }
+
+        .tarjeta-nueva:nth-child(even) {
+            transform: rotate(1.5deg); 
+        }
+
+        .tarjeta-nueva:hover {
+            transform: rotate(0deg) scale(1.03);
+            z-index: 20;
+            box-shadow: 0 20px 40px rgba(181, 115, 122, 0.15);
+        }
+
+        .img-historia {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .info-flotante {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            background: rgba(253, 251, 251, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(181, 115, 122, 0.2);
+        }
+
+        .año-badge {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            background: var(--rosa-elegante);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(181, 115, 122, 0.3);
+            letter-spacing: 1px;
+            font-family: var(--font-numbers); 
+            font-weight: 600;
+        }
+
+        /* --- NUEVO CONTADOR MINIMALISTA --- */
+        #countdown {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #countdown span.time-num {
+            font-family: var(--font-numbers) !important; 
+            font-weight: 400; 
+            line-height: 1;
+            transition: color 0.5s ease;
+        }
+
+        #countdown .time-label {
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 8px;
+            font-family: var(--font-elegant);
+            transition: color 0.5s ease;
+        }
 
         /* Capas protectoras adaptables Hero */
-        .hero-overlay { background-color: rgba(0, 0, 0, 0.4); }
+        .hero-overlay { background-color: rgba(0, 0, 0, 0.4); transition: background-color 0.5s ease;}
 
         /* =========================================
            CONFIGURACIÓN DEL MODO OSCURO (NIGHT MODE)
@@ -236,8 +421,11 @@
 
         body.dark-mode select option { color: #121212 !important; }
 
-        /* Ajuste de capa protectora en modo oscuro (se oscurece más) */
+        /* Ajuste de capa protectora en modo oscuro */
         body.dark-mode .hero-overlay { background-color: rgba(0, 0, 0, 0.7); }
+        
+        /* Ajuste colores contador para modo oscuro */
+        body.dark-mode #countdown .time-label { color: #A0A0A0 !important; }
 
         /* INVERSIÓN DE ICONOS A BLANCO EN MODO OSCURO */
         .icono-tema { transition: filter 0.5s ease; }
@@ -309,11 +497,15 @@
         
         <header class="relative min-h-screen flex flex-col bg-cover bg-center" style="background-image: var(--bg-regina);">
             
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/90 z-0"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/90 z-0"></div>
             <div class="absolute inset-0 hero-overlay transition-colors duration-500 z-0"></div>
             <div class="bg-texture-main z-0"></div>
             
-            <div class="relative z-10 w-full pt-16 md:pt-24 text-center px-4 reveal-scale active">
+            <div class="relative z-10 w-full pt-20 md:pt-28 text-center px-4 reveal-scale active flex flex-col items-center">
+                <img src="https://i.imgur.com/LtxVy3t.png" alt="Corona" class="w-20 md:w-24 mb-6 object-contain" style="filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.6));">
+                
+                <h2 class="text-3xl md:text-5xl text-white font-script mb-2 drop-shadow-md">Mis XV</h2>
+                
                 <h1 class="name-header text-white text-center">Regina</h1>
             </div>
 
@@ -332,27 +524,6 @@
             </div>
             
             <div class="relative z-10 w-full mt-auto text-center px-4 pb-8 md:pb-12 reveal-scale active delay-200">
-                <p class="text-[10px] uppercase tracking-[0.3em] text-white/80 pb-4 font-bold">Faltan solo...</p>
-                
-                <div id="countdown" class="flex gap-6 md:gap-14 justify-center">
-                    <div class="flex flex-col items-center">
-                        <span id="days" class="time-num text-4xl md:text-6xl">00</span>
-                        <span class="time-label">Días</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="hours" class="time-num text-4xl md:text-6xl">00</span>
-                        <span class="time-label">Horas</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="minutes" class="time-num text-4xl md:text-6xl">00</span>
-                        <span class="time-label">Min</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="seconds" class="time-num text-4xl md:text-6xl">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
-                </div>
-                
                 <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-white/70 mt-10 font-bold">Desliza para ver más</p>
             </div>
         </header>
@@ -497,38 +668,12 @@
             </div>
         </section>
         
-<section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-center relative overflow-hidden">
-            <div class="bg-texture-main opacity-20 z-0"></div>
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
-                <h1 class="text-5xl md:text-8xl mb-4 text-rosa-elegante font-script">Trivia</h1>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
-                
-                <div id="trivia-container" class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-rosa-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
-                    
-                    <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
-                        <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-[#2C2A2A] mb-8">Pregunta aquí</h3>
-                        <div id="trivia-options" class="flex flex-col gap-4">
-                            </div>
-                    </div>
-
-                    <div id="trivia-result" class="hidden">
-                        <h3 class="font-script text-6xl text-rosa-elegante mb-4">¡Terminaste!</h3>
-                        <p class="text-2xl text-[#2C2A2A] mb-2">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold text-rosa-elegante mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
-                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-500 mb-8 font-bold"></p>
-                        <button onclick="resetTrivia()" class="bg-transparent text-rosa-elegante border border-rosa-elegante px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-rosa-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-        
         <section class="h-[70vh] parallax-section" style="background-image: url('https://i.imgur.com/VseF79Z.jpeg');"></section>
-        
+
         <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla relative text-[#2C2A2A]">
             <div class="bg-texture-main opacity-20 z-0"></div>
-            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+            
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-20 relative z-10">
                 <div class="bg-transparent p-4 md:p-8 border border-rosa-elegante/30 shadow-none reveal flex flex-col h-full rounded-xl">
                     <div class="text-center mb-8">
                         <div class="mx-auto mb-4 flex items-center justify-center opacity-80">
@@ -572,6 +717,28 @@
                     </div>
 
                     <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full block text-center bg-rosa-elegante border border-rosa-elegante text-white font-bold px-8 py-4 text-[12px] tracking-widest uppercase hover:bg-transparent hover:text-rosa-elegante shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Abrir en App de Mapas</a>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 mb-16 pt-8 border-t border-rosa-elegante/20">
+                <h3 class="text-5xl font-script text-rosa-elegante mb-8">Faltan solo...</h3>
+                <div id="countdown" class="flex gap-6 md:gap-14 justify-center">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="time-num text-5xl md:text-7xl text-rosa-elegante">00</span>
+                        <span class="time-label text-[#2C2A2A]">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="time-num text-5xl md:text-7xl text-rosa-elegante">00</span>
+                        <span class="time-label text-[#2C2A2A]">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="time-num text-5xl md:text-7xl text-rosa-elegante">00</span>
+                        <span class="time-label text-[#2C2A2A]">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="time-num text-5xl md:text-7xl text-rosa-elegante">00</span>
+                        <span class="time-label text-[#2C2A2A]">Seg</span>
+                    </div>
                 </div>
             </div>
 
@@ -638,6 +805,33 @@
                         </div>
                         <div class="w-5/12 text-left hidden md:block"><h3 class="text-3xl">Vals y Baile</h3><p class="text-gray-400 italic text-sm">¡A celebrar!</p></div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+<section class="pt-32 lg:pt-40 pb-32 px-6 bg-blanco-perla text-center relative overflow-hidden">
+            <div class="bg-texture-main opacity-20 z-0"></div>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-4 text-rosa-elegante font-script">Trivia</h1>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
+                
+                <div id="trivia-container" class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-rosa-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                    
+                    <div id="trivia-question-container">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
+                        <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-[#2C2A2A] mb-8">Pregunta aquí</h3>
+                        <div id="trivia-options" class="flex flex-col gap-4">
+                            </div>
+                    </div>
+
+                    <div id="trivia-result" class="hidden">
+                        <h3 class="font-script text-6xl text-rosa-elegante mb-4">¡Terminaste!</h3>
+                        <p class="text-2xl text-[#2C2A2A] mb-2">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold text-rosa-elegante mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
+                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-500 mb-8 font-bold"></p>
+                        <button onclick="resetTrivia()" class="bg-transparent text-rosa-elegante border border-rosa-elegante px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-rosa-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -812,8 +1006,7 @@
 
     <script>
         function openEnvelope() {
-            // Mostramos el contenido principal inmediatamente para que se revele 
-            // fluidamente por detrás de las solapas mientras se abren
+            // Mostramos el contenido principal inmediatamente para que se revele fluidamente
             document.getElementById('section-main').style.display = 'block';
             
             // Iniciar observadores, APIs y Trivia
@@ -986,22 +1179,21 @@
             container.innerHTML = cardsHTML;
         }
         // --- TRIVIA DE LA QUINCEAÑERA ---
-        // Aquí puedes editar las preguntas, las opciones y cuál es la correcta
         const triviaData = [
             {
                 question: "¿Cuál es mi postre favorito?",
                 options: ["Helado de vainilla", "Pastel de Chocolate", "Crepas dulces", "Fresas con crema"],
-                answer: 1 // El 1 equivale a "Pastel de Chocolate" (se cuenta desde el 0)
+                answer: 1 
             },
             {
                 question: "¿A dónde me gustaría viajar?",
                 options: ["París", "Tokio", "Nueva York", "Londres"],
-                answer: 0 // El 0 equivale a "París"
+                answer: 0 
             },
             {
                 question: "¿Cuál es mi serie favorita?",
                 options: ["Stranger Things", "Bridgerton", "Friends", "Gossip Girl"],
-                answer: 3 // El 3 equivale a "Gossip Girl"
+                answer: 3 
             }
         ];
 
@@ -1031,7 +1223,6 @@
             const correctIndex = triviaData[currentQuestion].answer;
             const allBtns = document.querySelectorAll('.btn-trivia');
             
-            // Bloqueamos los botones para que no hagan doble clic
             allBtns.forEach(b => b.disabled = true);
 
             if (selectedIndex === correctIndex) {
@@ -1039,11 +1230,9 @@
                 score++;
             } else {
                 btnElement.classList.add('incorrect');
-                // Iluminamos la correcta para que sepan cuál era
                 allBtns[correctIndex].classList.add('correct');
             }
 
-            // Pasamos a la siguiente pregunta después de 1.5 segundos
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < triviaData.length) {
@@ -1078,7 +1267,8 @@
             document.getElementById("trivia-result").classList.add("hidden");
             loadQuestion();
         }
-              // --- 9. LÓGICA DE ENVÍO Y CARGA MEJORADA ---
+        
+        // --- 9. LÓGICA DE ENVÍO Y CARGA MEJORADA ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
@@ -1087,7 +1277,6 @@
             const pax = document.getElementById('rsvpPax').value;
             const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
             
-            // Ocultar formulario y mostrar carga
             document.getElementById('rsvpForm').style.display = 'none';
             const loader = document.getElementById('loadingMessage');
             loader.classList.remove('hidden');
@@ -1097,12 +1286,10 @@
                 const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
                 const result = await response.json();
                 
-                // Ocultar carga
                 loader.classList.add('hidden');
                 loader.classList.remove('flex');
 
                 if(result.status === "success") {
-                    // Llenar datos en el ticket
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
@@ -1115,7 +1302,6 @@
                         document.getElementById('successMessage').classList.remove('hidden');
                     };
                 } else if (result.status === "exists") {
-                    // Mostrar error de duplicado
                     document.getElementById('errorMessage').classList.remove('hidden');
                     document.getElementById('errorMessage').classList.add('flex');
                 }
@@ -1125,7 +1311,6 @@
             }
         });
 
-        // Función para volver a intentar
         function resetForm() {
             document.getElementById('errorMessage').classList.add('hidden');
             document.getElementById('errorMessage').classList.remove('flex');
