@@ -104,19 +104,10 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        /* --- SECCIÓN 2: PANTALLA INTRO --- */
-        #section-intro {
-            position: fixed; inset: 0; z-index: 50;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3), rgba(0,0,0,0.8)), var(--bg-regina);
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            padding: 4rem 2rem; text-align: center; color: white; opacity: 0; visibility: hidden;
-            transition: opacity 1.2s ease-in-out; cursor: pointer;
-        }
-        #section-intro.active { opacity: 1; visibility: visible; }
+        /* Estilo para el Nombre Gigante del Hero */
         .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.6); }
 
-        /* --- SECCIÓN 3: CONTENIDO --- */
+        /* --- SECCIÓN PRINCIPAL --- */
         #section-main { display: none; }
 
         .bg-texture-main {
@@ -210,10 +201,10 @@
         /* Contador Minimalista en Portada Oscura */
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
         #countdown span.time-num { font-family: var(--font-numbers); font-weight: 400; line-height: 1; transition: color 0.5s ease; color: white; }
-        #countdown .time-label { color: rgba(255, 255, 255, 0.7); font-weight: 700; font-size: 10px; text-transform: uppercase; tracking: 0.2em; margin-top: 8px; font-family: var(--font-elegant); }
+        #countdown .time-label { color: rgba(255, 255, 255, 0.7); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); }
 
-        /* Capas protectoras adaptables Hero - AHORA OSCURA */
-        .hero-overlay { background-color: rgba(0, 0, 0, 0.5); }
+        /* Capas protectoras adaptables Hero */
+        .hero-overlay { background-color: rgba(0, 0, 0, 0.4); }
 
         /* =========================================
            CONFIGURACIÓN DEL MODO OSCURO (NIGHT MODE)
@@ -245,7 +236,7 @@
 
         body.dark-mode select option { color: #121212 !important; }
 
-        /* Ajuste de capa protectora en modo oscuro (se mantiene oscura) */
+        /* Ajuste de capa protectora en modo oscuro (se oscurece más) */
         body.dark-mode .hero-overlay { background-color: rgba(0, 0, 0, 0.7); }
 
         /* INVERSIÓN DE ICONOS A BLANCO EN MODO OSCURO */
@@ -314,59 +305,62 @@
         </div>
     </div>
 
-    <div id="section-intro" onclick="showMainContent()">
-        <header><h1 class="name-header text-white">Regina</h1></header>
-        <div>
-            <section class="flex items-center gap-8 justify-center mb-8">
-                <div class="flex flex-col items-center">
-                    <span class="text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
-                    <span class="text-[6rem] leading-none text-white drop-shadow-md font-numbers">16</span>
-                </div>
-                <div class="w-px h-24 bg-white/60 shadow-sm"></div>
-                <div class="text-left">
-                    <span class="text-4xl tracking-widest block text-white drop-shadow-md">NOV</span>
-                    <span class="text-2xl tracking-[0.6em] text-white drop-shadow-md font-numbers">2026</span>
-                </div>
-            </section>
-            <p class="text-[9px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para continuar</p>
-        </div>
-    </div>
-
     <main id="section-main">
         
-        <header class="relative min-h-screen flex flex-col bg-cover bg-center" style="background-image: url('https://i.imgur.com/muVJu2c.png');">
-            <div class="absolute inset-0 hero-overlay"></div>
-            <div class="bg-texture-main"></div>
+        <header class="relative min-h-screen flex flex-col bg-cover bg-center" style="background-image: var(--bg-regina);">
             
-            <div class="relative z-10 w-full mt-auto text-center px-4 pb-20 md:pb-24">
-                <h1 class="text-7xl md:text-9xl mb-6 text-white font-script reveal-scale pr-6">Mis XV</h1>
-                <p class="text-[11px] uppercase tracking-[0.3em] text-white/80 pb-6 font-bold">Faltan solo...</p>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/90 z-0"></div>
+            <div class="absolute inset-0 hero-overlay transition-colors duration-500 z-0"></div>
+            <div class="bg-texture-main z-0"></div>
+            
+            <div class="relative z-10 w-full pt-16 md:pt-24 text-center px-4 reveal-scale active">
+                <h1 class="name-header text-white text-center">Regina</h1>
+            </div>
+
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 reveal-scale active delay-100">
+                <section class="flex items-center gap-6 md:gap-8 justify-center">
+                    <div class="flex flex-col items-center text-center">
+                        <span class="text-lg md:text-xl tracking-[0.4em] uppercase text-white drop-shadow-md">Sábado</span>
+                        <span class="text-[5rem] md:text-[7rem] leading-none text-white drop-shadow-md font-numbers">16</span>
+                    </div>
+                    <div class="w-px h-20 md:h-24 bg-white/60 shadow-sm"></div>
+                    <div class="text-left">
+                        <span class="text-3xl md:text-4xl tracking-widest block text-white drop-shadow-md">NOV</span>
+                        <span class="text-xl md:text-2xl tracking-[0.6em] text-white drop-shadow-md font-numbers">2026</span>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="relative z-10 w-full mt-auto text-center px-4 pb-8 md:pb-12 reveal-scale active delay-200">
+                <p class="text-[10px] uppercase tracking-[0.3em] text-white/80 pb-4 font-bold">Faltan solo...</p>
                 
-                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100">
+                <div id="countdown" class="flex gap-6 md:gap-14 justify-center">
                     <div class="flex flex-col items-center">
-                        <span id="days" class="time-num text-4xl md:text-8xl">00</span>
+                        <span id="days" class="time-num text-4xl md:text-6xl">00</span>
                         <span class="time-label">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <span id="hours" class="time-num text-4xl md:text-8xl">00</span>
+                        <span id="hours" class="time-num text-4xl md:text-6xl">00</span>
                         <span class="time-label">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <span id="minutes" class="time-num text-4xl md:text-8xl">00</span>
+                        <span id="minutes" class="time-num text-4xl md:text-6xl">00</span>
                         <span class="time-label">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <span id="seconds" class="time-num text-4xl md:text-8xl">00</span>
+                        <span id="seconds" class="time-num text-4xl md:text-6xl">00</span>
                         <span class="time-label">Seg</span>
                     </div>
                 </div>
+                
+                <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-white/70 mt-10 font-bold">Desliza para ver más</p>
             </div>
         </header>
 
         <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-blanco-perla relative">
             <div class="bg-texture-main opacity-20 z-0"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
-                <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Regina</h1>
+                <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Bienvenidos</h1>
                 <p class="text-xl md:text-3xl italic text-[#2C2A2A] leading-relaxed font-light mb-16">
                     "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
                 </p>
@@ -818,28 +812,29 @@
 
     <script>
         function openEnvelope() {
-            document.getElementById('section-intro').classList.add('active');
+            // Mostramos el contenido principal inmediatamente para que se revele 
+            // fluidamente por detrás de las solapas mientras se abren
+            document.getElementById('section-main').style.display = 'block';
+            
+            // Iniciar observadores, APIs y Trivia
+            initObserver();
+            fetchWeather();
+            loadQuestion();
+            playAudio(); 
+
+            // Activar la animación de las solapas
             document.getElementById('envelope-wrapper').classList.add('open');
+            
+            // Aparecen los botones flotantes sutilmente
+            setTimeout(() => {
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                document.getElementById('theme-btn').classList.remove('hidden'); 
+            }, 1000);
+
+            // Quitamos el sobre del DOM para que no estorbe los clicks
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
             }, 1800);
-        }
-
-        function showMainContent() {
-            const intro = document.getElementById('section-intro');
-            intro.style.opacity = '0';
-            
-            playAudio(); 
-
-            setTimeout(() => {
-                intro.style.display = 'none';
-                document.getElementById('section-main').style.display = 'block';
-                document.getElementById('audio-btn').classList.remove('hidden'); 
-                document.getElementById('theme-btn').classList.remove('hidden'); 
-                initObserver();
-                fetchWeather();
-                loadQuestion();
-            }, 1200);
         }
 
         // --- LÓGICA DE MODO DÍA / NOCHE ---
