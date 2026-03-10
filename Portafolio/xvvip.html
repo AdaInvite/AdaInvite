@@ -37,7 +37,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -48,6 +48,7 @@
             --bg-clima: url('https://i.imgur.com/I21Z8Dr.jpeg');
             --font-elegant: 'Cormorant Garamond', serif;
             --font-script: 'Pinyon Script', cursive;
+            --font-numbers: 'Montserrat', sans-serif;
         }
 
         body, html {
@@ -55,7 +56,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: var(--font-elegant); /* Fuente elegante para todo el cuerpo */
+            font-family: var(--font-elegant);
             background-color: var(--blanco-perla);
             overflow-x: hidden;
             color: var(--rosa-elegante);
@@ -66,21 +67,15 @@
         h1, h2, h3, h4, .serif, label, input, select, button, span { 
             font-family: var(--font-elegant); 
         }
+
+        /* Clase especial solo para números */
+        .font-numbers {
+            font-family: var(--font-numbers) !important;
+        }
         
-        /* Peso normal para textos generales */
-        body, p, span, input, select {
-            font-weight: 400;
-        }
-
-        /* Peso negrita para subtítulos o etiquetas que requieran énfasis */
-        .font-bold, h3, label {
-            font-weight: 700;
-        }
-
-        .font-script { 
-            font-family: var(--font-script); 
-            font-weight: 400; /* Las cursivas suelen verse mejor en peso normal */
-        }
+        body, p, span, input, select { font-weight: 400; }
+        .font-bold, h3, label { font-weight: 700; }
+        .font-script { font-family: var(--font-script); font-weight: 400; }
 
         /* --- SECCIÓN 1: SOBRE --- */
         #envelope-wrapper {
@@ -148,7 +143,7 @@
         .bg-floral-section { background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-floral); background-size: cover; background-position: center; }
         .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
         
-           .bg-clima-section { background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-clima); background-size: cover; background-position: center; }
+        .bg-clima-section { background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-clima); background-size: cover; background-position: center; }
         
         .btn-calendar {
             border: 1px solid var(--rosa-elegante); padding: 12px 28px; font-size: 11px;
@@ -209,12 +204,13 @@
             position: absolute; top: -15px; right: 15px; background: var(--rosa-elegante);
             color: white; padding: 6px 18px; border-radius: 20px;
             font-size: 15px; box-shadow: 0 4px 12px rgba(181, 115, 122, 0.3); letter-spacing: 1px;
+            font-family: var(--font-numbers); font-weight: 600;
         }
 
         /* Contador Minimalista en Portada Oscura */
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
-        #countdown span.time-num { font-weight: 300; line-height: 1; transition: color 0.5s ease; color: white; }
-        #countdown .time-label { color: rgba(255, 255, 255, 0.7); font-weight: 700; font-size: 10px; text-transform: uppercase; tracking: 0.2em; margin-top: 8px; }
+        #countdown span.time-num { font-family: var(--font-numbers); font-weight: 300; line-height: 1; transition: color 0.5s ease; color: white; }
+        #countdown .time-label { color: rgba(255, 255, 255, 0.7); font-weight: 700; font-size: 10px; text-transform: uppercase; tracking: 0.2em; margin-top: 8px; font-family: var(--font-elegant); }
 
         /* Capas protectoras adaptables Hero - AHORA OSCURA */
         .hero-overlay { background-color: rgba(0, 0, 0, 0.5); }
@@ -255,9 +251,11 @@
         /* INVERSIÓN DE ICONOS A BLANCO EN MODO OSCURO */
         .icono-tema { transition: filter 0.5s ease; }
         body.dark-mode .icono-tema { filter: invert(1); }
-       /* Ocultar barra de scroll en el clima */
+        
+        /* Ocultar barra de scroll en el clima */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
         /* Ajustes modo oscuro para el clima */
         body.dark-mode .weather-card { 
             background-color: rgba(26, 26, 26, 0.95) !important; 
@@ -265,6 +263,7 @@
         }
         body.dark-mode .weather-card .hora-clima { color: #A0A0A0 !important; }
         body.dark-mode .weather-card .temp-texto { color: #EAEAEA !important; }
+        
         /* Estilos y Modo Oscuro para Trivia */
         body.dark-mode #trivia-container { 
             background-color: #1A1A1A; 
@@ -273,25 +272,12 @@
         body.dark-mode #trivia-q-text, 
         body.dark-mode #trivia-result p { color: #EAEAEA !important; }
         
-        .btn-trivia { 
-            transition: all 0.3s ease; 
-        }
-        body.dark-mode .btn-trivia {
-            color: #EAEAEA !important;
-        }
+        .btn-trivia { transition: all 0.3s ease; }
+        body.dark-mode .btn-trivia { color: #EAEAEA !important; }
         
         /* Colores de acierto y error */
-        .btn-trivia.correct { 
-            background-color: #10B981 !important; /* Verde */
-            color: white !important; 
-            border-color: #10B981 !important; 
-        }
-        .btn-trivia.incorrect { 
-            background-color: #EF4444 !important; /* Rojo */
-            color: white !important; 
-            border-color: #EF4444 !important; 
-        }
-        /* Desactivar hover cuando ya se respondió */
+        .btn-trivia.correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; }
+        .btn-trivia.incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; }
         .btn-trivia:disabled { cursor: not-allowed; opacity: 0.9; }
         
     </style>
@@ -334,12 +320,12 @@
             <section class="flex items-center gap-8 justify-center mb-8">
                 <div class="flex flex-col items-center">
                     <span class="text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
-                    <span class="text-[6rem] leading-none font-light text-white drop-shadow-md">16</span>
+                    <span class="text-[6rem] leading-none font-light text-white drop-shadow-md font-numbers">16</span>
                 </div>
                 <div class="w-px h-24 bg-white/60 shadow-sm"></div>
                 <div class="text-left">
                     <span class="text-4xl tracking-widest block text-white drop-shadow-md">NOV</span>
-                    <span class="text-2xl tracking-[0.6em] text-white drop-shadow-md">2026</span>
+                    <span class="text-2xl tracking-[0.6em] text-white drop-shadow-md font-numbers">2026</span>
                 </div>
             </section>
             <p class="text-[9px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para continuar</p>
@@ -526,7 +512,7 @@
                 <div id="trivia-container" class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-rosa-elegante/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
                     
                     <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4 font-bold">Pregunta <span id="trivia-current-num">1</span> de <span id="trivia-total-num">3</span></p>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
                         <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-[#2C2A2A] mb-8">Pregunta aquí</h3>
                         <div id="trivia-options" class="flex flex-col gap-4">
                             </div>
@@ -535,7 +521,7 @@
                     <div id="trivia-result" class="hidden">
                         <h3 class="font-script text-6xl text-rosa-elegante mb-4">¡Terminaste!</h3>
                         <p class="text-2xl text-[#2C2A2A] mb-2">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold text-rosa-elegante mb-8"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
+                        <p class="text-5xl font-bold text-rosa-elegante mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
                         <p id="trivia-feedback" class="text-sm uppercase tracking-widest text-gray-500 mb-8 font-bold"></p>
                         <button onclick="resetTrivia()" class="bg-transparent text-rosa-elegante border border-rosa-elegante px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-rosa-elegante hover:text-white transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
                     </div>
@@ -555,7 +541,7 @@
                             <img src="https://i.imgur.com/T6yLarn.png" class="w-16 h-16 md:w-20 md:h-20 icono-tema" alt="Ceremonia">
                         </div>
                         <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Ceremonia</h1>
-                        <p class="text-[#2C2A2A] italic text-sm">Templo Expiatorio del Sagrado Corazón de Jesús<br>Madero 721, Centro, León, Gto.</p>
+                        <p class="text-[#2C2A2A] italic text-sm">Templo Expiatorio del Sagrado Corazón de Jesús<br>Madero <span class="font-numbers">721</span>, Centro, León, Gto.</p>
                     </div>
                     
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-rosa-elegante/30 mb-6 shadow-sm">
@@ -577,7 +563,7 @@
                             <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png?raw=true" class="w-16 h-16 md:w-20 md:h-20 icono-tema" alt="Recepción">
                         </div>
                         <h1 class="text-5xl md:text-8xl mb-6 text-rosa-elegante font-script reveal-scale">Recepción</h1>
-                        <p class="text-[#2C2A2A] italic text-sm">Hacienda del Conde Eventos<br>Blvd. Aeropuerto 123, León, Gto.</p>
+                        <p class="text-[#2C2A2A] italic text-sm">Hacienda del Conde Eventos<br>Blvd. Aeropuerto <span class="font-numbers">123</span>, León, Gto.</p>
                     </div>
                     
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-rosa-elegante/30 mb-6 shadow-sm">
@@ -632,11 +618,11 @@
                         <div class="bg-white p-3 rounded-full border border-rosa-elegante/20 shadow-md reveal-scale delay-200">
                             <img src="https://i.imgur.com/T6yLarn.png" class="w-16 md:w-20 object-contain opacity-80 icono-tema">
                         </div>
-                        <div class="w-5/12 text-left"><span class="text-2xl italic text-rosa-elegante">17:00 HRS</span><h3 class="text-3xl md:hidden">Ceremonia</h3></div>
+                        <div class="w-5/12 text-left"><span class="text-2xl italic text-rosa-elegante font-numbers">17:00 HRS</span><h3 class="text-3xl md:hidden">Ceremonia</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-2xl italic text-rosa-elegante">19:30 HRS</span><h3 class="text-3xl md:hidden">Cóctel</h3></div>
+                        <div class="w-5/12 text-right"><span class="text-2xl italic text-rosa-elegante font-numbers">19:30 HRS</span><h3 class="text-3xl md:hidden">Cóctel</h3></div>
                         <div class="bg-white p-3 rounded-full border border-rosa-elegante/20 shadow-md reveal-scale delay-200">
                             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-16 md:w-20 object-contain opacity-80 icono-tema">
                         </div>
@@ -648,11 +634,11 @@
                         <div class="bg-white p-3 rounded-full border border-rosa-elegante/20 shadow-md reveal-scale delay-200">
                             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Cubiertos%20negro.png" class="w-16 md:w-20 object-contain opacity-80 icono-tema">
                         </div>
-                        <div class="w-5/12 text-left"><span class="text-2xl italic text-rosa-elegante">21:00 HRS</span><h3 class="text-3xl md:hidden">Cena</h3></div>
+                        <div class="w-5/12 text-left"><span class="text-2xl italic text-rosa-elegante font-numbers">21:00 HRS</span><h3 class="text-3xl md:hidden">Cena</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-2xl italic text-rosa-elegante">22:00 HRS</span><h3 class="text-3xl md:hidden">Vals</h3></div>
+                        <div class="w-5/12 text-right"><span class="text-2xl italic text-rosa-elegante font-numbers">22:00 HRS</span><h3 class="text-3xl md:hidden">Vals</h3></div>
                         <div class="bg-white p-3 rounded-full border border-rosa-elegante/20 shadow-md reveal-scale delay-200">
                             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-16 md:w-20 object-contain opacity-80 icono-tema">
                         </div>
@@ -742,7 +728,7 @@
         <section class="pt-32 lg:pt-40 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[500px] flex flex-col justify-start"> 
                 <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del 10 de Noviembre de 2026</p>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del <span class="font-numbers">10</span> de Noviembre de <span class="font-numbers">2026</span></p>
                 
                 <form id="rsvpForm" class="space-y-12 text-left bg-black/50 p-8 rounded-xl backdrop-blur-md border border-rosa-elegante/30 shadow-2xl transition-all duration-500">
                     <div class="grid md:grid-cols-2 gap-10">
@@ -783,7 +769,7 @@
                         <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center">
                             <p class="text-[11px] uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
                             <img id="ticketQR" src="" alt="QR" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
-                            <p id="ticketFolio" class="text-2xl font-light tracking-widest text-white"></p>
+                            <p id="ticketFolio" class="text-2xl font-light tracking-widest text-white font-numbers"></p>
                         </div>
                         <p id="ticketName" class="text-3xl text-white mb-1"></p>
                         <p id="ticketPax" class="text-xs uppercase tracking-widest text-gray-400"></p>
@@ -810,7 +796,7 @@
                     <div class="bg-white/10 p-5 rounded-lg mb-6 flex flex-col items-center w-full max-w-[250px] mx-auto">
                         <p class="text-sm uppercase tracking-widest text-rosa-elegante font-bold mb-4">Código de Acceso</p>
                         <img id="consultaQR" src="" alt="QR de Acceso" class="w-32 h-32 object-contain bg-white p-2 rounded-lg mb-4 hidden shadow-md">
-                        <p id="consultaFolio" class="text-2xl font-light tracking-widest text-white"></p>
+                        <p id="consultaFolio" class="text-2xl font-light tracking-widest text-white font-numbers"></p>
                     </div>
 
                     <p id="consultaNameDisplay" class="text-2xl text-white mb-1"></p>
@@ -825,8 +811,8 @@
         <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white relative z-10">
             <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-rosa-elegante shadow-md">
             <p class="text-6xl font-script mb-2 text-rosa-elegante">Regina</p>
-            <p class="text-[10px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-8 font-bold">16 • Noviembre • 2026</p>
-            <p class="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-light">AdaInvite © 2026</p>
+            <p class="text-[10px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-8 font-bold font-numbers">16 • Noviembre • 2026</p>
+            <p class="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-light">AdaInvite © <span class="font-numbers">2026</span></p>
         </footer>
     </main>
 
@@ -994,9 +980,9 @@
                     
                     cardsHTML += `
                         <div class="weather-card w-32 flex-shrink-0 bg-white/95 backdrop-blur-sm border border-rosa-elegante/30 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl transition-all duration-500 hover:-translate-y-1" style="scroll-snap-align: center;">
-                            <span class="hora-clima text-[10px] font-bold text-[#2C2A2A] opacity-60 uppercase tracking-[0.2em] mb-3">${hourFormatted}</span>
+                            <span class="hora-clima text-[10px] font-bold text-[#2C2A2A] opacity-60 uppercase tracking-[0.2em] mb-3 font-numbers">${hourFormatted}</span>
                             ${iconSVG}
-                            <span class="temp-texto text-3xl text-[#2C2A2A]">${temp}°C</span>
+                            <span class="temp-texto text-3xl text-[#2C2A2A] font-numbers">${temp}°C</span>
                         </div>
                     `;
                     hoursShown++;
