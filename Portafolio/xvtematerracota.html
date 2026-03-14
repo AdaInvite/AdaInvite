@@ -231,9 +231,6 @@
     <audio id="bg-music" loop>
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
     </audio>
-    <div id="audio-btn" class="fixed top-[40px] left-[20px] w-[50px] h-[50px] flex items-center justify-center z-[999] cursor-pointer transition-all duration-300 hidden music-float" onclick="toggleAudio()">
-        <img id="audio-icon" src="https://i.imgur.com/bUF3Qpe.png" class="w-full h-full object-contain drop-shadow-lg" alt="Música">
-    </div>
 
     <div id="envelope-wrapper">
         <div class="envelope-bg"></div>
@@ -294,8 +291,21 @@
 
         <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-20 text-center relative seccion-clara">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
+                        <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-20 text-center relative seccion-clara">
+            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
                 
-                                <p class="text-sm md:text-base italic leading-relaxed font-light mb-16 px-8 md:px-24 lg:px-40">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-10 w-full reveal-scale">
+                    <button onclick="toggleAudio()" class="w-12 h-12 rounded-full border border-terracota flex items-center justify-center text-terracota hover:bg-terracota hover:text-white transition-all duration-300 shadow-sm focus:outline-none">
+                        <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+                    <div class="text-center md:text-left">
+                        <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-terracota mb-1">Música de Fondo</p>
+                        <p class="text-xs font-light italic">Photograph - Ed Sheeran</p>
+                    </div>
+                </div>
+                
+            <p class="text-sm md:text-base italic leading-relaxed font-light mb-16 px-8 md:px-24 lg:px-40">
                     "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
                 </p>
                                 <div class="grid md:grid-cols-2 gap-10 md:gap-16 mt-10">
@@ -772,40 +782,43 @@
             playAudio(); 
 
             document.getElementById('envelope-wrapper').classList.add('open');
-            
-            setTimeout(() => {
-                document.getElementById('audio-btn').classList.remove('hidden'); 
-            }, 1000);
 
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
             }, 1800);
         }
 
-        const audio = document.getElementById("bg-music");
-        const audioBtn = document.getElementById("audio-btn");
-        const audioIcon = document.getElementById("audio-icon");
+                const audio = document.getElementById("bg-music");
         let isPlaying = false;
 
         function playAudio() {
+            const playIcon = document.getElementById("icon-play");
+            const pauseIcon = document.getElementById("icon-pause");
+            
             audio.play().then(() => {
                 isPlaying = true;
-                // Ahora no gira la imagen completa porque arruina su forma de nota musical, solo aplicamos float o pulso al contenedor
-                audioBtn.classList.add('music-float');
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
             }).catch(error => {
-                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
+                isPlaying = false;
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
             });
         }
 
         function toggleAudio() {
+            const playIcon = document.getElementById("icon-play");
+            const pauseIcon = document.getElementById("icon-pause");
+
             if (isPlaying) {
                 audio.pause();
-                audioBtn.classList.remove('music-float');
-                audioBtn.style.opacity = '0.5';
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
             } else {
                 audio.play();
-                audioBtn.classList.add('music-float');
-                audioBtn.style.opacity = '1';
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
             }
             isPlaying = !isPlaying;
         }
