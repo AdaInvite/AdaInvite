@@ -224,6 +224,33 @@
         .separador-img {
             min-height: 100dvh; width: 100%; height: auto; border: 0; box-shadow: none; object-fit: cover; border-radius: 0;
         }
+                /* Estilos para la barra de reproducción tipo Spotify */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            height: 4px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -292,14 +319,32 @@
         <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-20 text-center relative seccion-clara">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
                 
-                <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-10 w-full reveal-scale">
-                    <button onclick="toggleAudio()" class="w-12 h-12 rounded-full border border-terracota flex items-center justify-center text-terracota hover:bg-terracota hover:text-white transition-all duration-300 shadow-sm focus:outline-none">
-                        <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                    </button>
-                    <div class="text-center md:text-left">
-                        <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-terracota mb-1">Música de Fondo</p>
-                        <p class="text-xs font-light italic">Photograph - Ed Sheeran</p>
+                                <div class="w-full max-w-sm mx-auto bg-terracota/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl mb-12 reveal-scale text-white border border-white/10">
+                    
+                    <div class="text-left mb-6">
+                        <h3 class="text-2xl font-bold mb-1 font-elegant tracking-wide">Photograph</h3>
+                        <p class="text-sm font-light text-white/70 font-elegant">Ed Sheeran</p>
+                    </div>
+
+                    <div class="flex items-center gap-3 mb-6">
+                        <span id="current-time" class="text-[11px] font-numbers font-light w-8 text-left opacity-80">0:00</span>
+                        <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
+                        <span id="duration-time" class="text-[11px] font-numbers font-light w-8 text-right opacity-80">-0:00</span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-8">
+                        <button class="text-white hover:text-white/70 transition-colors opacity-80">
+                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                        </button>
+
+                        <button onclick="toggleAudio()" class="w-16 h-16 bg-white text-terracota rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg focus:outline-none">
+                            <svg id="icon-play" class="w-8 h-8 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="icon-pause" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+
+                        <button class="text-white hover:text-white/70 transition-colors opacity-80">
+                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                        </button>
                     </div>
                 </div>
                 
@@ -831,6 +876,43 @@
             }
             isPlaying = !isPlaying;
         }
+        // LÓGICA DE LA BARRA DE REPRODUCCIÓN TIPO SPOTIFY
+        const progressBar = document.getElementById("progress-bar");
+        const currentTimeEl = document.getElementById("current-time");
+        const durationTimeEl = document.getElementById("duration-time");
+
+        // Formatea los segundos a "Minutos:Segundos"
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        // Actualiza la barra y los tiempos mientras suena la canción
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                // Mueve la barra
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.value = progressPercent;
+                
+                // Actualiza los textos (0:06 y -4:14)
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                const remaining = audio.duration - audio.currentTime;
+                durationTimeEl.textContent = "-" + formatTime(remaining);
+            }
+        });
+
+        // Cuando cargas los metadatos de la canción, pinta la duración total
+        audio.addEventListener('loadedmetadata', () => {
+            durationTimeEl.textContent = "-" + formatTime(audio.duration);
+        });
+
+        // Permite arrastrar la bolita para adelantar la canción
+        progressBar.addEventListener('input', (e) => {
+            const seekTime = (e.target.value / 100) * audio.duration;
+            audio.currentTime = seekTime;
+        });
 
         const targetDate = new Date("November 16, 2026 17:00:00").getTime();
         function updateCountdown() {
