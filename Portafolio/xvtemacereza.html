@@ -123,45 +123,53 @@
             filter: brightness(0) invert(1);
         }
 
-               /* SOBRE INICIAL - CON TEXTURA Y COLOR PERLA */
+                       /* =========================================
+           SOBRE INICIAL - CORRECCIÓN TEXTURA Y SAFARI
+           ========================================= */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: block; /* Soluciona el bug de Safari */
+            transition: visibility 1.8s;
+        }
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/arqV06S.jpeg");
-            background-color: var(--blanco-perla); /* Asignamos el color perla */
-            background-blend-mode: multiply; /* Esta propiedad fusiona el color conservando la textura */
+            background-color: var(--blanco-perla);
+            background-blend-mode: multiply; 
             background-size: cover; 
             transition: opacity 1.2s ease-in-out; 
             z-index: 1;
         }
+        
+        #envelope-container {
+            position: absolute !important; 
+            inset: 0 !important; /* Fuerza el 100% de la pantalla */
+            z-index: 10;
+        }
 
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
+        
+        /* Una sola clase para mantener la textura impecable */
         .flap { 
             width: 100%; 
             height: 100%; 
             background-image: url("https://i.imgur.com/arqV06S.jpeg");
             background-color: var(--blanco-perla);
-            background-blend-mode: multiply; /* Mantiene la textura en las solapas */
+            background-blend-mode: multiply;
             background-size: cover; 
         }
-
-        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
         
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
-
-        .flap { 
-            width: 100%; 
-            height: 100%; 
-            /* Filtro perla semi-transparente sobre la textura */
-            background-image: linear-gradient(rgba(247, 246, 237, 0.9), rgba(247, 246, 237, 0.9)), url("https://i.imgur.com/arqV06S.jpeg"); 
-            background-size: cover; 
-        }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        
         .seal-wrapper {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 10; display: flex; flex-direction: column; align-items: center;
             cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
         }
+        /* ========================================= */
         #envelope-wrapper.open .envelope-bg { opacity: 0; }
         #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
@@ -322,10 +330,10 @@
             <img src="https://i.imgur.com/ijLQvGI.jpeg" class="separador-img" alt="Separador">
         </div>
 
-               <section class="min-h-[100dvh] flex flex-col justify-start pt-16 pb-10 px-10 text-center relative bg-padres">
+               <section class="min-h-[100dvh] flex flex-col justify-start pt-1 pb-10 px-10 text-center relative bg-padres">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-terracota w-full flex flex-col h-full flex-grow">
                 
-                <div class="w-full max-w-[280px] mx-auto bg-terracota/95 backdrop-blur-md rounded-2xl pt-4 pb-4 md:pt-5 pb-5 px-5 shadow-xl reveal-scale text-white border border-white/10 flex-shrink-0">
+                <div class="w-full max-w-[280px] mx-auto bg-terracota/95 backdrop-blur-md rounded-2xl pt-1 pb-16 md:pt-1 pb-16 px-5 shadow-xl reveal-scale text-white border border-white/10 flex-shrink-0">
                     <div class="text-left mb-4">
                         <h3 class="text-lg font-bold mb-0.5 font-elegant tracking-wide">Yo Voy Contigo</h3>
                         <p class="text-[10px] font-light text-white/70 font-elegant">Brisa Carrillo</p>
