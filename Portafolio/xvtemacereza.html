@@ -123,48 +123,45 @@
             filter: brightness(0) invert(1);
         }
 
-                       /* =========================================
-           SOBRE INICIAL - CORRECCIÓN TEXTURA Y SAFARI
-           ========================================= */
+                       /* SOBRE INICIAL */
         #envelope-wrapper {
             position: fixed; inset: 0; z-index: 100;
-            display: block; /* Soluciona el bug de Safari */
+            display: flex; align-items: center; justify-content: center;
             transition: visibility 1.8s;
         }
-              .envelope-bg {
+        .envelope-bg {
             position: absolute; inset: 0;
-            /* Usamos linear-gradient para forzar el color perla sobre la textura */
-            background-image: linear-gradient(var(--blanco-perla), var(--blanco-perla)), url("https://i.imgur.com/arqV06S.jpeg");
-            background-blend-mode: multiply; 
-            background-size: cover; 
-            transition: opacity 1.2s ease-in-out; 
-            z-index: 1;
+            background-image: url("https://i.imgur.com/arqV06S.jpeg");
+            background-color: var(--blanco-perla); /* <-- NUEVO */
+            background-blend-mode: multiply;    /* <-- NUEVO */
+            background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
 
-        .flap { 
-            width: 100%; 
-            height: 100%; 
-            /* Aplicamos el mismo truco del linear-gradient aquí */
-            background-image: linear-gradient(var(--blanco-perla), var(--blanco-perla)), url("https://i.imgur.com/arqV06S.jpeg");
-            background-blend-mode: multiply;
-            background-size: cover; 
-        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
         
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
+.flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
+
+.flap { 
+    width: 100%; 
+    height: 100%; 
+    background-image: linear-gradient(var(--blanco-perla), var(--blanco-perla)), url("https://i.imgur.com/arqV06S.jpeg"); 
+    background-size: cover; 
+    background-blend-mode: multiply; 
+}
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
-        
         .seal-wrapper {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 10; display: flex; flex-direction: column; align-items: center;
             cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        /* ========================================= */
         #envelope-wrapper.open .envelope-bg { opacity: 0; }
         #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 25vw, 15rem); line-height: 0.8; margin-top: 10px; }
+        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 25vw, 14rem); line-height: 1; margin-top: -10px; }
 
         #section-main { display: none; }
 
