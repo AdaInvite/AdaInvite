@@ -91,14 +91,20 @@
             width: 100%;
         }
 
-        /* CLASE PARA LAS SECCIONES OVALADAS - AJUSTADA */
+        /* CLASE PARA LAS SECCIONES OVALADAS - TAMAÑO ESTRICTO */
         .forma-ovalada {
             background-color: var(--terracota);
             color: var(--blanco-perla);
             border-radius: 50%;
             /* Sombra oscura y centrada en todos los lados */
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); 
-            padding: 15% 8%; 
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.45); 
+            
+            /* MEDIDAS FIJAS PARA QUE TODAS SEAN IGUALES A LA DEL CLIMA */
+            width: 92vw;
+            max-width: 380px;
+            aspect-ratio: 0.65; /* Proporción para hacer un óvalo vertical alto */
+            
+            padding: 8% 5%; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -108,9 +114,13 @@
             z-index: 10;
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 768px) {
             .forma-ovalada {
-                padding: 25% 6%; /* Más espacio arriba y abajo en móviles para no cortar el texto */
+                width: 400px;
+                max-width: 400px;
+                height: 600px;
+                aspect-ratio: auto;
+                padding: 5%;
             }
         }
 
@@ -134,8 +144,8 @@
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/arqV06S.jpeg");
-            background-color: var(--blanco-perla); /* <-- NUEVO */
-            background-blend-mode: multiply;    /* <-- NUEVO */
+            background-color: var(--blanco-perla); 
+            background-blend-mode: multiply;    
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
 
@@ -204,23 +214,23 @@
         .slider-historia::-webkit-scrollbar { display: none; }
         
         .tarjeta-nueva {
-            flex: 0 0 280px; scroll-snap-align: center; position: relative;
-            background: transparent; padding: 15px; 
+            flex: 0 0 250px; scroll-snap-align: center; position: relative;
+            background: transparent; padding: 10px; 
             transition: all 0.4s ease;
             display: flex; flex-direction: column; align-items: center;
         }
         .tarjeta-nueva:hover { transform: translateY(-10px); z-index: 20; }
         .img-historia { 
-            width: 100%; height: 250px; object-fit: cover; 
-            border-radius: 80px 80px 80px 80px; 
+            width: 100%; height: 220px; object-fit: cover; 
+            border-radius: 60px; 
             border: 2px solid var(--blanco-perla);
             filter: grayscale(20%) sepia(10%); transition: all 0.4s ease; 
         }
         .tarjeta-nueva:hover .img-historia { filter: none; border-color: rgba(255,255,255,0.8); }
-        .info-historia { width: 100%; text-align: center; margin-top: 20px; color: var(--blanco-perla); }
+        .info-historia { width: 100%; text-align: center; margin-top: 15px; color: var(--blanco-perla); }
         
         .año-badge {
-            color: var(--blanco-perla); font-size: 16px; letter-spacing: 3px;
+            color: var(--blanco-perla); font-size: 14px; letter-spacing: 3px;
             font-family: var(--font-numbers); font-weight: 600; margin-bottom: 5px;
             border-bottom: 1px solid var(--blanco-perla); padding-bottom: 5px; display: inline-block;
         }
@@ -372,19 +382,18 @@
         </section>
 
                <section class="min-h-[100dvh] flex flex-col justify-center py-0 px-1 md:px-1 fondo-perla relative overflow-hidden">
-            <div class="forma-ovalada max-w-4xl w-full mx-auto relative z-10">
-                <div class="text-center mb-1 reveal w-full">
+            <div class="forma-ovalada mx-auto relative z-10">
+                <div class="text-center mb-1 reveal w-full mt-4">
                     <h2 class="text-5xl mb-1 mt-1 font-script reveal-scale">Mi Historia</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] font-light opacity-90">Un viaje inolvidable</p>
                 </div>
 
-                <div id="historia-container" class="slider-historia !py-4"> 
+                <div id="historia-container" class="slider-historia !py-4 flex-grow"> 
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/RT0PL5u.jpeg" class="img-historia" alt="2011">
                         <div class="info-historia">
                             <div class="año-badge">2011</div>
                             <h4 class="text-xl font-bold mt-1">Mis Inicios</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">El primer capítulo de una vida llena de luz.</p>
                         </div>
                     </div>
 
@@ -393,7 +402,6 @@
                         <div class="info-historia">
                             <div class="año-badge">2014</div>
                             <h4 class="text-xl font-bold mt-1">Aventuras</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">Mis primeros pasos descubriendo el mundo.</p>
                         </div>
                     </div>
 
@@ -402,7 +410,6 @@
                         <div class="info-historia">
                             <div class="año-badge">2017</div>
                             <h4 class="text-xl font-bold mt-1">Escuela</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">Días de juegos y mis primeras letras.</p>
                         </div>
                     </div>
 
@@ -411,29 +418,10 @@
                         <div class="info-historia">
                             <div class="año-badge">2020</div>
                             <h4 class="text-xl font-bold mt-1">Creciendo</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">Aprendiendo a soñar cada día más alto.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/oEAEf9h.jpeg" class="img-historia" alt="2023">
-                        <div class="info-historia">
-                            <div class="año-badge">2023</div>
-                            <h4 class="text-xl font-bold mt-1">Ilusiones</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">Cerca de vivir mi noche más mágica.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/ungKbti.jpeg" class="img-historia" alt="2026">
-                        <div class="info-historia">
-                            <div class="año-badge">2026</div>
-                            <h4 class="text-xl font-bold mt-1">Mis XV</h4>
-                            <p class="text-[13px] text-blanco-perla/80 mt-1 font-light">¡Hoy el sueño se hace realidad!</p>
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-white/80 text-[10px] mt-1 mb-1 uppercase tracking-[0.4em] font-light w-full">Arrastra para ver más →</p>
+                <p class="text-center text-white/80 text-[10px] mb-4 uppercase tracking-[0.4em] font-light w-full">Arrastra →</p>
             </div>
         </section>
 
@@ -471,15 +459,6 @@
                             <p class="text-[10px] text-terracota uppercase tracking-widest mt-1">Chambelán</p>
                         </div>
                     </div>
-                    <div class="chambelan-card">
-                        <div class="chambelan-img-wrapper">
-                            <img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián">
-                        </div>
-                        <div class="pt-6 text-center">
-                            <h4 class="text-xl text-terracota font-bold">Sebastián Díaz</h4>
-                            <p class="text-[10px] text-terracota uppercase tracking-widest mt-1">Chambelán</p>
-                        </div>
-                    </div>
                 </div>
                 <p class="text-center text-terracota/80 text-[10px] mt-10 uppercase tracking-[0.3em] font-light">Desliza para ver más →</p>
             </div>
@@ -488,16 +467,16 @@
         <section id="ubicaciones" class="min-h-[100dvh] flex flex-col justify-center py-5 px-15 fondo-perla relative">
             <div class="max-w-6xl mx-auto flex flex-col gap-10 md:gap-16 mb-10 relative z-10 w-full">
                 
-                <div class="forma-ovalada w-full max-w-4xl mx-auto reveal text-center">
-                    <div class="mb-6">
-                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
-                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-20 h-20 filtro-blanco" alt="Ceremonia">
+                <div class="forma-ovalada mx-auto reveal text-center">
+                    <div class="mb-4 mt-4">
+                        <div class="mx-auto mb-2 flex items-center justify-center opacity-90">
+                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 h-16 filtro-blanco" alt="Ceremonia">
                         </div>
-                        <h1 class="text-5xl md:text-6xl mb-4 font-script reveal-scale">Ceremonia</h1>
-                        <p class="text-white/90 font-light text-xs md:text-sm tracking-wide">Templo Expiatorio del Sagrado Corazón<br>Madero <span class="font-numbers">721</span>, Centro, León</p>
+                        <h1 class="text-5xl mb-2 font-script reveal-scale">Ceremonia</h1>
+                        <p class="text-white/90 font-light text-[11px] tracking-wide px-4">Templo Expiatorio del Sagrado Corazón<br>Madero <span class="font-numbers">721</span></p>
                     </div>
                     
-                    <div class="w-[200px] h-[200px] md:w-[240px] md:h-[240px] relative mx-auto overflow-hidden border-4 border-white/20 mb-8 shadow-xl">
+                    <div class="w-[180px] h-[180px] md:w-[200px] md:h-[200px] relative mx-auto overflow-hidden border-2 border-white/20 mb-6 shadow-xl flex-grow">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.907715494294!2d-101.67756962386121!3d21.116262084772183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bbf61e3d36e89%3A0xc47e30d1e342a170!2sTemplo%20Expiatorio%20del%20Sagrado%20Coraz%C3%B3n%20de%20Jes%C3%BAs!5e0!3m2!1ses-419!2smx!4v1708833892790!5m2!1ses-419!2smx" 
                             class="absolute top-0 left-0 w-full h-full" 
@@ -507,19 +486,19 @@
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
-                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full block text-center bg-white border border-white text-terracota font-bold px-15 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-transparent hover:text-white transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none">Abrir en App</a>
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-[80%] block mx-auto text-center bg-white text-terracota font-bold py-3 text-[9px] tracking-[0.2em] uppercase mb-4">Abrir en App</a>
                 </div>
 
-                <div class="forma-ovalada w-full max-w-4xl mx-auto reveal text-center">
-                    <div class="mb-6">
-                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
-                            <img src="https://i.imgur.com/AIApde9.png" class="w-20 h-20 filtro-blanco" alt="Recepción">
+                <div class="forma-ovalada mx-auto reveal text-center">
+                    <div class="mb-4 mt-4">
+                        <div class="mx-auto mb-2 flex items-center justify-center opacity-90">
+                            <img src="https://i.imgur.com/AIApde9.png" class="w-16 h-16 filtro-blanco" alt="Recepción">
                         </div>
-                        <h1 class="text-5xl md:text-6xl mb-4 font-script reveal-scale">Recepción</h1>
-                        <p class="text-white/90 font-light text-xs md:text-sm tracking-wide">Hacienda del Conde Eventos<br>Blvd. Aeropuerto <span class="font-numbers">123</span>, León</p>
+                        <h1 class="text-5xl mb-2 font-script reveal-scale">Recepción</h1>
+                        <p class="text-white/90 font-light text-[11px] tracking-wide px-4">Hacienda del Conde Eventos<br>Blvd. Aeropuerto <span class="font-numbers">123</span></p>
                     </div>
                     
-                    <div class="w-[200px] h-[200px] md:w-[240px] md:h-[240px] relative mx-auto overflow-hidden border-4 border-white/20 mb-8 shadow-xl">
+                    <div class="w-[180px] h-[180px] md:w-[200px] md:h-[200px] relative mx-auto overflow-hidden border-2 border-white/20 mb-6 shadow-xl flex-grow">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.981882069818!2d-101.60334812386221!3d21.073386686252086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bb54c9e7845f1%3A0xc3af87c53d9223cb!2sPoliforum%20Le%C3%B3n!5e0!3m2!1ses-419!2smx!4v1708834032483!5m2!1ses-419!2smx" 
                             class="absolute top-0 left-0 w-full h-full" 
@@ -530,7 +509,7 @@
                         </iframe>
                     </div>
 
-                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-full block text-center bg-white border border-white text-terracota font-bold px-15 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-transparent hover:text-white transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none">Abrir en App</a>
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-[80%] block mx-auto text-center bg-white text-terracota font-bold py-3 text-[9px] tracking-[0.2em] uppercase mb-4">Abrir en App</a>
                 </div>
             </div>
         </section>
@@ -583,11 +562,11 @@
         </section>
         
         <section class="min-h-[100dvh] flex flex-col justify-center py-2 px-2 fondo-perla text-center relative overflow-hidden">
-            <div class="forma-ovalada max-w-4xl w-full mx-auto reveal-scale text-center">
-                <h2 class="text-6xl mb-4 font-script drop-shadow-lg w-full">Clima del Día</h2>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-light opacity-90 w-full">Pronóstico por hora. León, Gto.</p>
+            <div class="forma-ovalada mx-auto reveal-scale text-center">
+                <h2 class="text-5xl md:text-6xl mb-4 font-script drop-shadow-lg w-full mt-4">Clima del Día</h2>
+                <p class="text-[9px] md:text-[10px] uppercase tracking-[0.4em] mb-8 font-light opacity-90 w-full">Pronóstico por hora. León, Gto.</p>
                 
-                <div id="weather-container" class="w-full max-w-xl mx-auto">
+                <div id="weather-container" class="w-full mx-auto flex-grow flex items-center">
                     <p class="text-sm w-full animate-pulse font-light drop-shadow-md text-center">Cargando pronóstico...</p>
                 </div>
             </div>
@@ -634,50 +613,31 @@
                                 <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">Pastel</h3>
                             </div>
                         </div>
-
-                        <div class="flex items-center w-full relative z-10 reveal-right">
-                            <div class="w-1/2 text-right pr-4 md:pr-8">
-                                <span class="text-base md:text-base text-terracota font-numbers italic font-bold">22:00 HRS</span>
-                                <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">Vals</h3>
-                            </div>
-                            <div class="w-1/2 flex justify-center filtro-terracota pl-4 md:pl-8">
-                                <img src="https://i.imgur.com/tRNwEAy.png" class="w-20 md:w-28 object-contain opacity-90 filtro-terracota relative z-10 drop-shadow-sm px-2 py-4">
-                            </div>
-                        </div>
-                        <div class="flex items-center w-full relative z-10 reveal-left">
-                            <div class="w-1/2 flex justify-center filtro-terracota pr-4 md:pr-8">
-                                <img src="https://i.imgur.com/AEpfW9Z.png" class="w-20 md:w-28 object-contain opacity-90 filtro-terracota relative z-10 drop-shadow-sm px-2 py-4">
-                            </div>
-                            <div class="w-1/2 text-left pl-4 md:pl-8">
-                                <span class="text-base md:text-base text-terracota font-numbers italic font-bold">22:30 HRS</span>
-                                <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">¡A bailar!</h3>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-10 fondo-perla text-center relative overflow-hidden">
-            <div class="forma-ovalada max-w-4xl w-full mx-auto reveal-scale text-center">
-                <h1 class="text-6xl mb-4 font-script w-full">Trivia</h1>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 opacity-90 font-light drop-shadow-sm w-full">¿Qué tanto conoces a la quinceañera?</p>
+            <div class="forma-ovalada mx-auto reveal-scale text-center">
+                <h1 class="text-5xl md:text-6xl mb-4 font-script w-full mt-4">Trivia</h1>
+                <p class="text-[9px] md:text-[10px] uppercase tracking-[0.4em] mb-6 opacity-90 font-light drop-shadow-sm w-full">¿Qué tanto conoces a la quinceañera?</p>
                 
-                <div id="trivia-container" class="w-full transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                <div id="trivia-container" class="w-full transition-colors duration-500 flex-grow flex flex-col justify-center">
                     
                     <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-white/70 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
-                        <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-white mb-8 font-light">Pregunta aquí</h3>
-                        <div id="trivia-options" class="flex flex-col gap-4 max-w-sm mx-auto">
+                        <p class="text-[10px] uppercase tracking-widest text-white/70 mb-2 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
+                        <h3 id="trivia-q-text" class="text-xl md:text-2xl text-white mb-6 font-light px-2">Pregunta aquí</h3>
+                        <div id="trivia-options" class="flex flex-col gap-3 w-[90%] mx-auto">
                         </div>
                     </div>
 
                     <div id="trivia-result" class="hidden">
-                        <h3 class="font-script text-7xl mb-4">¡Terminaste!</h3>
-                        <p class="text-xl mb-2 font-light">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
-                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest opacity-90 mb-8 font-bold"></p>
-                        <button onclick="resetTrivia()" class="bg-transparent text-white border border-white px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-terracota transition-all duration-300 rounded-none active:scale-95">Jugar de nuevo</button>
+                        <h3 class="font-script text-6xl mb-4">¡Terminaste!</h3>
+                        <p class="text-lg mb-2 font-light">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold mb-6"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
+                        <p id="trivia-feedback" class="text-xs uppercase tracking-widest opacity-90 mb-6 font-bold px-4"></p>
+                        <button onclick="resetTrivia()" class="bg-transparent text-white border border-white px-6 py-3 text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-terracota transition-all duration-300 rounded-none active:scale-95">Jugar de nuevo</button>
                     </div>
 
                 </div>
@@ -711,24 +671,23 @@
         </div>
 
         <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-10 fondo-perla text-center relative overflow-hidden">
-            <div class="forma-ovalada max-w-4xl w-full mx-auto reveal-scale text-center">
-                <svg class="w-16 h-16 mx-auto mb-6 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="forma-ovalada mx-auto reveal-scale text-center">
+                <svg class="w-12 h-12 mx-auto mb-4 text-white opacity-90 mt-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
                 </svg>
                 
-                <h1 class="text-5xl mb-6 font-script reveal-scale w-full">Álbum Compartido</h1>
+                <h1 class="text-5xl mb-4 font-script reveal-scale w-full">Álbum Compartido</h1>
                 
-                <p class="text-sm md:text-base font-light tracking-wide mb-6 leading-relaxed text-white/90 w-full max-w-md mx-auto">
-                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
+                <p class="text-[11px] md:text-sm font-light tracking-wide mb-6 leading-relaxed text-white/90 w-full px-2">
+                    Ayúdame a capturar los mejores momentos. ¡Escanea el código!
                 </p>
 
-                <div class="mx-auto bg-white p-4 rounded-3xl shadow-lg inline-block mb-10 border border-white/30">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-40 h-40 object-contain">
+                <div class="mx-auto bg-white p-3 rounded-2xl shadow-lg inline-block mb-6 border border-white/30">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-32 h-32 object-contain">
                 </div>
-                <br>
                 
-                <a href="#" target="_blank" class="inline-block bg-transparent text-white border border-white px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-terracota transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95 duration-300 rounded-full">
+                <a href="#" target="_blank" class="w-[80%] mx-auto block bg-transparent text-white border border-white py-3 text-[9px] uppercase tracking-widest font-bold hover:bg-white hover:text-terracota transition-all mb-4">
                     Subir fotos aquí
                 </a>
             </div>
@@ -746,10 +705,6 @@
                             <img src="https://i.imgur.com/XS1MDtG.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Amazon">
                         </a>
 
-                        <a href="#" class="mx-auto group shadow-md rounded-none h-full w-full md:w-full overflow-hidden flex items-center filtro-terracota justify-center reveal-scale delay-200">
-                            <img src="https://i.imgur.com/ovK8eD6.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Liverpool">
-                        </a>
-
                         <div class="p-6 md:p-8 group h-40 w-64 md:w-56 flex flex-col items-center justify-center reveal-right delay-300">
                             <svg class="w-10 h-10 mb-4 text-terracota group-hover:scale-110 transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
@@ -762,52 +717,40 @@
         </section>
 
         <section class="min-h-[100dvh] flex flex-col justify-center py-6 px-10 fondo-perla text-center relative overflow-hidden">
-            <div class="forma-ovalada max-w-4xl w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
-                <h2 class="text-6xl font-script mb-6 drop-shadow-md px-6 w-full">Confirmar Asistencia</h2>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 opacity-90 font-light w-full">Confirmar antes del <span class="font-numbers">10</span> de Noviembre de <span class="font-numbers">2026</span></p>
+            <div class="forma-ovalada mx-auto reveal-scale text-center flex flex-col justify-center"> 
+                <h2 class="text-5xl md:text-6xl font-script mb-4 drop-shadow-md w-full mt-2">Confirmar Asistencia</h2>
+                <p class="text-[8px] md:text-[9px] uppercase tracking-[0.4em] mb-6 opacity-90 font-light w-full px-2">Confirmar antes del <span class="font-numbers">10</span> de Noviembre</p>
                 
-                <form id="rsvpForm" class="w-full max-w-lg mx-auto space-y-8 text-left bg-transparent transition-all duration-500">
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left">
+                <form id="rsvpForm" class="w-full mx-auto space-y-4 text-left bg-transparent flex-grow flex flex-col justify-center">
+                    <div class="flex flex-col gap-4">
+                        <div class="border-b border-white/50 pb-1">
+                            <label class="text-[9px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre</label>
+                            <input type="text" id="rsvpName" required class="w-full bg-transparent py-1 outline-none text-lg text-white font-light text-center">
                         </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Personas</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light appearance-none text-center md:text-left cursor-pointer">
+                        <div class="border-b border-white/50 pb-1">
+                            <label class="text-[9px] uppercase tracking-widest opacity-90 text-white font-bold">Personas</label>
+                            <select id="rsvpPax" class="w-full bg-transparent py-1 outline-none text-lg text-white font-light appearance-none text-center cursor-pointer">
                                 <option class="text-black" value="1 Persona">1 Persona</option>
                                 <option class="text-black" value="2 Personas">2 Personas</option>
                                 <option class="text-black" value="Familia">Familia</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-white text-terracota font-bold py-5 uppercase tracking-[0.3em] text-[10px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-full">Confirmar y Generar Pase</button>
+                    <button type="submit" id="btnSubmitRSVP" class="w-[80%] mx-auto bg-white text-terracota font-bold py-3 uppercase tracking-[0.2em] text-[9px] shadow-md mt-6 rounded-full">Generar Pase</button>
                 </form>
 
-                <div id="loadingMessage" class="hidden mt-10 flex-col items-center justify-center transition-all duration-500 w-full">
-                    <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                    <p class="text-6xl font-script text-white mb-2">Generando Pase...</p>
-                    <p class="text-[10px] uppercase tracking-[0.3em] opacity-90 font-bold">Validando tu registro</p>
+                <div id="loadingMessage" class="hidden flex-col items-center justify-center w-full flex-grow">
+                    <div class="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                    <p class="text-4xl font-script text-white mb-2">Generando...</p>
                 </div>
 
-                <div id="errorMessage" class="hidden mt-10 bg-white/10 p-8 rounded-3xl flex-col items-center transition-all duration-500 w-full max-w-sm mx-auto">
-                    <p class="text-3xl font-light text-white mb-2">Ya estás en la lista</p>
-                    <p class="text-[11px] uppercase tracking-widest text-red-200 mb-8 font-light">Este nombre ya generó un pase anteriormente.</p>
-                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-8 py-4 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-terracota transition-colors">Intentar otro nombre</button>
-                </div>
-
-                <div id="successMessage" class="hidden mt-10 transition-all duration-500 w-full max-w-md mx-auto">
-                    <div class="bg-white/10 p-10 rounded-3xl relative overflow-hidden shadow-2xl border border-white/20">
-                        <p class="text-6xl md:text-7xl font-script text-white mb-2 mt-4">¡Pase Confirmado!</p>
-                        <p class="text-[11px] uppercase tracking-widest text-white/80 mb-8 font-light">Toma captura y muestra este código en la entrada</p>
-                        <div class="bg-white p-6 rounded-3xl mb-8 flex flex-col items-center text-terracota">
-                            <p class="text-[11px] uppercase tracking-widest font-bold mb-4">Código de Acceso</p>
-                            <img id="ticketQR" src="" alt="QR" class="w-40 h-40 object-contain mb-4 hidden">
-                            <p id="ticketFolio" class="text-3xl font-light tracking-widest font-numbers"></p>
-                        </div>
-                        <p id="ticketName" class="text-3xl font-light mb-2"></p>
-                        <p id="ticketPax" class="text-xs uppercase tracking-widest opacity-90 font-bold"></p>
+                <div id="successMessage" class="hidden w-full flex-grow flex flex-col justify-center">
+                    <p class="text-5xl font-script text-white mb-2">¡Confirmado!</p>
+                    <div class="bg-white p-4 rounded-xl mb-4 flex flex-col items-center text-terracota w-[80%] mx-auto">
+                        <img id="ticketQR" src="" alt="QR" class="w-24 h-24 object-contain mb-2 hidden">
+                        <p id="ticketFolio" class="text-xl font-light tracking-widest font-numbers"></p>
                     </div>
+                    <p id="ticketName" class="text-lg font-light mb-1"></p>
                 </div>
             </div>
         </section>
@@ -1027,7 +970,7 @@
 
         function getConditionText(code) {
             if (code === 0) return "Despejado";
-            if (code >= 1 && code <= 3) return "Parcialmente nublado";
+            if (code >= 1 && code <= 3) return "Parc. nublado";
             if (code >= 45 && code <= 48) return "Niebla";
             if (code >= 51 && code <= 77) return "Llovizna";
             if (code >= 80 && code <= 82) return "Lluvia";
@@ -1051,7 +994,7 @@
             for (let i = 0; i < data.hourly.time.length; i++) {
                 const forecastDate = new Date(data.hourly.time[i]);
                 
-                if (forecastDate >= now && hoursShown < 6) {
+                if (forecastDate >= now && hoursShown < 5) { /* Reduje a 5 para que quepa mejor en el ancho */
                     const temp = Math.round(data.hourly.temperature_2m[i]);
                     const weatherCode = data.hourly.weathercode[i];
                     
@@ -1067,13 +1010,13 @@
                     const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
 
                     let iconSVG = getWeatherIcon(weatherCode);
-                    iconSVG = iconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-6 h-6 md:w-8 md:h-8 mx-auto my-2');
+                    iconSVG = iconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-5 h-5 md:w-7 md:h-7 mx-auto my-2');
 
                     hourlyHTML += `
                         <div class="flex flex-col items-center justify-center flex-1">
-                            <span class="text-[10px] md:text-xs font-light opacity-90">${hourStr}</span>
+                            <span class="text-[9px] md:text-[10px] font-light opacity-90">${hourStr}</span>
                             ${iconSVG}
-                            <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
+                            <span class="text-xs md:text-sm font-bold font-numbers">${temp}°</span>
                         </div>
                     `;
                     hoursShown++;
@@ -1083,26 +1026,26 @@
             const conditionText = getConditionText(currentCode);
             
             let mainIconSVG = getWeatherIcon(currentCode);
-            mainIconSVG = mainIconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
+            mainIconSVG = mainIconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-7 h-7 md:w-9 md:h-9 ml-auto mb-1');
 
             container.innerHTML = `
-                <div class="bg-transparent rounded-none p-2 text-white text-left mx-auto font-sans w-full">
-                    <div class="flex justify-between items-start mb-8 border-b border-white/20 pb-6">
+                <div class="bg-transparent rounded-none p-1 text-white text-left mx-auto font-sans w-full">
+                    <div class="flex justify-between items-start mb-6 border-b border-white/20 pb-4">
                         <div>
-                            <h3 class="text-xl md:text-2xl font-light flex items-center gap-2">
+                            <h3 class="text-lg md:text-xl font-light flex items-center gap-1">
                                 León
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
                             </h3>
-                            <div class="text-[60px] md:text-[80px] font-light leading-none mt-2 font-numbers">${currentTemp}°</div>
+                            <div class="text-[50px] md:text-[60px] font-light leading-none mt-1 font-numbers">${currentTemp}°</div>
                         </div>
                         <div class="text-right flex flex-col items-end pt-1">
                             ${mainIconSVG}
-                            <p class="text-sm md:text-base font-medium mt-2">${conditionText}</p>
-                            <p class="text-[10px] md:text-xs opacity-80 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
+                            <p class="text-xs md:text-sm font-medium mt-1">${conditionText}</p>
+                            <p class="text-[8px] md:text-[9px] opacity-80 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
                         </div>
                     </div>
                     
-                    <div class="flex justify-between items-center w-full pt-2">
+                    <div class="flex justify-between items-center w-full pt-1">
                         ${hourlyHTML}
                     </div>
                 </div>
@@ -1110,9 +1053,9 @@
         }
         
         const triviaData = [
-            { question: "¿Cuál es mi postre favorito?", options: ["Helado de vainilla", "Pastel de Chocolate", "Crepas dulces", "Fresas con crema"], answer: 1 },
-            { question: "¿A dónde me gustaría viajar?", options: ["París", "Tokio", "Nueva York", "Londres"], answer: 0 },
-            { question: "¿Cuál es mi serie favorita?", options: ["Stranger Things", "Bridgerton", "Friends", "Gossip Girl"], answer: 3 }
+            { question: "¿Postre favorito?", options: ["Helado", "Pastel", "Crepas", "Fresas"], answer: 1 },
+            { question: "¿Viaje soñado?", options: ["París", "Tokio", "NY", "Londres"], answer: 0 },
+            { question: "¿Serie favorita?", options: ["Stranger T.", "Bridgerton", "Friends", "Gossip Girl"], answer: 3 }
         ];
 
         let currentQuestion = 0;
@@ -1131,7 +1074,7 @@
             triviaData[currentQuestion].options.forEach((opt, index) => {
                 const btn = document.createElement("button");
                 btn.innerText = opt;
-                btn.className = "btn-trivia w-full text-left px-6 py-5 rounded-full border border-white/40 text-white font-bold bg-transparent hover:bg-white hover:text-terracota text-sm tracking-wide text-center";
+                btn.className = "btn-trivia w-full text-center px-4 py-3 rounded-full border border-white/40 text-white font-bold bg-transparent hover:bg-white hover:text-terracota text-xs tracking-wide";
                 btn.onclick = () => checkAnswer(index, btn);
                 optionsContainer.appendChild(btn);
             });
@@ -1169,11 +1112,11 @@
 
             const feedback = document.getElementById("trivia-feedback");
             if (score === triviaData.length) {
-                feedback.innerText = "¡Wow! Me conoces a la perfección";
+                feedback.innerText = "¡Me conoces a la perfección!";
             } else if (score >= triviaData.length / 2) {
-                feedback.innerText = "¡Nada mal! Me conoces bastante bien";
+                feedback.innerText = "¡Nada mal! Me conoces bien";
             } else {
-                feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
+                feedback.innerText = "¡Uy! Necesitamos platicar más";
             }
         }
 
@@ -1208,7 +1151,6 @@
                 if(result.status === "success") {
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
-                    document.getElementById('ticketPax').innerText = pax;
 
                     const qrImg = document.getElementById('ticketQR');
                     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
@@ -1218,8 +1160,8 @@
                         document.getElementById('successMessage').classList.remove('hidden');
                     };
                 } else if (result.status === "exists") {
-                    document.getElementById('errorMessage').classList.remove('hidden');
-                    document.getElementById('errorMessage').classList.add('flex');
+                    alert("Ya estás en la lista. Este nombre ya generó un pase.");
+                    resetForm();
                 }
             } catch (error) {
                 alert("Hubo un problema de conexión. Intenta de nuevo.");
@@ -1228,10 +1170,8 @@
         });
 
         function resetForm() {
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('errorMessage').classList.remove('flex');
             document.getElementById('loadingMessage').classList.add('hidden');
-            document.getElementById('rsvpForm').style.display = 'block';
+            document.getElementById('rsvpForm').style.display = 'flex';
             document.getElementById('rsvpName').value = '';
         }
 
