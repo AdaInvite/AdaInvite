@@ -159,7 +159,7 @@
                     <p class="text-[9px] uppercase tracking-widest text-terracota/80 mb-4 font-bold">¿La cámara no enfoca?</p>
                     <div class="flex flex-col gap-4">
                         <input type="text" id="manualFolio" placeholder="EJ. XV-1234" class="w-full bg-transparent border-b border-terracota/40 px-2 py-2 outline-none text-2xl text-center text-terracota uppercase font-light tracking-widest placeholder-terracota/30" maxlength="7">
-                        <button onclick="verificarManual()" class="bg-[#DCB9AE] text-white px-6 py-4 font-bold text-[10px] uppercase tracking-[0.2em] shadow-md hover:bg-terracota transition-all duration-300">Validar Folio</button>
+                        <button onclick="verificarManual()" class="bg-[#DCB9AE] text-black border border-black px-6 py-4 font-bold text-[10px] uppercase tracking-[0.2em] shadow-md hover:bg-terracota transition-all duration-300">Validar Folio</button>
                     </div>
                 </div>
             </div>
@@ -207,102 +207,117 @@
 
     <script>
         // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec';
-        let html5QrcodeScanner;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec';
+let html5QrcodeScanner;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const folio = urlParams.get('folio') || urlParams.get('pase');
-            if (folio) { verificarFolioEnGoogle(folio); } else { iniciarCamara(); }
-        });
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const folio = urlParams.get('folio') || urlParams.get('pase');
+    if (folio) { verificarFolioEnGoogle(folio); } else { iniciarCamara(); }
+});
 
-        function iniciarCamara() {
-            ocultarTodasLasVistas();
-            document.getElementById('vistaCamara').classList.remove('hidden');
-            document.getElementById('vistaCamara').classList.add('flex');
-            document.getElementById('mainContainer').style.borderColor = "transparent";
-            document.getElementById('manualFolio').value = '';
+function iniciarCamara() {
+    ocultarTodasLasVistas();
+    document.getElementById('vistaCamara').classList.remove('hidden');
+    document.getElementById('vistaCamara').classList.add('flex');
+    document.getElementById('mainContainer').style.borderColor = "transparent";
+    document.getElementById('manualFolio').value = '';
 
-            if (!html5QrcodeScanner) {
-                html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
-                    fps: 20, 
-                    qrbox: {width: 250, height: 250},
-                    aspectRatio: 1.0, 
-                    rememberLastUsedCamera: true,
-                    disableFlip: true, 
-                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
-                }, false);
-                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-            }
-        }
+    if (!html5QrcodeScanner) {
+        html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
+            fps: 20, 
+            qrbox: {width: 250, height: 250},
+            aspectRatio: 1.0, 
+            rememberLastUsedCamera: true,
+            disableFlip: true, 
+            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
+        }, false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
+}
 
 function onScanSuccess(decodedText) {
-            apagarCamara();
-            let folioExtraido = decodedText;
-            try {
-                let url = new URL(decodedText);
-                folioExtraido = url.searchParams.get('pase') || url.searchParams.get('folio') || decodedText;
-            } catch(e) {}
+    apagarCamara();
+    let folioExtraido = decodedText;
+    try {
+        let url = new URL(decodedText);
+        folioExtraido = url.searchParams.get('pase') || url.searchParams.get('folio') || decodedText;
+    } catch(e) {}
 
-            // Por si quedó algún QR viejo generado con el formato anterior (con barras | )
-            if(folioExtraido.includes('|')) {
-                folioExtraido = folioExtraido.split('|')[0].replace('XV-XV-', 'XV-'); 
-            }
+    // Por si quedó algún QR viejo generado con el formato anterior (con barras | )
+    if(folioExtraido.includes('|')) {
+        folioExtraido = folioExtraido.split('|')[0].replace('XV-XV-', 'XV-'); 
+    }
 
-            if(folioExtraido) verificarFolioEnGoogle(folioExtraido);
-            else mostrarDenegado("Código irreconocible.");
+    if(folioExtraido) verificarFolioEnGoogle(folioExtraido);
+    else mostrarDenegado("Código irreconocible.");
+}
+
+function onScanFailure(error) { 
+    // Silencioso, no queremos que lance alertas cada segundo que no ve un QR
+}
+
+function verificarManual() {
+    const folioManual = document.getElementById('manualFolio').value.trim();
+    if(!folioManual) return;
+    apagarCamara();
+    verificarFolioEnGoogle(folioManual);
+}
+
+function apagarCamara() {
+    if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear().then(() => { html5QrcodeScanner = null; }).catch(e => {});
+    }
+}
+
+async function verificarFolioEnGoogle(folio) {
+    ocultarTodasLasVistas();
+    document.getElementById('vistaCargando').classList.remove('hidden');
+    document.getElementById('vistaCargando').classList.add('flex');
+    try {
+        // Consultar a Google Sheets
+        const requestUrl = `${SCRIPT_URL}?action=consultar_folio&folio=${encodeURIComponent(folio)}`;
+        const response = await fetch(requestUrl);
+        const result = await response.json();
+        
+        ocultarTodasLasVistas();
+        if (result.status === "found") {
+            document.getElementById('mostrarFolio').innerText = folio;
+            document.getElementById('mostrarNombre').innerText = result.name;
+            document.getElementById('mostrarPersonas').innerText = result.pax;
+            
+            document.getElementById('vistaAprobado').classList.remove('hidden');
+            document.getElementById('vistaAprobado').classList.add('flex');
+            document.getElementById('mainContainer').style.borderColor = "rgba(16, 185, 129, 0.4)"; 
+        } else {
+            mostrarDenegado("Ese folio no existe o aún no tiene pases asignados.");
         }
+    } catch (error) {
+        mostrarDenegado("Error de conexión con la base de datos.");
+    }
+}
 
-        // ... código intermedio ...
+function mostrarDenegado(mensaje) {
+    ocultarTodasLasVistas();
+    document.getElementById('mensajeError').innerText = mensaje || "Pase no válido.";
+    document.getElementById('vistaDenegado').classList.remove('hidden');
+    document.getElementById('vistaDenegado').classList.add('flex');
+    document.getElementById('mainContainer').style.borderColor = "rgba(239, 68, 68, 0.4)"; // Borde rojo sutil
+}
 
-        async function verificarFolioEnGoogle(folio) {
-            ocultarTodasLasVistas();
-            document.getElementById('vistaCargando').classList.remove('hidden');
-            document.getElementById('vistaCargando').classList.add('flex');
-            try {
-                // AQUÍ CAMBIAMOS a consultar_folio para conectar con la nueva función que agregamos
-                const requestUrl = `${SCRIPT_URL}?action=consultar_folio&folio=${encodeURIComponent(folio)}`;
-                const response = await fetch(requestUrl);
-                const result = await response.json();
-                
-                ocultarTodasLasVistas();
-                if (result.status === "found") {
-                    document.getElementById('mostrarFolio').innerText = folio;
-                    document.getElementById('mostrarNombre').innerText = result.name;
-                    document.getElementById('mostrarPersonas').innerText = result.pax;
-                    
-                    document.getElementById('vistaAprobado').classList.remove('hidden');
-                    document.getElementById('vistaAprobado').classList.add('flex');
-                    document.getElementById('mainContainer').style.borderColor = "rgba(16, 185, 129, 0.4)"; 
-                } else {
-                    mostrarDenegado("Ese folio no existe o aún no tiene pases asignados.");
-                }
-            } catch (error) {
-                mostrarDenegado("Error de conexión con la base de datos.");
-            }
-        }
+function ocultarTodasLasVistas() {
+    const vistas = ['vistaCamara', 'vistaCargando', 'vistaAprobado', 'vistaDenegado'];
+    vistas.forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.remove('flex');
+    });
+    document.getElementById('mainContainer').style.borderColor = "transparent";
+}
 
-        function mostrarDenegado(mensaje) {
-            ocultarTodasLasVistas();
-            document.getElementById('mensajeError').innerText = mensaje || "Pase no válido.";
-            document.getElementById('vistaDenegado').classList.remove('hidden');
-            document.getElementById('vistaDenegado').classList.add('flex');
-            document.getElementById('mainContainer').style.borderColor = "rgba(239, 68, 68, 0.4)"; // Borde rojo sutil
-        }
-
-        function ocultarTodasLasVistas() {
-            const vistas = ['vistaCamara', 'vistaCargando', 'vistaAprobado', 'vistaDenegado'];
-            vistas.forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-                document.getElementById(id).classList.remove('flex');
-            });
-            document.getElementById('mainContainer').style.borderColor = "transparent";
-        }
-
-        function reiniciarEscaner() {
-            window.history.replaceState({}, document.title, window.location.pathname);
-            iniciarCamara();
-        }
+function reiniciarEscaner() {
+    window.history.replaceState({}, document.title, window.location.pathname);
+    iniciarCamara();
+}
     </script>
 </body>
 </html>
