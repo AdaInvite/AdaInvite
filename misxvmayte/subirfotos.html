@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XV Mayte - Subir Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#F5F5F0">
+    <meta property="og:title" content="XV Mayte - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la fiesta.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#2A2A2A', 
+                        blanco: { perla: '#F5F5F0' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.js";
+        LR.registerBlocks(LR);
+    </script>
+
+    <style>
+        :root {
+            --terracota: #2A2A2A; 
+            --blanco-perla: #F5F5F0;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Imperial Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
+            font-family: var(--font-elegant); color: var(--terracota);
+            background-color: var(--blanco-perla);
+        }
+        
+        h1, p, select, button { font-family: var(--font-elegant); }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+        
+        .fondo-perla {
+            background-image: url('https://i.imgur.com/pcBetjj.gif');
+            background-size: cover; background-position: center;
+        }
+
+        .forma-ovalada {
+            background-color: var(--blanco-perla);
+            color: var(--terracota);
+            border-radius: 250px 250px 0 0;
+            box-shadow: 0 0 45px rgba(0, 0, 0, 0.2);  
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            margin: 0 auto; position: relative; z-index: 10;
+            width: 95vw; max-width: 480px; height: 96svh; 
+            padding: 15% 6% 5% 6%; 
+            overflow-y: auto; overflow-x: hidden;
+        }
+
+        .forma-ovalada::-webkit-scrollbar { display: none; }
+        .forma-ovalada { -ms-overflow-style: none; scrollbar-width: none; }
+
+        select option { background-color: var(--blanco-perla); color: var(--terracota); }
+        select { text-align-last: center; } /* Centra el texto del select */
+        
+        /* Personalizando el botón de Uploadcare al tema claro/terracota */
+        lr-file-uploader-regular {
+            --ctx-name: uploader-mayte;
+            --darkmode: 0; /* Cambiado a modo claro */
+            --primary: #DCB9AE; /* Rosa de acento */
+            --text-primary: #2A2A2A;
+            --bg: #FFFFFF;
+            display: none; 
+            margin: 0 auto;
+            width: 100%;
+            max-width: 320px;
+        }
+        
+        .filtro-terracota { filter: brightness(0) opacity(0.8); }
+    </style>
+</head>
+<body class="fondo-perla relative flex flex-col justify-end items-center pt-8 pb-0 px-2 overflow-hidden min-h-screen">
+
+    <div class="forma-ovalada w-full mx-auto" id="mainContainer">
+        
+        <img src="https://i.imgur.com/TyJ42pL.png" class="w-20 mx-auto mb-6 filtro-terracota drop-shadow-sm" alt="Corona">
+        
+        <h1 class="text-6xl md:text-7xl font-script text-terracota mb-2 text-center">Recuerdos</h1>
+        <p class="text-[10px] tracking-[0.4em] uppercase text-terracota/80 font-bold mb-8 text-center">XV Mayte</p>
+
+        <p class="text-xs italic text-terracota/80 leading-relaxed mb-10 font-medium px-6 text-center">
+            Selecciona el momento de la fiesta y sube tus fotos o videos favoritos.
+        </p>
+
+        <div class="w-[85%] max-w-[280px] mx-auto border-b border-terracota/40 pb-2 mb-8">
+            <select id="folderSelect" class="w-full bg-transparent text-terracota text-[10px] tracking-[2px] uppercase font-bold outline-none text-center cursor-pointer appearance-none">
+                <option value="" disabled selected>Elige un momento...</option>
+                <option value="En la iglesia">En la iglesia</option>
+                <option value="En la recepción">En la recepción</option>
+                <option value="Cena">Cena</option>
+                <option value="El Vals">El Vals</option>
+                <option value="El baile">El baile</option>
+                <option value="El pastel">El pastel</option>
+            </select>
+        </div>
+        
+        <lr-config
+            ctx-name="uploader-mayte"
+            pubkey="d06366b119e257d9800b"
+            multiple="true"
+            source-list="local, camera"
+            locale-name="es"
+        ></lr-config>
+
+        <lr-file-uploader-regular
+            ctx-name="uploader-mayte"
+            css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
+            id="uploaderWidget"
+        ></lr-file-uploader-regular>
+
+        <button id="fakeButton" class="bg-transparent border border-terracota text-terracota font-bold py-3 px-6 uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 mb-4 w-[85%] max-w-[280px] mx-auto opacity-50 cursor-not-allowed transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            Elige un momento primero
+        </button>
+
+        <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-6 hidden text-terracota bg-white/50 p-6 rounded-2xl border border-terracota/10 shadow-sm text-center w-[90%] max-w-[320px] mx-auto leading-relaxed"></p>
+        
+    </div>
+
+    <script>
+        const folderSelect = document.getElementById('folderSelect');
+        const uploaderWidget = document.getElementById('uploaderWidget');
+        const fakeButton = document.getElementById('fakeButton');
+        const lrConfig = document.querySelector('lr-config');
+        const uploadMessage = document.getElementById('uploadMessage');
+
+        // 1. Mostrar el uploader real cuando eligen la categoría
+        folderSelect.addEventListener('change', (e) => {
+            if (e.target.value !== "") {
+                fakeButton.style.display = 'none';
+                uploaderWidget.style.display = 'block';
+                
+                // Guardamos la categoría elegida
+                lrConfig.setAttribute('metadata', JSON.stringify({ momento: e.target.value }));
+                
+                // Ocultamos el mensaje si eligen una nueva categoría
+                uploadMessage.classList.add('hidden');
+            }
+        });
+
+        // 2. Lógica para evitar que cierren la pestaña mientras suben archivos
+        let subidasEnProgreso = 0;
+
+        window.addEventListener('LR-upload-start', () => { subidasEnProgreso++; });
+        window.addEventListener('LR-upload-finish', () => { subidasEnProgreso--; });
+        window.addEventListener('LR-upload-failed', () => { subidasEnProgreso--; });
+
+        window.addEventListener('beforeunload', (e) => {
+            if (subidasEnProgreso > 0) {
+                e.preventDefault();
+                e.returnValue = 'Tus archivos se están subiendo. ¿Seguro que quieres salir y cancelar la subida?';
+            }
+        });
+
+        // 3. Mostrar mensaje de éxito cuando terminan
+        uploaderWidget.addEventListener('done-flow', () => {
+            uploadMessage.innerText = "¡Tus archivos se han subido correctamente, gracias por compartir estos recuerdos!";
+            uploadMessage.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
