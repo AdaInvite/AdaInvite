@@ -650,9 +650,9 @@
                             <label class="text-[10px] uppercase tracking-widest opacity-90 text-terracota font-bold">Nombre Completo</label>
                             <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40">
                         </div>
-                        <div class="border-b border-terracota/50 pb-2">
+                       <div class="border-b border-terracota/50 pb-2">
     <label class="text-[10px] uppercase tracking-widest opacity-90 text-terracota font-bold">Personas</label>
-    <input type="number" id="rsvpPax" required min="1" placeholder="Ej. 2" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" id="rsvpPax" required placeholder="Ej. 2" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40">
 </div>
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-full text-center leading-tight">Confirmar</button>
@@ -682,11 +682,11 @@
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
     <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
         <h2 class="text-5xl font-script mb-2 px-4 text-terracota w-full mt-4 text-shadow-none">Consultar Pase</h2>
-        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-terracota">Ingresa el folio que se te asignó al confirmar</p>
+        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-terracota">Ingresa el nombre con el que confirmaste</p>
         
         <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
             <div class="border-b border-terracota/50 pb-2">
-                <input type="text" id="inputConsultaFolio" placeholder="Ej. XV-1234" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center placeholder-terracota/40 uppercase">
+                <input type="text" id="inputConsultaNombre" placeholder="Ej. Juan Pérez" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center placeholder-terracota/40">
             </div>
             <button onclick="consultarPase()" id="btnConsultar" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-full text-center">Buscar mi Pase</button>
         </div>
@@ -1024,7 +1024,7 @@
         }
 
         // REEMPLAZA ESTA URL POR LA QUE COPIASTE DE GOOGLE APPS SCRIPT
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzYQHIrOjAHLwSnxY4o4huBg1dzhf39VogwJUDCnW3-HaKjlUVZY-hSHb5iIz2NKottcA/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec"; 
 
 document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -1080,12 +1080,12 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
 
 // FUNCIÓN PARA CONSULTAR EL PASE
 async function consultarPase() {
-    const folio = document.getElementById('inputConsultaFolio').value.trim().toUpperCase();
+    const nombre = document.getElementById('inputConsultaNombre').value.trim();
     const msg = document.getElementById('msgConsulta');
     const btn = document.getElementById('btnConsultar');
     
-    if(!folio) {
-        msg.innerText = "Por favor, ingresa un folio.";
+    if(!nombre) {
+        msg.innerText = "Por favor, ingresa tu nombre completo.";
         msg.classList.remove('hidden');
         return;
     }
@@ -1096,7 +1096,7 @@ async function consultarPase() {
     try {
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
-            body: JSON.stringify({ action: "consultar", folio: folio })
+            body: JSON.stringify({ action: "consultar", nombre: nombre }) // Ahora mandamos el nombre
         });
         
         const result = await response.json();
@@ -1104,11 +1104,11 @@ async function consultarPase() {
         if (result.status === 'ready') {
             document.getElementById('nombrePase').innerText = result.nombre;
             document.getElementById('pasesAprobados').innerText = result.pasesAsignados;
-            document.getElementById('folioPaseImpreso').innerText = folio;
+            document.getElementById('folioPaseImpreso').innerText = result.folio;
             
             // Generar QR oficial
             const qrOficial = document.getElementById('qrOficial');
-            qrOficial.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Folio:${folio},Pases:${result.pasesAsignados}`;
+            qrOficial.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Folio:${result.folio},Pases:${result.pasesAsignados}`;
             
             qrOficial.onload = () => {
                 document.getElementById('contenedorPaseOficial').classList.remove('hidden');
@@ -1121,7 +1121,7 @@ async function consultarPase() {
             document.getElementById('contenedorPaseOficial').classList.add('hidden');
             document.getElementById('btnDescargarPase').classList.add('hidden');
         } else {
-            msg.innerText = "Folio no encontrado. Verifica que esté escrito correctamente.";
+            msg.innerText = "Nombre no encontrado. Verifica escribirlo exactamente como lo registraste.";
             msg.classList.remove('hidden');
         }
     } catch (error) {
