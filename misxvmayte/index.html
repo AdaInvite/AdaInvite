@@ -1024,20 +1024,24 @@
         }
 
         // REEMPLAZA ESTA URL POR LA QUE COPIASTE DE GOOGLE APPS SCRIPT
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec";  
 
 document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('rsvpName').value.trim();
     const pax = document.getElementById('rsvpPax').value;
     
+    // Ocultar formulario y mostrar mensaje de agradecimiento
     document.getElementById('rsvpForm').style.display = 'none';
     const loader = document.getElementById('loadingMessage');
     loader.classList.remove('hidden');
     loader.classList.add('flex');
-    loader.querySelector('p').innerText = "Guardando confirmación...";
+    
+    // Cambiamos el texto para que vean el agradecimiento
+    loader.querySelector('p').innerText = "¡Gracias por confirmar! Redirigiendo a WhatsApp...";
 
     try {
+        // Hacemos el envío de datos a tu Google Sheet
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
@@ -1046,34 +1050,20 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
         const result = await response.json();
         
         if (result.status === 'success') {
-            loader.classList.add('hidden');
-            loader.classList.remove('flex');
+            // Ya no mostramos ningún folio ni código QR aquí
             
-            const folio = result.folio;
-            
-            // Mostrar mensaje de éxito sin QR
-            document.getElementById('successMessage').classList.remove('hidden');
-            document.getElementById('ticketFolio').innerText = folio;
-            document.getElementById('ticketName').innerText = name;
-            document.getElementById('ticketPax').innerText = "Solicitados: " + pax;
-            
-            // Ocultar la imagen QR genérica del mensaje de éxito porque ahora será hasta consultar
-            if(document.getElementById('ticketQR')) {
-                document.getElementById('ticketQR').style.display = 'none';
-            }
-            
-            // Redirigir a WhatsApp
+            // Preparamos el mensaje de WhatsApp (sin folio) y redirigimos inmediatamente
             const numDestino = "522224275935"; 
-            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A*Mi Folio es:* ${folio}%0A%0A¡Ahí nos vemos! ✨`;
+            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos! ✨`;
             const waLink = `https://wa.me/${numDestino}?text=${mensaje}`;
             
-            setTimeout(() => {
-                window.open(waLink, '_blank');
-            }, 3000); 
+            // window.location.href es mejor en celulares para que abra la app de WhatsApp directo en la misma pestaña
+            window.location.href = waLink; 
         }
     } catch (error) {
-        alert("Hubo un error al guardar. Por favor intenta de nuevo.");
+        alert("Hubo un error al guardar. Por favor revisa tu conexión e intenta de nuevo.");
         loader.classList.add('hidden');
+        loader.classList.remove('flex');
         document.getElementById('rsvpForm').style.display = 'block';
     }
 });
