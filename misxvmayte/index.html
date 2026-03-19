@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitación - Mis XV Mayte</title>
+    <title>XV Mayte</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -205,6 +205,9 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    
 </head>
 <body>
 
@@ -639,7 +642,7 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden pb-24">
             <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
                 <h2 class="text-5xl md:text-6xl font-script mb-4 px-4 text-terracota w-full mt-4 text-shadow-none">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-8 font-bold w-full leading-relaxed px-4 text-terracota">Por favor, confirma antes del<br>10 de Mayo de 2026</p>
@@ -657,27 +660,6 @@
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-full text-center leading-tight">Confirmar</button>
                 </form>
-
-                <div id="loadingMessage" class="hidden mt-6 flex-col items-center justify-center transition-all duration-500 w-full mb-4 text-terracota">
-                    <div class="w-12 h-12 border-4 border-terracota border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                    <p class="text-5xl font-script mb-2 text-shadow-none">Generando Pase...</p>
-                </div>
-
-                <div id="successMessage" class="hidden mt-4 transition-all duration-500 w-full max-w-md mx-auto mb-2">
-                    <div class="bg-black/5 p-6 rounded-3xl relative overflow-hidden shadow-lg border border-terracota/10 text-terracota">
-                        <p class="text-5xl md:text-6xl font-script mb-2 text-shadow-none">¡Pase Listo!</p>
-                        <p class="text-[10px] uppercase tracking-widest text-terracota/80 mb-4 font-bold">Toma captura de este código</p>
-                        <div class="bg-white p-4 rounded-3xl mb-4 flex flex-col items-center text-terracota w-48 mx-auto shadow-sm">
-                            <p class="text-[10px] uppercase tracking-widest font-bold mb-2">Código de Acceso</p>
-                            <img id="ticketQR" src="" alt="QR" class="w-24 h-24 object-contain mb-2 hidden mx-auto">
-                            <p id="ticketFolio" class="text-2xl font-light tracking-widest font-numbers"></p>
-                        </div>
-                        <p id="ticketName" class="text-2xl font-bold mb-1"></p>
-                        <p id="ticketPax" class="text-[10px] uppercase tracking-widest opacity-90 font-bold"></p>
-                        <p class="text-[10px] font-bold text-terracota/80 mt-4 px-4 leading-relaxed">Te redirigiremos a WhatsApp en unos segundos para finalizar tu registro...</p>
-                    </div>
-                </div>
-            </div>
         </section>
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
     <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
@@ -697,7 +679,7 @@
             <h3 class="font-script text-4xl mb-2">Mis XV Mayte</h3>
             <p class="text-[10px] uppercase tracking-widest font-bold mb-4 border-b border-terracota/20 pb-2">PASE DE ACCESO OFICIAL</p>
             
-            <img id="qrOficial" src="" alt="QR" class="w-32 h-32 object-contain mx-auto mb-4 border border-terracota/10 p-2 rounded-lg">
+           <div id="qrOficialDiv" class="w-32 h-32 mx-auto mb-4 border border-terracota/10 p-2 rounded-lg flex items-center justify-center"></div>
             
             <p id="nombrePase" class="text-xl font-bold mb-1"></p>
             <p class="text-sm tracking-widest font-light mb-1">Válido para: <span id="pasesAprobados" class="font-bold"></span></p>
@@ -1096,15 +1078,26 @@ async function consultarPase() {
             document.getElementById('pasesAprobados').innerText = result.pasesAsignados;
             document.getElementById('folioPaseImpreso').innerText = result.folio;
             
-            // Generar QR oficial
-            const qrOficial = document.getElementById('qrOficial');
-            qrOficial.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Folio:${result.folio},Pases:${result.pasesAsignados}`;
+
+          // Generar QR oficial (NUEVO, con librería local)
+            const qrDiv = document.getElementById('qrOficialDiv');
+            qrDiv.innerHTML = ''; // Limpiar el QR anterior si existe
             
-            qrOficial.onload = () => {
-                document.getElementById('contenedorPaseOficial').classList.remove('hidden');
-                document.getElementById('btnDescargarPase').classList.remove('hidden');
-                msg.classList.add('hidden');
-            };
+            // Creamos el QR localmente dentro del div vacío
+            new QRCode(qrDiv, {
+                text: `XV-${result.folio}|${result.nombre}|${result.pasesAsignados}`, // Los datos que llevará el QR
+                width: 128,
+                height: 128,
+                colorDark: "#2A2A2A", // Color oscuro del terracota
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Una vez generado, mostramos la tarjeta y el botón
+            document.getElementById('contenedorPaseOficial').classList.remove('hidden');
+            document.getElementById('btnDescargarPase').classList.remove('hidden');
+            msg.classList.add('hidden');
+            
         } else if (result.status === 'pending') {
             msg.innerText = "Tus pases aún están siendo procesados por el anfitrión. Vuelve a consultar más tarde.";
             msg.classList.remove('hidden');
@@ -1130,7 +1123,8 @@ function descargarPase() {
     
     html2canvas(paseOficial, {
         scale: 2, // Mayor calidad
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        useCORS: true
     }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'Pase_XVs_Mayte.png';
