@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguridad y Acceso - XV Mayte</title>
+    
+    <meta name="theme-color" content="#F5F5F0">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#2A2A2A', /* Dark Grey/Black para tonos oscuros */
+                        blanco: {
+                            perla: '#F5F5F0' /* Beige/Neutro claro para fondos */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <style>
+        :root {
+            --terracota: #2A2A2A; 
+            --blanco-perla: #F5F5F0;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Imperial Script', cursive;
+            --font-numbers: 'Montserrat', sans-serif; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-elegant);
+            background-color: var(--blanco-perla);
+            color: var(--terracota);
+        }
+
+        h1, h2, h3, h4, p, span, input, button { font-family: var(--font-elegant); }
+        .font-bold { font-weight: 600; }
+        .font-light { font-weight: 300; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+        .font-numbers { font-family: var(--font-numbers) !important; }
+
+        .fondo-perla {
+            background-image: url('https://i.imgur.com/pcBetjj.gif');
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+        }
+
+        /* Contenedor principal estilo invitación */
+        .forma-ovalada {
+            background-color: var(--blanco-perla);
+            color: var(--terracota);
+            border-radius: 250px 250px 0 0;
+            box-shadow: 0 0 45px rgba(0, 0, 0, 0.2);  
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            width: 95vw;
+            max-width: 480px; 
+            height: 96svh; 
+            padding: 10% 6% 5% 6%; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            border: 2px solid transparent; /* Para los estados de aprobado/denegado */
+            transition: all 0.3s ease;
+        }
+
+        /* Lector QR Personalizado al tema */
+        #qr-reader { 
+            width: 100%; 
+            max-width: 320px; 
+            margin: 0 auto; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            border: 1px solid rgba(42, 42, 42, 0.2); 
+            background-color: white; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        #qr-reader__scan_region img { display: none !important; } 
+        #qr-reader__dashboard_section_csr button, #qr-reader__camera_selection {
+            background-color: #DCB9AE; 
+            color: white; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 4px; 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em;
+            margin: 5px; 
+            cursor: pointer; 
+            width: 90%; 
+            max-width: 300px;
+            font-weight: 600;
+        }
+        #qr-reader__camera_selection { 
+            color: var(--terracota); 
+            background: transparent; 
+            border: 1px solid var(--terracota);
+            margin-bottom: 15px;
+        }
+        .scan-region-highlight { border: 2px solid #DCB9AE !important; border-radius: 15px;}
+        #qr-reader video { object-fit: cover !important; }
+        
+        /* Botones generales */
+        .btn-elegant { 
+            background-color: transparent; 
+            border: 1px solid var(--terracota); 
+            color: var(--terracota); 
+            font-size: 10px; 
+            letter-spacing: 0.2em; 
+            text-transform: uppercase; 
+            padding: 14px 24px; 
+            border-radius: 0; 
+            font-weight: 600; 
+            transition: all 0.3s;
+        }
+        .btn-elegant:hover { 
+            background-color: var(--terracota); 
+            color: white; 
+        }
+
+        /* Scrollbar oculta para limpieza visual */
+        .forma-ovalada::-webkit-scrollbar { display: none; }
+        .forma-ovalada { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <section class="min-h-[100svh] flex flex-col justify-end items-center pt-8 pb-0 px-2 fondo-perla relative overflow-hidden">
+        
+        <div class="forma-ovalada w-full mx-auto" id="mainContainer">
+            
+            <div id="vistaCamara" class="hidden w-full flex flex-col items-center mt-4">
+                <p class="text-[10px] uppercase tracking-[0.5em] font-bold opacity-90 text-terracota mb-1">Staff de Acceso</p>
+                <h1 class="text-6xl text-terracota font-script mb-6">XV Mayte</h1>
+                
+                <div id="qr-reader" class="mb-4"></div>
+                <p class="text-[9px] text-terracota/60 mb-8 uppercase tracking-widest px-4 text-center leading-relaxed">Aleja el celular 25cm para enfocar y pide al invitado hacer zoom al código.</p>
+                
+                <div class="w-full max-w-[300px] border-t border-terracota/20 pt-6 mt-2">
+                    <p class="text-[9px] uppercase tracking-widest text-terracota/80 mb-4 font-bold">¿La cámara no enfoca?</p>
+                    <div class="flex flex-col gap-4">
+                        <input type="text" id="manualFolio" placeholder="EJ. XV-1234" class="w-full bg-transparent border-b border-terracota/40 px-2 py-2 outline-none text-2xl text-center text-terracota uppercase font-light tracking-widest placeholder-terracota/30" maxlength="7">
+                        <button onclick="verificarManual()" class="bg-[#DCB9AE] text-white px-6 py-4 font-bold text-[10px] uppercase tracking-[0.2em] shadow-md hover:bg-terracota transition-all duration-300">Validar Folio</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vistaCargando" class="hidden py-24 flex-col items-center w-full mt-10">
+                <div class="w-16 h-16 border-4 border-terracota/20 border-t-[#DCB9AE] rounded-full animate-spin mx-auto mb-8"></div>
+                <p class="text-terracota uppercase tracking-[0.3em] text-[10px] font-bold animate-pulse">Consultando Lista...</p>
+            </div>
+
+            <div id="vistaAprobado" class="hidden py-8 w-full flex-col items-center mt-4">
+                <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#10B981] shadow-[0_0_30px_rgba(16,185,129,0.15)] bg-white">
+                    <svg class="w-10 h-10 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <p class="text-[10px] uppercase tracking-[0.4em] text-[#10B981] mb-1 font-bold">Autorizado</p>
+                <h1 class="text-6xl text-terracota font-script mb-2">¡Bienvenido!</h1>
+                <p id="mostrarFolio" class="text-xs tracking-[0.5em] font-numbers text-terracota/60 mb-8 font-light">XV-0000</p>
+                
+                <div class="w-full max-w-[300px] border border-terracota/10 rounded-2xl p-6 text-center mb-8 bg-white/50 shadow-sm">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-terracota/60 font-bold mb-2">Titular del Pase</p>
+                    <p class="text-2xl text-terracota font-light mb-6" id="mostrarNombre">Nombre</p>
+                    
+                    <div class="w-16 h-px bg-terracota/20 mx-auto mb-6"></div>
+                    
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-terracota/60 font-bold mb-2">Accesos Válidos</p>
+                    <p class="text-3xl text-[#DCB9AE] font-numbers" id="mostrarPersonas">0</p>
+                </div>
+                
+                <button onclick="reiniciarEscaner()" class="btn-elegant w-full max-w-[300px]">Siguiente Invitado</button>
+            </div>
+
+            <div id="vistaDenegado" class="hidden py-8 w-full flex-col items-center mt-4">
+                <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#EF4444] shadow-[0_0_30px_rgba(239,68,68,0.15)] bg-white">
+                    <svg class="w-10 h-10 text-[#EF4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </div>
+                <p class="text-[10px] uppercase tracking-[0.4em] text-[#EF4444] mb-1 font-bold">Error</p>
+                <h1 class="text-6xl text-terracota font-script mb-6">No Válido</h1>
+                
+                <p id="mensajeError" class="text-base font-light text-terracota mb-10 px-6 text-center">El folio no existe en la lista.</p>
+                
+                <button onclick="reiniciarEscaner()" class="btn-elegant w-full max-w-[300px] !border-[#EF4444] !text-[#EF4444] hover:!bg-[#EF4444] hover:!text-white">Volver a intentar</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec';
+        let html5QrcodeScanner;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const folio = urlParams.get('folio') || urlParams.get('pase');
+            if (folio) { verificarFolioEnGoogle(folio); } else { iniciarCamara(); }
+        });
+
+        function iniciarCamara() {
+            ocultarTodasLasVistas();
+            document.getElementById('vistaCamara').classList.remove('hidden');
+            document.getElementById('vistaCamara').classList.add('flex');
+            document.getElementById('mainContainer').style.borderColor = "transparent";
+            document.getElementById('manualFolio').value = '';
+
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
+                    fps: 20, 
+                    qrbox: {width: 250, height: 250},
+                    aspectRatio: 1.0, 
+                    rememberLastUsedCamera: true,
+                    disableFlip: true, 
+                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
+                }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        }
+
+        function onScanSuccess(decodedText) {
+            apagarCamara();
+            let folioExtraido = decodedText;
+            try {
+                let url = new URL(decodedText);
+                folioExtraido = url.searchParams.get('pase') || url.searchParams.get('folio') || decodedText;
+            } catch(e) {}
+
+            if(folioExtraido) verificarFolioEnGoogle(folioExtraido);
+            else mostrarDenegado("Código irreconocible.");
+        }
+
+        function onScanFailure(error) { /* Silencioso */ }
+
+        function verificarManual() {
+            const folioManual = document.getElementById('manualFolio').value.trim();
+            if(!folioManual) return;
+            apagarCamara();
+            verificarFolioEnGoogle(folioManual);
+        }
+
+        function apagarCamara() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => { html5QrcodeScanner = null; }).catch(e => {});
+            }
+        }
+
+        async function verificarFolioEnGoogle(folio) {
+            ocultarTodasLasVistas();
+            document.getElementById('vistaCargando').classList.remove('hidden');
+            document.getElementById('vistaCargando').classList.add('flex');
+            try {
+                const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folio)}`;
+                const response = await fetch(requestUrl);
+                const result = await response.json();
+                ocultarTodasLasVistas();
+                if (result.status === "found") {
+                    document.getElementById('mostrarFolio').innerText = folio;
+                    document.getElementById('mostrarNombre').innerText = result.name;
+                    document.getElementById('mostrarPersonas').innerText = result.pax;
+                    
+                    document.getElementById('vistaAprobado').classList.remove('hidden');
+                    document.getElementById('vistaAprobado').classList.add('flex');
+                    document.getElementById('mainContainer').style.borderColor = "rgba(16, 185, 129, 0.4)"; // Borde verde sutil
+                } else {
+                    mostrarDenegado("Ese folio no existe en la lista de invitados.");
+                }
+            } catch (error) {
+                mostrarDenegado("Error de conexión con la base de datos.");
+            }
+        }
+
+        function mostrarDenegado(mensaje) {
+            ocultarTodasLasVistas();
+            document.getElementById('mensajeError').innerText = mensaje || "Pase no válido.";
+            document.getElementById('vistaDenegado').classList.remove('hidden');
+            document.getElementById('vistaDenegado').classList.add('flex');
+            document.getElementById('mainContainer').style.borderColor = "rgba(239, 68, 68, 0.4)"; // Borde rojo sutil
+        }
+
+        function ocultarTodasLasVistas() {
+            const vistas = ['vistaCamara', 'vistaCargando', 'vistaAprobado', 'vistaDenegado'];
+            vistas.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.getElementById(id).classList.remove('flex');
+            });
+            document.getElementById('mainContainer').style.borderColor = "transparent";
+        }
+
+        function reiniciarEscaner() {
+            window.history.replaceState({}, document.title, window.location.pathname);
+            iniciarCamara();
+        }
+    </script>
+</body>
+</html>
