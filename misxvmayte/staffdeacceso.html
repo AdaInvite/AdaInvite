@@ -207,7 +207,7 @@
 
     <script>
         // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrudXH6-mkiTLJLh-Olgm3kGg3TdwIVBOGLRna3xa9hFC5a8-QvHxjR_gv9gg7TX7r/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyAfsqJ0vqcC1g4_J1neiDiiRvuInjvceqU6Nk0GvQ8i_JmWC3IKBYhUDJJhGPKSLtGg/exec';
         let html5QrcodeScanner;
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -236,7 +236,7 @@
             }
         }
 
-        function onScanSuccess(decodedText) {
+function onScanSuccess(decodedText) {
             apagarCamara();
             let folioExtraido = decodedText;
             try {
@@ -244,33 +244,27 @@
                 folioExtraido = url.searchParams.get('pase') || url.searchParams.get('folio') || decodedText;
             } catch(e) {}
 
+            // Por si quedó algún QR viejo generado con el formato anterior (con barras | )
+            if(folioExtraido.includes('|')) {
+                folioExtraido = folioExtraido.split('|')[0].replace('XV-XV-', 'XV-'); 
+            }
+
             if(folioExtraido) verificarFolioEnGoogle(folioExtraido);
             else mostrarDenegado("Código irreconocible.");
         }
 
-        function onScanFailure(error) { /* Silencioso */ }
-
-        function verificarManual() {
-            const folioManual = document.getElementById('manualFolio').value.trim();
-            if(!folioManual) return;
-            apagarCamara();
-            verificarFolioEnGoogle(folioManual);
-        }
-
-        function apagarCamara() {
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear().then(() => { html5QrcodeScanner = null; }).catch(e => {});
-            }
-        }
+        // ... código intermedio ...
 
         async function verificarFolioEnGoogle(folio) {
             ocultarTodasLasVistas();
             document.getElementById('vistaCargando').classList.remove('hidden');
             document.getElementById('vistaCargando').classList.add('flex');
             try {
-                const requestUrl = `${SCRIPT_URL}?action=consultar&folio=${encodeURIComponent(folio)}`;
+                // AQUÍ CAMBIAMOS a consultar_folio para conectar con la nueva función que agregamos
+                const requestUrl = `${SCRIPT_URL}?action=consultar_folio&folio=${encodeURIComponent(folio)}`;
                 const response = await fetch(requestUrl);
                 const result = await response.json();
+                
                 ocultarTodasLasVistas();
                 if (result.status === "found") {
                     document.getElementById('mostrarFolio').innerText = folio;
@@ -279,9 +273,9 @@
                     
                     document.getElementById('vistaAprobado').classList.remove('hidden');
                     document.getElementById('vistaAprobado').classList.add('flex');
-                    document.getElementById('mainContainer').style.borderColor = "rgba(16, 185, 129, 0.4)"; // Borde verde sutil
+                    document.getElementById('mainContainer').style.borderColor = "rgba(16, 185, 129, 0.4)"; 
                 } else {
-                    mostrarDenegado("Ese folio no existe en la lista de invitados.");
+                    mostrarDenegado("Ese folio no existe o aún no tiene pases asignados.");
                 }
             } catch (error) {
                 mostrarDenegado("Error de conexión con la base de datos.");
