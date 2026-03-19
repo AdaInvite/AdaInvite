@@ -666,11 +666,13 @@
         <h2 class="text-5xl font-script mb-2 px-4 text-terracota w-full mt-4 text-shadow-none">Consultar Pase</h2>
         <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-terracota">Ingresa el nombre con el que confirmaste</p>
         
-        <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
-            <div class="border-b border-terracota/50 pb-2">
-                <input type="text" id="inputConsultaNombre" placeholder="Ej. Juan Pérez" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center placeholder-terracota/40">
+       <div id="consultaFormContainer" class="transition-all duration-300">
+            <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
+                <div class="border-b border-terracota/50 pb-2">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" id="rsvpPax" required placeholder="Ej. 2" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40 uppercase">
+                </div>
+                <button onclick="consultarPase()" id="btnConsultar" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-full text-center">Buscar mi Pase</button>
             </div>
-            <button onclick="consultarPase()" id="btnConsultar" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-full text-center">Buscar mi Pase</button>
         </div>
 
         <p id="msgConsulta" class="text-xs font-bold text-terracota mt-2 hidden"></p>
@@ -1020,7 +1022,7 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
     loader.classList.add('flex');
     
     // Cambiamos el texto para que vean el agradecimiento
-    loader.querySelector('p').innerText = "¡Gracias por confirmar! Redirigiendo a WhatsApp...";
+    loader.querySelector('p').innerText = "¡Gracias por confirmar!";
 
     try {
         // Hacemos el envío de datos a tu Google Sheet
@@ -1036,7 +1038,7 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             
             // Preparamos el mensaje de WhatsApp (sin folio) y redirigimos inmediatamente
             const numDestino = "522224275935"; 
-            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos! ✨`;
+            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos!`;
             const waLink = `https://wa.me/${numDestino}?text=${mensaje}`;
             
             // window.location.href es mejor en celulares para que abra la app de WhatsApp directo en la misma pestaña
@@ -1092,7 +1094,9 @@ async function consultarPase() {
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-            
+            // --- NUEVA LÍNEA AÑADIDA AQUÍ ---
+            // Ocultar el formulario de consulta
+            document.getElementById('consultaFormContainer').classList.add('hidden');
             // Una vez generado, mostramos la tarjeta y el botón
             document.getElementById('contenedorPaseOficial').classList.remove('hidden');
             document.getElementById('btnDescargarPase').classList.remove('hidden');
