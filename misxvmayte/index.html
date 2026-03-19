@@ -204,6 +204,7 @@
             -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; cursor: pointer;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -650,13 +651,9 @@
                             <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40">
                         </div>
                         <div class="border-b border-terracota/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-terracota font-bold">Personas</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light appearance-none text-center md:text-left cursor-pointer">
-                                <option class="text-terracota" value="1 Persona">1 Persona</option>
-                                <option class="text-terracota" value="2 Personas">2 Personas</option>
-                                <option class="text-terracota" value="Familia">Familia</option>
-                            </select>
-                        </div>
+    <label class="text-[10px] uppercase tracking-widest opacity-90 text-terracota font-bold">Personas</label>
+    <input type="number" id="rsvpPax" required min="1" placeholder="Ej. 2" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center md:text-left placeholder-terracota/40">
+</div>
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-full text-center leading-tight">Confirmar</button>
                 </form>
@@ -682,7 +679,34 @@
                 </div>
             </div>
         </section>
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
+    <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
+        <h2 class="text-5xl font-script mb-2 px-4 text-terracota w-full mt-4 text-shadow-none">Consultar Pase</h2>
+        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-terracota">Ingresa el folio que se te asignó al confirmar</p>
         
+        <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
+            <div class="border-b border-terracota/50 pb-2">
+                <input type="text" id="inputConsultaFolio" placeholder="Ej. XV-1234" class="w-full bg-transparent py-1 outline-none text-xl text-terracota font-light text-center placeholder-terracota/40 uppercase">
+            </div>
+            <button onclick="consultarPase()" id="btnConsultar" class="w-full bg-[#DCB9AE] text-black font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-black hover:bg-black transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-full text-center">Buscar mi Pase</button>
+        </div>
+
+        <p id="msgConsulta" class="text-xs font-bold text-terracota mt-2 hidden"></p>
+
+        <div id="contenedorPaseOficial" class="hidden mt-4 w-full max-w-sm mx-auto p-6 bg-white border-2 border-terracota/20 rounded-xl shadow-2xl text-terracota relative">
+            <h3 class="font-script text-4xl mb-2">Mis XV Mayte</h3>
+            <p class="text-[10px] uppercase tracking-widest font-bold mb-4 border-b border-terracota/20 pb-2">PASE DE ACCESO OFICIAL</p>
+            
+            <img id="qrOficial" src="" alt="QR" class="w-32 h-32 object-contain mx-auto mb-4 border border-terracota/10 p-2 rounded-lg">
+            
+            <p id="nombrePase" class="text-xl font-bold mb-1"></p>
+            <p class="text-sm tracking-widest font-light mb-1">Válido para: <span id="pasesAprobados" class="font-bold"></span></p>
+            <p class="text-[10px] opacity-70 mt-4 font-numbers">Folio: <span id="folioPaseImpreso"></span></p>
+        </div>
+
+        <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 bg-transparent text-terracota border border-terracota py-3 px-1 uppercase tracking-[0.2em] text-[10px] hover:bg-terracota hover:text-white transition-all duration-300 rounded-full font-bold">Descargar Imagen</button>
+    </div>
+</section>
         <footer class="min-h-[100svh] flex flex-col justify-center py-6 px-4 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/0p8NVJY.jpeg');">
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10">
@@ -999,45 +1023,132 @@
             loadQuestion();
         }
 
-        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value;
-            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
-            
-            document.getElementById('rsvpForm').style.display = 'none';
-            const loader = document.getElementById('loadingMessage');
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
+        // REEMPLAZA ESTA URL POR LA QUE COPIASTE DE GOOGLE APPS SCRIPT
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzYQHIrOjAHLwSnxY4o4huBg1dzhf39VogwJUDCnW3-HaKjlUVZY-hSHb5iIz2NKottcA/exec"; 
 
-            // Simular carga de 1.5 seg antes de mostrar el éxito y abrir WA
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
-                
-                document.getElementById('ticketFolio').innerText = folio;
-                document.getElementById('ticketName').innerText = name;
-                document.getElementById('ticketPax').innerText = pax;
+document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('rsvpName').value.trim();
+    const pax = document.getElementById('rsvpPax').value;
+    
+    document.getElementById('rsvpForm').style.display = 'none';
+    const loader = document.getElementById('loadingMessage');
+    loader.classList.remove('hidden');
+    loader.classList.add('flex');
+    loader.querySelector('p').innerText = "Guardando confirmación...";
 
-                const qrImg = document.getElementById('ticketQR');
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Folio:${folio},Nombre:${name},Personas:${pax}`;
-                
-                qrImg.onload = () => {
-                    qrImg.classList.remove('hidden');
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    
-                    // Generar link de WhatsApp
-                    const numDestino = "522224275935"; // Usando el primero de los sugeridos
-                    const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas:* ${pax}%0A*Folio:* ${folio}%0A%0A¡Ahí nos vemos! ✨`;
-                    const waLink = `https://wa.me/${numDestino}?text=${mensaje}`;
-                    
-                    // Redirigir a WhatsApp
-                    setTimeout(() => {
-                        window.open(waLink, '_blank');
-                    }, 2500); // 2.5 seg para que les de tiempo de ver o hacer captura inicial
-                };
-            }, 1500);
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
         });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            loader.classList.add('hidden');
+            loader.classList.remove('flex');
+            
+            const folio = result.folio;
+            
+            // Mostrar mensaje de éxito sin QR
+            document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('ticketFolio').innerText = folio;
+            document.getElementById('ticketName').innerText = name;
+            document.getElementById('ticketPax').innerText = "Solicitados: " + pax;
+            
+            // Ocultar la imagen QR genérica del mensaje de éxito porque ahora será hasta consultar
+            if(document.getElementById('ticketQR')) {
+                document.getElementById('ticketQR').style.display = 'none';
+            }
+            
+            // Redirigir a WhatsApp
+            const numDestino = "522224275935"; 
+            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A*Mi Folio es:* ${folio}%0A%0A¡Ahí nos vemos! ✨`;
+            const waLink = `https://wa.me/${numDestino}?text=${mensaje}`;
+            
+            setTimeout(() => {
+                window.open(waLink, '_blank');
+            }, 3000); 
+        }
+    } catch (error) {
+        alert("Hubo un error al guardar. Por favor intenta de nuevo.");
+        loader.classList.add('hidden');
+        document.getElementById('rsvpForm').style.display = 'block';
+    }
+});
+
+// FUNCIÓN PARA CONSULTAR EL PASE
+async function consultarPase() {
+    const folio = document.getElementById('inputConsultaFolio').value.trim().toUpperCase();
+    const msg = document.getElementById('msgConsulta');
+    const btn = document.getElementById('btnConsultar');
+    
+    if(!folio) {
+        msg.innerText = "Por favor, ingresa un folio.";
+        msg.classList.remove('hidden');
+        return;
+    }
+
+    btn.innerText = "Buscando...";
+    msg.classList.add('hidden');
+
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "consultar", folio: folio })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'ready') {
+            document.getElementById('nombrePase').innerText = result.nombre;
+            document.getElementById('pasesAprobados').innerText = result.pasesAsignados;
+            document.getElementById('folioPaseImpreso').innerText = folio;
+            
+            // Generar QR oficial
+            const qrOficial = document.getElementById('qrOficial');
+            qrOficial.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Folio:${folio},Pases:${result.pasesAsignados}`;
+            
+            qrOficial.onload = () => {
+                document.getElementById('contenedorPaseOficial').classList.remove('hidden');
+                document.getElementById('btnDescargarPase').classList.remove('hidden');
+                msg.classList.add('hidden');
+            };
+        } else if (result.status === 'pending') {
+            msg.innerText = "Tus pases aún están siendo procesados por el anfitrión. Vuelve a consultar más tarde.";
+            msg.classList.remove('hidden');
+            document.getElementById('contenedorPaseOficial').classList.add('hidden');
+            document.getElementById('btnDescargarPase').classList.add('hidden');
+        } else {
+            msg.innerText = "Folio no encontrado. Verifica que esté escrito correctamente.";
+            msg.classList.remove('hidden');
+        }
+    } catch (error) {
+        msg.innerText = "Error de conexión. Intenta de nuevo.";
+        msg.classList.remove('hidden');
+    }
+    btn.innerText = "Buscar mi Pase";
+}
+
+// FUNCIÓN PARA DESCARGAR EL PASE COMO IMAGEN
+function descargarPase() {
+    const paseOficial = document.getElementById('contenedorPaseOficial');
+    const btnDescargar = document.getElementById('btnDescargarPase');
+    
+    btnDescargar.innerText = "Generando imagen...";
+    
+    html2canvas(paseOficial, {
+        scale: 2, // Mayor calidad
+        backgroundColor: "#ffffff"
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Pase_XVs_Mayte.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        btnDescargar.innerText = "Descargar Imagen";
+    });
+}
     </script>
 </body>
 </html>
