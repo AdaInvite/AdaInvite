@@ -680,9 +680,10 @@
         </section>
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-y-auto">
     <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
-        <h2 class="text-5xl font-script mb-2 px-4 text-white w-full mt-4 text-shadow-none">Consultar Pase</h2>
-        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Una vez que te asignen pases, ingresa el nombre con el que confirmaste</p>
-        
+       <div id="encabezadoConsulta" class="transition-all duration-300">
+    <h2 class="text-5xl font-script mb-2 px-4 text-white w-full mt-4 text-shadow-none">Consultar Pase</h2>
+    <p class="text-[9px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Una vez que te asignen pases, ingresa el nombre con el que confirmaste</p>
+</div>
        <div id="consultaFormContainer" class="transition-all duration-300">
             <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
                 <div class="border-b border-white/50 pb-2">
@@ -714,7 +715,7 @@
     
 </div>
 
-        <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 bg-transparent text-white border border-white py-3 px-1 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-[#095F47] transition-all duration-300 rounded-full font-bold">Descargar Imagen</button>
+        <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 mb-10 bg-transparent text-white border border-white py-3 px-1 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-[#095F47] transition-all duration-300 rounded-full font-bold">Descargar Imagen</button>
     </div>
 </section>
         <footer class="min-h-[100svh] flex flex-col justify-center py-6 px-4 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/RwszcgM.jpeg');">
@@ -1114,13 +1115,12 @@ async function consultarPase() {
         
         const result = await response.json();
         
-        if (result.status === 'ready') {
+                if (result.status === 'ready') {
             document.getElementById('nombrePase').innerText = result.nombre;
             document.getElementById('pasesAprobados').innerText = result.pasesAsignados;
             document.getElementById('folioPaseImpreso').innerText = result.folio;
             
-
-          // Generar QR oficial
+            // Generar QR oficial
             const qrDiv = document.getElementById('qrOficialDiv');
             qrDiv.innerHTML = ''; 
             
@@ -1135,12 +1135,15 @@ async function consultarPase() {
                 correctLevel: QRCode.CorrectLevel.H
             });
             
+            // ---> AGREGA ESTA LÍNEA AQUÍ <---
+            document.getElementById('encabezadoConsulta').classList.add('hidden');
+
             document.getElementById('consultaFormContainer').classList.add('hidden');
             document.getElementById('contenedorPaseOficial').classList.remove('hidden');
             document.getElementById('btnDescargarPase').classList.remove('hidden');
             msg.classList.add('hidden');
             
-        } else if (result.status === 'pending') {
+        }  else if (result.status === 'pending') {
             msg.innerText = "Tus pases aún están siendo procesados por el anfitrión. Vuelve a consultar más tarde.";
             msg.classList.remove('hidden');
             document.getElementById('contenedorPaseOficial').classList.add('hidden');
