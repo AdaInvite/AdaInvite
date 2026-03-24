@@ -255,6 +255,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (folio) { verificarFolioEnGoogle(folio); } else { iniciarCamara(); }
 });
 
+// Cambiamos la variable global
+let html5QrCode; 
+
 function iniciarCamara() {
     ocultarTodasLasVistas();
     document.getElementById('vistaCamara').classList.remove('hidden');
@@ -262,23 +265,43 @@ function iniciarCamara() {
     document.getElementById('mainContainer').style.borderColor = "black";
     document.getElementById('manualFolio').value = '';
 
-    if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
-            fps: 15, // Reducido a 15 FPS: Más que suficiente para escanear rápido y 100% compatible con Safari
-            qrbox: {width: 250, height: 250},
-            aspectRatio: 1.0, 
-            rememberLastUsedCamera: true,
-            disableFlip: true, 
-            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ], 
-            videoConstraints: {
-                facingMode: "environment" 
-                // ELIMINADO: advanced: [{ focusMode: "continuous" }] - Esto era lo que rompía Safari
-            }
-        }, false);
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    // Usamos Html5Qrcode en lugar de Scanner para tener control total sin interfaz basura
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("qr-reader");
     }
+
+    const configuracion = { 
+        fps: 15, 
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0,
+        disableFlip: true
+    };
+
+    // Encendemos la cámara trasera directamente
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+        configuracion, 
+        onScanSuccess, 
+        onScanFailure
+    ).catch((err) => {
+        console.error("Error al iniciar cámara en Safari:", err);
+        // Si falla (por falta de permisos o HTTPS), le avisamos al staff
+        document.getElementById('qr-reader').innerHTML = `
+            <div class="text-center p-4">
+                <p class="text-[10px] text-white uppercase tracking-widest mb-4">Error de cámara</p>
+                <button onclick="iniciarCamara()" class="btn-elegant w-full">Reintentar</button>
+            </div>
+        `;
+    });
 }
 
+function apagarCamara() {
+    if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+        }).catch(e => console.error("Error al apagar cámara", e));
+    }
+}
 
 function onScanSuccess(decodedText) {
     reproducirBeep();
@@ -309,11 +332,6 @@ function verificarManual() {
     verificarFolioEnGoogle(folioManual);
 }
 
-function apagarCamara() {
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear().then(() => { html5QrcodeScanner = null; }).catch(e => {});
-    }
-}
 
 async function verificarFolioEnGoogle(folio) {
     ocultarTodasLasVistas();
