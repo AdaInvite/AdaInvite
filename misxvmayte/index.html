@@ -1163,7 +1163,7 @@ async function consultarPase() {
     btn.innerText = "Buscar mi Pase";
 }
 
-// FUNCIÓN PARA DESCARGAR EL PASE COMO IMAGEN (Versión HD)
+// FUNCIÓN PARA DESCARGAR O COMPARTIR EL PASE COMO IMAGEN
 function descargarPase() {
     const paseOficial = document.getElementById('contenedorPaseOficial');
     const btnDescargar = document.getElementById('btnDescargarPase');
@@ -1171,24 +1171,43 @@ function descargarPase() {
     btnDescargar.innerText = "Generando imagen HD...";
     
     html2canvas(paseOficial, {
-        scale: 4, // ¡Aumentamos de 2 a 4 para calidad Ultra HD!
-        backgroundColor: "#053d2d", // Usamos el verde exacto de tu pase para evitar bordes blancos fantasma
+        scale: 4, 
+        backgroundColor: "#053d2d", 
         useCORS: true,
         allowTaint: true
     }).then(canvas => {
-        const link = document.createElement('a');
-        
-        // Extra: Guarda el archivo con el nombre del invitado automáticamente
         let nombreInvitado = document.getElementById('nombrePase').innerText.trim().replace(/\s+/g, '_');
         if(!nombreInvitado) nombreInvitado = "XVs_Mayte";
-        
-        link.download = `Pase_${nombreInvitado}.png`;
-        link.href = canvas.toDataURL('image/png', 1.0); // 1.0 fuerza la máxima calidad
-        link.click();
-        
-        btnDescargar.innerText = "Descargar Imagen";
+        const fileName = `Pase_${nombreInvitado}.png`;
+
+        // Convertimos el canvas a un archivo Blob
+        canvas.toBlob((blob) => {
+            const file = new File([blob], fileName, { type: 'image/png' });
+
+            // Detectar si el dispositivo soporta el menú de compartir nativo (iOS/Safari)
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: 'Pase de Acceso XVs Mayte',
+                    text: 'Aquí está mi pase de acceso.'
+                }).then(() => {
+                    btnDescargar.innerText = "Descargar Imagen";
+                }).catch((error) => {
+                    // Si el usuario cancela el menú, restauramos el botón silenciosamente
+                    btnDescargar.innerText = "Descargar Imagen";
+                });
+            } else {
+                // Fallback para Android / PC (Descarga tradicional a archivos/descargas)
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                btnDescargar.innerText = "Descargar Imagen";
+            }
+        }, 'image/png', 1.0);
+
     }).catch(err => {
-        btnDescargar.innerText = "Error al descargar";
+        btnDescargar.innerText = "Error al generar";
         setTimeout(() => btnDescargar.innerText = "Descargar Imagen", 2000);
     });
 }
