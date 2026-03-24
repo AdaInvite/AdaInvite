@@ -665,11 +665,23 @@
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-transparent text-white font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-white hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-full text-center leading-tight">Confirmar</button>
                 </form>
+                <div id="rsvpLoadingContext" class="hidden w-[85%] max-w-[320px] mx-auto flex-col items-center justify-center mt-4 transition-all duration-500">
+    <div id="rsvpSpinner" class="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+    
+    <div id="rsvpSuccessIcon" class="hidden w-16 h-16 rounded-full items-center justify-center mb-4 border border-[#10B981] bg-[#10B981]/10 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+        <svg class="w-8 h-8 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    
+    <p id="rsvpMessage" class="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-white text-center leading-relaxed">
+        Guardando confirmación...
+    </p>
+</div>
+
         </section>
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-y-auto">
     <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
         <h2 class="text-5xl font-script mb-2 px-4 text-white w-full mt-4 text-shadow-none">Consultar Pase</h2>
-        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Ingresa el nombre con el que confirmaste</p>
+        <p class="text-[10px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Una vez que te asignen pases, ingresa el nombre con el que confirmaste</p>
         
        <div id="consultaFormContainer" class="transition-all duration-300">
             <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
@@ -1029,17 +1041,23 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
     const name = document.getElementById('rsvpName').value.trim();
     const pax = document.getElementById('rsvpPax').value;
     
-    // Ocultar formulario y mostrar mensaje de agradecimiento
-    document.getElementById('rsvpForm').style.display = 'none';
-    const loader = document.getElementById('loadingMessage');
-    if (loader) {
-        loader.classList.remove('hidden');
-        loader.classList.add('flex');
-        loader.querySelector('p').innerText = "¡Gracias por confirmar!";
-    }
+    const form = document.getElementById('rsvpForm');
+    const loadingContext = document.getElementById('rsvpLoadingContext');
+    const spinner = document.getElementById('rsvpSpinner');
+    const successIcon = document.getElementById('rsvpSuccessIcon');
+    const message = document.getElementById('rsvpMessage');
+    
+    // 1. Ocultar formulario y mostrar pantalla de carga
+    form.style.display = 'none';
+    loadingContext.classList.remove('hidden');
+    loadingContext.classList.add('flex');
+    spinner.classList.remove('hidden');
+    successIcon.classList.add('hidden');
+    successIcon.classList.remove('flex');
+    message.innerText = "Guardando confirmación...";
 
     try {
-        // Hacemos el envío de datos a tu Google Sheet
+        // 2. Enviar a Google Sheets
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
@@ -1048,18 +1066,28 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
         const result = await response.json();
         
         if (result.status === 'success') {
-            const numDestino = "522224275935"; 
-            const mensaje = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos!`;
-            const waLink = `https://wa.me/${numDestino}?text=${mensaje}`;
-            window.location.href = waLink; 
+            // 3. Ocultar spinner y mostrar check de éxito
+            spinner.classList.add('hidden');
+            successIcon.classList.remove('hidden');
+            successIcon.classList.add('flex');
+            
+            // 4. Cambiar el texto al mensaje de redirección
+            message.innerHTML = "¡Confirmación exitosa!<br><br><span class='text-[8px] opacity-80'>Espera, te redirigiremos a WhatsApp para finalizar...</span>";
+            
+            // 5. Esperar 3 segundos para que lean el mensaje y luego redirigir a WhatsApp
+            setTimeout(() => {
+                const numDestino = "522224275935"; 
+                const mensajeTxt = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Mayte.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos!`;
+                const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
+                window.location.href = waLink; 
+            }, 3000); // 3000 milisegundos = 3 segundos
         }
     } catch (error) {
+        // En caso de error, volvemos a mostrar el formulario
         alert("Hubo un error al guardar. Por favor revisa tu conexión e intenta de nuevo.");
-        if (loader) {
-            loader.classList.add('hidden');
-            loader.classList.remove('flex');
-        }
-        document.getElementById('rsvpForm').style.display = 'block';
+        loadingContext.classList.add('hidden');
+        loadingContext.classList.remove('flex');
+        form.style.display = 'block';
     }
 });
 
