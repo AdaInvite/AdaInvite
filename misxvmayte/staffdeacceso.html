@@ -83,42 +83,80 @@
             overflow: hidden; 
         }
 
-        /* Lector QR Personalizado al tema */
+               /* Lector QR Personalizado al tema */
         #qr-reader { 
             width: 100%; 
             max-width: 320px; 
             margin: 0 auto; 
-            border-radius: 12px; 
+            border-radius: 16px; 
             overflow: hidden; 
-            border: 1px solid rgba(42, 42, 42, 0.2); 
-            background-color: white; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: none !important; 
+            background-color: rgba(0, 0, 0, 0.2) !important; /* Fondo oscuro translúcido para integrar con el cristal */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding-bottom: 10px;
+        }
+        
+        /* Contenedor de la cámara */
+        #qr-reader__scan_region {
+            border-radius: 16px 16px 0 0 !important;
+            overflow: hidden !important;
+            background-color: #000000 !important; /* Fondo negro puro mientras carga */
         }
         #qr-reader__scan_region img { display: none !important; } 
-        #qr-reader__dashboard_section_csr button, #qr-reader__camera_selection {
-            background-color: #FFFFFF; 
-            color: black; 
-            border: black; 
-            padding: 10px 15px; 
-            border-radius: 4px; 
-            font-size: 10px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.1em;
-            margin: 5px; 
-            cursor: pointer; 
-            width: 90%; 
-            max-width: 300px;
-            font-weight: 600;
-        }
-        #qr-reader__camera_selection { 
-            color: black; 
-            background: transparent; 
-            border: 1px solid black);
-            margin-bottom: 15px;
-        }
-        .scan-region-highlight { border: 2px solid #FFFFFF !important; border-radius: 15px;}
-        #qr-reader video { object-fit: cover !important; }
+        #qr-reader video { object-fit: cover !important; border-radius: 16px 16px 0 0 !important; }
         
+        /* Cuadro blanco de enfoque */
+        .scan-region-highlight { 
+            border: 2px solid #FFFFFF !important; 
+            border-radius: 12px !important;
+        }
+
+        /* Selector de cámara (Soluciona el texto ilegible) */
+        #qr-reader__camera_selection { 
+            color: #2A2A2A !important; /* Texto oscuro para máxima legibilidad */
+            background-color: #FFFFFF !important; /* Fondo blanco sólido */
+            border: none !important;
+            border-radius: 6px !important;
+            padding: 10px 12px !important;
+            font-size: 12px !important;
+            font-family: var(--font-elegant) !important;
+            width: 90% !important;
+            max-width: 280px !important;
+            margin: 15px auto 10px auto !important;
+            display: block !important;
+            outline: none !important;
+            text-align: center;
+        }
+
+        /* Botón de Iniciar / Detener escaneo */
+        #qr-reader__dashboard_section_csr button {
+            background-color: #FFFFFF !important; 
+            color: #2A2A2A !important; 
+            border: 1px solid #FFFFFF !important; 
+            padding: 12px 15px !important; 
+            border-radius: 6px !important; 
+            font-size: 10px !important; 
+            text-transform: uppercase !important; 
+            letter-spacing: 0.15em !important;
+            margin: 5px auto 10px auto !important; 
+            cursor: pointer !important; 
+            width: 90% !important; 
+            max-width: 280px !important;
+            font-weight: 700 !important;
+            display: block !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        #qr-reader__dashboard_section_csr button:hover {
+            background-color: #2A2A2A !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Limpieza visual: Ocultar textos extra y enlaces ("Powered by", "Scan an image file") */
+        #qr-reader__dashboard_section_swaplink { display: none !important; }
+        #qr-reader a { display: none !important; }
+        #qr-reader__dashboard_section_csr > span { display: none !important; }
+
         /* Botones generales */
         .btn-elegant { 
             background-color: transparent; 
@@ -225,18 +263,23 @@ function iniciarCamara() {
 
     if (!html5QrcodeScanner) {
         html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
-            fps: 20, 
-            qrbox: {width: 250, height: 250},
+            fps: 60, // Aumentado a 60 FPS para una lectura casi instantánea
+            qrbox: {width: 250, height: 250}, // Mantiene el área de enfoque concentrada
             aspectRatio: 1.0, 
             rememberLastUsedCamera: true,
-            disableFlip: true, 
-            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
+            disableFlip: true, // Ignora el modo espejo, ahorrando procesamiento
+            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ], // Exclusivo para QR, no pierde tiempo buscando códigos de barras
+            videoConstraints: {
+                facingMode: "environment", // Fuerza el uso de la cámara trasera
+                advanced: [{ focusMode: "continuous" }] // Le pide al celular que mantenga el autoenfoque activo
+            }
         }, false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     }
 }
 
 function onScanSuccess(decodedText) {
+    reproducirBeep();
     apagarCamara();
     let folioExtraido = decodedText;
     try {
@@ -318,6 +361,31 @@ function reiniciarEscaner() {
     window.history.replaceState({}, document.title, window.location.pathname);
     iniciarCamara();
 }
+// Función para generar un "beep" de éxito
+function reproducirBeep() {
+    try {
+        const contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
+        const oscilador = contextoAudio.createOscillator();
+        const ganancia = contextoAudio.createGain();
+
+        // Configuración del sonido (tono agradable y claro)
+        oscilador.type = 'sine'; 
+        oscilador.frequency.setValueAtTime(880, contextoAudio.currentTime); 
+        
+        // Volumen y duración del beep (0.15 segundos)
+        ganancia.gain.setValueAtTime(0.1, contextoAudio.currentTime);
+        ganancia.gain.exponentialRampToValueAtTime(0.00001, contextoAudio.currentTime + 0.15);
+
+        oscilador.connect(ganancia);
+        ganancia.connect(contextoAudio.destination);
+
+        oscilador.start();
+        oscilador.stop(contextoAudio.currentTime + 0.15); 
+    } catch(e) {
+        console.warn("Audio no soportado en este navegador");
+    }
+}
+
     </script>
 </body>
 </html>
