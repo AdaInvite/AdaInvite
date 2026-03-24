@@ -264,20 +264,21 @@ function iniciarCamara() {
 
     if (!html5QrcodeScanner) {
         html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { 
-            fps: 60, // Aumentado a 60 FPS para una lectura casi instantánea
-            qrbox: {width: 250, height: 250}, // Mantiene el área de enfoque concentrada
+            fps: 15, // Reducido a 15 FPS: Más que suficiente para escanear rápido y 100% compatible con Safari
+            qrbox: {width: 250, height: 250},
             aspectRatio: 1.0, 
             rememberLastUsedCamera: true,
-            disableFlip: true, // Ignora el modo espejo, ahorrando procesamiento
-            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ], // Exclusivo para QR, no pierde tiempo buscando códigos de barras
+            disableFlip: true, 
+            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ], 
             videoConstraints: {
-                facingMode: "environment", // Fuerza el uso de la cámara trasera
-                advanced: [{ focusMode: "continuous" }] // Le pide al celular que mantenga el autoenfoque activo
+                facingMode: "environment" 
+                // ELIMINADO: advanced: [{ focusMode: "continuous" }] - Esto era lo que rompía Safari
             }
         }, false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     }
 }
+
 
 function onScanSuccess(decodedText) {
     reproducirBeep();
