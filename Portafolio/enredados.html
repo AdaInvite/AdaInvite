@@ -11,7 +11,7 @@
     <meta property="og:title" content="XV Alana">
     <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.imgur.com/Op9NrZq.jpeg">
+    <meta property="og:image" content="https://i.imgur.com/iHG4wG4.jpeg">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -33,14 +33,14 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Port+Lligat+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Carattere&family=Port+Lligat+Sans&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --lila: #A668CA;
             --dorado: #D4AF37;
             --font-elegant: 'Port Lligat Sans', sans-serif;
-            --font-script: 'Henny Penny', cursive;
+            --font-script: 'Carattere', cursive;
             --font-numbers: 'Port Lligat Sans', sans-serif; 
         }
 
@@ -50,7 +50,6 @@
             width: 100%;
             height: 100%;
             font-family: var(--font-elegant);
-            /* Fondo global con el GIF */
             background-image: url('https://i.imgur.com/8oceEZa.gif');
             background-size: cover;
             background-attachment: fixed;
@@ -74,7 +73,6 @@
         .font-bold, h3, label { font-weight: 600; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        /* Las secciones ya no necesitan imagen de fondo porque el body lo tiene fixed */
         .bg-padres, .bg-intercalado, .fondo-perla { 
             background: transparent;
             width: 100%;
@@ -103,17 +101,33 @@
             overflow: hidden; 
         }
 
-        /* Cajas intercaladas con textura */
+        /* Cajas intercaladas con textura - Usando la textura del sobre */
         .caja-textura {
-            background: rgba(35, 20, 50, 0.85); /* Fondo oscuro lila para contraste */
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Textura sutil */
+            position: relative;
+            z-index: 10;
             border: 2px solid var(--dorado);
             border-radius: 20px;
             padding: 2rem 1.5rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            position: relative;
-            z-index: 10;
+            overflow: hidden;
+        }
+
+        .caja-textura::before {
+            content: "";
+            absolute; inset: 0;
+            background-image: url('https://i.imgur.com/iHG4wG4.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px); /* Un ligero blur para no distraer */
+            z-index: -2;
+        }
+
+        .caja-textura::after {
+            content: "";
+            absolute; inset: 0;
+            background-color: rgba(35, 20, 50, 0.85); /* Tinte lila oscuro para legibilidad */
+            z-index: -1;
+            backdrop-filter: blur(2px);
         }
 
         .texto-dorado { color: var(--dorado); }
@@ -121,7 +135,6 @@
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.8); }
         .text-shadow-none { text-shadow: none; }
 
-        /* Filtro dorado para iconos */
         .filtro-dorado { 
             filter: brightness(0) saturate(100%) invert(79%) sepia(35%) saturate(541%) hue-rotate(3deg) brightness(96%) contrast(90%); 
         }
@@ -140,7 +153,7 @@
             border: 1px solid #FCF6BA;
         }
 
-        /* SOBRE INICIAL */
+        /* SOBRE INICIAL - Imagen actualizada y filtros ajustados */
         #envelope-wrapper {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
@@ -148,10 +161,12 @@
         }
         .envelope-bg {
             position: absolute; inset: 0;
-            background-image: url("https://i.imgur.com/Op9NrZq.jpeg");
-            background-color: rgba(0,0,0,0.5);
-            background-blend-mode: multiply;
-            background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
+            background-image: url("https://i.imgur.com/iHG4wG4.jpeg"); /* Nueva imagen */
+            background-color: transparent; /* Sin filtro oscuro de fondo */
+            background-size: cover; 
+            background-position: center;
+            transition: opacity 1.2s ease-in-out; 
+            z-index: 1;
         }
         #envelope-container { position: absolute !important; inset: 0 !important; z-index: 10; }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
@@ -159,8 +174,10 @@
         .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.8)); isolation: isolate; }
         .flap { 
             width: 100%; height: 100%; 
-            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://i.imgur.com/Op9NrZq.jpeg"); 
-            background-size: cover; background-blend-mode: multiply; 
+            /* Se mantiene el filtro oscuro degradado solo en solapas */
+            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://i.imgur.com/iHG4wG4.jpeg"); 
+            background-size: cover; 
+            background-blend-mode: multiply; 
         }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
@@ -267,7 +284,7 @@
 
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-12 md:mt-20">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
-                    <h2 class="font-script text-6xl md:text-7xl texto-dorado mb-2 drop-shadow-sm">Mis 15</h2>
+                    <h2 class="font-script text-6xl md:text-7xl texto-dorado mb-2 drop-shadow-sm text-shadow-dark">Mis 15</h2>
                     <img src="https://i.imgur.com/n7uO9iz.png" alt="Corona" class="w-24 md:w-28 mb-2 relative z-10 drop-shadow-sm">
                     <h1 class="name-header texto-dorado mb-8 relative z-10 text-shadow-dark">Alana</h1>
                     
@@ -354,7 +371,7 @@
 
             <div class="forma-ovalada w-full mx-auto relative z-10 text-center">
                 <div class="text-center mb-1 reveal w-full mt-4">
-                    <h2 class="text-5xl md:text-6xl mb-1 font-script texto-dorado reveal-scale text-shadow-none">Mi Historia</h2>
+                    <h2 class="text-5xl md:text-6xl mb-1 font-script texto-dorado reveal-scale text-shadow-none text-shadow-dark">Mi Historia</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] font-bold opacity-90 text-white">Un viaje inolvidable</p>
                 </div>
 
@@ -436,7 +453,7 @@
                     <div class="mx-auto mb-2 flex items-center justify-center opacity-100">
                         <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 h-16 filtro-dorado" alt="Ceremonia">
                     </div>
-                    <h1 class="text-5xl md:text-6xl mb-2 font-script texto-dorado reveal-scale text-shadow-none">Ceremonia</h1>
+                    <h1 class="text-5xl md:text-6xl mb-2 font-script texto-dorado reveal-scale text-shadow-none text-shadow-dark">Ceremonia</h1>
                     <p class="text-white font-bold text-xs md:text-sm tracking-wide">18:00 HRS<br>Parroquia San Juan Bautista Cuautlancingo<br><span class="font-normal text-[10px] opacity-90 block mt-1">Av. Principal Sn Puebla, Centro, 72000 Juan Bautista Cuautlancingo, Pue.</span></p>
                 </div>
                 
@@ -460,7 +477,7 @@
                     <div class="mx-auto mb-2 flex items-center justify-center opacity-100">
                         <img src="https://i.imgur.com/AIApde9.png" class="w-16 h-16 filtro-dorado" alt="Recepción">
                     </div>
-                    <h1 class="text-5xl md:text-6xl mb-2 font-script texto-dorado reveal-scale text-shadow-none">Recepción</h1>
+                    <h1 class="text-5xl md:text-6xl mb-2 font-script texto-dorado reveal-scale text-shadow-none text-shadow-dark">Recepción</h1>
                     <p class="text-white font-bold text-xs md:text-sm tracking-wide">19:30 HRS<br>Antares Recepciones<br><span class="font-normal text-[10px] opacity-90 block mt-1">Entronque Zavaleta, Recta Sur - Recta Cholula, De Los Alamos, Sta Cruz Buenavista, Puebla.</span></p>
                 </div>
                 
@@ -529,7 +546,7 @@
         
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
             <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center">
-                <h2 class="text-5xl md:text-6xl mb-4 font-script texto-dorado drop-shadow-sm w-full">Clima del Día</h2>
+                <h2 class="text-5xl md:text-6xl mb-4 font-script texto-dorado drop-shadow-sm w-full text-shadow-dark">Clima del Día</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold opacity-90 w-full text-white">Pronóstico por hora. Puebla, Pue.</p>
                 
                 <div id="weather-container" class="w-full max-w-xl mx-auto">
@@ -609,7 +626,7 @@
 
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-hidden">
             <div class="forma-ovalada w-full mx-auto reveal-scale text-center">
-                <h1 class="text-5xl md:text-6xl mb-4 font-script texto-dorado w-full mt-4 text-shadow-none">Trivia</h1>
+                <h1 class="text-5xl md:text-6xl mb-4 font-script texto-dorado w-full mt-4 text-shadow-none text-shadow-dark">Trivia</h1>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-8 opacity-90 font-bold w-full text-white">¿Qué tanto conoces a la quinceañera?</p>
                 
                 <div id="trivia-container" class="w-full transition-colors duration-500 flex flex-col justify-center mb-4">
@@ -620,7 +637,7 @@
                     </div>
 
                     <div id="trivia-result" class="hidden text-white">
-                        <h3 class="font-script text-5xl md:text-6xl mb-4 texto-dorado text-shadow-none">¡Terminaste!</h3>
+                        <h3 class="font-script text-5xl md:text-6xl mb-4 texto-dorado text-shadow-none text-shadow-dark">¡Terminaste!</h3>
                         <p class="text-xl mb-2 font-light">Tu puntuación es:</p>
                         <p class="text-5xl font-bold mb-6"><span id="trivia-score" class="font-numbers texto-dorado">0</span> / <span id="trivia-total-score" class="font-numbers texto-dorado">3</span></p>
                         <p id="trivia-feedback" class="text-sm uppercase tracking-widest opacity-90 mb-6 font-bold"></p>
@@ -635,7 +652,7 @@
                 <div class="mx-auto mb-10 flex items-center justify-center">
                     <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-dorado" alt="Código de Vestimenta">
                 </div>
-                <h2 class="text-5xl md:text-6xl mb-8 font-script texto-dorado text-shadow-dark">Código de<br> Vestimenta</h2>
+                <h2 class="text-5xl md:text-6xl mb-8 font-script texto-dorado text-shadow-dark DressCodeTitle">Código de<br> Vestimenta</h2>
                 <p class="text-[12px] uppercase tracking-[0.5em] text-black mb-10 font-bold bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#BF953F] inline-block px-8 py-3 rounded-full shadow-lg">Formal</p>
                 <p class="text-sm md:text-base font-bold text-white mb-4 leading-relaxed px-4 md:px-20">Se reserva el color verde esmeralda exclusivamente para la quinceañera.</p>
                 <p class="text-xs md:text-sm font-fold text-white/90 leading-relaxed px-4 md:px-20 mb-8 italic">
@@ -655,7 +672,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
                 </svg>
                 
-                <h1 class="text-5xl md:text-6xl mb-4 font-script reveal-scale texto-dorado w-full text-shadow-none">Álbum de Recuerdos</h1>
+                <h1 class="text-5xl md:text-6xl mb-4 font-script reveal-scale texto-dorado w-full text-shadow-none text-shadow-dark">Álbum de Recuerdos</h1>
                 
                 <p class="text-sm md:text-base font-light tracking-wide mb-6 leading-relaxed text-white w-full max-w-sm mx-auto">
                     Ayúdame a capturar los mejores momentos de esta noche inolvidable. ¡Escanea el código para subir tus fotos!
@@ -690,7 +707,7 @@
 
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla text-center relative overflow-auto pb-24">
             <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
-                <h2 class="text-5xl md:text-6xl font-script mb-4 px-4 texto-dorado w-full mt-4 text-shadow-none">Confirmar Asistencia</h2>
+                <h2 class="text-5xl md:text-6xl font-script mb-4 px-4 texto-dorado w-full mt-4 text-shadow-none text-shadow-dark">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-8 font-bold w-full leading-relaxed px-4 text-white">Por favor, confirma antes del<br>10 de Mayo de 2026</p>
                 
                <form id="rsvpForm" class="w-[85%] max-w-[320px] mx-auto space-y-6 text-left bg-transparent transition-all duration-500 mb-4">
@@ -724,7 +741,7 @@
            <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center !h-auto !min-h-[96svh] !pt-28 !pb-20 !overflow-hidden">  
                
                <div id="encabezadoConsulta" class="transition-all duration-300">
-                    <h2 class="text-5xl font-script mb-2 px-4 texto-dorado w-full mt-4 text-shadow-none">Consultar Pase</h2>
+                    <h2 class="text-5xl font-script mb-2 px-4 texto-dorado w-full mt-4 text-shadow-none text-shadow-dark">Consultar Pase</h2>
                     <p class="text-[9px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Una vez que te asignen pases, ingresa el nombre con el que confirmaste</p>
                </div>
                
@@ -977,7 +994,7 @@
                         <div class="flex flex-col items-center justify-center flex-1 text-white">
                             <span class="text-[10px] md:text-xs font-light opacity-90">${hourStr}</span>
                             ${iconSVG}
-                            <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
+                            <span class="text-sm md:text-lg font-bold font-numbers texto-dorado">${temp}°</span>
                         </div>
                     `;
                     hoursShown++;
