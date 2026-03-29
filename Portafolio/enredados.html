@@ -100,16 +100,30 @@
         }
 
         /* Cajas intercaladas con textura - Usando la textura del sobre */
-        .caja-textura {
+              .caja-textura {
             position: relative;
             z-index: 10;
-            background-image: url('https://i.imgur.com/VHyaZb7.jpeg');
+            /* Quitamos el background-image y la opacidad de aquí */
             border-radius: 20px;
             padding: 2rem 1.5rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            overflow: hidden;
-            opacity-70;
+            overflow: hidden; 
+            /* El overflow: hidden es vital para que las esquinas del fondo sigan redonditas */
         }
+        .caja-textura::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.imgur.com/VHyaZb7.jpeg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7; /* Aquí controlas la transparencia de la imagen */
+            z-index: -1; /* Esto asegura que el fondo se quede detrás del texto */
+        }
+
 
         .texto-dorado { color: var(--dorado); }
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,0.8), 0px 0px 5px rgba(0,0,0,0.5); }
@@ -337,7 +351,7 @@
                 
                 <div class="flex-grow flex flex-col justify-center mt-10">
                     <div class="caja-textura w-[95%] md:w-[80%] mx-auto mb-0">
-                        <p class="text-sm md:text-base text-white italic leading-relaxed font-bold">
+                        <p class="text-sm md:text-base text-black italic leading-relaxed font-bold">
                             "Llena de magia, esperanza y nuevos desafíos, y quiero celebrarla rodeada de las personas que han sido parte de mi historia y que deseo sigan acompañándome en este nuevo camino."
                         </p>
                     </div>
@@ -348,11 +362,11 @@
                         <img src="https://i.imgur.com/KJu3DFT.png" class="absolute inset-0 w-full h-full object-contain z-0 filter drop-shadow-2xl" alt="Pergamino">
                         
                         <div class="relative z-10 px-8 py-10 text-center flex flex-col justify-center w-[80%] md:w-[70%]">
-                            <h3 class="text-[18px] md:text-[20px] mb-4 font-bold text-gray-900 font-script">Mis Padres</h3>
+                            <h3 class="text-xl md:text-xl mb-4 font-bold text-gray-900 font-script">Mis Padres</h3>
                             <p class="text-xs md:text-sm font-bold mb-1 text-gray-800">Sra. Maria Ramos Gutiérrez</p>
                             <p class="text-xs md:text-sm font-bold text-gray-800 mb-8">Sr. Juan Ramírez Jiménez</p>
                             
-                            <h3 class="text-[18px] md:text-[20px] mb-4 font-bold text-gray-900 font-script">Mis Padrinos</h3>
+                            <h3 class="text-xl md:text-xl mb-4 font-bold text-gray-900 font-script">Mis Padrinos</h3>
                             <p class="text-xs md:text-sm font-bold text-gray-800">Ana Juárez Martínez</p>
                             <p class="text-xs md:text-sm font-bold mb-1 text-gray-800">Pablo Hernández López </p>
                         </div>
@@ -424,7 +438,7 @@
 
             <div class="max-w-6xl mx-auto w-full reveal relative z-10 caja-textura !p-6 md:!p-12">
                 <div class="text-center mb-10">
-                    <h2 class="text-5xl md:text-6xl font-script texto-dorado text-shadow-dark mb-2">Galería de Fotos</h2>
+                    <h2 class="text-5xl md:text-6xl font-script texto-dorado mb-2">Galería de Fotos</h2>
                 </div>
                 
                 <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 hide-scrollbar items-center px-2">
@@ -500,37 +514,37 @@
             <img src="https://i.imgur.com/Kt9fOiV.png" class="absolute top-10 right-0 w-28 opacity-80 z-0 pointer-events-none transform rotate-180" alt="deco">
             
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full mt-10 caja-textura">
-                <h3 class="text-5xl md:text-6xl font-script texto-dorado text-shadow-dark mb-12">Faltan solo...</h3>
+                <h3 class="text-5xl md:text-6xl font-script texto-dorado mb-12">Faltan solo...</h3>
 
                 <div id="countdown" class="flex gap-4 md:gap-10 justify-center px-2 md:px-10 mb-16">
                     <div class="flex flex-col items-center">
                         <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border-2 border-dorado shadow-[0_0_15px_rgba(212,175,55,0.3)] flex items-center justify-center mb-4 rounded-xl backdrop-blur-sm">
-                            <span id="days" class="time-num text-3xl md:text-4xl text-white">00</span>
+                            <span id="days" class="time-num text-3xl md:text-4xl text-black">00</span>
                         </div>
                         <span class="time-label texto-dorado font-bold">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border-2 border-dorado shadow-[0_0_15px_rgba(212,175,55,0.3)] flex items-center justify-center mb-4 rounded-xl backdrop-blur-sm">
-                            <span id="hours" class="time-num text-3xl md:text-4xl text-white">00</span>
+                            <span id="hours" class="time-num text-3xl md:text-4xl text-black">00</span>
                         </div>
                         <span class="time-label texto-dorado font-bold">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border-2 border-dorado shadow-[0_0_15px_rgba(212,175,55,0.3)] flex items-center justify-center mb-4 rounded-xl backdrop-blur-sm">
-                            <span id="minutes" class="time-num text-3xl md:text-4xl text-white">00</span>
+                            <span id="minutes" class="time-num text-3xl md:text-4xl text-black">00</span>
                         </div>
                         <span class="time-label texto-dorado font-bold">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border-2 border-dorado shadow-[0_0_15px_rgba(212,175,55,0.3)] flex items-center justify-center mb-4 rounded-xl backdrop-blur-sm">
-                            <span id="seconds" class="time-num text-3xl md:text-4xl text-white">00</span>
+                            <span id="seconds" class="time-num text-3xl md:text-4xl text-black">00</span>
                         </div>
                         <span class="time-label texto-dorado font-bold">Seg</span>
                     </div>
                 </div>
 
                 <div class="reveal-scale delay-200 mt-12">
-                    <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-white font-bold">Reserva el momento <br> en tu calendario</p>
+                    <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-black font-bold">Reserva el momento <br> en tu calendario</p>
                     <div class="flex justify-center">
                         <button onclick="calendarLink('Mis XV Alana', 'Parroquia San Juan Bautista Cuautlancingo', '20260523T180000')" class="btn-dorado px-10 py-4 text-[11px] uppercase tracking-widest transition-all duration-300 rounded-full">
                             Agregar al calendario
@@ -554,8 +568,8 @@
         <section class="min-h-[100svh] flex flex-col justify-center py-10 px-4 md:px-20 bg-intercalado relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full mt-6 text-white caja-textura">
                 <div class="text-center mb-14">
-                    <h1 class="text-5xl md:text-6xl mb-4 texto-dorado font-script reveal-scale text-shadow-dark">Itinerario</h1>
-                    <p class="text-[10px] uppercase tracking-[0.5em] font-bold text-white/80">Los momentos <br> que tendremos</p>
+                    <h1 class="text-5xl md:text-6xl mb-4 texto-dorado font-script reveal-scale">Itinerario</h1>
+                    <p class="text-[10px] uppercase tracking-[0.5em] font-bold text-black/80">Los momentos <br> que tendremos</p>
                 </div>
 
                 <div class="relative w-full max-w-lg mx-auto">
@@ -648,10 +662,10 @@
                 <div class="mx-auto mb-10 flex items-center justify-center">
                     <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-dorado" alt="Código de Vestimenta">
                 </div>
-                <h2 class="text-5xl md:text-6xl mb-8 font-script texto-dorado text-shadow-dark DressCodeTitle">Código de<br> Vestimenta</h2>
+                <h2 class="text-5xl md:text-6xl mb-8 font-script texto-dorado DressCodeTitle">Código de<br> Vestimenta</h2>
                 <p class="text-[12px] uppercase tracking-[0.5em] text-black mb-10 font-bold bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#BF953F] inline-block px-8 py-3 rounded-full shadow-lg">Formal</p>
-                <p class="text-sm md:text-base font-bold text-white mb-4 leading-relaxed px-4 md:px-20">Se reserva el color verde esmeralda exclusivamente para la quinceañera.</p>
-                <p class="text-xs md:text-sm font-fold text-white/90 leading-relaxed px-4 md:px-20 mb-8 italic">
+                <p class="text-sm md:text-base font-bold text-black mb-4 leading-relaxed px-4 md:px-20">Se reserva el color lila y derivados exclusivamente para la quinceañera.</p>
+                <p class="text-xs md:text-sm font-fold text-black/90 leading-relaxed px-4 md:px-20 mb-8 italic">
                     ¡Prepárate para lucir increíble esta noche!
                 </p>
             </div>
@@ -671,7 +685,7 @@
                 <h1 class="text-5xl md:text-6xl mb-4 font-script reveal-scale texto-dorado w-full text-shadow-none text-shadow-dark">Álbum de Recuerdos</h1>
                 
                 <p class="text-sm md:text-base font-light tracking-wide mb-6 leading-relaxed text-white w-full max-w-sm mx-auto">
-                    Ayúdame a capturar los mejores momentos de esta noche inolvidable. ¡Escanea el código para subir tus fotos!
+                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br> ¡Escanea el código para subir tus fotos!
                 </p>
 
                 <div class="mx-auto bg-white p-3 rounded-3xl shadow-[0_0_20px_rgba(212,175,55,0.4)] inline-block mb-6 border-2 border-dorado">
@@ -686,8 +700,8 @@
 
         <section class="min-h-[100svh] flex flex-col justify-center py-12 px-4 md:px-10 bg-intercalado text-center relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full mt-10 caja-textura">
-                <h1 class="text-5xl md:text-6xl mb-6 texto-dorado font-script reveal-scale text-shadow-dark">Mesa de Regalos</h1>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white/80 font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
+                <h1 class="text-5xl md:text-6xl mb-6 texto-dorado font-script reveal-scale">Mesa de Regalos</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-black/80 font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
                 
                 <div class="flex flex-col md:flex-row gap-6 items-center justify-center w-full mt-10 text-white">
                     <div class="p-6 md:p-8 bg-transparent border-2 border-dorado h-56 w-full max-w-sm flex flex-col items-center justify-center reveal-scale shadow-[0_0_20px_rgba(212,175,55,0.2)] rounded-2xl">
@@ -695,7 +709,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
                         </svg>
                         <h4 class="font-bold text-lg mb-2 texto-dorado">Lluvia de Sobres</h4>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 text-center leading-relaxed">Un detalle a tu elección. <br>Tendré una urna en la entrada del salón.</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/80 text-center leading-relaxed">Un detalle a tu elección. <br>Tendré una urna en la entrada del salón.</p>
                     </div>
                 </div>
             </div>
@@ -780,7 +794,7 @@
         <footer class="min-h-[100svh] flex flex-col justify-center py-6 px-4 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/K3iuqiQ.jpeg');">
             <div class="absolute inset-0 bg-black/60"></div>
             <div class="relative z-10">
-                <p class="text-8xl md:text-7xl font-script mb-16 texto-dorado drop-shadow-lg text-shadow-dark">¡No faltes!</p>
+                <p class="text-8xl md:text-5xl font-script mb-16 texto-dorado drop-shadow-lg text-shadow-dark">¡No faltes!</p>
                 <p class="text-xs md:text-xs font-elegant text-white drop-shadow-md tracking-widest uppercase">Alana Ramírez Ramos</p>
             </div>
         </footer>
