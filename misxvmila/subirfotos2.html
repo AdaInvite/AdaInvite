@@ -18,19 +18,17 @@
     
     <style>
         body, html {
-    margin: 0; padding: 0; width: 100%; 
-    min-height: 100svh;
-    font-family: 'Cinzel', serif; 
-    color: #D4AF37;
-    scroll-behavior: smooth;
-
-    /* CONFIGURACIÓN ANTIESTIRAMIENTO */
-    background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover; /* Esto hace que la imagen siempre llene la pantalla sin estirarse feo */
-    background-attachment: fixed; /* Esto la deja anclada al fondo mientras scrolleas */
-}
+            margin: 0; padding: 0; width: 100%; 
+            min-height: 100svh;
+            font-family: 'Cinzel', serif; 
+            color: #D4AF37;
+            scroll-behavior: smooth;
+            background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-attachment: fixed; 
+        }
         .font-script { font-family: 'Great Vibes', cursive; }
         
         .contenedor-principal {
@@ -61,7 +59,6 @@
         #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
         #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
         
-        /* Grid para las miniaturas de vista previa */
         #previewContainer {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -104,7 +101,7 @@
                 </div>
                 
                 <div id="muro" class="columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2">
-                    <div class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center">Cargando recuerdos...</div>
+                    <div id="loadingText" class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center">Cargando recuerdos...</div>
                 </div>
             </div>
         </div>
@@ -185,7 +182,7 @@
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        // LÓGICA DE VISTA PREVIA MÚLTIPLE
+        // LÓGICA DE VISTA PREVIA CON AUTOPLAY EN VIDEOS
         archivoInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
@@ -202,7 +199,7 @@
                 if (file.type.includes("image")) {
                     thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
                 } else {
-                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                    thumb.innerHTML = `<video src="${url}" autoplay muted loop playsinline class="w-full h-full object-cover"></video>`;
                 }
                 previewContainer.appendChild(thumb);
             });
@@ -225,7 +222,6 @@
             btnSubir.disabled = true;
             estadoCarga.classList.remove('hidden');
 
-            // Subimos uno por uno para no saturar la conexión del invitado
             for (let i = 0; i < archivos.length; i++) {
                 const file = archivos[i];
                 const total = archivos.length;
@@ -265,34 +261,55 @@
             document.getElementById('muro').className = "columns-2 md:columns-3 lg:columns-4 gap-3 w-full px-1";
         });
 
-        // EL MURO CON AUTOPLAY
+        // EL MURO CON AUTOPLAY, CLICK PARA AUDIO Y LIKES FLUIDOS
         const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
-            const muro = document.getElementById('muro');
-            muro.innerHTML = "";
-            snapshot.forEach((docSnap) => {
-                const datos = docSnap.data();
-                const id = docSnap.id;
-                // Agregamos 'controls' para que aparezca la barra de pausa y volumen
-const media = datos.tipo === "video" 
-    ? `<video src="${datos.url_multimedia}" controls loop playsinline class="w-full h-auto rounded-xl shadow-inner bg-black/40"></video>` 
-    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-lg">`;
+            let hayFotosNuevas = false;
+            
+            // Revisamos si son fotos nuevas o si solo alguien dio like
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added" || change.type === "removed") {
+                    hayFotosNuevas = true;
+                } else if (change.type === "modified") {
+                    // Si solo fue un like, actualizamos el texto directamente sin recargar todo
+                    const likeSpan = document.getElementById(`likes-${change.doc.id}`);
+                    if (likeSpan) {
+                        likeSpan.innerText = change.doc.data().likes;
+                        // Pequeña animación fluida en el icono
+                        likeSpan.parentElement.classList.add('scale-125');
+                        setTimeout(() => likeSpan.parentElement.classList.remove('scale-125'), 200);
+                    }
+                }
+            });
+
+            // Si hay contenido nuevo, redibujamos el muro
+            if (hayFotosNuevas) {
+                const muro = document.getElementById('muro');
+                muro.innerHTML = "";
                 
-                muro.innerHTML += `
-                <div class="break-inside-avoid mb-4 rounded-2xl relative">
-                    <span class="absolute top-2 right-2 bg-dorado-elegante text-black text-[8px] font-bold px-2 py-1 rounded-full uppercase z-10">${datos.momento}</span>
-                    ${media}
-                    <div class="flex items-center justify-between">
-                        <h4 class="text-white font-bold uppercase text-[9px] truncate flex-1">${datos.nombre}</h4>
-                        <div class="flex items-center gap-3">
-                            <button onclick="darLike('${id}')" class="flex items-center gap-1 text-dorado-elegante">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                <span class="font-bold text-sm num-likes">${datos.likes}</span>
+                snapshot.forEach((docSnap) => {
+                    const datos = docSnap.data();
+                    const id = docSnap.id;
+                    
+                    // Video autoplay sin sonido. Al hacer clic se pone el sonido y los controles.
+                    const media = datos.tipo === "video" 
+                        ? `<video src="${datos.url_multimedia}" autoplay muted loop playsinline class="w-full h-auto cursor-pointer" onclick="this.muted = false; this.controls = true; this.play();"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto">`;
+                    
+                    muro.innerHTML += `
+                    <div class="break-inside-avoid mb-6 bg-dorado-elegante rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.5)] relative overflow-hidden transform transition-all hover:scale-[1.01]">
+                        <span class="absolute top-2 right-2 bg-white text-dorado-elegante text-[9px] font-bold px-2 py-1 rounded-md uppercase z-10 shadow-md">${datos.momento}</span>
+                        ${media}
+                        <div class="flex items-center justify-between px-3 py-3">
+                            <h4 class="text-white font-bold uppercase text-[10px] tracking-wider truncate flex-1 drop-shadow-md">${datos.nombre}</h4>
+                            <button onclick="darLike('${id}')" class="flex items-center gap-1.5 text-white transition-transform active:scale-90 cursor-pointer pl-2">
+                                <svg class="w-5 h-5 drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                <span id="likes-${id}" class="font-bold text-sm drop-shadow-md transition-all duration-200">${datos.likes}</span>
                             </button>
                         </div>
-                    </div>
-                </div>`;
-            });
+                    </div>`;
+                });
+            }
         });
 
         window.darLike = async function(id) {
