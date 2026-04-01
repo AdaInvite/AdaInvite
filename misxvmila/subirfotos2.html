@@ -18,11 +18,6 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     
-    <script type="module">
-        import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.js";
-        LR.registerBlocks(LR);
-    </script>
-
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; min-height: 100%;
@@ -35,37 +30,32 @@
         }
         select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
         
-        /* Personalizando el botón oficial de Uploadcare con tus colores dorados */
-        lr-file-uploader-regular {
-            --ctx-name: uploader-mila;
-            --darkmode: 1;
-            --primary: #D4AF37;
-            --text-primary: #D4AF37;
-            display: none; /* Lo mantenemos oculto hasta que elijan una categoría */
-            margin: 0 auto;
+        /* Estilos para el input de archivo personalizado */
+        input[type="file"]::file-selector-button {
+            background-color: #D4AF37; color: white; border: none;
+            padding: 8px 16px; border-radius: 4px; cursor: pointer;
+            font-family: 'Cinzel', serif; text-transform: uppercase; font-size: 10px; font-weight: bold; tracking: 2px;
         }
     </style>
 </head>
-<body class="bg-floral-section relative flex flex-col items-center justify-center min-h-screen overflow-x-hidden p-4">
+<body class="bg-floral-section relative flex flex-col items-center min-h-screen overflow-x-hidden p-4">
 
-    <div class="absolute inset-6 md:inset-12 border border-dorado-elegante z-0 pointer-events-none rounded-3xl opacity-70"></div>
+    <div class="fixed inset-6 md:inset-12 border border-dorado-elegante z-0 pointer-events-none rounded-3xl opacity-70"></div>
+    <img src="https://i.imgur.com/TjUVH3M.png" class="fixed top-1 left-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md" alt="Rosa">
+    <img src="https://i.imgur.com/TjUVH3M.png" class="fixed top-1 right-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md transform scale-x-[-1]" alt="Rosa">
+    <img src="https://i.imgur.com/4OQKstd.png" class="fixed bottom-1 left-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md" alt="Rosa">
+    <img src="https://i.imgur.com/4OQKstd.png" class="fixed bottom-1 right-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md transform scale-x-[-1]" alt="Rosa">
 
-    <img src="https://i.imgur.com/TjUVH3M.png" class="absolute top-1 left-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md" alt="Rosa">
-    <img src="https://i.imgur.com/TjUVH3M.png" class="absolute top-1 right-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md transform scale-x-[-1]" alt="Rosa">
-    <img src="https://i.imgur.com/4OQKstd.png" class="absolute bottom-1 left-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md" alt="Rosa">
-    <img src="https://i.imgur.com/4OQKstd.png" class="absolute bottom-1 right-1 w-32 md:w-48 z-10 pointer-events-none drop-shadow-md transform scale-x-[-1]" alt="Rosa">
-
-    <div class="relative z-20 text-center max-w-2xl w-full flex flex-col items-center pt-8 pb-16">
+    <div class="relative z-20 text-center max-w-4xl w-full flex flex-col items-center pt-8 pb-16">
         
         <img src="https://i.imgur.com/H3DS04B.png" class="w-24 mx-auto mb-10 drop-shadow-lg" alt="Corona">
         <h1 class="text-6xl md:text-8xl font-script text-dorado-elegante drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-8">Recuerdos</h1>
         <p class="text-[15px] tracking-[0.4em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mb-8">XV Mila</p>
-
         <p class="text-sm italic text-white leading-relaxed mb-6 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] px-4">
-            Selecciona el momento de la fiesta y sube tus fotos o videos favoritos. No importa si son pesados.
+            Selecciona el momento de la fiesta y sube tus fotos o videos favoritos.
         </p>
 
-        <select id="folderSelect" class="bg-black/50 backdrop-blur-sm border border-dorado-elegante text-dorado-elegante text-[10px] tracking-[2px] uppercase font-bold rounded-md px-6 py-3 outline-none mb-6 text-center shadow-lg w-full max-w-xs cursor-pointer">
+        <select id="folderSelect" class="bg-black/50 backdrop-blur-sm border border-dorado-elegante text-dorado-elegante text-[10px] tracking-[2px] uppercase font-bold rounded-md px-6 py-3 outline-none mb-4 text-center shadow-lg w-full max-w-xs cursor-pointer">
             <option value="" disabled selected>Elige un momento...</option>
             <option value="En la iglesia">En la iglesia</option>
             <option value="En la recepción">En la recepción</option>
@@ -74,45 +64,148 @@
             <option value="El baile">El baile</option>
             <option value="El pastel">El pastel</option>
         </select>
-        
-        <lr-config
-            ctx-name="uploader-mila"
-            pubkey="d06366b119e257d9800b"
-            multiple="true"
-            source-list="local, camera"
-            locale-name="es"
-        ></lr-config>
 
-        <lr-file-uploader-regular
-            ctx-name="uploader-mila"
-            css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
-            id="uploaderWidget"
-        ></lr-file-uploader-regular>
-
-        <button id="fakeButton" class="bg-dorado-elegante text-white border border-dorado-elegante font-bold rounded-md px-8 py-3 mx-auto shadow-lg text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 mb-4 w-full max-w-xs opacity-50 cursor-not-allowed">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <button id="fakeButton" class="bg-dorado-elegante/50 text-white border border-dorado-elegante font-bold rounded-md px-8 py-3 mx-auto shadow-lg text-[10px] tracking-[2px] uppercase flex items-center justify-center gap-2 mb-4 w-full max-w-xs cursor-not-allowed">
             Elige un momento primero
         </button>
 
-        <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] hidden"></p>
+        <div id="uploadForm" class="hidden w-full max-w-xs flex flex-col gap-4">
+            <input type="text" id="nombreInput" placeholder="TU NOMBRE" class="bg-black/50 backdrop-blur-sm border border-dorado-elegante text-white text-[10px] tracking-[2px] uppercase font-bold rounded-md px-6 py-3 outline-none text-center shadow-lg w-full placeholder-dorado-elegante">
+            
+            <div class="bg-black/50 backdrop-blur-sm border border-dorado-elegante rounded-md p-3 text-center">
+                <input type="file" id="archivoInput" accept="video/mp4, image/*" class="text-dorado-elegante text-xs w-full">
+            </div>
+
+            <button id="btnSubir" class="bg-dorado-elegante text-white font-bold rounded-md px-8 py-3 shadow-lg text-[12px] tracking-[2px] uppercase hover:bg-yellow-600 transition-colors">
+                Subir al Álbum
+            </button>
+        </div>
+
+        <p id="estadoCarga" class="text-[12px] uppercase tracking-widest font-bold mt-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] text-white bg-black/60 p-2 rounded-lg border border-dorado-elegante hidden"></p>
+
+        <div class="w-full mt-16 border-t border-dorado-elegante/30 pt-10">
+            <h2 class="text-3xl font-script text-white mb-8">Álbum Interactivo</h2>
+            <div id="muro" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-4">
+                </div>
+        </div>
+
     </div>
 
-    <script>
-        const folderSelect = document.getElementById('folderSelect');
-        const uploaderWidget = document.getElementById('uploaderWidget');
-        const fakeButton = document.getElementById('fakeButton');
-        const lrConfig = document.querySelector('lr-config');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-        // Cuando eligen una categoría, ocultamos el botón falso y mostramos el uploader real
+        // ⚠️ PEGA AQUÍ TU CONFIGURACIÓN DE FIREBASE ⚠️
+        const firebaseConfig = {
+            apiKey: "AIzaSyAN8BxVdjAk0GuQ_fKoYFY5hAd0cWsOVh0",
+            authDomain: "xv-mila-81421.firebaseapp.com",
+            projectId: "xv-mila-81421",
+            storageBucket: "xv-mila-81421.firebasestorage.app",
+            messagingSenderId: "1024496307652",
+            appId: "1:1024496307652:web:2f8154effc737a097ea891"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Lógica de UI: Mostrar formulario al elegir categoría
+        const folderSelect = document.getElementById('folderSelect');
+        const uploadForm = document.getElementById('uploadForm');
+        const fakeButton = document.getElementById('fakeButton');
+        const estadoCarga = document.getElementById('estadoCarga');
+
         folderSelect.addEventListener('change', (e) => {
             if (e.target.value !== "") {
                 fakeButton.style.display = 'none';
-                uploaderWidget.style.display = 'block';
-                
-                // Guardamos la categoría elegida como un metadato invisible
-                lrConfig.setAttribute('metadata', JSON.stringify({ momento: e.target.value }));
+                uploadForm.classList.remove('hidden');
+                estadoCarga.classList.add('hidden');
             }
         });
+
+        // 1. FUNCIÓN PARA SUBIR (Reemplaza a Uploadcare)
+        document.getElementById("btnSubir").addEventListener("click", async () => {
+            const archivo = document.getElementById("archivoInput").files[0];
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (!archivo || !nombre || !momento) {
+                alert("Por favor llena tu nombre, elige el momento y selecciona una foto o video.");
+                return;
+            }
+
+            estadoCarga.innerText = "Subiendo recuerdo... por favor espera.";
+            estadoCarga.classList.remove('hidden');
+            document.getElementById("btnSubir").disabled = true;
+            document.getElementById("btnSubir").classList.add("opacity-50");
+
+            try {
+                // Subir a Storage
+                const nombreArchivoSeguro = Date.now() + "_" + archivo.name;
+                const storageRef = ref(storage, 'xv_mila/' + nombreArchivoSeguro);
+                await uploadBytes(storageRef, archivo);
+                const urlDescarga = await getDownloadURL(storageRef);
+
+                // Guardar en Firestore
+                await addDoc(collection(db, "muro_mila"), {
+                    nombre: nombre,
+                    momento: momento,
+                    url_multimedia: urlDescarga,
+                    likes: 0,
+                    tipo: archivo.type.includes("video") ? "video" : "imagen",
+                    fecha: new Date()
+                });
+
+                estadoCarga.innerText = "¡Gracias por compartir este recuerdo!";
+                document.getElementById("archivoInput").value = "";
+                document.getElementById("nombreInput").value = "";
+                
+            } catch (error) {
+                console.error(error);
+                estadoCarga.innerText = "❌ Hubo un error al subir.";
+            } finally {
+                document.getElementById("btnSubir").disabled = false;
+                document.getElementById("btnSubir").classList.remove("opacity-50");
+            }
+        });
+
+        // 2. FUNCIÓN PARA DIBUJAR EL MURO EN TIEMPO REAL
+        // Usamos query y orderBy para mostrar las más recientes primero
+        const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const muro = document.getElementById("muro");
+            muro.innerHTML = ""; 
+
+            snapshot.forEach((documento) => {
+                const datos = documento.data();
+                const id = documento.id;
+
+                let mediaHTML = datos.tipo === "video" 
+                    ? `<video src="${datos.url_multimedia}" controls class="w-full h-64 object-cover rounded-md mb-3 border border-dorado-elegante/50"></video>`
+                    : `<img src="${datos.url_multimedia}" class="w-full h-64 object-cover rounded-md mb-3 border border-dorado-elegante/50" alt="Recuerdo">`;
+
+                let tarjeta = `
+                <div class="bg-black/60 backdrop-blur-md border border-dorado-elegante rounded-xl p-4 text-left shadow-2xl relative">
+                    <span class="absolute top-2 right-2 bg-dorado-elegante text-black text-[9px] font-bold px-2 py-1 rounded uppercase tracking-wider">${datos.momento}</span>
+                    ${mediaHTML}
+                    <h4 class="text-white font-bold tracking-widest uppercase text-sm mb-2">${datos.nombre}</h4>
+                    <button onclick="darLike('${id}')" class="flex items-center gap-2 text-dorado-elegante hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span class="font-bold text-lg">${datos.likes}</span>
+                    </button>
+                </div>`;
+
+                muro.innerHTML += tarjeta;
+            });
+        });
+
+        // 3. FUNCIÓN DE LIKES GLOBAL
+        window.darLike = async function(idDocumento) {
+            const docRef = doc(db, "muro_mila", idDocumento);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
     </script>
 </body>
 </html>
