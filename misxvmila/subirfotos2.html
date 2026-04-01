@@ -18,16 +18,19 @@
     
     <style>
         body, html {
-            margin: 0; padding: 0; width: 100%; 
-            min-height: 100svh;
-            font-family: 'Cinzel', serif; color: #D4AF37;
-            scroll-behavior: smooth;
-            background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; 
-            background-repeat: no-repeat;
-        }
+    margin: 0; padding: 0; width: 100%; 
+    min-height: 100svh;
+    font-family: 'Cinzel', serif; 
+    color: #D4AF37;
+    scroll-behavior: smooth;
+
+    /* CONFIGURACIÓN ANTIESTIRAMIENTO */
+    background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover; /* Esto hace que la imagen siempre llene la pantalla sin estirarse feo */
+    background-attachment: fixed; /* Esto la deja anclada al fondo mientras scrolleas */
+}
         .font-script { font-family: 'Great Vibes', cursive; }
         
         .contenedor-principal {
@@ -270,17 +273,16 @@
             snapshot.forEach((docSnap) => {
                 const datos = docSnap.data();
                 const id = docSnap.id;
-                
-                // CLAVE: Se agregaron atributos 'autoplay muted loop playsinline' para el efecto automático
-                const media = datos.tipo === "video" 
-                    ? `<video src="${datos.url_multimedia}" autoplay muted loop playsinline class="w-full h-auto rounded-xl border border-dorado-elegante/30"></video>` 
-                    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl border border-dorado-elegante/30">`;
+                // Agregamos 'controls' para que aparezca la barra de pausa y volumen
+const media = datos.tipo === "video" 
+    ? `<video src="${datos.url_multimedia}" controls loop playsinline class="w-full h-auto rounded-xl shadow-inner bg-black/40"></video>` 
+    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-lg">`;
                 
                 muro.innerHTML += `
-                <div class="break-inside-avoid mb-4 bg-black/70 border border-dorado-elegante rounded-2xl p-3 relative">
+                <div class="break-inside-avoid mb-4 rounded-2xl relative">
                     <span class="absolute top-2 right-2 bg-dorado-elegante text-black text-[8px] font-bold px-2 py-1 rounded-full uppercase z-10">${datos.momento}</span>
                     ${media}
-                    <div class="flex items-center justify-between mt-3">
+                    <div class="flex items-center justify-between">
                         <h4 class="text-white font-bold uppercase text-[9px] truncate flex-1">${datos.nombre}</h4>
                         <div class="flex items-center gap-3">
                             <button onclick="darLike('${id}')" class="flex items-center gap-1 text-dorado-elegante">
