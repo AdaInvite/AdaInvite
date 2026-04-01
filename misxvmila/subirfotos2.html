@@ -116,7 +116,7 @@
                         <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <svg class="w-10 h-10 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                         <p class="text-white text-sm font-bold">Haz clic o arrastra tu archivo aquí</p>
-                        <p class="text-dorado-elegante/70 text-[10px] mt-2 uppercase tracking-wide">JPG, PNG, GIF, MP4 - Máx. 30 segundos</p>
+                        <p class="text-dorado-elegante/70 text-[10px] mt-2 uppercase tracking-wide">JPG, PNG, GIF, MP4 - Máx. 30s</p>
                     </div>
 
                     <div id="previsualizacion" class="w-full relative hidden mt-2">
@@ -124,7 +124,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
                         <div id="previewContainer" class="border border-dorado-elegante/50 rounded-xl overflow-hidden bg-black h-40 flex items-center justify-center relative">
-                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -140,16 +140,16 @@
             </div>
 
             <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-4 text-white bg-black p-3 rounded-md border border-dorado-elegante hidden text-center w-full font-sans"></p>
-
         </div>
     </div>
 
     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png" class="fixed bottom-4 right-4 w-16 opacity-40 z-10 pointer-events-none" alt="AdaInvite">
 
     <script type="module">
+        // IMPORTAMOS 'uploadBytesResumable' PARA VER EL PORCENTAJE EN VIVO
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         // TUS LLAVES (XV-MILA-FINAL)
         const firebaseConfig = {
@@ -165,7 +165,6 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // --- VARIABLES DE INTERFAZ ---
         const modal = document.getElementById('uploadModal');
         const openBtn = document.getElementById('openModalBtn');
         const closeBtnIcon = document.getElementById('closeModalBtnIcon');
@@ -178,25 +177,20 @@
         const removePreviewBtn = document.getElementById('removePreviewBtn');
         const estadoCarga = document.getElementById('estadoCarga');
 
-        // --- FUNCIONES DE LIMPIEZA ---
         function limpiarFormulario() {
             document.getElementById("nombreInput").value = "";
             document.getElementById("folderSelect").value = "";
             limpiarVistaPrevia(true);
         }
 
-        // AQUÍ ESTABA EL BUG: Ahora podemos decirle que NO borre el archivo de la memoria si solo estamos procesándolo
         function limpiarVistaPrevia(borrarInputReal = true) {
-            if (borrarInputReal) {
-                archivoInput.value = ""; // Solo se borra la memoria si le damos a la X o cerramos la modal
-            }
+            if (borrarInputReal) archivoInput.value = ""; 
             previewContainer.innerHTML = ""; 
             previsualizacion.classList.add('hidden'); 
-            dropZone.classList.remove('hidden'); // Vuelve a mostrar el cuadro punteado
+            dropZone.classList.remove('hidden'); 
             estadoCarga.classList.add('hidden');
         }
 
-        // --- LÓGICA DE LA MODAL ---
         function openModal() {
             limpiarFormulario(); 
             modal.classList.remove('hidden');
@@ -214,13 +208,10 @@
         btnCancelar.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-        // --- LÓGICA DEL CUADRO PUNTEADO Y VISTA PREVIA ---
         function procesarArchivoParaVistaPrevia(archivo) {
-            dropZone.classList.add('hidden'); // Ocultar cuadro punteado
-            previsualizacion.classList.remove('hidden'); // Mostrar vista previa
-            
+            dropZone.classList.add('hidden'); 
+            previsualizacion.classList.remove('hidden'); 
             const objectUrl = URL.createObjectURL(archivo);
-
             if (archivo.type.includes("image")) {
                 previewContainer.innerHTML = `<img src="${objectUrl}" class="w-full h-full object-contain" alt="Vista previa">`;
             } else if (archivo.type.includes("video")) {
@@ -230,87 +221,100 @@
 
         archivoInput.addEventListener('change', (e) => {
             const archivo = e.target.files[0];
-            
-            // Limpiamos visualmente, pero le decimos (false) para que NO borre la memoria
             limpiarVistaPrevia(false); 
 
-            if (!archivo) {
-                limpiarVistaPrevia(true);
-                return;
-            }
+            if (!archivo) { limpiarVistaPrevia(true); return; }
 
-            // Validación de video 30s
             if (archivo.type.startsWith("video/")) {
                 const videoElement = document.createElement('video');
                 videoElement.preload = 'metadata';
-                
                 videoElement.onloadedmetadata = function() {
                     window.URL.revokeObjectURL(videoElement.src);
                     if (videoElement.duration > 31) {
                         alert("¡Ups! 🎬 El video dura más de 30 segundos. Por favor elige uno más corto.");
-                        limpiarVistaPrevia(true); // Aquí SÍ borramos la memoria porque el video no pasó
+                        limpiarVistaPrevia(true); 
                         return;
-                    } else {
-                        procesarArchivoParaVistaPrevia(archivo);
-                    }
+                    } else { procesarArchivoParaVistaPrevia(archivo); }
                 }
                 videoElement.src = URL.createObjectURL(archivo);
-            } else {
-                procesarArchivoParaVistaPrevia(archivo);
-            }
+            } else { procesarArchivoParaVistaPrevia(archivo); }
         });
 
-        // Botón rojo de "X" en la vista previa
-        removePreviewBtn.addEventListener('click', () => {
-            limpiarVistaPrevia(true); // Limpia todo y borra el archivo de la memoria
-        });
+        removePreviewBtn.addEventListener('click', () => limpiarVistaPrevia(true));
 
-        // --- SUBIDA A FIREBASE ---
+        // --- SUBIDA A FIREBASE CON PORCENTAJE EN VIVO ---
         document.getElementById("btnSubir").addEventListener("click", async () => {
             const archivo = archivoInput.files[0]; 
             const nombre = document.getElementById("nombreInput").value;
             const momento = document.getElementById("folderSelect").value;
             const btn = document.getElementById("btnSubir");
 
-            // Ahora la validación funcionará perfecto porque la memoria no se borró
             if (!archivo || !nombre || !momento) {
-                alert("Por favor llena tu nombre, elige qué momento fue y selecciona una foto o video.");
+                alert("Por favor llena tu nombre, elige qué momento fue y selecciona un archivo.");
                 return;
             }
 
-            estadoCarga.innerText = "Subiendo... no cierres la ventana.";
-            estadoCarga.classList.remove('hidden');
+            // Desactivamos botones mientras sube
             btn.disabled = true;
-            btn.innerText = "Subiendo...";
+            btnCancelar.disabled = true;
+            btn.innerText = "Iniciando...";
+            estadoCarga.innerText = "Preparando tu recuerdo...";
+            estadoCarga.classList.remove('hidden');
 
             try {
                 const nombreArchivoSeguro = Date.now() + "_" + archivo.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
                 const storageRef = ref(storage, 'xv_mila/' + nombreArchivoSeguro);
                 
-                await uploadBytes(storageRef, archivo);
-                const urlDescarga = await getDownloadURL(storageRef);
+                // Usamos la función Resumable para leer el progreso
+                const uploadTask = uploadBytesResumable(storageRef, archivo);
 
-                await addDoc(collection(db, "muro_mila"), {
-                    nombre: nombre,
-                    momento: momento,
-                    url_multimedia: urlDescarga,
-                    likes: 0,
-                    tipo: archivo.type.includes("video") ? "video" : "imagen",
-                    fecha: new Date()
-                });
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Aquí calculamos el progreso del 0 al 100%
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        btn.innerText = `Subiendo... ${Math.round(progress)}%`;
+                    }, 
+                    (error) => {
+                        // Si falla (Ej. falta de reglas de seguridad) nos avisa aquí
+                        console.error("Error de subida:", error);
+                        alert("Error al subir: " + error.message + "\n\n(Asegúrate de haber configurado las Reglas de Storage en 'if true')");
+                        btn.disabled = false;
+                        btnCancelar.disabled = false;
+                        btn.innerHTML = `Intentar de nuevo`;
+                        estadoCarga.classList.add('hidden');
+                    }, 
+                    async () => {
+                        // Cuando llega al 100%
+                        btn.innerText = "Guardando...";
+                        estadoCarga.innerText = "Generando tarjeta...";
+                        
+                        const urlDescarga = await getDownloadURL(uploadTask.snapshot.ref);
 
-                estadoCarga.innerText = "¡Súper! Se subió al muro.";
-                
-                setTimeout(() => {
-                    closeModal();
-                    btn.disabled = false;
-                    btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Subir al Álbum`;
-                }, 1500);
+                        await addDoc(collection(db, "muro_mila"), {
+                            nombre: nombre,
+                            momento: momento,
+                            url_multimedia: urlDescarga,
+                            likes: 0,
+                            tipo: archivo.type.includes("video") ? "video" : "imagen",
+                            fecha: new Date()
+                        });
+
+                        estadoCarga.innerText = "¡Súper! Se subió al muro.";
+                        
+                        setTimeout(() => {
+                            closeModal();
+                            btn.disabled = false;
+                            btnCancelar.disabled = false;
+                            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Subir al Álbum`;
+                        }, 1500);
+                    }
+                );
                 
             } catch (error) {
                 console.error(error);
-                estadoCarga.innerText = "❌ Error: " + error.message; 
+                alert("Ocurrió un error inesperado.");
                 btn.disabled = false;
+                btnCancelar.disabled = false;
                 btn.innerHTML = `Intentar de nuevo`;
             }
         });
