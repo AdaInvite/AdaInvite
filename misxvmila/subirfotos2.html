@@ -27,37 +27,18 @@
             background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
             background-size: cover; background-position: center; background-attachment: fixed;
         }
-        select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
         
         .input-ada {
-            background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            border: 1px solid #D4AF37; color: white;
-            text-align: center; border-radius: 8px;
-            text-transform: uppercase; font-weight: bold; font-size: 11px; letter-spacing: 2px;
+            background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            border: 1px solid rgba(212, 175, 55, 0.5); color: white;
+            border-radius: 8px; font-family: sans-serif; font-size: 14px;
         }
-        .input-ada::placeholder { color: rgba(212, 175, 55, 0.7); }
-
-        input[type="file"]::file-selector-button {
-            background-color: #D4AF37; color: black; border: none;
-            padding: 8px 16px; border-radius: 4px; cursor: pointer;
-            font-family: 'Cinzel', serif; text-transform: uppercase; font-size: 10px; font-weight: bold; letter-spacing: 1px;
-            margin-right: 10px;
-        }
+        .input-ada:focus { border-color: #D4AF37; outline: none; background-color: rgba(0,0,0,0.7); }
+        .input-ada::placeholder { color: rgba(255, 255, 255, 0.4); }
+        select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
 
         #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
         #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
-        
-        #previewContainer {
-            width: 100%;
-            max-height: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #D4AF37;
-            background-color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
     </style>
 </head>
 <body class="bg-floral-section relative min-h-screen overflow-x-hidden p-4 pb-20">
@@ -73,12 +54,12 @@
             <p class="text-[16px] md:text-[18px] tracking-[0.5em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mb-10">XV MILA</p>
             
             <p class="text-sm italic text-white leading-relaxed mb-6 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] px-4 max-w-md">
-                Comparte tus momentos favoritos de la fiesta.
+                Comparte tus momentos favoritos de la fiesta con nosotros.
             </p>
 
             <button id="openModalBtn" class="bg-dorado-elegante text-black font-bold rounded-full px-10 py-4 shadow-[0_5px_20px_rgba(212,175,55,0.5)] text-[12px] tracking-[3px] uppercase flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 mt-4">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3Z"/></svg>
-                Subir un momento
+                Subir Foto o Video
             </button>
         </div>
 
@@ -89,50 +70,76 @@
         </div>
     </div>
 
-    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
-        <div class="relative bg-[#050505] border-2 border-dorado-elegante rounded-2xl w-full max-w-md p-6 md:p-8 shadow-[0_10px_50px_rgba(212,175,55,0.3)] flex flex-col items-center">
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="relative bg-[#0d0d0d] border border-dorado-elegante/50 rounded-2xl w-full max-w-md p-6 shadow-[0_10px_50px_rgba(212,175,55,0.2)] flex flex-col items-center">
             
-            <button id="closeModalBtn" class="absolute top-4 right-4 text-dorado-elegante opacity-70 hover:opacity-100 transition-opacity">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-dorado-elegante opacity-70 hover:opacity-100 transition-opacity">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <h2 class="text-4xl md:text-5xl font-script text-dorado-elegante mb-8 mt-4">Sube tu momento</h2>
+            <h2 class="text-3xl font-script text-dorado-elegante mb-6 mt-2">Sube tu momento</h2>
 
-            <div id="uploadForm" class="w-full flex flex-col gap-4">
+            <div id="uploadForm" class="w-full flex flex-col gap-5 text-left font-sans">
                 
-                <input type="text" id="nombreInput" placeholder="TU NOMBRE" class="input-ada px-6 py-4 w-full placeholder:text-dorado-elegante/50">
-                
-                <select id="folderSelect" class="input-ada px-6 py-4 w-full cursor-pointer appearance-none text-dorado-elegante/90">
-                    <option value="" disabled selected>¿QUÉ MOMENTO FUE?</option>
-                    <option value="En la iglesia">En la iglesia</option>
-                    <option value="En la recepción">En la recepción</option>
-                    <option value="Cena">Cena</option>
-                    <option value="El Vals">El Vals</option>
-                    <option value="El baile">El baile</option>
-                    <option value="El pastel">El pastel</option>
-                </select>
-                
-                <div class="input-ada p-4 w-full text-left">
-                    <p class="text-[10px] text-dorado-elegante/70 mb-2 tracking-wider">ELIGE UNA FOTO O VIDEO (MÁX 30s)</p>
-                    <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" class="text-white text-xs w-full cursor-pointer">
+                <div>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        Tu nombre *
+                    </label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Ana María" class="input-ada px-4 py-3 w-full">
+                    <p class="text-white/40 text-[10px] mt-1 ml-1">Tu nombre aparecerá en la foto del álbum</p>
                 </div>
-
-                <div id="previsualizacion" class="w-full relative hidden mt-2">
-                    <p class="text-[10px] text-dorado-elegante tracking-wider uppercase font-bold text-center mb-2">Vista previa:</p>
+                
+                <div>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        Momento del evento *
+                    </label>
+                    <select id="folderSelect" class="input-ada px-4 py-3 w-full cursor-pointer appearance-none">
+                        <option value="" disabled selected>Elige una opción...</option>
+                        <option value="En la iglesia">En la iglesia</option>
+                        <option value="En la recepción">En la recepción</option>
+                        <option value="Cena">Cena</option>
+                        <option value="El Vals">El Vals</option>
+                        <option value="El baile">El baile</option>
+                        <option value="El pastel">El pastel</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                        Seleccionar archivo *
+                    </label>
                     
-                    <button id="removePreviewBtn" class="absolute top-6 right-1 bg-red-600/80 text-white rounded-full p-1.5 z-40 hover:bg-red-700 active:scale-95 shadow-md">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
+                    <div id="dropZone" class="relative border-2 border-dashed border-dorado-elegante/50 bg-black/30 rounded-xl p-6 text-center hover:bg-dorado-elegante/10 transition-colors cursor-pointer mt-1">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-10 h-10 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="text-white text-sm font-bold">Haz clic o arrastra tu archivo aquí</p>
+                        <p class="text-dorado-elegante/70 text-[10px] mt-2 uppercase tracking-wide">JPG, PNG, GIF, MP4 - Máx. 30 segundos</p>
+                    </div>
 
-                    <div id="previewContainer"></div>
+                    <div id="previsualizacion" class="w-full relative hidden mt-2">
+                        <button id="removePreviewBtn" class="absolute top-2 right-2 bg-red-600 border border-white text-white rounded-full p-1 z-40 hover:bg-red-700 active:scale-95 shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                        <div id="previewContainer" class="border border-dorado-elegante/50 rounded-xl overflow-hidden bg-black h-40 flex items-center justify-center relative">
+                            </div>
+                    </div>
                 </div>
 
-                <button id="btnSubir" class="bg-dorado-elegante text-black font-bold rounded-lg px-8 py-4 shadow-lg text-[12px] tracking-[3px] uppercase hover:bg-yellow-500 transition-colors disabled:opacity-50 mt-4">
-                    Subir al Muro
-                </button>
+                <div class="flex gap-3 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-white/10 text-white font-bold rounded-lg py-3.5 text-[11px] tracking-[2px] uppercase hover:bg-white/20 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="btnSubir" class="flex-[1.5] bg-dorado-elegante text-black font-bold rounded-lg py-3.5 shadow-lg text-[11px] tracking-[2px] uppercase hover:bg-yellow-500 transition-colors disabled:opacity-50 flex justify-center items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        Subir al Álbum
+                    </button>
+                </div>
             </div>
 
-            <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-5 text-white bg-black/60 p-3 rounded-md border border-dorado-elegante hidden text-center w-full font-sans"></p>
+            <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-4 text-white bg-black p-3 rounded-md border border-dorado-elegante hidden text-center w-full font-sans"></p>
 
         </div>
     </div>
@@ -158,28 +165,38 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // --- VARIABLES DE INTERFAZ ---
         const modal = document.getElementById('uploadModal');
         const openBtn = document.getElementById('openModalBtn');
-        const closeBtn = document.getElementById('closeModalBtn');
+        const closeBtnIcon = document.getElementById('closeModalBtnIcon');
+        const btnCancelar = document.getElementById('btnCancelar');
+        
         const archivoInput = document.getElementById('archivoInput');
+        const dropZone = document.getElementById('dropZone');
         const previsualizacion = document.getElementById('previsualizacion');
         const previewContainer = document.getElementById('previewContainer');
         const removePreviewBtn = document.getElementById('removePreviewBtn');
         const estadoCarga = document.getElementById('estadoCarga');
 
+        // --- FUNCIONES DE LIMPIEZA ---
         function limpiarFormulario() {
             document.getElementById("nombreInput").value = "";
             document.getElementById("folderSelect").value = "";
-            limpiarVistaPrevia();
+            limpiarVistaPrevia(true);
         }
 
-        function limpiarVistaPrevia() {
-            archivoInput.value = ""; 
+        // AQUÍ ESTABA EL BUG: Ahora podemos decirle que NO borre el archivo de la memoria si solo estamos procesándolo
+        function limpiarVistaPrevia(borrarInputReal = true) {
+            if (borrarInputReal) {
+                archivoInput.value = ""; // Solo se borra la memoria si le damos a la X o cerramos la modal
+            }
             previewContainer.innerHTML = ""; 
             previsualizacion.classList.add('hidden'); 
-            document.body.style.overflow = 'auto'; 
+            dropZone.classList.remove('hidden'); // Vuelve a mostrar el cuadro punteado
+            estadoCarga.classList.add('hidden');
         }
 
+        // --- LÓGICA DE LA MODAL ---
         function openModal() {
             limpiarFormulario(); 
             modal.classList.remove('hidden');
@@ -188,57 +205,65 @@
 
         function closeModal() {
             modal.classList.add('hidden');
-            limpiarVistaPrevia(); 
+            document.body.style.overflow = 'auto'; 
+            limpiarVistaPrevia(true); 
         }
 
         openBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
+        closeBtnIcon.addEventListener('click', closeModal);
+        btnCancelar.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-        // --- LÓGICA DE VALIDACIÓN DE 30 SEGUNDOS Y VISTA PREVIA ---
-        function mostrarVistaPrevia(archivo) {
-            previsualizacion.classList.remove('hidden');
+        // --- LÓGICA DEL CUADRO PUNTEADO Y VISTA PREVIA ---
+        function procesarArchivoParaVistaPrevia(archivo) {
+            dropZone.classList.add('hidden'); // Ocultar cuadro punteado
+            previsualizacion.classList.remove('hidden'); // Mostrar vista previa
+            
             const objectUrl = URL.createObjectURL(archivo);
 
             if (archivo.type.includes("image")) {
-                previewContainer.innerHTML = `<img src="${objectUrl}" class="w-full h-full object-cover" alt="Vista previa">`;
+                previewContainer.innerHTML = `<img src="${objectUrl}" class="w-full h-full object-contain" alt="Vista previa">`;
             } else if (archivo.type.includes("video")) {
-                previewContainer.innerHTML = `<video src="${objectUrl}" muted loop controls class="w-full h-full object-cover"></video>`;
+                previewContainer.innerHTML = `<video src="${objectUrl}" muted loop controls class="w-full h-full object-contain"></video>`;
             }
         }
 
         archivoInput.addEventListener('change', (e) => {
             const archivo = e.target.files[0];
-            limpiarVistaPrevia(); 
+            
+            // Limpiamos visualmente, pero le decimos (false) para que NO borre la memoria
+            limpiarVistaPrevia(false); 
 
-            if (!archivo) return;
+            if (!archivo) {
+                limpiarVistaPrevia(true);
+                return;
+            }
 
-            // Si es un video, verificamos la duración antes de hacer nada
+            // Validación de video 30s
             if (archivo.type.startsWith("video/")) {
                 const videoElement = document.createElement('video');
                 videoElement.preload = 'metadata';
                 
                 videoElement.onloadedmetadata = function() {
-                    window.URL.revokeObjectURL(videoElement.src); // Liberar memoria
-                    
-                    // Ponemos 31 segundos por si el celular grabó 30.5s
+                    window.URL.revokeObjectURL(videoElement.src);
                     if (videoElement.duration > 31) {
-                        alert("¡Ups! El video dura más de 30 segundos. Por favor elige uno más corto para que todos puedan verlo rápido.");
-                        limpiarVistaPrevia(); 
-                        return; // Detiene el proceso
+                        alert("¡Ups! 🎬 El video dura más de 30 segundos. Por favor elige uno más corto.");
+                        limpiarVistaPrevia(true); // Aquí SÍ borramos la memoria porque el video no pasó
+                        return;
                     } else {
-                        // Si pasa la prueba, mostramos la vista previa
-                        mostrarVistaPrevia(archivo);
+                        procesarArchivoParaVistaPrevia(archivo);
                     }
                 }
                 videoElement.src = URL.createObjectURL(archivo);
             } else {
-                // Si es imagen, se muestra directo
-                mostrarVistaPrevia(archivo);
+                procesarArchivoParaVistaPrevia(archivo);
             }
         });
 
-        removePreviewBtn.addEventListener('click', limpiarVistaPrevia);
+        // Botón rojo de "X" en la vista previa
+        removePreviewBtn.addEventListener('click', () => {
+            limpiarVistaPrevia(true); // Limpia todo y borra el archivo de la memoria
+        });
 
         // --- SUBIDA A FIREBASE ---
         document.getElementById("btnSubir").addEventListener("click", async () => {
@@ -247,12 +272,13 @@
             const momento = document.getElementById("folderSelect").value;
             const btn = document.getElementById("btnSubir");
 
+            // Ahora la validación funcionará perfecto porque la memoria no se borró
             if (!archivo || !nombre || !momento) {
                 alert("Por favor llena tu nombre, elige qué momento fue y selecciona una foto o video.");
                 return;
             }
 
-            estadoCarga.innerText = "⏳ Subiendo... no cierres la ventana.";
+            estadoCarga.innerText = "Subiendo... no cierres la ventana.";
             estadoCarga.classList.remove('hidden');
             btn.disabled = true;
             btn.innerText = "Subiendo...";
@@ -276,19 +302,20 @@
                 estadoCarga.innerText = "¡Súper! Se subió al muro.";
                 
                 setTimeout(() => {
-                    limpiarFormulario();
                     closeModal();
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Subir al Álbum`;
                 }, 1500);
                 
             } catch (error) {
                 console.error(error);
-                estadoCarga.innerText = "Error: " + error.message; 
-            } finally {
+                estadoCarga.innerText = "❌ Error: " + error.message; 
                 btn.disabled = false;
-                btn.innerText = "Subir al Muro";
+                btn.innerHTML = `Intentar de nuevo`;
             }
         });
 
+        // --- MURO ---
         const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
             const muro = document.getElementById("muro");
@@ -330,7 +357,6 @@
                 const span = btn.querySelector('.num-likes');
                 span.innerText = parseInt(span.innerText) + 1;
                 btn.classList.add('text-white');
-
                 await updateDoc(docRef, { likes: increment(1) });
             } catch(e) { console.error("Error en like", e); }
         };
