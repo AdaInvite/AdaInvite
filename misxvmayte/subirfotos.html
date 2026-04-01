@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XV Mayte - Subir Recuerdos</title>
+    <title>XV Mayte - Muro de Recuerdos</title>
     
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
@@ -28,165 +28,317 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script type="module">
-        import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.js";
-        LR.registerBlocks(LR);
-    </script>
 
     <style>
         :root {
-            --terracota: #FFFFFF; 
-            --blanco-perla: #FFFFFF;
             --font-elegant: 'Montserrat', sans-serif;
             --font-script: 'Imperial Script', cursive;
         }
 
         body, html {
-            margin: 0; padding: 0; width: 100%; min-height: 100%;
-            font-family: var(--font-elegant); color: var(--terracota);
-            background-color: var(--blanco-perla);
+            margin: 0; padding: 0; width: 100%; min-height: 100svh;
+            font-family: var(--font-elegant); color: #2A2A2A;
+            scroll-behavior: smooth;
         }
         
         h1, p, select, button { font-family: var(--font-elegant); }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
         
+        /* Fondo fijo anti-estiramiento */
         .fondo-perla {
             background-image: url('https://i.imgur.com/XpSlXib.gif');
-            background-size: cover; background-position: center;
+            background-size: cover; 
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
 
-         .forma-ovalada {
-            background-color: rgba(255, 255, 255, 0.1); /* Efecto cristal transparente */
-            backdrop-filter: blur(12px); /* Efecto reproductor de música/cristal */
+        /* Forma de cristal adaptada para que permita hacer scroll hacia abajo */
+        .forma-ovalada {
+            background-color: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(12px); 
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil para resaltar el cristal */
-            color: #FFFFFF;
-            border-radius: 250px 250px 0 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);  
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: 200px 200px 0 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);  
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             margin: 0 auto;
             position: relative;
             z-index: 10;
             width: 95vw;
-            max-width: 480px; 
-            height: 96svh; 
-            padding: 5% 6%; 
-            overflow: hidden; 
+            max-width: 600px; 
+            min-height: 100svh; 
+            padding: 15% 4% 10% 4%; 
         }
 
-        .forma-ovalada::-webkit-scrollbar { display: none; }
-        .forma-ovalada { -ms-overflow-style: none; scrollbar-width: none; }
-
-        select option { background-color: var(--blanco-perla); color: var(--terracota); }
-        select { text-align-last: center; } /* Centra el texto del select */
+        select option { background-color: #ffffff; color: #2A2A2A; }
+        select { text-align-last: center; } 
         
-        /* Personalizando el botón de Uploadcare al tema claro/terracota */
-        lr-file-uploader-regular {
-            --ctx-name: uploader-mayte;
-            --darkmode: 0; /* Cambiado a modo claro */
-            --primary: #DCB9AE; /* Rosa de acento */
-            --text-primary: #2A2A2A;
-            --bg: #FFFFFF;
-            display: none; 
-            margin: 0 auto;
-            width: 100%;
-            max-width: 320px;
+        .input-mayte {
+            background-color: rgba(255,255,255,0.6); backdrop-filter: blur(4px);
+            border: 1px solid rgba(42, 42, 42, 0.3); color: #2A2A2A;
+            border-radius: 8px; font-family: sans-serif; font-size: 14px;
         }
+        .input-mayte:focus { border-color: #DCB9AE; outline: none; background-color: rgba(255,255,255,0.9); }
+        .input-mayte::placeholder { color: rgba(42, 42, 42, 0.5); }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
         
-        .filtro-terracota { filter: brightness(0) opacity(0.8); }
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
     </style>
 </head>
-<body class="fondo-perla relative flex flex-col justify-end items-center pt-8 pb-0 px-2 overflow-hidden relative min-h-[100svh]">
+<body class="fondo-perla relative flex flex-col pt-8">
 
-    <div class="forma-ovalada w-full mx-auto" id="mainContainer">
+    <div class="forma-ovalada" id="mainContainer">
         
         <img src="https://i.imgur.com/TyJ42pL.png" class="w-20 mx-auto mb-6 drop-shadow-sm" alt="Corona">
-        
-        <h1 class="text-6xl md:text-7xl font-script text-white mb-2 text-center">Recuerdos</h1>
-        <p class="text-[10px] tracking-[0.4em] uppercase text-white/80 font-bold mb-8 text-center">XV Mayte</p>
+        <h1 class="text-7xl md:text-8xl font-script text-terracota mb-0 text-center drop-shadow-sm">Recuerdos</h1>
+        <p class="text-[10px] tracking-[0.4em] uppercase text-terracota/70 font-bold mb-8 text-center mt-2">XV Mayte</p>
 
-        <p class="text-xs italic text-white/80 leading-relaxed mb-10 font-medium px-6 text-center">
-            Selecciona el momento de la fiesta y sube tus fotos o videos favoritos.
+        <p class="text-xs italic text-terracota/80 leading-relaxed mb-6 font-medium px-6 text-center max-w-sm">
+            Comparte tus fotos y videos favoritos de la fiesta con nosotros.
         </p>
 
-        <div class="w-[85%] max-w-[280px] mx-auto border-b border-white/40 pb-2 mb-8">
-            <select id="folderSelect" class="w-full bg-transparent text-white text-[10px] tracking-[2px] uppercase font-bold outline-none text-center cursor-pointer appearance-none">
-                <option value="" disabled selected>Elige un momento...</option>
-                <option value="En la iglesia">En la iglesia</option>
-                <option value="En la recepción">En la recepción</option>
-                <option value="Cena">Cena</option>
-                <option value="El Vals">El Vals</option>
-                <option value="El baile">El baile</option>
-            </select>
-        </div>
-        
-        <lr-config
-            ctx-name="uploader-mayte"
-            pubkey="d06366b119e257d9800b"
-            multiple="true"
-            source-list="local, camera"
-            locale-name="es"
-        ></lr-config>
-
-        <lr-file-uploader-regular
-            ctx-name="uploader-mayte"
-            css-src="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css"
-            id="uploaderWidget"
-        ></lr-file-uploader-regular>
-
-        <button id="fakeButton" class="bg-transparent border border-white text-white font-bold py-3 px-6 uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 mb-4 w-[85%] max-w-[280px] mx-auto opacity-50 cursor-not-allowed transition-all">
+        <button id="openModalBtn" class="bg-blanco-perla text-terracota font-bold py-3 px-8 rounded-full uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 mb-8 shadow-md hover:scale-105 transition-transform active:scale-95">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            Elige un momento primero
+            Subir Momentos
         </button>
 
-        <p id="uploadMessage" class="text-[10px] uppercase tracking-widest font-bold mt-6 hidden text-terracota bg-white/50 p-6 rounded-2xl border border-white/10 shadow-sm text-center w-[90%] max-w-[320px] mx-auto leading-relaxed"></p>
+        <div class="w-full pt-8 border-t border-terracota/10 flex flex-col items-center">
+            <p class="text-[9px] text-terracota/70 uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
+            <div class="bg-white/40 backdrop-blur-sm border border-terracota/20 rounded-full p-1 flex inline-flex shadow-sm mb-6">
+                <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-blanco-perla rounded-full transition-all">1 Columna</button>
+                <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all">2 Columnas</button>
+            </div>
+            
+            <div id="muro" class="columns-1 md:columns-2 gap-4 w-full px-2">
+                <div class="text-terracota text-sm opacity-70 col-span-full font-sans py-4 text-center">Cargando recuerdos...</div>
+            </div>
+        </div>
         
     </div>
 
-    <script>
-        const folderSelect = document.getElementById('folderSelect');
-        const uploaderWidget = document.getElementById('uploaderWidget');
-        const fakeButton = document.getElementById('fakeButton');
-        const lrConfig = document.querySelector('lr-config');
-        const uploadMessage = document.getElementById('uploadMessage');
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-terracota/90 backdrop-blur-sm hidden">
+        <div class="relative bg-white border border-blanco-perla rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col items-center max-h-[90vh] overflow-y-auto">
+            
+            <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-terracota/50 hover:text-terracota transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
 
-        // 1. Mostrar el uploader real cuando eligen la categoría
-        folderSelect.addEventListener('change', (e) => {
-            if (e.target.value !== "") {
-                fakeButton.style.display = 'none';
-                uploaderWidget.style.display = 'block';
+            <h2 class="text-5xl font-script text-terracota mb-6 mt-2 text-center">Sube tus momentos</h2>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-4 text-left font-sans">
+                <div>
+                    <label class="text-terracota text-[10px] font-bold tracking-widest uppercase mb-1.5 block">Tu nombre *</label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Familia Gómez" class="input-mayte px-4 py-3 w-full text-center">
+                </div>
                 
-                // Guardamos la categoría elegida
-                lrConfig.setAttribute('metadata', JSON.stringify({ momento: e.target.value }));
+                <div>
+                    <label class="text-terracota text-[10px] font-bold tracking-widest uppercase mb-1.5 block">Momento del evento *</label>
+                    <select id="folderSelect" class="input-mayte px-4 py-3 w-full cursor-pointer appearance-none text-center">
+                        <option value="" disabled selected>Elige una opción...</option>
+                        <option value="En la iglesia">En la iglesia</option>
+                        <option value="En la recepción">En la recepción</option>
+                        <option value="Cena">Cena</option>
+                        <option value="El Vals">El Vals</option>
+                        <option value="El baile">El baile</option>
+                    </select>
+                </div>
                 
-                // Ocultamos el mensaje si eligen una nueva categoría
-                uploadMessage.classList.add('hidden');
+                <div>
+                    <label class="text-terracota text-[10px] font-bold tracking-widest uppercase mb-1.5 block">Seleccionar archivos *</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-blanco-perla bg-blanco-perla/10 rounded-xl p-6 text-center hover:bg-blanco-perla/20 cursor-pointer transition-colors">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-8 h-8 mx-auto text-blanco-perla mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="text-terracota text-[11px] font-bold uppercase tracking-widest">Elige varias fotos o videos</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-terracota/10 rounded-xl bg-gray-50">
+                        <p class="text-[9px] text-terracota/70 text-center py-2 uppercase font-bold border-b border-terracota/10">Archivos seleccionados:</p>
+                        <div id="previewContainer"></div>
+                        <button id="removePreviewBtn" class="w-full py-2 text-[9px] text-red-500 uppercase font-bold hover:bg-red-50 transition-colors rounded-b-xl">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-gray-100 text-terracota font-bold rounded-full py-3.5 text-[10px] tracking-widest uppercase hover:bg-gray-200 transition-colors">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-blanco-perla text-white font-bold rounded-full py-3.5 text-[10px] tracking-widest uppercase shadow-md hover:scale-105 transition-transform">Subir al Álbum</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest font-bold mt-4 text-terracota bg-blanco-perla/20 p-3 rounded-lg border border-blanco-perla hidden text-center w-full font-sans"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // LLAVES DE FIREBASE DE MAYTE
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6oWLoLyRL3AUUpWceHQWlTHDZ4-wQ7tI",
+            authDomain: "xv-mayte-3f7c3.firebaseapp.com",
+            projectId: "xv-mayte-3f7c3",
+            storageBucket: "xv-mayte-3f7c3.firebasestorage.app",
+            messagingSenderId: "24046456453",
+            appId: "1:24046456453:web:2aef8664b2c4343ebae3ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // UI Logic
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // Vista Previa Múltiple
+        archivoInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            dropZone.classList.add('hidden');
+            previsualizacion.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+
+            files.forEach(file => {
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-gray-200 rounded-md overflow-hidden shadow-sm";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/30"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            });
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        // Subida en Lote
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) return alert("Completa todos los campos para continuar.");
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_mayte/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_mayte"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
             }
+
+            estadoCarga.innerText = "¡Recuerdos guardados con éxito!";
+            setTimeout(() => location.reload(), 1500);
         });
 
-        // 2. Lógica para evitar que cierren la pestaña mientras suben archivos
-        let subidasEnProgreso = 0;
+        // Alternar Columnas
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
 
-        window.addEventListener('LR-upload-start', () => { subidasEnProgreso++; });
-        window.addEventListener('LR-upload-finish', () => { subidasEnProgreso--; });
-        window.addEventListener('LR-upload-failed', () => { subidasEnProgreso--; });
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-blanco-perla rounded-full transition-all";
+            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all";
+            muro.className = "columns-1 md:columns-2 gap-4 w-full px-2";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-blanco-perla rounded-full transition-all";
+            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all";
+            muro.className = "columns-2 md:columns-3 gap-3 w-full px-1";
+        });
 
-        window.addEventListener('beforeunload', (e) => {
-            if (subidasEnProgreso > 0) {
-                e.preventDefault();
-                e.returnValue = 'Tus archivos se están subiendo. ¿Seguro que quieres salir y cancelar la subida?';
+        // Dibujar Muro (Sin marcos, con controles de video)
+        const q = query(collection(db, "muro_mayte"), orderBy("fecha", "desc"));
+        onSnapshot(q, (snapshot) => {
+            muro.innerHTML = "";
+            
+            if(snapshot.empty) {
+                 muro.innerHTML = `<div class="text-terracota text-sm opacity-70 col-span-full font-sans py-4 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero!</div>`;
+                 return;
             }
+
+            snapshot.forEach((docSnap) => {
+                const datos = docSnap.data();
+                const id = docSnap.id;
+                
+                // Videos con Controls, sin marcos gruesos
+                const media = datos.tipo === "video" 
+                    ? `<video src="${datos.url_multimedia}" controls playsinline class="w-full h-auto rounded-xl shadow-md bg-white/50"></video>` 
+                    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-md">`;
+                
+                muro.innerHTML += `
+                <div class="break-inside-avoid mb-6 relative group flex flex-col">
+                    <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-terracota text-[8px] font-bold px-3 py-1 rounded-full uppercase z-10 shadow-sm">${datos.momento}</span>
+                    ${media}
+                    <div class="flex items-center justify-between mt-2 px-1">
+                        <h4 class="text-terracota font-bold uppercase text-[10px] tracking-widest truncate flex-1 font-sans">${datos.nombre}</h4>
+                        <div class="flex items-center gap-3">
+                            <a href="${datos.url_multimedia}" target="_blank" download class="text-blanco-perla hover:text-terracota transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </a>
+                            <button onclick="darLike('${id}')" class="flex items-center gap-1 text-blanco-perla hover:text-terracota transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                <span class="font-bold text-sm num-likes">${datos.likes}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
         });
 
-        // 3. Mostrar mensaje de éxito cuando terminan
-        uploaderWidget.addEventListener('done-flow', () => {
-            uploadMessage.innerText = "¡Tus archivos se han subido correctamente, gracias por compartir estos recuerdos!";
-            uploadMessage.classList.remove('hidden');
-        });
+        window.darLike = async function(id) {
+            const docRef = doc(db, "muro_mayte", id);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
     </script>
 </body>
 </html>
