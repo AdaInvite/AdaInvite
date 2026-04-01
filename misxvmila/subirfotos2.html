@@ -17,13 +17,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
-        /* FONDO FIJO SIN ESTIRAMIENTO */
+        /* FONDO FIJO SIN ESTIRAMIENTO CORREGIDO */
         body, html {
             margin: 0; padding: 0; width: 100%; 
             min-height: 100svh;
             font-family: 'Cinzel', serif; 
             color: #D4AF37;
-            background-color: transparent; /* Color de respaldo */
+            background-color: transparent; 
         }
 
         .background-fijo {
@@ -34,7 +34,8 @@
             background-position: center center;
             background-repeat: no-repeat;
             background-size: cover;
-            z-index: -1; /* Se queda atrás de todo */
+            background-color: black; 
+            z-index: -1; 
         }
 
         .font-script { font-family: 'Great Vibes', cursive; }
@@ -104,8 +105,8 @@
             <div class="w-full mt-6 pt-6 border-t border-dorado-elegante/20 flex flex-col items-center">
                 <p class="text-[10px] text-dorado-elegante uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
                 <div class="bg-black/40 backdrop-blur-sm border border-dorado-elegante/40 rounded-lg p-1 flex inline-flex shadow-lg mb-6">
-                    <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md">1 Columna</button>
-                    <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md">2 Columnas</button>
+                    <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all">1 Columna</button>
+                    <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all">2 Columnas</button>
                 </div>
                 
                 <div id="muro" class="columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2">
@@ -186,6 +187,19 @@
         document.getElementById('openModalBtn').addEventListener('click', () => { modal.classList.remove('hidden'); });
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); });
+
+        // VISTAS DE COLUMNAS (Aquí están de vuelta)
+        document.getElementById('btn1Col').addEventListener('click', () => {
+            document.getElementById('muro').className = "columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2";
+            document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all";
+            document.getElementById('btn2Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all";
+        });
+
+        document.getElementById('btn2Col').addEventListener('click', () => {
+            document.getElementById('muro').className = "columns-2 md:columns-3 lg:columns-4 gap-3 w-full px-1";
+            document.getElementById('btn2Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all";
+            document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all";
+        });
 
         archivoInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
