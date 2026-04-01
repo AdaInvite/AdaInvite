@@ -77,18 +77,39 @@
         }
         
        /* Secciones con fondo GIF animado y capa oscura ligera */
-        .seccion-rosa {
-            /* Usamos rgba(0,0,0,0.3) que es color negro al 30% de opacidad */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.imgur.com/MmXulZL.gif');
-            background-size: cover;
-            background-position: center;
-            color: var(--blanco-perla);
-            width: 100%;
-            border-radius: 40px;
-            margin: 20px 0; 
-            box-shadow: 0 15px 35px rgba(230, 168, 184, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+       .seccion-rosa {
+    /* 1. CONFIGURACIÓN DEL CONTENEDOR PRINCIPAL */
+    position: relative; /* ¡CRÍTICO! Permite que el fondo se posicione correctamente */
+    overflow: hidden; /* Evita que el desenfoque se salga de los bordes redondeados */
+    z-index: 1; /* Crea un contexto para que el texto quede por encima */
+    
+    color: var(--blanco-perla);
+    width: 100%;
+    border-radius: 40px;
+    margin: 20px 0; 
+    box-shadow: 0 15px 35px rgba(230, 168, 184, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.seccion-rosa::before {
+    /* 2. CAPA DEL FONDO DESENFOCADO */
+    content: "";
+    position: absolute;
+    /* Estiramos el fondo un poco más allá de los bordes para que el blur no deje márgenes blancos */
+    top: -10px; 
+    left: -10px; 
+    right: -10px; 
+    bottom: -10px; 
+    z-index: -1; /* Lo enviamos detrás del texto */
+    
+    /* Tu fondo original con el gradiente y el GIF */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.imgur.com/MmXulZL.gif');
+    background-size: cover;
+    background-position: center;
+    
+    /* AQUÍ APLICAS EL DESENFOQUE */
+    filter: blur(4px); /* Cambia el 8px por el valor que prefieras. A mayor número, más borroso */
+}
 
         @media (min-width: 768px) {
             .seccion-rosa {
