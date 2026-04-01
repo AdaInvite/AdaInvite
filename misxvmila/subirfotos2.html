@@ -30,11 +30,10 @@
         }
         select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
         
-        /* Estilos para el input de archivo personalizado */
         input[type="file"]::file-selector-button {
             background-color: #D4AF37; color: white; border: none;
             padding: 8px 16px; border-radius: 4px; cursor: pointer;
-            font-family: 'Cinzel', serif; text-transform: uppercase; font-size: 10px; font-weight: bold; tracking: 2px;
+            font-family: 'Cinzel', serif; text-transform: uppercase; font-size: 10px; font-weight: bold; letter-spacing: 2px;
         }
     </style>
 </head>
@@ -86,7 +85,7 @@
         <div class="w-full mt-16 border-t border-dorado-elegante/30 pt-10">
             <h2 class="text-3xl font-script text-white mb-8">Álbum Interactivo</h2>
             <div id="muro" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-4">
-                </div>
+            </div>
         </div>
 
     </div>
@@ -96,21 +95,19 @@
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-        // ⚠️ PEGA AQUÍ TU CONFIGURACIÓN DE FIREBASE ⚠️
         const firebaseConfig = {
-            apiKey: "AIzaSyAN8BxVdjAk0GuQ_fKoYFY5hAd0cWsOVh0",
-            authDomain: "xv-mila-81421.firebaseapp.com",
-            projectId: "xv-mila-81421",
-            storageBucket: "xv-mila-81421.firebasestorage.app",
-            messagingSenderId: "1024496307652",
-            appId: "1:1024496307652:web:2f8154effc737a097ea891"
+            apiKey: "AIzaSyD2YvEdaxuUV9UkdeNfkFFGoZ0K539eA_c",
+            authDomain: "xv-mila-final.firebaseapp.com",
+            projectId: "xv-mila-final",
+            storageBucket: "xv-mila-final.firebasestorage.app",
+            messagingSenderId: "165068896780",
+            appId: "1:165068896780:web:59c4d6e7ea08f399a30c29"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Lógica de UI: Mostrar formulario al elegir categoría
         const folderSelect = document.getElementById('folderSelect');
         const uploadForm = document.getElementById('uploadForm');
         const fakeButton = document.getElementById('fakeButton');
@@ -124,7 +121,6 @@
             }
         });
 
-        // 1. FUNCIÓN PARA SUBIR (Reemplaza a Uploadcare)
         document.getElementById("btnSubir").addEventListener("click", async () => {
             const archivo = document.getElementById("archivoInput").files[0];
             const nombre = document.getElementById("nombreInput").value;
@@ -135,19 +131,17 @@
                 return;
             }
 
-            estadoCarga.innerText = "Subiendo recuerdo... por favor espera.";
+            estadoCarga.innerText = "⏳ Subiendo recuerdo... por favor espera.";
             estadoCarga.classList.remove('hidden');
             document.getElementById("btnSubir").disabled = true;
             document.getElementById("btnSubir").classList.add("opacity-50");
 
             try {
-                // Subir a Storage
                 const nombreArchivoSeguro = Date.now() + "_" + archivo.name;
                 const storageRef = ref(storage, 'xv_mila/' + nombreArchivoSeguro);
                 await uploadBytes(storageRef, archivo);
                 const urlDescarga = await getDownloadURL(storageRef);
 
-                // Guardar en Firestore
                 await addDoc(collection(db, "muro_mila"), {
                     nombre: nombre,
                     momento: momento,
@@ -163,15 +157,13 @@
                 
             } catch (error) {
                 console.error(error);
-                estadoCarga.innerText = "❌ Hubo un error al subir.";
+                estadoCarga.innerText = "❌ Error: " + error.message; 
             } finally {
                 document.getElementById("btnSubir").disabled = false;
                 document.getElementById("btnSubir").classList.remove("opacity-50");
             }
         });
 
-        // 2. FUNCIÓN PARA DIBUJAR EL MURO EN TIEMPO REAL
-        // Usamos query y orderBy para mostrar las más recientes primero
         const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
         
         onSnapshot(q, (snapshot) => {
@@ -201,7 +193,6 @@
             });
         });
 
-        // 3. FUNCIÓN DE LIKES GLOBAL
         window.darLike = async function(idDocumento) {
             const docRef = doc(db, "muro_mila", idDocumento);
             await updateDoc(docRef, { likes: increment(1) });
