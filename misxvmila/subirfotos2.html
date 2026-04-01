@@ -17,44 +17,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
-    /* 1. Ajuste del fondo para que no se mueva */
-    body, html {
-        margin: 0; padding: 0; width: 100%; 
-        min-height: 100svh; /* Altura mínima de la pantalla */
-        font-family: 'Cinzel', serif; color: #D4AF37;
-        scroll-behavior: smooth;
-        /* Esto deja el fondo quieto mientras scrolleas */
-        background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed; 
-        background-repeat: no-repeat;
-    }
+        body, html {
+            margin: 0; padding: 0; width: 100%; 
+            min-height: 100svh;
+            font-family: 'Cinzel', serif; color: #D4AF37;
+            scroll-behavior: smooth;
+            background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; 
+            background-repeat: no-repeat;
+        }
+        .font-script { font-family: 'Great Vibes', cursive; }
+        
+        .contenedor-principal {
+            position: relative;
+            min-height: 100svh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* 2. El contenedor relativo es clave para que el marco sepa hasta dónde estirarse */
-    .contenedor-principal {
-        position: relative;
-        min-height: 100svh;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        .marco-estirable {
+            position: absolute;
+            inset: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 5;
+            /* Esta línea es la que hace la magia de estirarse */
+            height: calc(100% - 30px); 
+        }
 
-    /* 3. El marco ahora es absoluto y sigue al contenido */
-    .marco-estirable {
-        position: absolute;
-        inset: 15px; /* Margen del marco */
-        border: 1px solid rgba(212, 175, 55, 0.5);
-        border-radius: 20px;
-        pointer-events: none;
-        z-index: 5;
-        /* Importante: esto hace que el marco cubra TODO el largo del contenido */
-        height: calc(100% - 30px); 
-    }
-</style>
+        .input-ada {
+            background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            border: 1px solid rgba(212, 175, 55, 0.5); color: white;
+            border-radius: 8px; font-family: sans-serif; font-size: 14px;
+        }
+        select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+    </style>
+</head>
+<body>
 
-<body class="relative">
     <div class="contenedor-principal p-4 pb-20">
         
         <div class="marco-estirable"></div>
@@ -62,45 +69,40 @@
         <img src="https://i.imgur.com/TjUVH3M.png" class="absolute top-0 left-0 w-32 md:w-48 z-10 pointer-events-none" alt="Rosa">
         <img src="https://i.imgur.com/TjUVH3M.png" class="absolute top-0 right-0 w-32 md:w-48 z-10 pointer-events-none transform scale-x-[-1]" alt="Rosa">
 
-        <div class="relative z-20 text-center max-w-5xl w-full mx-auto pt-12">
-             </div>
-
-    </div>
-</body>
-        
-        <div id="mainHeader" class="flex flex-col items-center mb-8">
-            <h1 class="text-6xl md:text-5xl font-script text-dorado-elegante drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-2">Recuerdos</h1>
-            <p class="text-[16px] md:text-[18px] tracking-[0.5em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mb-8">XV MILA</p>
+        <div class="relative z-20 text-center max-w-5xl w-full mx-auto pt-12 flex flex-col items-center">
             
-            <p class="text-sm italic text-white leading-relaxed mb-4 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] px-4 max-w-md">
-                Comparte tus momentos favoritos de la fiesta con nosotros.
-            </p>
+            <div id="mainHeader" class="flex flex-col items-center mb-8">
+                <h1 class="text-6xl md:text-5xl font-script text-dorado-elegante drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-2">Recuerdos</h1>
+                <p class="text-[16px] md:text-[18px] tracking-[0.5em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] mb-8">XV MILA</p>
+                
+                <p class="text-sm italic text-white leading-relaxed mb-4 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] px-4 max-w-md text-center">
+                    Comparte tus momentos favoritos de la fiesta con nosotros.
+                </p>
 
-            <button id="openModalBtn" class="bg-dorado-elegante text-black font-bold rounded-full px-10 py-4 shadow-[0_5px_20px_rgba(212,175,55,0.5)] text-[12px] tracking-[3px] uppercase flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 mt-2">
-                Subir Foto o Video
-            </button>
-        </div>
-
-        <div class="w-full mt-6 pt-6 border-t border-dorado-elegante/20 flex flex-col items-center">
-            <p class="text-[10px] text-dorado-elegante uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
-            <div class="bg-black/40 backdrop-blur-sm border border-dorado-elegante/40 rounded-lg p-1 flex inline-flex shadow-lg mb-6">
-                <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    1 Columna
-                </button>
-                <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    2 Columnas
+                <button id="openModalBtn" class="bg-dorado-elegante text-black font-bold rounded-full px-10 py-4 shadow-[0_5px_20px_rgba(212,175,55,0.5)] text-[12px] tracking-[3px] uppercase flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 mt-2">
+                    Subir Foto o Video
                 </button>
             </div>
-            
-            <div id="muro" class="columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2">
-                <div class="text-white text-sm opacity-70 col-span-full font-sans py-4">Cargando recuerdos...</div>
+
+            <div class="w-full mt-6 pt-6 border-t border-dorado-elegante/20 flex flex-col items-center">
+                <p class="text-[10px] text-dorado-elegante uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
+                <div class="bg-black/40 backdrop-blur-sm border border-dorado-elegante/40 rounded-lg p-1 flex inline-flex shadow-lg mb-6">
+                    <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        1 Columna
+                    </button>
+                    <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        2 Columnas
+                    </button>
+                </div>
+                
+                <div id="muro" class="columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2">
+                    <div class="text-white text-sm opacity-70 col-span-full font-sans py-4">Cargando recuerdos...</div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    </div> <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
         <div class="relative bg-[#0d0d0d] border border-dorado-elegante/50 rounded-2xl w-full max-w-md p-6 shadow-[0_10px_50px_rgba(212,175,55,0.2)] flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-dorado-elegante opacity-70 hover:opacity-100 transition-opacity">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -164,20 +166,19 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // UI Logic
         const modal = document.getElementById('uploadModal');
         const openBtn = document.getElementById('openModalBtn');
         const archivoInput = document.getElementById('archivoInput');
+        const dropZone = document.getElementById('dropZone');
         const previsualizacion = document.getElementById('previsualizacion');
         const previewContainer = document.getElementById('previewContainer');
-        const dropZone = document.getElementById('dropZone');
         const estadoCarga = document.getElementById('estadoCarga');
 
-        // Modal Logic
         openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        // Preview Logic
         archivoInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -193,7 +194,6 @@
             dropZone.classList.remove('hidden');
         });
 
-        // Upload Logic
         document.getElementById("btnSubir").addEventListener("click", async () => {
             const archivo = archivoInput.files[0];
             const nombre = document.getElementById("nombreInput").value;
@@ -222,7 +222,6 @@
             );
         });
 
-        // View Toggle Logic
         document.getElementById('btn1Col').addEventListener('click', () => {
             document.getElementById('muro').className = "columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2";
         });
@@ -230,14 +229,13 @@
             document.getElementById('muro').className = "columns-2 md:columns-3 lg:columns-4 gap-3 w-full px-1";
         });
 
-        // Real-time Feed
         const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
             const muro = document.getElementById('muro');
             muro.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const datos = doc.data();
-                const id = doc.id;
+            snapshot.forEach((docSnap) => {
+                const datos = docSnap.data();
+                const id = docSnap.id;
                 const media = datos.tipo === "video" ? `<video src="${datos.url_multimedia}" controls class="w-full h-auto rounded-xl border border-dorado-elegante/30"></video>` : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl border border-dorado-elegante/30">`;
                 
                 muro.innerHTML += `
