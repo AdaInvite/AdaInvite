@@ -46,7 +46,6 @@
             border-radius: 20px;
             pointer-events: none;
             z-index: 5;
-            /* Esta línea es la que hace la magia de estirarse */
             height: calc(100% - 30px); 
         }
 
@@ -58,12 +57,22 @@
         select option { background-color: rgba(0,0,0,0.9); color: #D4AF37; }
         #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
         #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        /* Grid para las miniaturas de vista previa */
+        #previewContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="contenedor-principal p-4 pb-20">
-        
         <div class="marco-estirable"></div>
 
         <img src="https://i.imgur.com/TjUVH3M.png" class="absolute top-0 left-0 w-32 md:w-48 z-10 pointer-events-none" alt="Rosa">
@@ -80,41 +89,37 @@
                 </p>
 
                 <button id="openModalBtn" class="bg-dorado-elegante text-black font-bold rounded-full px-10 py-4 shadow-[0_5px_20px_rgba(212,175,55,0.5)] text-[12px] tracking-[3px] uppercase flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 mt-2">
-                    Subir Foto o Video
+                    Subir Momentos
                 </button>
             </div>
 
             <div class="w-full mt-6 pt-6 border-t border-dorado-elegante/20 flex flex-col items-center">
                 <p class="text-[10px] text-dorado-elegante uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
                 <div class="bg-black/40 backdrop-blur-sm border border-dorado-elegante/40 rounded-lg p-1 flex inline-flex shadow-lg mb-6">
-                    <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                        1 Columna
-                    </button>
-                    <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                        2 Columnas
-                    </button>
+                    <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all">1 Columna</button>
+                    <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all">2 Columnas</button>
                 </div>
                 
                 <div id="muro" class="columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2">
-                    <div class="text-white text-sm opacity-70 col-span-full font-sans py-4">Cargando recuerdos...</div>
+                    <div class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center">Cargando recuerdos...</div>
                 </div>
             </div>
         </div>
-    </div> <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    </div>
+
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
         <div class="relative bg-[#0d0d0d] border border-dorado-elegante/50 rounded-2xl w-full max-w-md p-6 shadow-[0_10px_50px_rgba(212,175,55,0.2)] flex flex-col items-center max-h-[90vh] overflow-y-auto">
-            <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-dorado-elegante opacity-70 hover:opacity-100 transition-opacity">
+            <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-dorado-elegante opacity-70">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <h2 class="text-3xl font-script text-dorado-elegante mb-6 mt-2">Sube tu momento</h2>
+            <h2 class="text-3xl font-script text-dorado-elegante mb-6 mt-2 text-center">Sube tus momentos</h2>
             <div id="uploadForm" class="w-full flex flex-col gap-5 text-left font-sans">
                 <div>
-                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">Tu nombre *</label>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 block">Tu nombre *</label>
                     <input type="text" id="nombreInput" placeholder="Ej: Ana María" class="input-ada px-4 py-3 w-full">
                 </div>
                 <div>
-                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">Momento del evento *</label>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 block">Momento del evento *</label>
                     <select id="folderSelect" class="input-ada px-4 py-3 w-full cursor-pointer appearance-none">
                         <option value="" disabled selected>Elige una opción...</option>
                         <option value="En la iglesia">En la iglesia</option>
@@ -126,25 +131,24 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 flex items-center gap-2">Seleccionar archivo *</label>
-                    <div id="dropZone" class="relative border-2 border-dashed border-dorado-elegante/50 bg-black/30 rounded-xl p-6 text-center hover:bg-dorado-elegante/10 transition-colors cursor-pointer mt-1">
-                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                        <svg class="w-10 h-10 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        <p class="text-white text-sm font-bold">Haz clic o arrastra tu archivo aquí</p>
+                    <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 block">Seleccionar archivos *</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-dorado-elegante/50 bg-black/30 rounded-xl p-6 text-center hover:bg-dorado-elegante/10 cursor-pointer">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-8 h-8 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="text-white text-xs font-bold uppercase tracking-widest">Elige varias fotos o videos</p>
                     </div>
-                    <div id="previsualizacion" class="w-full relative hidden mt-2">
-                        <button id="removePreviewBtn" class="absolute top-2 right-2 bg-red-600 border border-white text-white rounded-full p-1 z-40 hover:bg-red-700 active:scale-95 shadow-md">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                        <div id="previewContainer" class="border border-dorado-elegante/50 rounded-xl overflow-hidden bg-black h-40 flex items-center justify-center relative"></div>
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-dorado-elegante/20 rounded-xl bg-black/50">
+                        <p class="text-[9px] text-dorado-elegante text-center py-2 uppercase font-bold border-b border-dorado-elegante/10">Archivos seleccionados:</p>
+                        <div id="previewContainer"></div>
+                        <button id="removePreviewBtn" class="w-full py-2 text-[9px] text-red-500 uppercase font-bold hover:bg-red-500/10 transition-colors">Limpiar selección</button>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-2">
-                    <button id="btnCancelar" class="flex-1 bg-white/10 text-white font-bold rounded-lg py-3.5 text-[11px] tracking-[2px] uppercase">Cancelar</button>
-                    <button id="btnSubir" class="flex-[1.5] bg-dorado-elegante text-black font-bold rounded-lg py-3.5 shadow-lg text-[11px] tracking-[2px] uppercase">Subir al Álbum</button>
+                    <button id="btnCancelar" class="flex-1 bg-white/10 text-white font-bold rounded-lg py-3.5 text-[10px] tracking-widest uppercase">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-dorado-elegante text-black font-bold rounded-lg py-3.5 text-[10px] tracking-widest uppercase shadow-lg">Subir al Álbum</button>
                 </div>
             </div>
-            <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-4 text-white bg-black p-3 rounded-md border border-dorado-elegante hidden text-center w-full font-sans"></p>
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest font-bold mt-4 text-white bg-black p-3 rounded-md border border-dorado-elegante hidden text-center w-full font-sans"></p>
         </div>
     </div>
 
@@ -166,26 +170,39 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // UI Logic
         const modal = document.getElementById('uploadModal');
-        const openBtn = document.getElementById('openModalBtn');
         const archivoInput = document.getElementById('archivoInput');
-        const dropZone = document.getElementById('dropZone');
-        const previsualizacion = document.getElementById('previsualizacion');
         const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
         const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
 
-        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('openModalBtn').addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
+        // LÓGICA DE VISTA PREVIA MÚLTIPLE
         archivoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
             dropZone.classList.add('hidden');
             previsualizacion.classList.remove('hidden');
-            const url = URL.createObjectURL(file);
-            previewContainer.innerHTML = file.type.includes("image") ? `<img src="${url}" class="h-full object-contain">` : `<video src="${url}" muted loop class="h-full object-contain"></video>`;
+            previewContainer.innerHTML = "";
+
+            files.forEach(file => {
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-black rounded-lg overflow-hidden border border-white/10";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            });
         });
 
         document.getElementById('removePreviewBtn').addEventListener('click', () => {
@@ -194,34 +211,50 @@
             dropZone.classList.remove('hidden');
         });
 
-        document.getElementById("btnSubir").addEventListener("click", async () => {
-            const archivo = archivoInput.files[0];
+        // CARGA MÚLTIPLE A FIREBASE
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
             const nombre = document.getElementById("nombreInput").value;
             const momento = document.getElementById("folderSelect").value;
-            if(!archivo || !nombre || !momento) return alert("Completa todos los campos");
 
-            const btn = document.getElementById("btnSubir");
-            btn.disabled = true;
+            if (archivos.length === 0 || !nombre || !momento) return alert("Completa todos los campos");
+
+            btnSubir.disabled = true;
             estadoCarga.classList.remove('hidden');
 
-            const storageRef = ref(storage, 'xv_mila/' + Date.now() + "_" + archivo.name);
-            const uploadTask = uploadBytesResumable(storageRef, archivo);
+            // Subimos uno por uno para no saturar la conexión del invitado
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_mila/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
 
-            uploadTask.on('state_changed', 
-                (snapshot) => { btn.innerText = `Subiendo... ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; },
-                (error) => { alert("Error al subir"); btn.disabled = false; },
-                async () => {
-                    const url = await getDownloadURL(uploadTask.snapshot.ref);
-                    await addDoc(collection(db, "muro_mila"), {
-                        nombre, momento, url_multimedia: url, likes: 0,
-                        tipo: archivo.type.includes("video") ? "video" : "imagen",
-                        fecha: new Date()
-                    });
-                    location.reload();
-                }
-            );
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_mila"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡Todo listo! ✨";
+            setTimeout(() => location.reload(), 1000);
         });
 
+        // VISTAS DE COLUMNAS
         document.getElementById('btn1Col').addEventListener('click', () => {
             document.getElementById('muro').className = "columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2";
         });
@@ -229,6 +262,7 @@
             document.getElementById('muro').className = "columns-2 md:columns-3 lg:columns-4 gap-3 w-full px-1";
         });
 
+        // EL MURO CON AUTOPLAY
         const q = query(collection(db, "muro_mila"), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
             const muro = document.getElementById('muro');
@@ -236,7 +270,11 @@
             snapshot.forEach((docSnap) => {
                 const datos = docSnap.data();
                 const id = docSnap.id;
-                const media = datos.tipo === "video" ? `<video src="${datos.url_multimedia}" controls class="w-full h-auto rounded-xl border border-dorado-elegante/30"></video>` : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl border border-dorado-elegante/30">`;
+                
+                // CLAVE: Se agregaron atributos 'autoplay muted loop playsinline' para el efecto automático
+                const media = datos.tipo === "video" 
+                    ? `<video src="${datos.url_multimedia}" autoplay muted loop playsinline class="w-full h-auto rounded-xl border border-dorado-elegante/30"></video>` 
+                    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl border border-dorado-elegante/30">`;
                 
                 muro.innerHTML += `
                 <div class="break-inside-avoid mb-4 bg-black/70 border border-dorado-elegante rounded-2xl p-3 relative">
@@ -245,10 +283,7 @@
                     <div class="flex items-center justify-between mt-3">
                         <h4 class="text-white font-bold uppercase text-[9px] truncate flex-1">${datos.nombre}</h4>
                         <div class="flex items-center gap-3">
-                            <a href="${datos.url_multimedia}" target="_blank" download="Mila_Recuerdo" class="text-dorado-elegante hover:text-white transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            </a>
-                            <button onclick="darLike('${id}')" class="flex items-center gap-1 text-dorado-elegante hover:text-white transition-all">
+                            <button onclick="darLike('${id}')" class="flex items-center gap-1 text-dorado-elegante">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                 <span class="font-bold text-sm num-likes">${datos.likes}</span>
                             </button>
