@@ -287,6 +287,7 @@
             muro.className = "columns-2 md:columns-3 gap-3 w-full px-1";
         });
 
+        // Dibujar Muro con optimización (docChanges)
         let isFirstLoad = true;
         const q = query(collection(db, "muro_mayte"), orderBy("fecha", "desc"));
         
@@ -304,9 +305,9 @@
                 const id = change.doc.id;
 
                 if (change.type === "added") {
-                    // MODIFICACIÓN: El video inicia sin controles, silenciado y en bucle. Se le asigna un ID.
+                    // MODIFICACIÓN: Agregamos onclick y cursor-pointer al video
                     const media = datos.tipo === "video" 
-                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline class="w-full h-auto rounded-xl shadow-md bg-white/50"></video>` 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto rounded-xl shadow-md bg-white/50 cursor-pointer"></video>` 
                         : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-md">`;
                     
                     const divTarjeta = document.createElement('div');
@@ -319,9 +320,6 @@
                         <div class="flex items-center justify-between mt-2 px-1">
                             <h4 class="text-white font-bold uppercase text-[10px] tracking-widest truncate flex-1 font-sans">${datos.nombre}</h4>
                             <div class="flex items-center gap-3">
-                                <a href="${datos.url_multimedia}" target="_blank" download class="text-blanco-perla hover:text-white transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                </a>
                                 <button onclick="darLike('${id}')" class="flex items-center gap-1 text-blanco-perla hover:text-white transition-colors">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                     <span id="contador-likes-${id}" class="font-bold text-sm num-likes">${datos.likes}</span>
@@ -355,16 +353,21 @@
             isFirstLoad = false;
         });
 
+        // FUNCIONES DE INTERACCIÓN
         window.darLike = async function(id) {
-            // Registrar el like en Firestore
+            // El like ahora solo suma likes
             const docRef = doc(db, "muro_mayte", id);
             await updateDoc(docRef, { likes: increment(1) });
+        };
 
-            // MODIFICACIÓN: Buscar el video asociado y activar el sonido y los controles
+        window.activarVideo = function(id) {
+            // Nueva función: al tocar el video, se quita el silencio y salen los controles
             const videoElement = document.getElementById(`vid-${id}`);
             if (videoElement) {
                 videoElement.muted = false;
                 videoElement.controls = true;
+                // Quitamos el cursor-pointer para que se sienta como un video normal después del clic
+                videoElement.classList.remove('cursor-pointer');
             }
         };
     </script>
