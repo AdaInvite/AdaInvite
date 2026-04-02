@@ -44,7 +44,6 @@
         h1, p, select, button { font-family: var(--font-elegant); }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
         
-        /* Fondo fijo anti-estiramiento */
         .fondo-perla {
             background-image: url('https://i.imgur.com/XpSlXib.gif');
             background-size: cover; 
@@ -53,7 +52,6 @@
             background-repeat: no-repeat;
         }
 
-        /* Forma de cristal adaptada para que permita hacer scroll hacia abajo */
         .forma-ovalada {
             background-color: rgba(255, 255, 255, 0.15); 
             backdrop-filter: blur(12px); 
@@ -106,17 +104,17 @@
         </p>
 
         <button id="openModalBtn" class="bg-white text-terracota font-bold py-3 px-8 rounded-full uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 mb-8 shadow-md hover:scale-105 transition-transform active:scale-95">
-       Subir recuerdos </button>
+            Subir recuerdos 
+        </button>
 
         <div class="w-full pt-8 border-t border-terracota/10 flex flex-col items-center">
             <p class="text-[9px] text-white uppercase tracking-widest mb-3 font-bold">Vista de Galería</p>
             <div class="bg-white/40 backdrop-blur-sm border border-terracota/20 rounded-full p-1 flex inline-flex shadow-sm mb-6">
                 <button id="btn1Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota bg-white rounded-full transition-all">1 Columna</button>
-                <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all">2 Columnas</button>
+                <button id="btn2Col" class="px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 text-terracota rounded-full transition-all">2 Columnas</button>
             </div>
             
             <div id="muro" class="columns-1 md:columns-2 gap-4 w-full px-2">
-                <div class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center">Cargando recuerdos...</div>
             </div>
         </div>
         
@@ -179,7 +177,6 @@
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-        // LLAVES DE FIREBASE DE MAYTE
         const firebaseConfig = {
             apiKey: "AIzaSyC6oWLoLyRL3AUUpWceHQWlTHDZ4-wQ7tI",
             authDomain: "xv-mayte-3f7c3.firebaseapp.com",
@@ -193,7 +190,6 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // UI Logic
         const modal = document.getElementById('uploadModal');
         const openBtn = document.getElementById('openModalBtn');
         const archivoInput = document.getElementById('archivoInput');
@@ -207,7 +203,6 @@
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        // Vista Previa Múltiple
         archivoInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
@@ -236,7 +231,6 @@
             dropZone.classList.remove('hidden');
         });
 
-        // Subida en Lote
         btnSubir.addEventListener("click", async () => {
             const archivos = Array.from(archivoInput.files);
             const nombre = document.getElementById("nombreInput").value;
@@ -274,65 +268,104 @@
                 });
             }
 
-            estadoCarga.innerText = "¡Recuerdos guardados con éxito!";
+            estadoCarga.innerText = "Recuerdos guardados con éxito";
             setTimeout(() => location.reload(), 1500);
         });
 
-        // Alternar Columnas
         const btn1Col = document.getElementById('btn1Col');
         const btn2Col = document.getElementById('btn2Col');
         const muro = document.getElementById('muro');
 
         btn1Col.addEventListener('click', () => {
-            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-blanco-perla rounded-full transition-all";
-            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all";
+            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota bg-white rounded-full transition-all";
+            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-white/50 rounded-full transition-all";
             muro.className = "columns-1 md:columns-2 gap-4 w-full px-2";
         });
         btn2Col.addEventListener('click', () => {
-            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-blanco-perla rounded-full transition-all";
-            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota hover:bg-white/50 rounded-full transition-all";
+            btn2Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-terracota bg-white rounded-full transition-all";
+            btn1Col.className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-white/50 rounded-full transition-all";
             muro.className = "columns-2 md:columns-3 gap-3 w-full px-1";
         });
 
-        // Dibujar Muro (Sin marcos, con controles de video)
+        let isFirstLoad = true;
         const q = query(collection(db, "muro_mayte"), orderBy("fecha", "desc"));
+        
         onSnapshot(q, (snapshot) => {
-            muro.innerHTML = "";
-            
-            if(snapshot.empty) {
-                 muro.innerHTML = `<div class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero!</div>`;
-                 return;
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="text-white text-sm opacity-70 col-span-full font-sans py-4 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero!</div>`;
+                return;
             }
 
-            snapshot.forEach((docSnap) => {
-                const datos = docSnap.data();
-                const id = docSnap.id;
-                
-                // Videos con Controls, sin marcos gruesos
-                const media = datos.tipo === "video" 
-                    ? `<video src="${datos.url_multimedia}" controls playsinline class="w-full h-auto rounded-xl shadow-md bg-white/50"></video>` 
-                    : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-md">`;
-                
-                muro.innerHTML += `
-                <div class="break-inside-avoid mb-6 relative group flex flex-col">
-                    <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-terracota text-[8px] font-bold px-3 py-1 rounded-full uppercase z-10 shadow-sm">${datos.momento}</span>
-                    ${media}
-                    <div class="flex items-center justify-between mt-2 px-1">
-                        <h4 class="text-white font-bold uppercase text-[10px] tracking-widest truncate flex-1 font-sans">${datos.nombre}</h4>
-                        <div class="flex items-center gap-3">
-                            <button onclick="darLike('${id}')" class="flex items-center gap-1 text-blanco-perla hover:text-terracota transition-colors">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                <span class="font-bold text-sm num-likes">${datos.likes}</span>
-                            </button>
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    // MODIFICACIÓN: El video inicia sin controles, silenciado y en bucle. Se le asigna un ID.
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline class="w-full h-auto rounded-xl shadow-md bg-white/50"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-xl shadow-md">`;
+                    
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "break-inside-avoid mb-6 relative group flex flex-col";
+                    
+                    divTarjeta.innerHTML = `
+                        <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-terracota text-[8px] font-bold px-3 py-1 rounded-full uppercase z-10 shadow-sm">${datos.momento}</span>
+                        ${media}
+                        <div class="flex items-center justify-between mt-2 px-1">
+                            <h4 class="text-white font-bold uppercase text-[10px] tracking-widest truncate flex-1 font-sans">${datos.nombre}</h4>
+                            <div class="flex items-center gap-3">
+                                <a href="${datos.url_multimedia}" target="_blank" download class="text-blanco-perla hover:text-white transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                </a>
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1 text-blanco-perla hover:text-white transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                    <span id="contador-likes-${id}" class="font-bold text-sm num-likes">${datos.likes}</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>`;
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
             });
+
+            isFirstLoad = false;
         });
 
         window.darLike = async function(id) {
+            // Registrar el like en Firestore
             const docRef = doc(db, "muro_mayte", id);
             await updateDoc(docRef, { likes: increment(1) });
+
+            // MODIFICACIÓN: Buscar el video asociado y activar el sonido y los controles
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+            }
         };
     </script>
 </body>
