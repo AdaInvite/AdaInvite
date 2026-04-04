@@ -200,7 +200,7 @@
             50% { margin-top: -15px; margin-left: 10px; }
         }
 
-        /* Reproductor de audio escondido */
+        /* Reproductor de audio escondido y animado */
         #audio-control {
             position: fixed;
             bottom: 20px;
@@ -209,18 +209,37 @@
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--dorado);
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             backdrop-filter: blur(4px);
-            color: var(--dorado);
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: all 0.5s ease;
+            /* Inicialmente oculto para el sobre */
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        #audio-control.visible {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        #audio-control:hover { transform: scale(1.1); }
+
+        .mariposa-audio {
+            width: 25px;
             transition: transform 0.3s ease;
         }
-        #audio-control:hover { transform: scale(1.1); }
+
+        .animar-aleteo {
+            animation: aleteo 0.4s infinite alternate ease-in-out;
+        }
 
         #countdown { background: none !important; border: none !important; box-shadow: none !important; display: flex; justify-content: center; align-items: center; }
         #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; line-height: 1; }
@@ -236,8 +255,7 @@
     </audio>
 
     <div id="audio-control" onclick="toggleAudio()">
-        <svg id="icon-play" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="icon-pause" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <img id="mariposa-icon" src="https://i.imgur.com/vulCeEB.png" class="mariposa-audio animar-aleteo" alt="Control de Música">
     </div>
 
     <div id="envelope-wrapper">
@@ -425,6 +443,8 @@
             playAudio(); 
 
             document.getElementById('envelope-wrapper').classList.add('open');
+            // Muestra el botón de música justo cuando se abre el sobre
+            document.getElementById('audio-control').classList.add('visible');
 
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
@@ -435,33 +455,27 @@
         let isPlaying = false;
 
         function playAudio() {
-            const playIcon = document.getElementById("icon-play");
-            const pauseIcon = document.getElementById("icon-pause");
+            const mariposaIcon = document.getElementById("mariposa-icon");
             
             audio.play().then(() => {
                 isPlaying = true;
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
+                mariposaIcon.classList.add('animar-aleteo');
             }).catch(error => {
                 console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
                 isPlaying = false;
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+                mariposaIcon.classList.remove('animar-aleteo');
             });
         }
 
         function toggleAudio() {
-            const playIcon = document.getElementById("icon-play");
-            const pauseIcon = document.getElementById("icon-pause");
+            const mariposaIcon = document.getElementById("mariposa-icon");
 
             if (isPlaying) {
                 audio.pause();
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+                mariposaIcon.classList.remove('animar-aleteo');
             } else {
                 audio.play();
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
+                mariposaIcon.classList.add('animar-aleteo');
             }
             isPlaying = !isPlaying;
         }
