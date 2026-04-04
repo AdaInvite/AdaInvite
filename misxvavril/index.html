@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Mis XV Avril</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#A85741',
+                        blanco: {
+                            perla: '#FDFBF9'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --terracota: #A85741;
+            --blanco-perla: #FDFBF9;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Fleur De Leah', cursive;
+            --font-numbers: 'Montserrat', sans-serif; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-elegant);
+            background-color: var(--blanco-perla);
+            overflow-x: hidden;
+            color: var(--terracota);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, span, p, a { 
+            font-family: var(--font-elegant); 
+        }
+
+        .font-numbers { font-family: var(--font-numbers) !important; font-weight: 500; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+
+        /* FONDOS INTERCALADOS */
+        .bg-pattern-1 {
+            background-image: url('https://i.imgur.com/C3hlGT4.gif');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bg-pattern-2 {
+            position: relative;
+            background-image: url('https://i.imgur.com/zWTBsCm.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Decoraciones superpuestas para fondo 2 */
+        .bg-pattern-2::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100px; /* Ajustar altura según imagen */
+            background-image: url('https://i.imgur.com/PxS6u1l.png');
+            background-size: contain; background-repeat: no-repeat; background-position: top center;
+            z-index: 1;
+        }
+        .bg-pattern-2::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 100px; /* Ajustar altura según imagen */
+            background-image: url('https://i.imgur.com/S2v1MQB.png');
+            background-size: contain; background-repeat: no-repeat; background-position: bottom center;
+            z-index: 1;
+        }
+        .bg-pattern-2 > * { position: relative; z-index: 2; } /* Subir contenido por encima de decoraciones */
+
+
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(168, 87, 65, 0.3); }
+        .filtro-terracota { filter: brightness(0) saturate(100%) invert(38%) sepia(21%) saturate(1633%) hue-rotate(333deg) brightness(95%) contrast(87%); }
+
+        /* SOBRE INICIAL - Sin Filtros, Nueva Textura */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url("https://i.imgur.com/TcQ7Awm.jpeg");
+            background-size: cover; background-position: center; transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); isolation: isolate; }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); isolation: isolate; }
+
+        .flap { 
+            width: 100%; height: 100%; 
+            background-image: url("https://i.imgur.com/TcQ7Awm.jpeg"); 
+            background-size: cover; 
+        }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-100%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(100%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        .name-header { font-family: var(--font-script); font-size: clamp(5rem, 20vw, 12rem); line-height: 1; }
+
+        #section-main { display: none; }
+
+        /* ANIMACIONES */
+        .reveal, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(40px); }
+        .reveal-scale { transform: scale(0.9); }
+        .reveal.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+
+        @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        
+        /* Animación Mariposa */
+        @keyframes butterflyMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5px, -5px) rotate(5deg); }
+            50% { transform: translate(0, -10px) rotate(0deg); }
+            75% { transform: translate(-5px, -5px) rotate(-5deg); }
+        }
+        .butterfly-anim { animation: butterflyMove 4s infinite ease-in-out; }
+
+        /* Icono de música escondido */
+        #music-control {
+            position: fixed; bottom: 20px; right: 20px; z-index: 50;
+            width: 40px; height: 40px; background: rgba(168, 87, 65, 0.6);
+            border-radius: 50%; display: flex; items-center; justify-content: center;
+            color: white; cursor: pointer; backdrop-filter: blur(5px);
+            transition: all 0.3s ease; opacity: 0.3; /* Escondido/discreto */
+        }
+        #music-control:hover { opacity: 1; background: rgba(168, 87, 65, 1); }
+        
+        .lds-ripple { display: inline-block; relative; width: 20px; height: 20px; }
+        .lds-ripple div { position: absolute; border: 2px solid #fff; opacity: 1; border-radius: 50%; animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite; }
+        .lds-ripple div:nth-child(2) { animation-delay: -0.5s; }
+        @keyframes lds-ripple {
+            0% { top: 10px; left: 10px; width: 0; height: 0; opacity: 1; }
+            100% { top: 0px; left: 0px; width: 20px; height: 20px; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="PONER_AQUI_EL_ENLACE_DIRECTO_A_BOSQUEALEGRE.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-control" onclick="toggleAudio()">
+        <div id="music-playing" class="lds-ripple hidden"><div></div><div></div></div>
+        <svg id="music-paused" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-[9px] tracking-[3px] uppercase mb-4 text-terracota font-bold drop-shadow-sm">Toca para abrir</div>
+                <img src="https://i.imgur.com/8po1PtG.png" class="w-[110px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <header class="relative min-h-[100svh] flex flex-col pt-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/iWUpbv7.jpeg');"> 
+            
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-6 text-center">
+                <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full mb-10">
+                    
+                    <h2 class="font-script text-5xl md:text-4xl text-terracota mb-2 drop-shadow-sm">Mis 15</h2>
+                    <img src="https://i.imgur.com/sc1Veyg.png" alt="Corona" class="w-36 md:w-30 mb-2 filtro-terracota drop-shadow-sm">
+                    <h1 class="name-header text-terracota mb-12 drop-shadow-md">Avril</h1>
+                    
+                    <div class="flex items-center justify-center gap-4 w-full max-w-sm px-6">
+                        <div class="w-full flex justify-center items-center gap-4 border-t border-b border-terracota py-3">
+                            <span class="text-xl font-light font-elegant">May</span>
+                        </div>
+                        
+                        <span class="text-[3rem] leading-none font-numbers mx-2">09</span>
+                        
+                        <div class="w-full flex justify-center items-center gap-4 border-t border-b border-terracota py-3">
+                            <span class="text-xl font-light font-elegant tracking-widest">2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative z-10 w-full reveal active delay-100 flex justify-center">
+                <img src="https://i.imgur.com/W2oWvWj.png" class="w-full max-w-lg object-contain" alt="Decoración">
+            </div>
+        </header>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 text-center bg-pattern-1 relative overflow-hidden">
+            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
+                
+                <div class="relative inline-block mb-16 p-10 md:p-16">
+                    <img src="https://i.imgur.com/yJAi2nl.png" class="absolute inset-0 w-full h-full object-contain" alt="Marco">
+                    
+                    <img src="https://i.imgur.com/vulCeEB.png" class="absolute top-0 left-0 w-8 h-8 butterfly-anim" style="animation-delay: 0s" alt="Mariposa">
+                    
+                    <p class="relative z-10 text-sm md:text-base italic leading-relaxed font-light px-6 text-terracota">
+                        "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
+                    </p>
+
+                    <img src="https://i.imgur.com/vulCeEB.png" class="absolute bottom-0 right-0 w-8 h-8 butterfly-anim" style="animation-delay: 2s" alt="Mariposa">
+                </div>
+                
+                <p class="text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold text-terracota">Con la bendición de mis padres y padrinos</p>
+                
+            </div>
+        </section>
+
+        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-20 px-5 bg-pattern-2 relative">
+            <div class="max-w-xl mx-auto reveal relative z-10 w-full px-4 text-center">
+                
+                <div class="bg-white/80 p-8 md:p-12 shadow-xl backdrop-blur-sm border border-terracota/10">
+                    <div class="mx-auto mb-6 flex items-center justify-center opacity-90">
+                        <img src="https://i.imgur.com/AIApde9.png" class="w-20 h-20 filtro-terracota" alt="Recepción">
+                    </div>
+                    
+                    <h1 class="text-5xl mb-6 font-script text-terracota text-shadow-light">Recepción</h1>
+                    
+                    <p class="text-[#2C2A2A] font-bold text-lg mb-2">Salón Quinta Paraiso</p>
+                    <p class="text-[#2C2A2A] font-light text-sm tracking-wide mb-6">Calle 33 sur esquina ejidal</p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-terracota border-t border-b border-terracota/30 py-4 mb-8">
+                        <div class="font-numbers text-2xl">7:00 PM</div>
+                        <div class="hidden sm:block">|</div>
+                        <div class="text-xs uppercase tracking-widest font-bold">Sábado, 9 de Mayo</div>
+                    </div>
+
+                    <a href="https://maps.app.goo.gl/ZiTrXZmjJ9PxEuLH6" target="_blank" class="w-full block text-center bg-terracota text-white font-bold px-8 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-white hover:text-terracota transition-all border border-terracota duration-300 rounded-none shadow-md">Ver ubicación</a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-pattern-1 text-center relative overflow-hidden">
+            <div class="max-w-2xl mx-auto reveal relative z-10 w-full">
+                
+                <h1 class="text-5xl mb-6 text-terracota font-script text-shadow-light">Sugerencia de regalos</h1>
+                
+                <p class="text-sm md:text-base font-light text-[#2C2A2A] mb-12 leading-relaxed px-6">
+                    Tu presencia es mi mejor regalo pero si gustas obsequiarme algo y no sabes qué te sugiero lo siguiente:
+                </p>
+                
+                <div class="bg-white/60 p-10 shadow-lg border border-terracota/10 backdrop-blur-sm inline-block">
+                    <div class="flex flex-col items-center justify-center">
+                        <svg class="w-16 h-16 mb-6 text-terracota" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        
+                        <h3 class="text-2xl font-bold text-terracota mb-3">Lluvia de sobres</h3>
+                        <p class="text-xs md:text-sm text-[#2C2A2A] leading-relaxed max-w-xs font-light">
+                            Depósita en un sobre el efectivo que gustes obsequiarme.<br>Tendré una urna en la entrada para recibirlos.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-pattern-2 text-center relative">
+            <div class="max-w-xl mx-auto reveal-scale relative z-10 w-full"> 
+                
+                <div class="bg-white/80 p-8 md:p-12 shadow-xl backdrop-blur-sm border border-terracota/10">
+                    <h2 class="text-5xl font-script mb-6 text-terracota text-shadow-light">Confirmar Asistencia</h2>
+                    
+                    <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold bg-terracota/10 inline-block px-4 py-2">
+                        Por favor confirma antes del <span class="font-numbers text-terracota">29 de Abril</span>
+                    </p>
+                    
+                    <p class="text-sm text-[#2C2A2A] font-light mb-10 leading-relaxed">
+                        Agradecería mucho que me confirmaras tu asistencia lo antes posible para preparar todos los detalles. Toca el botón para enviarme un mensaje directo.
+                    </p>
+
+                    <a href="https://wa.me/529841190704?text=Hola%20Avril,%20confirmo%20mi%20asistencia%20a%20tus%20XV." target="_blank" class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-bold py-5 uppercase tracking-[0.2em] text-[10px] hover:shadow-lg transition-all duration-300 rounded-none shadow-md">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.022.14-.185.263-.304.347-.88.631-1.212.946-2.101 1.392-.312.157-.415.163-.767.048-1.919-.631-3.646-1.876-4.721-3.212-.403-.5-.732-.887-.997-1.312-.115-.185-.115-.28 0-.393.354-.413.307-.36.567-.676.111-.133.178-.22.248-.332.056-.089.023-.191-.013-.263-.061-.122-.467-1.127-.64-1.54-.173-.413-.347-.35-.508-.35-.161 0-.347-.02-.533-.02-.187 0-.493.07-.751.347-.257.276-1.002 1.002-1.002 2.441 0 1.44 1.049 2.832 1.189 3.031.14.2 2.069 3.209 5.012 4.478.7.302 1.243.484 1.681.611.7.199 1.346.163 1.856.09.561-.08 1.774-.706 2.028-1.39.256-.684.256-1.272.179-1.39-.071-.118-.247-.181-.469-.283zM12.1 3c-4.944 0-9 4.056-9 9 0 1.572.417 3.106 1.199 4.467L3 21l4.613-1.213C8.943 20.563 10.508 21 12.1 21c4.944 0 9-4.056 9-9s-4.056-9-9-9zm0 16.5c-1.4 0-2.784-.359-3.999-1.039l-.286-.16-2.96.778.791-2.884-.175-.281C4.792 14.777 4.1 13.456 4.1 12.1c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+                        Confirmar por WhatsApp
+                    </a>
+                </div>
+
+            </div>
+        </section>
+        
+        <footer class="min-h-[60svh] flex flex-col justify-center py-10 px-6 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/JIvmnsC.jpeg');">
+            <div class="absolute inset-0 bg-terracota/70"></div>
+            
+            <div class="relative z-10">
+                <p class="text-7xl md:text-8xl font-script mb-6 text-white drop-shadow-md">¡No faltes Avril!</p>
+                <p class="text-xs font-elegant text-white/80 drop-shadow-sm">AdaInvite © 2026</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            
+            initObserver();
+            // Intentar reproducir música al abrir (Nota: puede ser bloqueado por navegador)
+            playAudio(); 
+
+            document.getElementById('envelope-wrapper').classList.add('open');
+
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        // LÓGICA MUSICA SIMPLIFICADA
+        const audio = document.getElementById("bg-music");
+        const musicPlayingIcon = document.getElementById("music-playing");
+        const musicPausedIcon = document.getElementById("music-paused");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                musicPausedIcon.classList.add('hidden');
+                musicPlayingIcon.classList.remove('hidden');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. Usar control manual.");
+                isPlaying = false;
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                musicPlayingIcon.classList.add('hidden');
+                musicPausedIcon.classList.remove('hidden');
+            } else {
+                audio.play();
+                musicPausedIcon.classList.add('hidden');
+                musicPlayingIcon.classList.remove('hidden');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Intersection Observer para animaciones reveal
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.15 });
+            
+            document.querySelectorAll('.reveal, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+    </script>
+</body>
+</html>
