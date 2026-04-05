@@ -49,14 +49,15 @@
             scroll-behavior: smooth;
         }
 
-        #bg-video {
+       #bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            z-index: -1;
+            z-index: -2; /* Lo mandamos un poco más atrás */
+            filter: brightness(0.35); /* Aquí está el filtro oscuro */
             pointer-events: none;
         }
 
@@ -164,8 +165,8 @@
         }
         #envelope-container { position: absolute !important; inset: 0 !important; z-index: 10; }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.6)); isolation: isolate; }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.6)); isolation: isolate; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); isolation: isolate; }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); isolation: isolate; }
         .flap { 
             width: 100%; height: 100%; 
             background-image: url("https://i.imgur.com/pXOb69a.jpeg"); 
@@ -257,6 +258,23 @@
         #countdown .time-label { font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; }
         
         .deco-horizontal { width: 100%; object-fit: cover; position: relative; z-index: 20; pointer-events: none;}
+        .deco-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transform: translateY(-45%); /* Sube la imagen para que muerda ambas secciones */
+            z-index: 20;
+        }
+
+        .deco-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transform: translateY(45%); /* Baja la imagen para quedar en el borde inferior */
+            z-index: 20;
+        }
     </style>
 </head>
 <body>
@@ -279,7 +297,7 @@
             <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
             <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-lg font-bold mb-4 animate-bounce text-dorado font-elegant text-shadow-dark">
+                <div class="text-lg font-bold mb-4 animate-bounce text-dorado font-elegant">
                     Toca para abrir
                 </div>
                 <img src="https://i.imgur.com/8po1PtG.png" class="w-[150px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
@@ -293,7 +311,7 @@
             
             <div class="relative z-10 w-full flex flex-col justify-center items-center px-4 text-center">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
-                    <h2 class="text-4xl md:text-5xl font-bold texto-dorado mb-2 drop-shadow-sm text-shadow-dark tracking-widest">MIS XV</h2>
+                    <h2 class="text-4xl md:text-5xl font-bold texto-dorado mt-4 mb-2 drop-shadow-sm text-shadow-dark tracking-widest">MIS XV</h2>
                     <h1 class="name-header texto-dorado mb-8 relative z-10 text-shadow-dark">AVRIL</h1>
                     
                     <div class="flex items-center justify-center w-full max-w-[320px] mx-auto px-2 pb-6 relative z-10">
@@ -316,8 +334,8 @@
 
         <section class="fondo-bosque min-h-[100svh] flex flex-col justify-center items-center relative">
             
-            <div class="relative w-full">
-                <img src="https://i.imgur.com/PxS6u1l.png" class="deco-horizontal" alt="Deco Arriba">
+            <div class="deco-top">
+                <img src="https://i.imgur.com/PxS6u1l.png" class="w-full object-cover pointer-events-none" alt="Deco Arriba">
                 <img src="https://i.imgur.com/vulCeEB.png" class="mariposa mariposa-izq" alt="Mariposa">
             </div>
 
@@ -326,22 +344,22 @@
                     <img src="https://i.imgur.com/yJAi2nl.png" class="w-full h-auto drop-shadow-2xl" alt="Marco Redondo">
                     
                     <div class="absolute inset-0 flex items-center justify-center px-[18%] sm:px-[22%]">
-                        <p class="text-center text-sm md:text-lg italic text-black font-bold leading-relaxed">
+                        <p class="text-center text-lg md:text-lg italic text-black font-bold leading-relaxed">
                             "Llena de magia, esperanza y nuevos desafíos, y quiero celebrarla rodeada de las personas que han sido parte de mi historia y que deseo sigan acompañándome en este nuevo camino."
                         </p>
                     </div>
                 </div>
 
                 <div class="relative z-10 text-center mt-6 px-4">
-                    <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-white font-bold leading-loose opacity-90 text-shadow-dark">
+                    <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-black font-bold leading-loose opacity-90 text-shadow-dark">
                         Con la bendición de Dios y de mis padres
-                        <span class="texto-dorado text-sm md:text-base mt-2 block tracking-[0.15em] font-bold">ESTÁN INVITADOS A CELEBRAR<br>CONMIGO ESTE DÍA TAN ESPECIAL</span>
+                        <span class="texto-black text-sm md:text-base mt-2 block tracking-[0.15em] font-bold">ESTÁN INVITADOS A CELEBRAR<br>CONMIGO ESTE DÍA TAN ESPECIAL</span>
                     </p>
                 </div>
             </div>
 
-            <div class="relative w-full">
-                <img src="https://i.imgur.com/S2v1MQB.png" class="deco-horizontal" alt="Deco Abajo">
+            <div class="deco-bottom">
+                <img src="https://i.imgur.com/S2v1MQB.png" class="w-full object-cover pointer-events-none" alt="Deco Abajo">
                 <img src="https://i.imgur.com/vulCeEB.png" class="mariposa mariposa-der" alt="Mariposa">
             </div>
 
@@ -432,8 +450,8 @@
 
         <section class="fondo-bosque min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 text-center relative overflow-hidden pb-24">
             
-            <div class="relative w-full absolute top-0">
-                <img src="https://i.imgur.com/PxS6u1l.png" class="deco-horizontal" alt="Deco Arriba">
+            <div class="deco-top">
+                <img src="https://i.imgur.com/PxS6u1l.png" class="w-full object-cover pointer-events-none" alt="Deco Arriba">
                 <img src="https://i.imgur.com/vulCeEB.png" class="mariposa mariposa-izq" alt="Mariposa">
             </div>
 
@@ -447,8 +465,8 @@
                 </a>
             </div>
 
-            <div class="relative w-full absolute bottom-0">
-                <img src="https://i.imgur.com/S2v1MQB.png" class="deco-horizontal" alt="Deco Abajo">
+            <div class="deco-bottom">
+                <img src="https://i.imgur.com/S2v1MQB.png" class="w-full object-cover pointer-events-none" alt="Deco Abajo">
                 <img src="https://i.imgur.com/vulCeEB.png" class="mariposa mariposa-der" alt="Mariposa">
             </div>
         </section>
