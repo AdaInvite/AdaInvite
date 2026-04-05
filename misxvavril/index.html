@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>XV Avril</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
@@ -43,10 +43,22 @@
             width: 100%;
             height: 100%;
             font-family: var(--font-elegant);
-            background-color: transparent;
+            background-color: #000; /* Fallback color */
             overflow-x: hidden;
             color: #FFFFFF;
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased; /* Mejora lectura en iOS/Mac */
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ocultar flechas del input numérico para mantener la elegancia */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Para Firefox */
         }
 
        #bg-video {
@@ -133,7 +145,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
+            color: #FFD700; /* Fallback robusto */
         }
         
         .text-shadow-dark { 
@@ -146,6 +158,7 @@
             border: none;
             font-weight: 700;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            -webkit-tap-highlight-color: transparent; /* Quita el flash azul en móviles */
         }
 
         #envelope-wrapper {
@@ -156,7 +169,7 @@
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/pXOb69a.jpeg"); 
-            background-color: transparent; 
+            background-color: #1a1a1a; 
             background-size: cover; 
             background-position: center;
             transition: opacity 1.2s ease-in-out; 
@@ -178,17 +191,18 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 10; display: flex; flex-direction: column; align-items: center;
             cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         #envelope-wrapper.open .envelope-bg { opacity: 0; }
-        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
-        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-100%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(100%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
         .name-header { font-size: clamp(4rem, 18vw, 8rem); line-height: 1; margin-top: 10px; font-weight: 500; letter-spacing: 2px;}
 
         #section-main { display: none; }
 
-        .reveal, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
         .reveal { transform: translateY(40px); }
         .reveal-scale { transform: scale(0.85); }
         .reveal.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
@@ -204,6 +218,7 @@
             width: 40px;
             z-index: 30;
             animation: aleteo 0.8s infinite alternate ease-in-out, flotarMariposa 6s infinite ease-in-out;
+            will-change: transform, margin;
         }
         .mariposa-izq { top: -10px; left: 10px; }
         .mariposa-der { bottom: -10px; right: 10px; transform: scaleX(-1); }
@@ -233,6 +248,7 @@
             opacity: 0;
             pointer-events: none;
             visibility: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #audio-control.visible {
@@ -289,7 +305,7 @@
 
     <main id="section-main">
         
-        <header class="relative min-h-[100svh] flex flex-col justify-center items-center px-4 py-10"> 
+        <header class="relative min-h-screen min-h-[100svh] flex flex-col justify-center items-center px-4 py-10"> 
             <div class="relative z-10 w-full flex flex-col justify-center items-center px-4 text-center">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
                     <h2 class="text-3xl md:text-4xl font-bold titulo-degradado mt-4 mb-2 tracking-widest">MIS XV</h2>
@@ -316,13 +332,13 @@
             <img src="https://i.imgur.com/vulCeEB.png" class="mariposa mariposa-izq" alt="Mariposa">
         </div>
 
-        <section class="fondo-bosque min-h-[100svh] flex flex-col justify-center items-center relative py-16">
+        <section class="fondo-bosque min-h-screen min-h-[100svh] flex flex-col justify-center items-center relative py-16">
             <div class="flex-grow flex flex-col items-center justify-center w-full reveal">
                 <div class="relative w-full flex items-center justify-center">
                     <img src="https://i.imgur.com/yJAi2nl.png" class="w-full h-auto drop-shadow-2xl" alt="Marco Redondo">
                     <div class="absolute inset-0 flex items-center justify-center px-[18%] sm:px-[22%]">
-                        <p class="text-center text-lg md:text-lg italic text-black font-bold leading-relaxed">
-                            "HABÍA UNA VEZ... UNA NIÑA QUE SOÑABA CON SU GRAN DÍA. HOY, ESE SUEÑO FLORECE Y LA MAGIA COMIENZA. <br> TE INVITO A SER PARTE DE MI CUENTO... <br> MIS 15 AÑOS
+                        <p class="text-center text-[15px] md:text-lg italic text-black font-bold leading-relaxed">
+                            "HABÍA UNA VEZ... UNA NIÑA QUE SOÑABA CON SU GRAN DÍA. HOY, ESE SUEÑO FLORECE Y LA MAGIA COMIENZA. <br> TE INVITO A SER PARTE DE MI CUENTO..." <br><br> MIS 15 AÑOS
                         </p>
                     </div>
                 </div>
@@ -373,14 +389,14 @@
                 </div>
 
                 <div class="reveal-scale delay-200 mt-2 mb-6">
-                    <button onclick="calendarLink('XV Avril', 'Quinta Paraiso, Calle 33 sur esquina ejidal', '20260509T190000')" class="btn-dorado px-10 py-4 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 rounded-full">
+                    <button onclick="calendarLink('XV Avril', 'Quinta Paraiso, Calle 33 sur esquina ejidal', '20260509T190000')" class="btn-dorado px-10 py-4 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 rounded-full cursor-pointer">
                         Agregar al calendario
                     </button>
                 </div>
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 relative">
+        <section class="min-h-screen min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 relative">
             <div class="forma-ovalada w-full mx-auto reveal text-center">
                 <div class="mb-4 mt-2">
                     <div class="mx-auto mb-2 flex items-center justify-center opacity-100">
@@ -400,7 +416,7 @@
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
-                <a href="https://maps.app.goo.gl/ZiTrXZmjJ9PxEuLH6" target="_blank" class="w-[180px] md:w-[220px] block mx-auto text-center btn-dorado px-4 py-4 text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-full mb-2">Ver en GPS</a>
+                <a href="https://maps.app.goo.gl/ZiTrXZmjJ9PxEuLH6" target="_blank" rel="noopener noreferrer" class="w-[180px] md:w-[220px] block mx-auto text-center btn-dorado px-4 py-4 text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-full mb-2">Ver en GPS</a>
             </div>
         </section>
         
@@ -436,19 +452,10 @@
                 <h2 class="text-4xl md:text-5xl font-bold mb-4 px-4 titulo-degradado w-full mt-4 tracking-widest">CONFIRMAR ASISTENCIA</h2>
                 <p class="text-[12px] uppercase tracking-[0.2em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Por favor, confirma tu asistencia antes del<br><span class="text-white text-lg mt-2 block tracking-wider">29 DE ABRIL</span></p>
                 
-                <div class="w-full max-w-[280px] mx-auto mb-6 text-white text-left">
-                    <label for="numero-asistentes" class="block text-xs font-bold tracking-[0.1em] mb-2 uppercase text-center text-dorado">Número de asistentes:</label>
-                    <div class="relative">
-                        <select id="numero-asistentes" class="w-full bg-black/60 border border-dorado text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-dorado appearance-none text-center font-bold tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.2)] backdrop-blur-md cursor-pointer">
-                            <option value="1" class="text-black">1 PERSONA</option>
-                            <option value="2" class="text-black">2 PERSONAS</option>
-                            <option value="3" class="text-black">3 PERSONAS</option>
-                            <option value="4" class="text-black">4 PERSONAS</option>
-                            <option value="5" class="text-black">5 PERSONAS</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-dorado">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
+                <div class="w-full max-w-[280px] mx-auto mb-6 text-white text-center">
+                    <label for="numero-asistentes" class="block text-xs font-bold tracking-[0.1em] mb-3 uppercase text-dorado">Número de asistentes:</label>
+                    <div class="relative w-full max-w-[150px] mx-auto">
+                        <input type="number" id="numero-asistentes" min="1" max="10" placeholder="Ej. 2" class="w-full bg-black/60 border border-dorado text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-dorado text-center font-bold tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.2)] backdrop-blur-md transition-all">
                     </div>
                 </div>
                 
@@ -491,7 +498,7 @@
                 isPlaying = true;
                 mariposaIcon.classList.add('animar-aleteo');
             }).catch(error => {
-                console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
+                console.log("Autoplay bloqueado por el navegador. El usuario debe tocar el botón.");
                 isPlaying = false;
                 mariposaIcon.classList.remove('animar-aleteo');
             });
@@ -546,7 +553,16 @@
         }
 
         function enviarWhatsApp() {
-            const asistentes = document.getElementById('numero-asistentes').value;
+            const inputAsistentes = document.getElementById('numero-asistentes');
+            const asistentes = inputAsistentes.value.trim();
+
+            // Validación: Si el campo está vacío o es menor a 1
+            if (!asistentes || parseInt(asistentes) < 1) {
+                alert("Por favor, escribe el número de personas que asistirán antes de confirmar.");
+                inputAsistentes.focus();
+                return;
+            }
+
             const mensaje = `¡Hola! Confirmo mi asistencia a los XVs de Avril. Seremos ${asistentes} persona(s).`;
             const numero = "529841190704";
             const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
