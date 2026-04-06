@@ -9,8 +9,8 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Nuestra Boda">
-    <meta name="theme-color" content="#0B1B3D">
+    <meta name="apple-mobile-web-app-title" content="Boda Alya & Jean">
+    <meta name="theme-color" content="#0A192F">
     <meta property="og:title" content="Nuestra Boda - Alya & Jean">
     <meta property="og:description" content="Nos encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
     <meta property="og:type" content="website">
@@ -21,10 +21,11 @@
             theme: {
                 extend: {
                     colors: {
-                        navy: '#0B1B3D',
-                        dorado: '#C5A059',
-                        blanco: '#FFFFFF',
-                        crema: '#F9F6F0'
+                        navy: '#0A192F', /* Azul Navy */
+                        gold: '#D4AF37', /* Dorado */
+                        blanco: {
+                            perla: '#FFFFFF'
+                        }
                     }
                 }
             }
@@ -33,13 +34,13 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poiret+One:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Poiret+One:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --navy: #0B1B3D; 
-            --dorado: #C5A059;
-            --blanco: #FFFFFF;
+            --navy: #0A192F; 
+            --gold: #D4AF37;
+            --blanco-perla: #FFFFFF;
             --font-elegant: 'Poiret One', sans-serif;
             --font-script: 'Pinyon Script', cursive;
             --font-numbers: 'Poiret One', sans-serif; 
@@ -53,6 +54,7 @@
             font-family: var(--font-elegant);
             background-color: var(--navy);
             overflow-x: hidden;
+            color: var(--blanco-perla);
             scroll-behavior: smooth;
         }
 
@@ -62,33 +64,25 @@
 
         .font-numbers {
             font-family: var(--font-numbers) !important;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 600; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        /* FONDOS INTERCALADOS */
-        .bg-navy-solid { 
-            background-color: var(--navy);
-            color: var(--blanco);
-            width: 100%;
-        }
-
-        .bg-oval-wrapper { 
-            background-image: url('https://i.imgur.com/EvidLJe.png');
+        .bg-textura-fondo { 
+            background-image: url('https://i.imgur.com/cBQrkn8.jpeg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             width: 100%;
         }
 
-        /* CLASE PARA LAS SECCIONES OVALADAS */
+        /* CLASE PARA LAS SECCIONES OVALADAS - FULL SCREEN 100DVH */
        .forma-ovalada {
-            background-color: var(--blanco);
-            color: var(--navy);
-            border-radius: 250px 250px 0 0;
+            background-color: var(--navy);
+            color: var(--blanco-perla);
+            border-radius: 250px 250px 0 0; 
             box-shadow: 0 0 45px rgba(0, 0, 0, 0.45);  
             display: flex;
             flex-direction: column;
@@ -97,6 +91,7 @@
             margin: 0 auto;
             position: relative;
             z-index: 10;
+            border: 1px solid rgba(212, 175, 55, 0.2); /* Toque dorado sutil en el borde */
             
             width: 95vw;
             max-width: 480px; 
@@ -106,15 +101,8 @@
         }
 
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
-        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); }
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(212, 175, 55, 0.2); }
 
-        /* Filtros para íconos */
-        .filtro-navy {
-            filter: brightness(0) saturate(100%) invert(10%) sepia(34%) saturate(4649%) hue-rotate(209deg) brightness(94%) contrast(98%);
-        }
-        .filtro-dorado {
-            filter: brightness(0) saturate(100%) invert(73%) sepia(21%) saturate(1210%) hue-rotate(352deg) brightness(91%) contrast(89%);
-        }
         .filtro-blanco {
             filter: brightness(0) invert(1);
         }
@@ -128,8 +116,6 @@
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/KPktiM1.jpeg");
-            background-color: var(--navy);
-            background-blend-mode: multiply; 
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         #envelope-container {
@@ -149,6 +135,7 @@
         }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        
         .seal-wrapper {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 10; display: flex; flex-direction: column; align-items: center;
@@ -159,7 +146,7 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: clamp(5rem, 20vw, 10rem); line-height: 1; margin-top: -10px; }
+        .name-header { font-family: var(--font-script); font-size: clamp(4rem, 18vw, 10rem); line-height: 1; margin-top: -10px; }
 
         #section-main { display: none; }
 
@@ -174,6 +161,27 @@
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
+
+        /* GALERÍA DE FOTOS */
+        .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 30px; padding: 20px 0; scrollbar-width: none; justify-content: start; }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 220px; scroll-snap-align: center;
+            transition: transform 0.4s ease; display: flex; flex-direction: column; align-items: center;
+        }
+        .chambelan-card:hover { transform: translateY(-5px); }
+        
+        .chambelan-img-wrapper {
+            width: 200px; height: 280px; margin: 0 auto; 
+            border-radius: 120px 120px 0 0; 
+            overflow: hidden;
+            border: 2px solid var(--gold); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background-color: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px); }
@@ -192,16 +200,17 @@
         .tarjeta-nueva:hover { transform: translateY(-10px); z-index: 20; }
         .img-historia { 
             width: 100%; height: 220px; object-fit: cover; 
-            border: 2px solid var(--dorado);
-            filter: grayscale(20%) sepia(10%); transition: all 0.4s ease; 
+            border-radius: 0px; 
+            border: 2px solid var(--gold);
+            filter: grayscale(40%) sepia(20%); transition: all 0.4s ease; 
         }
-        .tarjeta-nueva:hover .img-historia { filter: none; border-color: var(--blanco); }
-        .info-historia { width: 100%; text-align: center; margin-top: 15px; color: var(--blanco); }
+        .tarjeta-nueva:hover .img-historia { filter: none; border-color: var(--blanco-perla); }
+        .info-historia { width: 100%; text-align: center; margin-top: 15px; color: var(--blanco-perla); }
         
         .año-badge {
-            color: var(--dorado); font-size: 16px; letter-spacing: 3px;
+            color: var(--gold); font-size: 16px; letter-spacing: 3px;
             font-family: var(--font-numbers); font-weight: 600; margin-bottom: 5px;
-            border-bottom: 1px solid var(--dorado); padding-bottom: 5px; display: inline-block;
+            border-bottom: 1px solid var(--gold); padding-bottom: 5px; display: inline-block;
         }
 
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
@@ -215,7 +224,7 @@
         
         input[type=range] {
             -webkit-appearance: none;
-            background: rgba(11, 27, 61, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             height: 4px;
             outline: none;
@@ -226,18 +235,18 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: var(--navy);
+            background: var(--gold);
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
         input[type=range]::-moz-range-thumb {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: var(--navy);
+            background: var(--gold);
             cursor: pointer;
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
     </style>
 </head>
@@ -257,309 +266,267 @@
                 <div class="flap flap-right"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-              <div class="text-[11px] font-bold uppercase mb-4 animate-bounce text-navy font-elegant bg-white/80 backdrop-blur-sm px-2 py-1.5 rounded-full shadow-sm border border-none">
+              <div class="text-[11px] font-bold uppercase mb-4 animate-bounce text-navy font-elegant bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-lg border border-none">
                 Toca para abrir
               </div>
-              <img src="https://i.imgur.com/oQuDNeh.png" class="w-[140px]" style="animation: floating 5s infinite ease-in-out" alt="Sello Boda">
+                <img src="https://i.imgur.com/oQuDNeh.png" class="w-[140px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
             </div>
         </div>
     </div>
 
     <main id="section-main">
         
-        <header class="relative min-h-[100svh] flex flex-col px-10 py-10 bg-navy-solid overflow-hidden"> 
-            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-64 md:w-80 pointer-events-none z-0">
-            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-64 md:w-80 pointer-events-none z-0" style="transform: rotate(180deg);">
+        <header class="relative min-h-[100svh] flex flex-col px-10 py-10 bg-navy overflow-hidden"> 
+            
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-40 md:w-56 opacity-90 z-0 pointer-events-none" alt="Deco">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-40 md:w-56 transform rotate-180 opacity-90 z-0 pointer-events-none" alt="Deco">
             
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-12 md:mt-20">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
                     
-                    <h2 class="font-elegant text-sm md:text-base uppercase tracking-[0.4em] text-dorado mb-8 drop-shadow-sm font-bold">Nuestra Boda</h2>
-                    <h1 class="name-header text-blanco mb-4 relative z-10 drop-shadow-md">Alya</h1>
-                    <h1 class="font-script text-6xl text-dorado mb-4 relative z-10 drop-shadow-md">&</h1>
-                    <h1 class="name-header text-blanco mb-12 relative z-10 drop-shadow-md">Jean</h1>
+                    <h2 class="font-script text-4xl md:text-5xl text-gold mb-6 drop-shadow-sm">Nuestra Boda</h2>
+                    <h1 class="name-header text-white mb-8 relative z-10 drop-shadow-md">Alya <br> <span class="text-gold text-5xl md:text-7xl">&</span> <br> Jean</h1>
                     
                     <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-6 px-2 relative z-10">
-                        <div class="flex-1 flex justify-center items-center border-t border-b border-dorado py-2">
-                            <span class="text-lg md:text-xl font-bold font-elegant uppercase tracking-[0.3em] text-blanco">Nov</span>
+                        <div class="flex-1 flex justify-center items-center border-t border-b border-gold py-2">
+                            <span class="text-lg md:text-xl font-bold font-elegant uppercase tracking-[0.3em] text-white">Nov</span>
                         </div>
-                        
-                        <span class="text-[4rem] md:text-[4.5rem] leading-none font-numbers font-bold text-dorado mx-4 drop-shadow-md">16</span>
-                        
-                        <div class="flex-1 flex justify-center items-center border-t border-b border-dorado py-2">
-                            <span class="text-lg md:text-xl font-bold font-elegant tracking-widest text-blanco">2026</span>
+                        <span class="text-[4rem] md:text-[4.5rem] leading-none font-numbers font-bold text-gold mx-4 drop-shadow-md">16</span>
+                        <div class="flex-1 flex justify-center items-center border-t border-b border-gold py-2">
+                            <span class="text-lg md:text-xl font-bold font-elegant tracking-widest text-white">2026</span>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="relative z-10 w-full pb-4 flex flex-col items-center reveal-scale active delay-100 text-center">
-                <svg class="w-6 h-6 text-dorado animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-6 h-6 text-gold animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </div>
         </header>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto relative z-10 text-center">
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-textura-fondo relative overflow-hidden">
+            <div class="forma-ovalada w-full mx-auto relative z-10 text-center flex flex-col justify-center">
                 
-                <div class="w-full max-w-[280px] mx-auto bg-crema rounded-2xl pt-4 pb-4 px-6 shadow-md reveal-scale text-navy border border-dorado/30 flex-shrink-0 mb-10">
-                    <div class="text-left mb-4 text-center">
-                        <h3 class="text-lg font-bold mb-0.5 font-elegant tracking-wide">Que Me Alcance La Vida</h3>
-                        <p class="text-[10px] font-bold text-dorado font-elegant uppercase tracking-widest">Sin Bandera</p>
+                <div class="w-full max-w-[280px] mx-auto bg-white/10 backdrop-blur-md rounded-2xl pt-4 pb-4 px-4 shadow-xl reveal-scale text-white border border-gold/30 flex-shrink-0 mb-10">
+                    <div class="text-left mb-4">
+                        <h3 class="text-lg font-bold mb-0.5 font-elegant tracking-wide text-gold">Que Me Alcance La Vida</h3>
+                        <p class="text-[10px] font-light text-white/70 font-elegant">Sin Bandera</p>
                     </div>
 
                     <div class="flex items-center gap-2 mb-4">
-                        <span id="current-time" class="text-[9px] font-numbers font-bold w-8 text-left opacity-80">0:00</span>
+                        <span id="current-time" class="text-[9px] font-numbers font-light w-8 text-left opacity-80">0:00</span>
                         <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
-                        <span id="duration-time" class="text-[9px] font-numbers font-bold w-8 text-right opacity-80">-0:00</span>
+                        <span id="duration-time" class="text-[9px] font-numbers font-light w-8 text-right opacity-80">-0:00</span>
                     </div>
 
                     <div class="flex items-center justify-center gap-6">
-                        <button onclick="toggleAudio()" class="w-12 h-12 bg-navy text-blanco rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
+                        <button class="text-gold hover:text-white transition-colors opacity-80 focus:outline-none">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                        </button>
+                        <button onclick="toggleAudio()" class="w-12 h-12 bg-gold text-navy rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
                             <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                        <button class="text-gold hover:text-white transition-colors opacity-80 focus:outline-none">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
                     </div>
                 </div>
                 
-                <div class="flex-grow flex flex-col justify-center">
-                    <p class="text-sm md:text-base text-navy italic leading-relaxed font-bold mb-10 px-4">
-                        "Con la bendición de Dios y de nuestros padres, hemos decidido unir nuestras vidas para siempre."
+                <div class="reveal w-full">
+                    <p class="text-sm md:text-base text-white italic leading-relaxed font-light mb-10 px-2 md:px-10">
+                        "Con la bendición de Dios y de nuestros padres, nos unimos en matrimonio para compartir el resto de nuestros días juntos."
                     </p>
                     
-                    <div class="grid grid-cols-1 gap-8 md:gap-10">
+                    <div class="grid md:grid-cols-2 gap-8 md:gap-12 text-center w-full">
                         <div>
-                            <h3 class="text-[12px] md:text-[14px] uppercase tracking-[0.4em] mb-3 font-bold text-dorado">Padres de la Novia</h3>
-                            <p class="text-sm md:text-base text-navy font-bold mb-1">Nombre Papá Novia</p>
-                            <p class="text-sm md:text-base text-navy font-bold">Nombre Mamá Novia</p>
+                            <h3 class="text-[10px] md:text-[12px] uppercase tracking-[0.4em] mb-4 font-bold text-gold">Padres de la Novia</h3>
+                            <p class="text-sm md:text-base text-white font-light mb-1">Sr. Roberto Gómez</p>
+                            <p class="text-sm md:text-base text-white font-light">Sra. Alicia Fernández</p>
                         </div>
                         <div>
-                            <h3 class="text-[12px] md:text-[14px] uppercase tracking-[0.4em] mb-3 font-bold text-dorado">Padres del Novio</h3>
-                            <p class="text-sm md:text-base text-navy font-bold mb-1">Nombre Papá Novio</p>
-                            <p class="text-sm md:text-base text-navy font-bold">Nombre Mamá Novio</p>
+                            <h3 class="text-[10px] md:text-[12px] uppercase tracking-[0.4em] mb-4 font-bold text-gold">Padres del Novio</h3>
+                            <p class="text-sm md:text-base text-white font-light mb-1">Sr. Carlos Martínez</p>
+                            <p class="text-sm md:text-base text-white font-light">Sra. Elena Ruiz</p>
                         </div>
-                    </div>
-                </div>
-                
-            </div>
-        </section>
-
-        <section class="min-h-[100svh] flex flex-col justify-center py-12 px-2 bg-navy-solid relative overflow-hidden">
-            <div class="w-full mx-auto relative z-10 text-center">
-                <div class="text-center mb-6 reveal w-full mt-4">
-                    <h2 class="text-6xl mb-2 font-script text-dorado reveal-scale">Nuestra Historia</h2>
-                    <p class="text-[10px] uppercase tracking-[0.5em] font-bold text-blanco opacity-90">6 Años y 10 Meses Juntos</p>
-                </div>
-
-                <div id="historia-container" class="slider-historia"> 
-                    <div class="tarjeta-nueva">
-                        <div class="img-historia bg-gray-200 flex items-center justify-center">
-                            <span class="text-navy font-bold text-sm">Foto 1</span>
-                        </div>
-                        <div class="info-historia">
-                            <div class="año-badge">Abr 2019</div>
-                            <h4 class="text-xl font-bold mt-2">El Inicio</h4>
-                            <p class="text-[13px] text-blanco/80 mt-1 font-light">El día que nuestras miradas se cruzaron.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="img-historia bg-gray-200 flex items-center justify-center">
-                            <span class="text-navy font-bold text-sm">Foto 2</span>
-                        </div>
-                        <div class="info-historia">
-                            <div class="año-badge">2021</div>
-                            <h4 class="text-xl font-bold mt-2">Aventuras</h4>
-                            <p class="text-[13px] text-blanco/80 mt-1 font-light">Construyendo recuerdos inolvidables juntos.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="img-historia bg-gray-200 flex items-center justify-center">
-                            <span class="text-navy font-bold text-sm">Foto 3</span>
-                        </div>
-                        <div class="info-historia">
-                            <div class="año-badge">2023</div>
-                            <h4 class="text-xl font-bold mt-2">Grandes Pasos</h4>
-                            <p class="text-[13px] text-blanco/80 mt-1 font-light">Planificando nuestro futuro de la mano.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="img-historia bg-gray-200 flex items-center justify-center">
-                            <span class="text-navy font-bold text-sm">Foto 4</span>
-                        </div>
-                        <div class="info-historia">
-                            <div class="año-badge">2026</div>
-                            <h4 class="text-xl font-bold mt-2">El Sí Acepto</h4>
-                            <p class="text-[13px] text-blanco/80 mt-1 font-light">¡Comienza nuestro para siempre!</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-dorado text-[10px] mt-4 mb-4 uppercase tracking-[0.4em] font-bold w-full">Arrastra para ver más →</p>
-            </div>
-        </section>
-
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto reveal text-center">
-                <div class="text-center mb-8">
-                    <h2 class="text-6xl font-script text-navy text-shadow-light mb-2">Nuestra Galería</h2>
-                    <p class="text-[10px] uppercase tracking-[0.4em] text-dorado font-bold">Momentos Favoritos</p>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-3 px-2 w-full max-w-[340px] mx-auto overflow-y-auto" style="max-height: 60vh;">
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 1</span>
-                    </div>
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm mt-6">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 2</span>
-                    </div>
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm -mt-6">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 3</span>
-                    </div>
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 4</span>
-                    </div>
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 5</span>
-                    </div>
-                    <div class="bg-gray-100 aspect-[3/4] flex items-center justify-center rounded-none border border-dorado shadow-sm mt-6">
-                        <span class="text-navy text-[10px] uppercase tracking-widest font-bold">Foto 6</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-6 bg-navy-solid relative overflow-hidden">
-            <div class="w-full max-w-4xl mx-auto reveal text-center flex flex-col gap-12">
+        <section class="min-h-[100svh] flex flex-col justify-center py-16 px-4 bg-navy relative overflow-hidden">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-32 md:w-48 opacity-50 z-0 pointer-events-none">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-32 md:w-48 transform rotate-180 opacity-50 z-0 pointer-events-none">
+            
+            <div class="max-w-6xl mx-auto w-full reveal relative z-10">
+                <div class="text-center mb-10">
+                    <h2 class="text-5xl md:text-6xl font-script text-gold text-shadow-light mb-2">Nuestra Galería</h2>
+                    <p class="text-[10px] uppercase tracking-[0.5em] font-bold opacity-80 text-white">Momentos Inolvidables</p>
+                </div>
                 
-                <div>
-                    <div class="mx-auto mb-4 flex items-center justify-center">
-                        <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 h-16 filtro-dorado" alt="Ceremonia">
+                <div class="chambelanes-slider px-4">
+                    <div class="chambelan-card">
+                        <div class="chambelan-img-wrapper">
+                            <span class="font-script text-4xl text-gold">Foto 1</span>
+                        </div>
                     </div>
-                    <h1 class="text-5xl md:text-6xl mb-2 font-script text-blanco reveal-scale">Ceremonia</h1>
-                    <p class="text-blanco font-light text-xs md:text-sm tracking-wide mb-6">Templo Expiatorio del Sagrado Corazón<br>Madero <span class="font-numbers">721</span>, Centro, León</p>
+                    <div class="chambelan-card">
+                        <div class="chambelan-img-wrapper">
+                            <span class="font-script text-4xl text-gold">Foto 2</span>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="chambelan-img-wrapper">
+                            <span class="font-script text-4xl text-gold">Foto 3</span>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="chambelan-img-wrapper">
+                            <span class="font-script text-4xl text-gold">Foto 4</span>
+                        </div>
+                    </div>
+                     <div class="chambelan-card">
+                        <div class="chambelan-img-wrapper">
+                            <span class="font-script text-4xl text-gold">Foto 5</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-white/60 text-[10px] mt-8 uppercase tracking-[0.3em] font-light">Desliza para ver más →</p>
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-textura-fondo relative overflow-hidden">
+            <div class="forma-ovalada w-full mx-auto reveal text-center flex flex-col justify-center gap-10">
+                
+                <div class="w-full">
+                    <div class="mx-auto mb-2 flex items-center justify-center opacity-90">
+                        <img src="https://i.imgur.com/lR5CuR5.png" class="w-12 h-12 filtro-blanco" alt="Ceremonia">
+                    </div>
+                    <h1 class="text-4xl md:text-5xl mb-2 font-script text-gold reveal-scale">Ceremonia Religiosa</h1>
+                    <p class="text-white font-light text-xs md:text-sm tracking-wide mb-4">Templo Expiatorio del Sagrado Corazón<br>Madero <span class="font-numbers">721</span>, Centro, León</p>
                     
-                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-[180px] md:w-[220px] block mx-auto text-center bg-transparent border border-dorado text-dorado font-bold px-4 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-dorado hover:text-navy transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none mb-2">Ver Mapa</a>
+                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-[160px] md:w-[200px] inline-block mx-auto text-center bg-transparent border border-gold text-gold font-bold px-4 py-3 text-[9px] tracking-[0.2em] uppercase hover:bg-gold hover:text-navy transition-all duration-300 rounded-none">Ver Mapa</a>
                 </div>
 
-                <div class="w-24 h-px bg-dorado/50 mx-auto"></div>
+                <div class="w-24 h-px bg-gold/30 mx-auto"></div>
                 
-                <div>
-                    <div class="mx-auto mb-4 flex items-center justify-center">
-                        <img src="https://i.imgur.com/AIApde9.png" class="w-16 h-16 filtro-dorado" alt="Recepción">
+                <div class="w-full">
+                    <div class="mx-auto mb-2 flex items-center justify-center opacity-90">
+                        <img src="https://i.imgur.com/AIApde9.png" class="w-12 h-12 filtro-blanco" alt="Recepción">
                     </div>
-                    <h1 class="text-5xl md:text-6xl mb-2 font-script text-blanco reveal-scale">Recepción</h1>
-                    <p class="text-blanco font-light text-xs md:text-sm tracking-wide mb-6">Hacienda del Conde Eventos<br>Blvd. Aeropuerto <span class="font-numbers">123</span>, León</p>
+                    <h1 class="text-4xl md:text-5xl mb-2 font-script text-gold reveal-scale">Recepción</h1>
+                    <p class="text-white font-light text-xs md:text-sm tracking-wide mb-4">Hacienda del Conde Eventos<br>Blvd. Aeropuerto <span class="font-numbers">123</span>, León</p>
                     
-                    <a href="https://maps.app.goo.gl/3QW6dGQKqXhT8Lp69" target="_blank" class="w-[180px] md:w-[220px] block mx-auto text-center bg-transparent border border-dorado text-dorado font-bold px-4 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-dorado hover:text-navy transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none mb-2">Ver Mapa</a>
+                    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.981882069818!2d-101.60334812386221!3d21.073386686252086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842bb54c9e7845f1%3A0xc3af87c53d9223cb!2sPoliforum%20Le%C3%B3n!5e0!3m2!1ses-419!2smx!4v1708834032483!5m2!1ses-419!2smx" target="_blank" class="w-[160px] md:w-[200px] inline-block mx-auto text-center bg-transparent border border-gold text-gold font-bold px-4 py-3 text-[9px] tracking-[0.2em] uppercase hover:bg-gold hover:text-navy transition-all duration-300 rounded-none">Ver Mapa</a>
                 </div>
-
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto reveal-scale text-center">
-                
-                <h3 class="text-6xl font-script text-navy text-shadow-light mb-12 mt-10">Faltan solo...</h3>
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-4 bg-navy relative overflow-hidden">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-32 md:w-48 opacity-50 z-0 pointer-events-none">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-32 md:w-48 transform rotate-180 opacity-50 z-0 pointer-events-none">
 
-                <div id="countdown" class="flex gap-3 md:gap-10 justify-center px-2 mb-16 w-full">
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full">
+                <h3 class="text-5xl md:text-6xl font-script text-gold mb-12">Faltan solo...</h3>
+
+                <div id="countdown" class="flex gap-4 md:gap-8 justify-center px-2 mb-16">
                     <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 md:w-24 md:h-24 bg-transparent border border-dorado shadow-sm flex items-center justify-center mb-4">
-                            <span id="days" class="time-num text-2xl md:text-3xl text-navy">00</span>
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-transparent border border-gold/50 flex items-center justify-center mb-4">
+                            <span id="days" class="time-num text-3xl md:text-4xl text-white">00</span>
                         </div>
-                        <span class="time-label text-navy font-bold">Días</span>
+                        <span class="time-label text-gold font-bold">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 md:w-24 md:h-24 bg-transparent border border-dorado shadow-sm flex items-center justify-center mb-4">
-                            <span id="hours" class="time-num text-2xl md:text-3xl text-navy">00</span>
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-transparent border border-gold/50 flex items-center justify-center mb-4">
+                            <span id="hours" class="time-num text-3xl md:text-4xl text-white">00</span>
                         </div>
-                        <span class="time-label text-navy font-bold">Hrs</span>
+                        <span class="time-label text-gold font-bold">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 md:w-24 md:h-24 bg-transparent border border-dorado shadow-sm flex items-center justify-center mb-4">
-                            <span id="minutes" class="time-num text-2xl md:text-3xl text-navy">00</span>
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-transparent border border-gold/50 flex items-center justify-center mb-4">
+                            <span id="minutes" class="time-num text-3xl md:text-4xl text-white">00</span>
                         </div>
-                        <span class="time-label text-navy font-bold">Min</span>
+                        <span class="time-label text-gold font-bold">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 md:w-24 md:h-24 bg-transparent border border-dorado shadow-sm flex items-center justify-center mb-4">
-                            <span id="seconds" class="time-num text-2xl md:text-3xl text-navy">00</span>
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-transparent border border-gold/50 flex items-center justify-center mb-4">
+                            <span id="seconds" class="time-num text-3xl md:text-4xl text-white">00</span>
                         </div>
-                        <span class="time-label text-navy font-bold">Seg</span>
+                        <span class="time-label text-gold font-bold">Seg</span>
                     </div>
                 </div>
 
-                <div class="reveal-scale delay-200 mt-6">
-                    <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-dorado font-bold">Reserva el momento <br> en tu calendario</p>
-                    <div class="flex justify-center mb-10">
-                        <button onclick="calendarLink('Boda Alya & Jean', 'Templo Expiatorio del Sagrado Corazón', '20261116T170000')" class="bg-navy text-blanco px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-dorado hover:text-navy border border-navy transition-all duration-300 shadow-md">
+                <div class="reveal-scale delay-200 mt-12">
+                    <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-white font-light">Reserva la fecha en tu calendario</p>
+                    <div class="flex justify-center">
+                        <button onclick="calendarLink('Boda Alya y Jean', 'Templo Expiatorio del Sagrado Corazón', '20261116T170000')" class="bg-gold text-navy px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-gold border border-gold transition-all duration-300 shadow-md">
                             Agregar al calendario
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <section class="min-h-[100svh] flex flex-col justify-center py-10 px-6 bg-navy-solid relative overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <div class="text-center mb-16 mt-8">
-                    <h1 class="text-6xl mb-4 text-dorado font-script reveal-scale">Itinerario</h1>
-                    <p class="text-[10px] uppercase tracking-[0.5em] text-blanco font-light">Nuestra noche mágica</p>
+
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-textura-fondo relative overflow-hidden">
+            <div class="forma-ovalada w-full mx-auto reveal-scale relative z-10 w-full pt-10 pb-10">
+                <div class="text-center mb-10 mt-4">
+                    <h1 class="text-5xl mb-2 text-gold font-script reveal-scale">Itinerario</h1>
+                    <p class="text-[9px] uppercase tracking-[0.5em] text-white/80 font-bold">El orden del gran día</p>
                 </div>
 
-                <div class="relative w-full max-w-lg mx-auto">
-                    <div class="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-dorado/30 z-0"></div>
+                <div class="relative w-full max-w-sm mx-auto flex-grow overflow-y-auto overflow-x-hidden pr-2 pb-10">
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-px h-[90%] bg-gold/40 z-0 top-0"></div>
                     
                     <div class="space-y-6">
                         <div class="flex items-center w-full relative z-10 reveal-left">
-                            <div class="w-1/2 flex justify-center pr-4 md:pr-8">
-                                <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 md:w-24 object-contain filtro-dorado relative z-10 px-2 py-2 bg-navy">
+                            <div class="w-1/2 flex justify-end pr-4">
+                                <img src="https://i.imgur.com/lR5CuR5.png" class="w-14 object-contain opacity-90 filtro-blanco">
                             </div>
-                            <div class="w-1/2 text-left pl-4 md:pl-8">
-                                <span class="text-sm md:text-base text-dorado font-numbers italic font-bold">17:00 HRS</span>
-                                <h3 class="text-sm md:text-base text-blanco font-bold mt-1">Ceremonia</h3>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center w-full relative z-10 reveal-right">
-                            <div class="w-1/2 text-right pr-4 md:pr-8">
-                                <span class="text-sm md:text-base text-dorado font-numbers italic font-bold">19:30 HRS</span>
-                                <h3 class="text-sm md:text-base text-blanco font-bold mt-1">Recepción</h3>
-                            </div>
-                            <div class="w-1/2 flex justify-center pl-4 md:pl-8">
-                                <img src="https://i.imgur.com/AIApde9.png" class="w-16 md:w-24 object-contain filtro-dorado relative z-10 px-2 py-2 bg-navy">
-                            </div>
-                        </div>
-
-                        <div class="flex items-center w-full relative z-10 reveal-left">
-                            <div class="w-1/2 flex justify-center pr-4 md:pr-8">
-                                <img src="https://i.imgur.com/6YWudkf.png" class="w-16 md:w-24 object-contain filtro-dorado relative z-10 px-2 py-2 bg-navy">
-                            </div>
-                            <div class="w-1/2 text-left pl-4 md:pl-8">
-                                <span class="text-sm md:text-base text-dorado font-numbers italic font-bold">20:30 HRS</span>
-                                <h3 class="text-sm md:text-base text-blanco font-bold mt-1">Banquete</h3>
+                            <div class="w-1/2 text-left pl-4">
+                                <span class="text-sm text-gold font-numbers italic font-bold">17:00 HRS</span>
+                                <h3 class="text-sm text-white font-light mt-1">Ceremonia</h3>
                             </div>
                         </div>
 
                         <div class="flex items-center w-full relative z-10 reveal-right">
-                            <div class="w-1/2 text-right pr-4 md:pr-8">
-                                <span class="text-sm md:text-base text-dorado font-numbers italic font-bold">22:00 HRS</span>
-                                <h3 class="text-sm md:text-base text-blanco font-bold mt-1">Primer Baile</h3>
+                            <div class="w-1/2 text-right pr-4">
+                                <span class="text-sm text-gold font-numbers italic font-bold">19:30 HRS</span>
+                                <h3 class="text-sm text-white font-light mt-1">Recepción</h3>
                             </div>
-                            <div class="w-1/2 flex justify-center pl-4 md:pl-8">
-                                <img src="https://i.imgur.com/tRNwEAy.png" class="w-16 md:w-24 object-contain filtro-dorado relative z-10 px-2 py-2 bg-navy">
+                            <div class="w-1/2 flex justify-start pl-4">
+                                <img src="https://i.imgur.com/AIApde9.png" class="w-14 object-contain opacity-90 filtro-blanco">
                             </div>
                         </div>
 
                         <div class="flex items-center w-full relative z-10 reveal-left">
-                            <div class="w-1/2 flex justify-center pr-4 md:pr-8">
-                                <img src="https://i.imgur.com/AEpfW9Z.png" class="w-16 md:w-24 object-contain filtro-dorado relative z-10 px-2 py-2 bg-navy">
+                            <div class="w-1/2 flex justify-end pr-4">
+                                <svg class="w-12 h-12 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path></svg>
                             </div>
-                            <div class="w-1/2 text-left pl-4 md:pl-8">
-                                <span class="text-sm md:text-base text-dorado font-numbers italic font-bold">22:30 HRS</span>
-                                <h3 class="text-sm md:text-base text-blanco font-bold mt-1">¡A bailar!</h3>
+                            <div class="w-1/2 text-left pl-4">
+                                <span class="text-sm text-gold font-numbers italic font-bold">20:30 HRS</span>
+                                <h3 class="text-sm text-white font-light mt-1">Cena</h3>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10 reveal-right">
+                            <div class="w-1/2 text-right pr-4">
+                                <span class="text-sm text-gold font-numbers italic font-bold">22:00 HRS</span>
+                                <h3 class="text-sm text-white font-light mt-1">Primer Baile</h3>
+                            </div>
+                            <div class="w-1/2 flex justify-start pl-4">
+                                <img src="https://i.imgur.com/tRNwEAy.png" class="w-14 object-contain opacity-90 filtro-blanco">
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center w-full relative z-10 reveal-left">
+                            <div class="w-1/2 flex justify-end pr-4">
+                                <img src="https://i.imgur.com/AEpfW9Z.png" class="w-14 object-contain opacity-90 filtro-blanco">
+                            </div>
+                            <div class="w-1/2 text-left pl-4">
+                                <span class="text-sm text-gold font-numbers italic font-bold">22:30 HRS</span>
+                                <h3 class="text-sm text-white font-light mt-1">¡A bailar!</h3>
                             </div>
                         </div>
                     </div>
@@ -567,146 +534,176 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper text-center relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto reveal-scale text-center">
-                <h1 class="text-5xl mb-4 font-script text-navy w-full mt-4 leading-none">Trivia<br>Nupcial</h1>
-                <p class="text-[10px] uppercase tracking-[0.3em] mb-8 opacity-90 font-bold text-dorado w-full">¿Qué tanto nos conocen?</p>
+        <section class="min-h-[100svh] flex flex-col justify-center py-12 px-6 bg-navy relative overflow-hidden text-center">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-32 md:w-48 opacity-50 z-0 pointer-events-none">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-32 md:w-48 transform rotate-180 opacity-50 z-0 pointer-events-none">
+
+            <div class="max-w-2xl mx-auto w-full reveal-scale relative z-10 flex flex-col gap-16">
                 
-                <div id="trivia-container" class="w-full flex flex-col justify-center mb-4">
+                <div>
+                    <h1 class="text-5xl mb-2 font-script text-gold w-full mt-4">Trivia</h1>
+                    <p class="text-[10px] uppercase tracking-[0.5em] mb-8 opacity-80 font-bold drop-shadow-sm w-full text-white">¿Qué tanto nos conocen?</p>
                     
-                    <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-navy/70 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
-                        <h3 id="trivia-q-text" class="text-xl md:text-2xl text-navy mb-6 font-bold px-2">Pregunta aquí</h3>
-                        <div id="trivia-options" class="flex flex-col gap-3 w-[90%] max-w-[280px] mx-auto">
+                    <div id="trivia-container" class="w-full transition-colors duration-500 flex flex-col justify-center">
+                        <div id="trivia-question-container">
+                            <p class="text-[10px] uppercase tracking-widest text-gold/80 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
+                            <h3 id="trivia-q-text" class="text-xl md:text-2xl text-white mb-6 font-light">Pregunta aquí</h3>
+                            <div id="trivia-options" class="flex flex-col gap-3 w-[90%] max-w-[320px] mx-auto"></div>
+                        </div>
+
+                        <div id="trivia-result" class="hidden">
+                            <h3 class="font-script text-6xl mb-4 text-gold">¡Terminaste!</h3>
+                            <p class="text-lg mb-2 font-light text-white">Tu puntuación es:</p>
+                            <p class="text-4xl font-bold mb-6 text-white"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
+                            <p id="trivia-feedback" class="text-sm uppercase tracking-widest opacity-90 mb-6 font-bold text-white"></p>
+                            <button onclick="resetTrivia()" class="bg-transparent text-gold border border-gold w-[85%] max-w-[260px] mx-auto py-3 text-[10px] uppercase tracking-widest font-bold hover:bg-gold hover:text-navy transition-all duration-300 rounded-none active:scale-95">Jugar de nuevo</button>
                         </div>
                     </div>
-
-                    <div id="trivia-result" class="hidden">
-                        <h3 class="font-script text-6xl mb-4 text-navy">¡Terminaste!</h3>
-                        <p class="text-sm mb-2 font-bold text-navy">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold mb-6 text-dorado"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
-                        <p id="trivia-feedback" class="text-[11px] uppercase tracking-widest text-navy mb-8 font-bold leading-relaxed px-4"></p>
-                       <button onclick="resetTrivia()" class="bg-navy text-blanco border border-navy w-[85%] max-w-[260px] mx-auto py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-navy transition-all duration-300 rounded-none active:scale-95">Jugar de nuevo</button>
-                    </div>
-
                 </div>
-            </div>
-        </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-10 bg-navy-solid relative text-center">
-            <div class="max-w-3xl mx-auto reveal-scale">
-                <div class="mx-auto mb-10 flex items-center justify-center">
-                    <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 md:w-32 md:h-32 object-contain filtro-dorado" alt="Código de Vestimenta">
-                </div>
-                <h2 class="text-6xl mb-8 font-script text-dorado">Código de<br> Vestimenta</h2>
-                <p class="text-[10px] uppercase tracking-[0.5em] text-navy mb-10 font-bold bg-dorado inline-block px-8 py-3 rounded-none shadow-sm">Formal / Etiqueta</p>
-                <p class="text-sm md:text-base font-light text-blanco mb-8 leading-relaxed px-6 md:px-20">Por favor, reserva el color blanco exclusivamente para la novia.</p>
-                
-                <div class="flex justify-center mt-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 rounded-full bg-blanco border border-gray-300 shadow-md relative">
-                            <div class="absolute inset-0 flex items-center justify-center text-red-500 font-bold text-3xl select-none leading-none">×</div>
-                        </div>
-                        <span class="text-[10px] uppercase tracking-widest mt-4 text-blanco font-light">Blanco</span>
+                <div class="w-32 h-px bg-gold/30 mx-auto"></div>
+
+                <div>
+                    <h2 class="text-4xl mb-2 font-script text-gold w-full">Clima del Día</h2>
+                    <p class="text-[9px] uppercase tracking-[0.5em] mb-8 font-bold opacity-80 w-full text-white">Pronóstico León, Gto.</p>
+                    <div id="weather-container" class="w-full max-w-md mx-auto">
+                        <p class="text-xs w-full animate-pulse font-light text-center text-white/70">Cargando pronóstico...</p>
                     </div>
                 </div>
+
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper text-center relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto reveal-scale text-center">
-                <svg class="w-14 h-14 mx-auto mb-4 text-dorado" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
-                </svg>
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-textura-fondo relative overflow-hidden">
+            <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center gap-10">
                 
-                <h1 class="text-5xl mb-4 font-script reveal-scale text-navy w-full leading-none">Álbum<br>Compartido</h1>
-                
-                <p class="text-xs md:text-sm font-bold tracking-wide mb-8 leading-relaxed text-navy w-full max-w-xs mx-auto">
-                    Ayúdanos a capturar los mejores momentos de nuestra boda. ¡Escanea el código para subir tus fotos!
-                </p>
-
-                <div class="mx-auto bg-blanco p-3 rounded-none shadow-lg inline-block mb-8 border border-dorado">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-32 h-32 md:w-40 md:h-40 object-contain">
+                <div>
+                    <div class="mx-auto mb-4 flex items-center justify-center">
+                        <img src="https://i.imgur.com/raf1i46.png" class="w-16 h-16 object-contain opacity-90 filtro-blanco" alt="Código de Vestimenta">
+                    </div>
+                    <h2 class="text-4xl md:text-5xl mb-4 font-script text-gold">Código de Vestimenta</h2>
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-navy bg-gold inline-block px-6 py-2 shadow-sm font-bold mb-4">Etiqueta Rigurosa</p>
+                    <p class="text-xs font-light text-white leading-relaxed px-6 max-w-xs mx-auto">Por favor, reserva el color blanco y tonalidades beige exclusivamente para la novia.</p>
                 </div>
-                
-                <a href="#" target="_blank" class="inline-block bg-navy text-blanco border border-navy px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-navy transition-all duration-300 rounded-none mb-10">
-                    Subir fotos aquí
-                </a>
-            </div>
-        </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-12 px-10 bg-navy-solid text-center relative overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <h1 class="text-6xl mb-6 text-dorado font-script reveal-scale">Mesa de Regalos</h1>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-blanco font-light">Su presencia es nuestro mayor regalo, pero si gustan tener un detalle:</p>
-                
-                <div class="flex flex-col gap-8 mt-6">
-                    <a href="#" class="mx-auto group bg-blanco h-16 w-full max-w-[280px] overflow-hidden flex items-center justify-center reveal-scale delay-100 shadow-md">
-                        <img src="https://i.imgur.com/ovK8eD6.png" class="h-8 object-contain transition duration-700 group-hover:scale-105" alt="Liverpool">
+                <div class="w-24 h-px bg-gold/30 mx-auto"></div>
+
+                <div>
+                    <h1 class="text-4xl md:text-5xl mb-4 font-script text-gold w-full">Álbum Compartido</h1>
+                    <p class="text-xs font-light tracking-wide mb-6 leading-relaxed text-white/90 w-full max-w-[260px] mx-auto">
+                        Captura nuestros mejores momentos. ¡Escanea o toca para subir tus fotos de la boda!
+                    </p>
+                    <div class="mx-auto bg-white p-2 shadow-lg inline-block mb-4 border border-gold">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-24 h-24 object-contain">
+                    </div>
+                    <br>
+                    <a href="#" target="_blank" class="inline-block bg-transparent text-gold border border-gold px-6 py-3 text-[9px] uppercase tracking-widest font-bold hover:bg-gold hover:text-navy transition-all duration-300 rounded-none">
+                        Subir fotos
                     </a>
-
-                    <a href="#" class="mx-auto group bg-blanco h-16 w-full max-w-[280px] overflow-hidden flex items-center justify-center reveal-scale delay-200 shadow-md">
-                        <img src="https://i.imgur.com/XS1MDtG.png" class="h-10 object-contain transition duration-700 group-hover:scale-105" alt="Amazon">
-                    </a>
-
-                    <div class="p-6 group h-auto w-full max-w-[280px] mx-auto flex flex-col items-center justify-center reveal-scale delay-300 border border-dorado/50 bg-navy/50 mt-4">
-                        <svg class="w-10 h-10 mb-4 text-dorado group-hover:scale-110 transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
-                        </svg>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blanco text-center leading-relaxed">Tendremos una urna en la entrada de la recepción para sus sobres</p>
-                    </div>
                 </div>
+
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-oval-wrapper text-center relative overflow-hidden">
-            <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center"> 
-                <h2 class="text-5xl font-script mb-4 text-navy w-full mt-8 leading-none">Confirmar<br>Asistencia</h2>
-                <p class="text-[10px] uppercase tracking-[0.4em] mb-10 text-dorado font-bold w-full px-4">Por favor confirmar antes del 10 de Octubre</p>
+        <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 bg-navy relative overflow-hidden text-center">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute top-0 right-0 w-32 md:w-48 opacity-50 z-0 pointer-events-none">
+            <img src="https://i.imgur.com/JYg0X3t.png" class="absolute bottom-0 left-0 w-32 md:w-48 transform rotate-180 opacity-50 z-0 pointer-events-none">
+
+            <div class="max-w-3xl mx-auto reveal relative z-10 w-full flex flex-col gap-16">
                 
-               <form id="rsvpForm" class="w-[85%] max-w-[320px] mx-auto space-y-6 text-left bg-transparent transition-all duration-500 mb-8">
-                    <div class="grid grid-cols-1 gap-6">
-                        <div class="border-b border-navy/30 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-navy font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required class="w-full bg-transparent py-1 outline-none text-xl text-navy font-bold text-center">
-                        </div>
-                        <div class="border-b border-navy/30 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-navy font-bold">Personas</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-1 outline-none text-xl text-navy font-bold appearance-none text-center cursor-pointer">
-                                <option class="text-navy" value="1 Persona">1 Persona</option>
-                                <option class="text-navy" value="2 Personas">2 Personas</option>
-                            </select>
+                <div>
+                    <h1 class="text-5xl mb-4 text-gold font-script">Mesa de Regalos</h1>
+                    <p class="text-[9px] uppercase tracking-[0.5em] mb-8 text-white font-light px-4">Su presencia es nuestro mejor regalo, pero si desean tener un detalle con nosotros:</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-6 items-center justify-center w-full max-w-sm mx-auto">
+                        <a href="#" class="mx-auto group shadow-md bg-white p-4 w-full flex items-center justify-center border border-gold/50 hover:bg-gray-100 transition duration-300">
+                            <img src="https://i.imgur.com/ovK8eD6.png" class="h-8 object-contain filter grayscale" alt="Liverpool">
+                        </a>
+                        <div class="border border-gold/50 p-6 w-full flex flex-col items-center justify-center">
+                            <svg class="w-8 h-8 mb-3 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
+                            </svg>
+                            <p class="text-[8px] font-bold uppercase tracking-[0.2em] text-white text-center leading-relaxed">Habrá un buzón en la recepción para lluvia de sobres</p>
                         </div>
                     </div>
-                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-navy text-blanco font-bold py-4 px-1 uppercase tracking-[0.2em] text-[10px] hover:bg-dorado hover:text-navy transition-all shadow-md mt-6 duration-300 rounded-none">Confirmar y Generar Pase</button>
-                </form>
-
-                <div id="loadingMessage" class="hidden mt-6 flex-col items-center justify-center transition-all duration-500 w-full mb-8">
-                    <div class="w-12 h-12 border-4 border-navy border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                    <p class="text-4xl font-script text-navy mb-2">Generando Pase...</p>
                 </div>
 
-                <div id="successMessage" class="hidden mt-4 transition-all duration-500 w-full max-w-md mx-auto mb-8">
-                    <div class="bg-crema p-6 rounded-none relative overflow-hidden shadow-lg border border-dorado">
-                        <p class="text-4xl font-script text-navy mb-2">¡Pase Confirmado!</p>
-                        <p class="text-[9px] uppercase tracking-widest text-navy/80 mb-4 font-bold">Toma captura y muestra este código en la entrada</p>
-                        <div class="bg-blanco p-4 border border-navy/20 mb-4 flex flex-col items-center text-navy w-48 mx-auto">
-                            <img id="ticketQR" src="" alt="QR" class="w-24 h-24 object-contain mb-2 hidden mx-auto">
-                            <p id="ticketFolio" class="text-xl font-bold tracking-widest font-numbers"></p>
+                <div class="w-32 h-px bg-gold/30 mx-auto"></div>
+
+                <div>
+                    <h2 class="text-5xl font-script mb-4 text-gold">Confirma tu Asistencia</h2>
+                    <p class="text-[9px] uppercase tracking-[0.5em] mb-8 text-white/80 font-bold w-full">Por favor confirmar antes del 10 de Octubre</p>
+                    
+                    <form id="rsvpForm" class="w-full max-w-[320px] mx-auto space-y-6 text-left mb-4">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="border-b border-gold/50 pb-2">
+                                <label class="text-[9px] uppercase tracking-widest text-gold font-bold">Nombre y Apellido</label>
+                                <input type="text" id="rsvpName" required class="w-full bg-transparent py-1 outline-none text-lg text-white font-light text-center md:text-left">
+                            </div>
+                            <div class="border-b border-gold/50 pb-2">
+                                <label class="text-[9px] uppercase tracking-widest text-gold font-bold">Asistentes</label>
+                                <select id="rsvpPax" class="w-full bg-transparent py-1 outline-none text-lg text-white font-light appearance-none text-center md:text-left cursor-pointer">
+                                    <option class="text-navy" value="1 Persona">1 Persona</option>
+                                    <option class="text-navy" value="2 Personas">2 Personas</option>
+                                    <option class="text-navy" value="No podré asistir">No podré asistir</option>
+                                </select>
+                            </div>
                         </div>
-                        <p id="ticketName" class="text-xl font-bold mb-1 text-navy"></p>
-                        <p id="ticketPax" class="text-[10px] uppercase tracking-widest text-dorado font-bold"></p>
+                        <button type="submit" id="btnSubmitRSVP" class="w-full bg-gold text-navy font-bold py-3 px-1 uppercase tracking-[0.3em] text-[10px] hover:bg-white transition-all duration-300 rounded-none mt-4">Confirmar y Generar Pase</button>
+                    </form>
+
+                    <div id="loadingMessage" class="hidden mt-6 flex-col items-center justify-center transition-all duration-500 w-full mb-4">
+                        <div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                        <p class="text-3xl font-script text-white mb-2">Generando Pase...</p>
+                    </div>
+
+                    <div id="errorMessage" class="hidden mt-6 border border-gold/30 p-6 flex-col items-center transition-all duration-500 w-full max-w-sm mx-auto mb-4">
+                        <p class="text-xl font-light text-white mb-2">Registro existente</p>
+                        <p class="text-[9px] uppercase tracking-widest text-red-300 mb-6 font-light">Este nombre ya generó un pase.</p>
+                        <button onclick="resetForm()" class="bg-transparent text-gold border border-gold px-6 py-2 w-[90%] mx-auto text-[9px] uppercase tracking-widest font-bold hover:bg-gold hover:text-navy transition-colors">Intentar otro nombre</button>
+                    </div>
+
+                    <div id="successMessage" class="hidden mt-4 transition-all duration-500 w-full max-w-md mx-auto mb-2">
+                        <div class="bg-white p-6 relative overflow-hidden shadow-2xl border border-gold text-navy">
+                            <p class="text-4xl font-script mb-2 text-gold">¡Confirmado!</p>
+                            <p class="text-[9px] uppercase tracking-widest mb-4 font-bold">Guarda este código para la entrada</p>
+                            <div class="border border-gold/30 p-4 mb-4 flex flex-col items-center w-40 mx-auto">
+                                <img id="ticketQR" src="" alt="QR" class="w-24 h-24 object-contain mb-2 hidden mx-auto">
+                                <p id="ticketFolio" class="text-xl font-light tracking-widest font-numbers"></p>
+                            </div>
+                            <p id="ticketName" class="text-xl font-bold mb-1"></p>
+                            <p id="ticketPax" class="text-[10px] uppercase tracking-widest opacity-80"></p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="pt-10 border-t border-gold/30 mt-6">
+                    <h3 class="text-3xl font-script text-gold mb-4">Recuperar mi Pase</h3>
+                    <div class="flex flex-col md:flex-row gap-4 max-w-sm mx-auto">
+                        <input type="text" id="searchName" placeholder="Tu nombre..." class="w-full bg-transparent border-b border-gold px-4 py-2 outline-none text-sm text-center text-white font-light placeholder-white/50">
+                        <button onclick="consultarPase()" id="btnConsultar" class="bg-transparent text-gold border border-gold px-6 py-2 font-bold text-[9px] uppercase tracking-widest hover:bg-gold hover:text-navy transition-all duration-300 flex-shrink-0">Buscar</button>
+                    </div>
+                    
+                    <div id="consultaResult" class="hidden mt-8 bg-white p-6 flex-col items-center transition-all duration-500 relative max-w-sm mx-auto border border-gold">
+                        <p class="text-[10px] uppercase tracking-widest text-navy font-bold mb-4">Pase Encontrado</p>
+                        <img id="consultaQR" src="" alt="QR" class="w-24 h-24 object-contain mb-2 hidden">
+                        <p id="consultaFolio" class="text-xl font-bold tracking-widest text-navy font-numbers mb-2"></p>
+                        <p id="consultaNameDisplay" class="text-lg font-light text-navy mb-1"></p>
+                        <p id="consultaPax" class="text-[9px] uppercase tracking-widest text-navy/70"></p>
+                    </div>
+                    
+                    <div id="consultaError" class="hidden mt-6 text-red-300 text-[10px] uppercase tracking-widest">
+                        No encontramos un registro. Verifica tu escritura.
+                    </div>
+                </div>
+
             </div>
         </section>
         
-        <footer class="min-h-[100svh] flex flex-col justify-center py-6 px-10 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/EvidLJe.png'); background-attachment: fixed;">
-            <div class="absolute inset-0 bg-navy/80"></div>
+        <footer class="min-h-[50svh] flex flex-col justify-center py-6 px-10 text-center relative z-10 bg-navy">
             <div class="relative z-10">
-                <p class="text-7xl md:text-9xl font-script mb-6 text-blanco drop-shadow-md">¡Los esperamos!</p>
-                <p class="text-xs md:text-xs font-elegant text-dorado drop-shadow-md tracking-widest uppercase">AdaInvite © 2026</p>
+                <p class="text-7xl md:text-8xl font-script mb-6 text-gold drop-shadow-md">¡Gracias por acompañarnos!</p>
+                <p class="text-xs font-elegant mt-20 text-white/50 tracking-widest uppercase">AdaInvite © 2026</p>
             </div>
         </footer>
     </main>
@@ -716,6 +713,7 @@
             document.getElementById('section-main').style.display = 'block';
             
             initObserver();
+            fetchWeather();
             loadQuestion();
             playAudio(); 
 
@@ -827,43 +825,64 @@
             window.open(url, '_blank');
         }
         
-        const historiaSlider = document.getElementById('historia-container');
-        let scrollInterval;
-
-        function iniciarAutoScroll() {
-            if (scrollInterval) clearInterval(scrollInterval);
-            scrollInterval = setInterval(() => {
-                if (historiaSlider.scrollLeft + historiaSlider.offsetWidth >= historiaSlider.scrollWidth) {
-                    historiaSlider.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    historiaSlider.scrollBy({ left: 320, behavior: 'smooth' });
-                }
-            }, 4000); 
+        async function fetchWeather() {
+            const lat = 21.1219; 
+            const lon = -101.6826; 
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                renderWeather(data);
+            } catch (error) {
+                document.getElementById('weather-container').innerHTML = '<p class="text-xs text-white/50 w-full">El clima no está disponible.</p>';
+            }
         }
 
-        const detenerCualquierInteraccion = () => {
-            clearInterval(scrollInterval);
-        };
+        function getWeatherIcon(code) {
+            const baseClass = "w-8 h-8 mx-auto mb-2 text-gold transition-colors duration-500";
+            if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
+            if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+            return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+        }
 
-        historiaSlider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
-        historiaSlider.addEventListener('mousedown', detenerCualquierInteraccion);
+        function renderWeather(data) {
+            const container = document.getElementById('weather-container');
+            const now = new Date();
+            let hourlyHTML = '';
+            let hoursShown = 0;
+            let currentTemp = 0;
 
-        const observerHistoria = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    iniciarAutoScroll();
-                } else {
-                    detenerCualquierInteraccion();
+            for (let i = 0; i < data.hourly.time.length; i++) {
+                const forecastDate = new Date(data.hourly.time[i]);
+                if (forecastDate >= now && hoursShown < 5) {
+                    const temp = Math.round(data.hourly.temperature_2m[i]);
+                    const weatherCode = data.hourly.weathercode[i];
+                    if (hoursShown === 0) currentTemp = temp;
+                    let hour = forecastDate.getHours();
+                    const ampm = hour >= 12 ? 'pm' : 'am';
+                    hour = hour % 12; hour = hour ? hour : 12;
+                    const hourStr = hoursShown === 0 ? 'Hoy' : `${hour} ${ampm}`;
+                    let iconSVG = getWeatherIcon(weatherCode).replace('w-8 h-8', 'w-6 h-6');
+
+                    hourlyHTML += `
+                        <div class="flex flex-col items-center justify-center flex-1 text-white">
+                            <span class="text-[10px] font-light opacity-80">${hourStr}</span>
+                            ${iconSVG}
+                            <span class="text-sm font-bold font-numbers">${temp}°</span>
+                        </div>
+                    `;
+                    hoursShown++;
                 }
-            });
-        }, { threshold: 0.5 });
-        observerHistoria.observe(document.getElementById('historia-container'));
-
-        // Trivia adaptada a novios
+            }
+            container.innerHTML = `<div class="flex justify-between items-center w-full pt-4 border-t border-gold/30">${hourlyHTML}</div>`;
+        }
+        
+        // TRIVIA DE BODA
         const triviaData = [
-            { question: "¿En dónde nos conocimos por primera vez?", options: ["En la escuela", "En una fiesta", "Por amigos en común", "En el trabajo"], answer: 2 },
-            { question: "¿Quién dijo 'Te amo' primero?", options: ["Alya", "Jean", "Fue al mismo tiempo", "Ninguno se acuerda"], answer: 1 },
-            { question: "¿A dónde fue nuestro primer viaje juntos?", options: ["A la playa", "A un pueblo mágico", "A la ciudad", "A la montaña"], answer: 0 }
+            { question: "¿Dónde fue nuestra primera cita?", options: ["En el cine", "En un café", "En una boda", "En el parque"], answer: 1 },
+            { question: "¿Quién dijo 'Te amo' primero?", options: ["Alya", "Jean", "Fue al mismo tiempo", "Ninguno de los dos"], answer: 1 },
+            { question: "¿A dónde nos vamos de luna de miel?", options: ["Cancún", "París", "Japón", "Italia"], answer: 3 }
         ];
 
         let currentQuestion = 0;
@@ -882,7 +901,7 @@
             triviaData[currentQuestion].options.forEach((opt, index) => {
                 const btn = document.createElement("button");
                 btn.innerText = opt;
-                btn.className = "btn-trivia w-full text-center px-4 py-4 rounded-none border border-dorado text-navy font-bold bg-transparent hover:bg-dorado/10";
+                btn.className = "btn-trivia w-full text-center px-4 py-3 border border-gold/40 text-white font-light bg-transparent hover:bg-gold/10";
                 btn.onclick = () => checkAnswer(index, btn);
                 optionsContainer.appendChild(btn);
             });
@@ -908,24 +927,19 @@
                 } else {
                     showTriviaResults();
                 }
-            }, 1500);
+            }, 1200);
         }
 
         function showTriviaResults() {
             document.getElementById("trivia-question-container").classList.add("hidden");
             document.getElementById("trivia-result").classList.remove("hidden");
-            
             document.getElementById("trivia-score").innerText = score;
             document.getElementById("trivia-total-score").innerText = triviaData.length;
 
             const feedback = document.getElementById("trivia-feedback");
-            if (score === triviaData.length) {
-                feedback.innerText = "¡Wow! Definitivamente conocen nuestra historia a la perfección.";
-            } else if (score >= triviaData.length / 2) {
-                feedback.innerText = "¡Nada mal! Saben bastante sobre nosotros.";
-            } else {
-                feedback.innerText = "¡Uy! Tendremos que contarles más historias en la boda.";
-            }
+            if (score === triviaData.length) feedback.innerText = "¡Súper! Nos conocen a la perfección.";
+            else if (score >= triviaData.length / 2) feedback.innerText = "¡Nada mal! Tienen buena memoria.";
+            else feedback.innerText = "¡Uy! Necesitamos platicar más en la boda.";
         }
 
         function resetTrivia() {
@@ -936,13 +950,14 @@
             loadQuestion();
         }
         
+        // CONEXIÓN SCRIPT GOOGLE (Mismos IDs originales)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('rsvpName').value.trim();
             const pax = document.getElementById('rsvpPax').value;
-            const folio = `WED-${Math.floor(1000 + Math.random() * 9000)}`;
+            const folio = `BODA-${Math.floor(1000 + Math.random() * 9000)}`;
             
             document.getElementById('rsvpForm').style.display = 'none';
             const loader = document.getElementById('loadingMessage');
@@ -956,26 +971,71 @@
                 loader.classList.add('hidden');
                 loader.classList.remove('flex');
 
-                if(result.status === "success" || result.status === "exists") {
+                if(result.status === "success") {
                     document.getElementById('ticketFolio').innerText = folio;
                     document.getElementById('ticketName').innerText = name;
                     document.getElementById('ticketPax').innerText = pax;
 
                     const qrImg = document.getElementById('ticketQR');
                     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
-                    
                     qrImg.onload = () => {
                         qrImg.classList.remove('hidden');
                         document.getElementById('successMessage').classList.remove('hidden');
                     };
+                } else if (result.status === "exists") {
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                    document.getElementById('errorMessage').classList.add('flex');
                 }
             } catch (error) {
                 alert("Hubo un problema de conexión. Intenta de nuevo.");
-                document.getElementById('loadingMessage').classList.add('hidden');
-                document.getElementById('loadingMessage').classList.remove('flex');
-                document.getElementById('rsvpForm').style.display = 'block';
+                resetForm();
             }
         });
+
+        function resetForm() {
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('errorMessage').classList.remove('flex');
+            document.getElementById('loadingMessage').classList.add('hidden');
+            document.getElementById('rsvpForm').style.display = 'block';
+            document.getElementById('rsvpName').value = '';
+        }
+
+        async function consultarPase() {
+            const searchInput = document.getElementById('searchName').value.trim();
+            const resultDiv = document.getElementById('consultaResult');
+            const errorDiv = document.getElementById('consultaError');
+            const btn = document.getElementById('btnConsultar');
+            
+            if (!searchInput) return;
+            btn.innerText = "..."; btn.disabled = true;
+            resultDiv.classList.add('hidden'); resultDiv.classList.remove('flex');
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`);
+                const result = await response.json();
+                btn.innerText = "Buscar"; btn.disabled = false;
+
+                if (result.status === "found") {
+                    document.getElementById('consultaNameDisplay').innerText = result.name;
+                    document.getElementById('consultaPax').innerText = result.pax;
+                    document.getElementById('consultaFolio').innerText = result.folio;
+
+                    const qrImg = document.getElementById('consultaQR');
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
+                    qrImg.onload = () => {
+                        qrImg.classList.remove('hidden');
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.classList.add('flex');
+                    };
+                } else {
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) { 
+                alert("Error al buscar. Revisa tu conexión.");
+                btn.innerText = "Buscar"; btn.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
