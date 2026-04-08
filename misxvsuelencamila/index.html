@@ -25,7 +25,7 @@
                             principal: '#8496B0'
                         },
                         blanco: {
-                            perla: '#F0F4F8'
+                            perla: '#F0EFEA'
                         }
                     }
                 }
@@ -40,7 +40,7 @@
     <style>
         :root {
             --azul-principal: #8496B0;
-            --blanco-perla: #F0F4F8;
+            --blanco-perla: #F0EFEA;
             --font-elegant: 'Lora', serif;
             --font-script: 'Great Vibes', cursive;
             --font-numbers: 'Cinzel', serif; 
@@ -79,7 +79,7 @@
             position: relative; 
             overflow: hidden; 
             z-index: 1; 
-            color: white;
+            color: var(--blanco-perla);
             width: 100%;
             border-radius: 40px;
             margin: 20px 0; 
@@ -90,10 +90,7 @@
         .seccion-azul::before {
             content: "";
             position: absolute;
-            top: -10px; 
-            left: -10px; 
-            right: -10px; 
-            bottom: -10px; 
+            top: -10px; left: -10px; right: -10px; bottom: -10px; 
             z-index: -1; 
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://i.imgur.com/tXBmVf5.gif');
             background-size: cover;
@@ -109,7 +106,7 @@
         }
 
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
-        .text-shadow-light { text-shadow: 0px 2px 10px rgba(132, 150, 176, 0.4); }
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(132, 150, 176, 0.5); }
 
         .filtro-azul {
             filter: invert(63%) sepia(18%) saturate(553%) hue-rotate(184deg) brightness(89%) contrast(89%);
@@ -123,28 +120,20 @@
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
             transition: visibility 1.8s;
-            background-color: var(--blanco-perla);
         }
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/arqV06S.jpeg");
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
-            filter: invert(63%) sepia(18%) saturate(553%) hue-rotate(184deg) brightness(89%) contrast(89%);
         }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
         
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); }
         
-        .flap { 
-            width: 100%; height: 100%; 
-            background-image: url("https://i.imgur.com/arqV06S.jpeg"); 
-            background-size: cover; 
-            filter: invert(63%) sepia(18%) saturate(553%) hue-rotate(184deg) brightness(89%) contrast(89%);
-        }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/arqV06S.jpeg"); background-size: cover; }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
-        
         .seal-wrapper {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 10; display: flex; flex-direction: column; align-items: center;
@@ -155,7 +144,7 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: clamp(4rem, 16vw, 9rem); line-height: 1.2; }
+        .name-header { font-family: var(--font-script); font-size: clamp(4rem, 15vw, 9rem); line-height: 1.2; }
 
         #section-main { display: none; }
 
@@ -184,14 +173,14 @@
         }
         .btn-calendar:hover { background: var(--azul-principal); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(132, 150, 176, 0.3); }
 
-        .chambelanes-container { display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center; width: 100%; }
-        .chambelan-card-text {
-            background: var(--blanco-perla);
+        .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 24px; padding: 10px 0; scrollbar-width: none; justify-content: center; flex-wrap: wrap; }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 280px; background: var(--blanco-perla);
             border: 1px solid rgba(132, 150, 176, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            transition: transform 0.4s ease, box-shadow 0.4s ease; border-radius: 8px; 
-            padding: 24px 40px; text-align: center; width: 100%; max-width: 400px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.5s ease; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
         }
-        .chambelan-card-text:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(132, 150, 176, 0.2); }
+        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(132, 150, 176, 0.2); }
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -214,7 +203,7 @@
         .img-historia { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; }
         .info-flotante {
             position: absolute; bottom: 25px; left: 25px; right: 25px;
-            background: rgba(240, 244, 248, 0.95); backdrop-filter: blur(8px);
+            background: rgba(240, 239, 234, 0.95); backdrop-filter: blur(8px);
             padding: 15px; border-radius: 12px; border: 1px solid rgba(132, 150, 176, 0.3);
         }
         .año-badge {
@@ -228,7 +217,9 @@
         #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; line-height: 1; transition: color 0.5s ease; }
         #countdown .time-label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); transition: color 0.5s ease; }
 
-        .separador-img { width: 100px; height: auto; margin: 0 auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); opacity: 0.8; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
     </style>
 </head>
 <body>
@@ -241,16 +232,16 @@
     </div>
 
     <div id="envelope-wrapper">
-        <div class="envelope-bg"></div>
+        <div class="envelope-bg filtro-azul"></div>
         <div id="envelope-container" class="w-full h-full relative z-10">
             <div class="flap-wrapper flap-left-wrapper">
-                <div class="flap flap-left"></div>
+                <div class="flap flap-left filtro-azul"></div>
             </div>
             <div class="flap-wrapper flap-right-wrapper">
-                <div class="flap flap-right"></div>
+                <div class="flap flap-right filtro-azul"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold text-shadow-dark">Toca para abrir</div>
+                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
                 <img src="https://i.imgur.com/mF0ZsJq.png" 
                      class="w-[120px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
@@ -293,36 +284,35 @@
                 <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
                     <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
                 </div>
-                
             </div>
         </header>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-12">
-            <img src="https://i.imgur.com/D2d464b.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/D2d464b.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
-       <section class="min-h-[70svh] flex flex-col justify-center py-16 px-6 text-center relative seccion-blanca overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-10">
                 <p class="text-lg md:text-2xl italic leading-relaxed font-light mb-16 px-8 md:px-24 lg:px-40">
-                    "Hoy comienza una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo"
+                    "Hoy comienza una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
                 </p>
                 <div class="grid md:grid-cols-2 gap-12 md:gap-16 mt-10">
                     <div>
-                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80 text-azul-principal">Mis Padres</h3>
-                        <p class="text-lg md:text-xl font-bold">Ana M. Martínez</p>
-                        <p class="text-lg md:text-xl font-bold">Francisco Martínez Medina</p>
+                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80">Mis Padres</h3>
+                        <p class="text-lg md:text-xl">Ana M. Martínez</p>
+                        <p class="text-lg md:text-xl">Francisco Martínez Medina</p>
                     </div>
                     <div>
-                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80 text-azul-principal">Mis Padrinos</h3>
-                        <p class="text-lg md:text-xl font-bold">Francisca Martínez Medina</p>
-                        <p class="text-lg md:text-xl font-bold">Sergio Arturo García</p>
+                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80">Mis Padrinos</h3>
+                        <p class="text-lg md:text-xl">Francisca Martínez Medina</p>
+                        <p class="text-lg md:text-xl">Sergio Arturo García</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/wal9krY.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/wal9krY.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul relative overflow-hidden">
@@ -337,8 +327,8 @@
                         <div class="año-badge font-numbers">2011</div>
                         <img src="https://i.imgur.com/txwNhCb.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">El primer capítulo</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">De una vida llena de luz.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis Inicios</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">El primer capítulo de una vida llena de luz</p>
                         </div>
                     </div>
 
@@ -346,8 +336,8 @@
                         <div class="año-badge font-numbers">2013</div>
                         <img src="https://i.imgur.com/RLmYcmn.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">Aventuras</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Mis primeros pasos descubriendo el mundo.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Aventuras</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Mis primeros pasos descubriendo el mundo</p>
                         </div>
                     </div>
 
@@ -355,8 +345,8 @@
                         <div class="año-badge font-numbers">2015</div>
                         <img src="https://i.imgur.com/Qck8sj5.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">Escuela</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Días de juegos y mis primeras letras.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Escuela</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Días de juegos y mis primeras letras</p>
                         </div>
                     </div>
 
@@ -364,8 +354,8 @@
                         <div class="año-badge font-numbers">2018</div>
                         <img src="https://i.imgur.com/zDFFYDD.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">Creciendo</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Aprendiendo a soñar cada día más alto.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Creciendo</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Aprendiendo a soñar cada día más alto</p>
                         </div>
                     </div>
 
@@ -373,8 +363,8 @@
                         <div class="año-badge font-numbers">2025</div>
                         <img src="https://i.imgur.com/Nga7spb.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">Ilusiones</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Cerca de vivir mi noche más mágica.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Ilusiones</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Cerca de vivir mi noche más mágica</p>
                         </div>
                     </div>
 
@@ -382,8 +372,8 @@
                         <div class="año-badge font-numbers">2026</div>
                         <img src="https://i.imgur.com/w82ahJ8.jpeg" class="img-historia">
                         <div class="info-flotante">
-                            <h4 class="text-lg text-[#2C2A2A] font-bold">Mis XV</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Hoy mi sueño se hace realidad.</p>
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis XV</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Hoy mi sueño se hace realidad</p>
                         </div>
                     </div>
                 </div>
@@ -391,32 +381,37 @@
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/aGth0hB.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/aGth0hB.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 seccion-blanca overflow-hidden relative">
-            <div class="max-w-4xl mx-auto w-full reveal relative z-10">
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca overflow-hidden relative">
+            <div class="max-w-6xl mx-auto w-full reveal relative z-10">
                 <div class="text-center mb-12">
-                    <h2 class="text-5xl font-script text-azul-principal text-shadow-light mb-4">Mis Chambelanes</h2>
-                    <p class="text-[11px] uppercase tracking-[0.5em] font-bold text-gray-400">Acompañantes de honor</p>
+                    <h2 class="text-5xl font-script text-azul-principal text-shadow-light">Mis Chambelanes</h2>
                 </div>
-                <div class="chambelanes-container px-2">
-                    <div class="chambelan-card-text">
-                        <h4 class="text-2xl text-azul-principal font-bold">Sebastian Martinez</h4>
+                <div class="chambelanes-slider px-2">
+                    <div class="chambelan-card">
+                        <div class="p-10 text-center bg-white h-full flex flex-col justify-center items-center min-h-[150px]">
+                            <h4 class="text-2xl text-azul-principal font-bold">Sebastian Martinez</h4>
+                        </div>
                     </div>
-                    <div class="chambelan-card-text">
-                        <h4 class="text-2xl text-azul-principal font-bold">Alejandro Ramirez</h4>
+                    <div class="chambelan-card">
+                        <div class="p-10 text-center bg-white h-full flex flex-col justify-center items-center min-h-[150px]">
+                            <h4 class="text-2xl text-azul-principal font-bold">Alejandro Ramirez</h4>
+                        </div>
                     </div>
-                    <div class="chambelan-card-text">
-                        <h4 class="text-2xl text-azul-principal font-bold">Pablo Benjamin Jaramillo</h4>
+                    <div class="chambelan-card">
+                        <div class="p-10 text-center bg-white h-full flex flex-col justify-center items-center min-h-[150px]">
+                            <h4 class="text-2xl text-azul-principal font-bold">Pablo Benjamin Jaramillo</h4>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/hITvXbW.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/hITvXbW.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
         <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul relative">
@@ -427,7 +422,8 @@
                             <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 h-24 md:w-32 md:h-32 filtro-blanco" alt="Ceremonia">
                         </div>
                         <h1 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Ceremonia</h1>
-                        <p class="text-white/90 italic text-sm">Parroquia San Judas Tadeo<br>Miguel Hidalgo y Costilla <span class="font-numbers">6207</span>, Pedregal de Santa Julia<br>C.P. 22604 Tijuana B.C.<br><br><span class="font-bold text-lg font-numbers tracking-widest">6:00 P.M.</span></p>
+                        <p class="text-white/90 italic text-sm">Parroquia San Judas Tadeo<br>Miguel Hidalgo y Costilla 6207<br>Pedregal de Santa Julia C.P. 22604<br>Tijuana B.C.</p>
+                        <p class="text-white font-numbers font-bold text-xl mt-2">6:00 p.m.</p>
                     </div>
                     
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl">
@@ -449,7 +445,8 @@
                             <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 md:w-32 md:h-32 filtro-blanco" alt="Recepción">
                         </div>
                         <h1 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Recepción</h1>
-                        <p class="text-white/90 italic text-sm">Muscari Salón de Eventos<br>C. Ensenada <span class="font-numbers">2462</span>, Lomas del Pacífico<br>C.P. 22614 Tijuana B.C.<br><br><span class="font-bold text-lg font-numbers tracking-widest">8:00 P.M.</span></p>
+                        <p class="text-white/90 italic text-sm">Muscari Salón de Eventos<br>C. Ensenada 2462<br>Lomas del Pacífico C.P. 22614<br>Tijuana B.C.</p>
+                        <p class="text-white font-numbers font-bold text-xl mt-2">8:00 p.m.</p>
                     </div>
                     
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl">
@@ -468,12 +465,11 @@
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/jS3g26x.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/jS3g26x.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
-
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 text-center relative seccion-blanca overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full py-10">
                 <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-16">Faltan solo...</h3>
 
@@ -499,18 +495,18 @@
                 <div class="reveal-scale delay-200 mt-8">
                     <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-[#2C2A2A] font-bold">Reserva el momento en tu calendario</p>
                     <div class="flex justify-center">
-                        <button onclick="calendarLink('Mis XV Suelen Camila', 'Parroquia San Judas Tadeo, Tijuana', '20260530T180000')" class="btn-calendar bg-azul-principal text-white border border-azul-principal font-bold rounded-md">
+                        <button onclick="calendarLink('Mis XV Suelen Camila', 'Parroquia San Judas Tadeo', '20260530T180000')" class="btn-calendar bg-azul-principal text-white border border-azul-principal font-bold rounded-md">
                             Agregar al calendario
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/V7yQGFF.jpeg" class="separador-img rounded-full" alt="Separador">
-        </div>
         
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/V7yQGFF.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
+        </div>
+
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <div class="text-center mb-24">
@@ -534,11 +530,11 @@
                         <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
                             <img src="https://i.imgur.com/AIApde9.png" class="w-24 md:w-28 object-contain opacity-80 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Recepción</h3><p class="text-gray-500 italic text-sm">Bienvenidos</p></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Recepción</h3><p class="text-gray-500 italic text-sm">Llegada al salón</p></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Cena de Gala</h3><p class="text-gray-500 italic text-sm">Banquete Especial</p></div>
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Cena</h3><p class="text-gray-500 italic text-sm">Banquete Especial</p></div>
                         <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
                             <img src="https://i.imgur.com/6YWudkf.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
                         </div>
@@ -550,46 +546,44 @@
                         <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
                             <img src="https://i.imgur.com/tRNwEAy.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Vals de la Quinceañera</h3><p class="text-gray-500 italic text-sm">Momento Mágico</p></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Vals</h3><p class="text-gray-500 italic text-sm">Presentación Oficial</p></div>
                     </div>
                     
                     <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">¡A Bailar!</h3><p class="text-gray-500 italic text-sm">Apertura de pista</p></div>
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">A bailar</h3><p class="text-gray-500 italic text-sm">¡Que comience la fiesta!</p></div>
                         <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
-                            <img src="https://i.imgur.com/ruhzeF1.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul"> </div>
-                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">22:30 HRS</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">A Bailar</h3></div>
+                            <svg class="w-24 md:w-28 text-azul-principal p-4 opacity-90" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13.59L15.3,17.88L16.71,16.46L13,12.76V7H11Z" /></svg>
+                        </div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">22:30 HRS</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">A bailar</h3></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/rcJU4b7.jpeg" class="separador-img rounded-full" alt="Separador">
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/rcJU4b7.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative text-center">
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative text-center">
             <div class="max-w-3xl mx-auto reveal-scale">
                 <div class="mx-auto mb-8 flex items-center justify-center">
                     <img src="https://i.imgur.com/ruhzeF1.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-azul" alt="Código de Vestimenta">
                 </div>
                 <h2 class="text-5xl mb-8 font-script text-azul-principal text-shadow-light">Código de Vestimenta</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] text-blanco-perla mb-10 font-bold bg-azul-principal inline-block px-6 py-2 rounded-full shadow-sm">Formal</p>
-                <p class="text-lg md:text-2xl italic text-[#2C2A2A] mb-8 leading-relaxed px-4">Por favor, reserva el color blanco y el azul cielo exclusivamente para la quinceañera.</p>
+                <p class="text-lg md:text-2xl italic text-[#2C2A2A] mb-8 leading-relaxed px-4">Por favor, reserva el color azul cielo y tonos similares exclusivamente para la quinceañera.</p>
                 
                 <div class="flex justify-center gap-8 mt-8">
                     <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 rounded-full bg-white border border-gray-200 shadow-md relative"></div>
-                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#2C2A2A] font-bold">Blanco</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 rounded-full bg-azul-principal border border-azul-principal/50 shadow-md relative"></div>
-                        <span class="text-[10px] uppercase tracking-widest mt-4 text-azul-principal font-bold">Azul Cielo</span>
+                        <div class="w-14 h-14 rounded-full bg-blue-300 border border-blue-400 shadow-md relative"></div>
+                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#2C2A2A] font-bold">Azul Cielo</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
             <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full">
                 <svg class="w-16 h-16 mx-auto mb-6 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
@@ -613,79 +607,52 @@
             </div>
         </section>
 
-        <div class="w-full flex justify-center bg-blanco-perla py-8">
-            <img src="https://i.imgur.com/PQ132cI.jpeg" class="separador-img rounded-full" alt="Separador">
-        </div>
-
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Mesa de Regalos</h1>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] drop-shadow-sm font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
-                <div class="flex flex-col items-center justify-center w-full">
-                    <div class="bg-white p-10 border border-gray-200 group shadow-md rounded-2xl max-w-sm flex flex-col items-center justify-center reveal-scale transition-all duration-500 cursor-default">
-                        <svg class="w-16 h-16 mb-4 text-azul-principal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex justify-center w-full">
+                    <div class="bg-white p-8 md:p-12 border border-gray-200 group shadow-md rounded-2xl flex flex-col items-center justify-center reveal-scale delay-200 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-principal/50 duration-500 cursor-default">
+                        <svg class="w-16 h-16 mb-4 text-azul-principal group-hover:scale-110 transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
                         </svg>
-                        <h3 class="text-xl font-bold text-[#2C2A2A] mb-2 uppercase tracking-widest">Lluvia de Sobres</h3>
-                        <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-gray-500 text-center leading-relaxed">Tendremos una urna en la entrada del salón para sobres. ¡Solo habrá sobres!</p>
+                        <h3 class="text-xl font-bold text-azul-principal mb-2">Lluvia de Sobres</h3>
+                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2C2A2A] text-center leading-relaxed max-w-sm">
+                            Tendré una urna en la entrada del salón para depositar sus sobres.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale py-10">
+            <img src="https://i.imgur.com/PQ132cI.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
+        </div>
 
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Confirmar antes del <span class="font-numbers">20</span> de Mayo de <span class="font-numbers">2026</span></p>
                 
-                <form id="rsvpForm" class="space-y-12 text-left bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500">
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" placeholder="Ej. Familia García" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-bold placeholder:text-white/40">
-                        </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Cantidad (Solo de adultos)</label>
-                            <input type="text" id="rsvpPax" placeholder="Ej. 2 Adultos" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-bold placeholder:text-white/40">
-                        </div>
-                    </div>
-                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-white text-azul-principal font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Enviar Solicitud a Anfitriona</button>
-                </form>
-
-                <div id="loadingMessage" class="hidden mt-10 bg-black/40 backdrop-blur-md border border-white/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
-                    <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                    <p class="text-4xl font-script text-white mb-2">Registrando...</p>
-                    <p class="text-[11px] uppercase tracking-[0.3em] opacity-90 font-bold">Validando tus datos</p>
-                </div>
-
-                <div id="errorMessage" class="hidden mt-10 bg-red-900/60 backdrop-blur-md border border-red-500/50 p-12 rounded-3xl flex-col items-center transition-all duration-500">
-                    <p class="text-3xl font-bold text-white mb-2">Ya enviaste tu solicitud</p>
-                    <p class="text-[11px] uppercase tracking-widest text-red-100 mb-8">Este nombre ya se encuentra registrado.</p>
-                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-8 py-4 rounded-xl text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-red-900 transition-colors">Intentar otro nombre</button>
-                </div>
-
-                <div id="successMessage" class="hidden mt-10 transition-all duration-500">
-                    <div class="bg-black/40 backdrop-blur-md border border-white p-10 rounded-3xl relative overflow-hidden shadow-2xl">
-                        <p class="text-5xl font-script text-white mb-4">¡Solicitud Enviada!</p>
-                        <p class="text-[11px] uppercase tracking-widest text-gray-200 mb-6 leading-relaxed">Tus datos han sido enviados. La anfitriona asignará tus pases. Una vez asignados, podrás buscarlos en la sección de abajo con tu nombre.</p>
-                        <div class="bg-white/20 p-6 rounded-2xl mb-8">
-                            <p class="text-[11px] uppercase tracking-widest font-bold mb-2">Folio de Registro</p>
-                            <p id="ticketFolio" class="text-3xl font-bold tracking-widest font-numbers text-white"></p>
-                        </div>
-                        <p id="ticketName" class="text-2xl font-bold mb-2"></p>
-                        <p id="ticketPax" class="text-xs uppercase tracking-widest opacity-90 font-bold"></p>
-                    </div>
+                <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500">
+                    <p class="text-lg md:text-xl italic text-white mb-8 leading-relaxed px-4">
+                        Por favor, confírmame tu asistencia mandándome un mensajito indicando tu nombre y la cantidad de adultos que te acompañan.
+                    </p>
+                    
+                    <a href="https://wa.me/526642803730?text=Hola,%20confirmo%20mi%20asistencia%20a%20tus%20XV.%20Nombre:%20%0ACantidad%20de%20adultos:%20" target="_blank" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl">
+                        Confirmar por WhatsApp
+                    </a>
                 </div>
             </div>
         </section>
         
-        <section class="min-h-[70svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal relative z-10 border-t border-azul-principal/30 pt-16 w-full">
-                <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-4">Mis Pases</h3>
-                <p class="text-[11px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-bold">Ingresa tu nombre para ver los pases asignados</p>
+                <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-4">Consultar Pases</h3>
+                <p class="text-[11px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-bold">Ingresa tu nombre para ver la cantidad de pases asignados</p>
                 
                 <div class="flex flex-col md:flex-row gap-4">
-                    <input type="text" id="searchName" placeholder="Ej. Familia García" class="w-full bg-white border border-gray-300 rounded-xl px-6 py-4 outline-none text-xl text-center text-[#2C2A2A] uppercase shadow-sm font-bold">
+                    <input type="text" id="searchName" placeholder="Ej. Familia Martínez" class="w-full bg-white border border-gray-300 rounded-xl px-6 py-4 outline-none text-xl text-center text-[#2C2A2A] uppercase shadow-sm font-bold">
                     <button onclick="consultarPase()" id="btnConsultar" class="bg-azul-principal text-white px-10 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-transparent hover:text-azul-principal border border-azul-principal transition-all duration-300 flex-shrink-0 shadow-md">Buscar</button>
                 </div>
                 
@@ -695,23 +662,20 @@
                     
                     <p class="text-[12px] uppercase tracking-widest text-azul-principal font-bold mb-6">Pases Asignados</p>
                     
-                    <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl mb-8 flex flex-col items-center w-full max-w-[300px] mx-auto">
-                        <p class="text-sm uppercase tracking-widest text-azul-principal font-bold mb-4">Folio de Acceso</p>
-                        <p id="consultaFolio" class="text-4xl font-bold tracking-widest text-[#2C2A2A] font-numbers"></p>
+                    <p id="consultaNameDisplay" class="text-3xl font-bold text-[#2C2A2A] mb-4"></p>
+                    <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl w-full max-w-[300px] mx-auto">
+                        <p class="text-sm uppercase tracking-widest text-azul-principal font-bold mb-2">Cantidad</p>
+                        <p id="consultaPax" class="text-2xl font-bold text-[#2C2A2A] font-numbers"></p>
                     </div>
-
-                    <p id="consultaNameDisplay" class="text-3xl font-bold text-[#2C2A2A] mb-2"></p>
-                    <p id="consultaPax" class="text-lg uppercase tracking-widest text-gray-500 font-bold"></p>
-                    <p class="text-[10px] mt-6 text-gray-400 uppercase tracking-widest">Muestra esta pantalla en la entrada del salón.</p>
                 </div>
 
                 <div id="consultaError" class="hidden mt-8 bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
-                    <p class="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed">No encontramos pases asignados con ese nombre. Verifica que esté escrito igual que cuando confirmaste, o contacta a la anfitriona.</p>
+                    <p class="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando te asignaron los pases o contacta a la anfitriona.</p>
                 </div>
             </div>
         </section>
         
-        <footer class="min-h-[70svh] flex flex-col justify-center py-20 px-6 text-center seccion-azul relative z-10">
+        <footer class="min-h-[100svh] flex flex-col justify-center py-20 px-6 text-center seccion-azul relative z-10">
             <p class="text-7xl font-script mb-4 text-white drop-shadow-md relative z-10">¡No faltes!</p>
             <p class="text-[11px] text-white/90 uppercase tracking-[0.5em] mb-10 font-bold font-numbers relative z-10">30 • Mayo • 2026</p>
             <p class="text-[9px] text-white/70 uppercase tracking-[0.2em] font-bold relative z-10">AdaInvite © <span class="font-numbers">2026</span></p>
@@ -830,61 +794,11 @@
             });
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
-
         
         // ==========================================
-        // CONFIRMACIÓN Y BÚSQUEDA DE PASES (API)
+        // BÚSQUEDA DE PASES (API)
         // ==========================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
-
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value.trim();
-            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
-            
-            document.getElementById('rsvpForm').style.display = 'none';
-            const loader = document.getElementById('loadingMessage');
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
-
-            try {
-                // Notificación vía API para que la anfitriona lo reciba y asigne
-                const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
-                const result = await response.json();
-                
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
-
-                if(result.status === "success") {
-                    document.getElementById('ticketFolio').innerText = folio;
-                    document.getElementById('ticketName').innerText = name;
-                    document.getElementById('ticketPax').innerText = pax;
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    
-                    // Abrir WhatsApp también opcionalmente o solo confiar en la API:
-                    // window.open(`https://wa.me/526642803730?text=Hola,%20confirmo%20mi%20asistencia%20para%20los%20XV%20de%20Suelen.%20Nombre:%20${encodeURIComponent(name)}.%20Pases%20solicitados:%20${encodeURIComponent(pax)}.%20Folio:%20${folio}`, '_blank');
-                    
-                } else if (result.status === "exists") {
-                    document.getElementById('errorMessage').classList.remove('hidden');
-                    document.getElementById('errorMessage').classList.add('flex');
-                }
-            } catch (error) {
-                // En caso de fallar, redirige al whatsapp directo
-                alert("Redirigiendo a WhatsApp para confirmar...");
-                window.open(`https://wa.me/526642803730?text=Hola,%20confirmo%20mi%20asistencia%20para%20los%20XV%20de%20Suelen.%20Nombre:%20${encodeURIComponent(name)}.%20Cantidad:%20${encodeURIComponent(pax)}.`, '_blank');
-                resetForm();
-            }
-        });
-
-        function resetForm() {
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('errorMessage').classList.remove('flex');
-            document.getElementById('loadingMessage').classList.add('hidden');
-            document.getElementById('rsvpForm').style.display = 'block';
-            document.getElementById('rsvpName').value = '';
-            document.getElementById('rsvpPax').value = '';
-        }
 
         async function consultarPase() {
             const searchInput = document.getElementById('searchName').value.trim();
@@ -910,8 +824,7 @@
                 if (result.status === "found") {
                     document.getElementById('consultaNameDisplay').innerText = result.name;
                     document.getElementById('consultaPax').innerText = result.pax;
-                    document.getElementById('consultaFolio').innerText = result.folio;
-                    
+
                     resultDiv.classList.remove('hidden');
                     resultDiv.classList.add('flex');
                 } else {
@@ -926,18 +839,16 @@
     </script>
 
     <script>
-      // 1. Bloqueo de teclado e inspección básica
       document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
       }, false);
 
       document.onkeydown = function(e) {
-        if (e.keyCode == 123) return false; // F12
+        if (e.keyCode == 123) return false; 
         if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ver código
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
       };
 
-      // 2. Debugger Infinito (Se activa si logran abrir la consola)
       (function() {
         (function() {
           var block = function() {
