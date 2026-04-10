@@ -37,6 +37,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
             --azul-principal: #8496B0;
@@ -617,7 +619,7 @@
                 <h1 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Álbum Compartido</h1>
                 
                 <p class="text-sm md:text-lg font-medium tracking-widest mb-10 leading-relaxed text-white/90">
-                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
+                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Sube tus fotos y videos!
                 </p>
 
                 <div class="mx-auto bg-white p-4 rounded-2xl shadow-lg inline-block mb-10 border border-white/30">
@@ -658,44 +660,71 @@
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Confirmar antes del <span class="font-numbers">20</span> de Mayo de <span class="font-numbers">2026</span></p>
                 
-                <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500">
-                    <p class="text-lg md:text-xl italic text-white mb-8 leading-relaxed px-4">
-                        Por favor, confírmame tu asistencia mandándome un mensajito indicando tu nombre y la cantidad de adultos que te acompañan.
-                    </p>
+                <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto">
                     
-                    <a href="https://wa.me/526642803730?text=Hola,%20confirmo%20mi%20asistencia%20a%20tus%20XV.%20Nombre:%20%0ACantidad%20de%20adultos:%20" target="_blank" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl">
-                        Confirmar por WhatsApp
-                    </a>
+                    <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
+                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                        </div>
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Cantidad de Personas</label>
+                            <select id="rsvpPax" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left appearance-none">
+                                <option value="" disabled selected class="text-black">Selecciona cantidad</option>
+                                <option value="1" class="text-black">1 Pase</option>
+                                <option value="2" class="text-black">2 Pases</option>
+                                <option value="3" class="text-black">3 Pases</option>
+                                <option value="4" class="text-black">4 Pases</option>
+                                <option value="5" class="text-black">5 Pases (Máximo)</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
+                            Confirmar por WhatsApp
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </section>
         
-        <section class="min-h-[60svh] flex flex-col justify-center py-8 px-6 seccion-blanca text-center relative overflow-hidden">
-            <div class="max-w-2xl mx-auto reveal relative z-10 border-t border-azul-principal/30 pt-16 w-full">
-                <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-4">Consultar Pases</h3>
-                <p class="text-[11px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-bold">Ingresa tu nombre para ver la cantidad de pases asignados</p>
+        <section class="min-h-[60svh] flex flex-col justify-center py-8 px-6 seccion-blanca text-center relative overflow-hidden pb-20">
+            <div class="max-w-2xl mx-auto reveal relative z-10 border-t border-azul-principal/30 pt-16 w-full flex flex-col">
                 
-                <div class="flex flex-col md:flex-row gap-4">
-                    <input type="text" id="searchName" placeholder="Ej. Familia Martínez" class="w-full bg-white border border-gray-300 rounded-xl px-6 py-4 outline-none text-xl text-center text-[#2C2A2A] uppercase shadow-sm font-bold">
-                    <button onclick="consultarPase()" id="btnConsultar" class="bg-azul-principal text-white px-10 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-transparent hover:text-azul-principal border border-azul-principal transition-all duration-300 flex-shrink-0 shadow-md">Buscar</button>
-                </div>
-                
-                <div id="consultaResult" class="hidden mt-12 bg-white shadow-2xl border border-gray-100 p-10 rounded-3xl flex-col items-center transition-all duration-500 relative overflow-hidden">
-                    <div class="absolute -left-5 top-1/2 w-10 h-10 bg-blanco-perla rounded-full transform -translate-y-1/2 shadow-inner"></div>
-                    <div class="absolute -right-5 top-1/2 w-10 h-10 bg-blanco-perla rounded-full transform -translate-y-1/2 shadow-inner"></div>
+                <div id="encabezadoConsulta">
+                    <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-4">Consultar Pases</h3>
+                    <p class="text-[11px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-bold">Ingresa tu nombre para ver la cantidad de pases asignados</p>
                     
-                    <p class="text-[12px] uppercase tracking-widest text-azul-principal font-bold mb-6">Pases Asignados</p>
-                    
-                    <p id="consultaNameDisplay" class="text-3xl font-bold text-[#2C2A2A] mb-4"></p>
-                    <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl w-full max-w-[300px] mx-auto">
-                        <p class="text-sm uppercase tracking-widest text-azul-principal font-bold mb-2">Cantidad</p>
-                        <p id="consultaPax" class="text-2xl font-bold text-[#2C2A2A] font-numbers"></p>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <input type="text" id="searchName" placeholder="Ej. Familia Martínez" class="w-full bg-white border border-gray-300 rounded-xl px-6 py-4 outline-none text-xl text-center text-[#2C2A2A] uppercase shadow-sm font-bold">
+                        <button onclick="consultarPase()" id="btnConsultar" class="bg-azul-principal text-white px-10 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-transparent hover:text-azul-principal border border-azul-principal transition-all duration-300 flex-shrink-0 shadow-md">Buscar</button>
                     </div>
                 </div>
 
-                <div id="consultaError" class="hidden mt-8 bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
+                <div id="consultaError" class="hidden mt-4 mb-4 bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
                     <p class="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando te asignaron los pases o contacta a la anfitriona.</p>
                 </div>
+
+                <div id="contenedorPaseOficial" class="hidden my-auto w-[90%] max-w-[340px] mx-auto py-8 px-4 bg-azul-principal border-2 border-white/20 rounded-2xl shadow-2xl text-white relative flex-col items-center mt-6 transition-all duration-500">
+                    
+                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-20 mb-3 mt-2 drop-shadow-sm filtro-blanco mx-auto">
+                    
+                    <div class="w-full text-center pb-6 pt-2">
+                        <p class="text-4xl tracking-widest font-script leading-none m-0 p-0 text-white">Pase de Acceso</p>
+                    </div>
+                    
+                    <div class="w-full h-px bg-white/30 mb-6"></div>
+                    
+                    <p id="nombrePase" class="text-3xl font-bold mb-2 text-white"></p>
+                    <div class="flex justify-center items-center gap-2 mb-6 text-sm uppercase tracking-widest">
+                        Pases asignados: <span id="pasesAprobados" class="bg-white text-azul-principal font-bold px-3 py-1 rounded-full text-xl font-numbers"></span>
+                    </div>
+                    
+                    <p class="text-[10px] uppercase tracking-[0.15em] opacity-90 mt-4 mb-2 leading-relaxed font-bold border-t border-white/30 pt-4 px-2 w-full text-center text-white">
+                        Muestra esta tarjeta en recepción<br>para tener acceso al evento
+                    </p>
+                </div>
+
+                <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 mb-10 bg-white text-azul-principal border border-white py-4 px-1 uppercase tracking-[0.2em] text-[11px] hover:bg-transparent hover:text-azul-principal hover:border-azul-principal transition-all duration-300 rounded-xl font-bold shadow-md">Descargar Tarjeta</button>
             </div>
         </section>
         
@@ -817,6 +846,22 @@
             });
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
+
+        // ==========================================
+        // RSVP - CONFIRMAR ASISTENCIA
+        // ==========================================
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const pax = document.getElementById('rsvpPax').value;
+
+            // Numero original de Suelen:
+            const numDestino = "526642803730"; 
+            const mensajeTxt = `Hola, confirmo mi asistencia a tus XV.%0ANombre: ${name}%0ACantidad de adultos: ${pax}`;
+            const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
+
+            window.location.href = waLink; 
+        });
         
         // ==========================================
         // BÚSQUEDA DE PASES (API)
@@ -825,16 +870,14 @@
 
         async function consultarPase() {
             const searchInput = document.getElementById('searchName').value.trim();
-            const resultDiv = document.getElementById('consultaResult');
             const errorDiv = document.getElementById('consultaError');
             const btn = document.getElementById('btnConsultar');
+            const encabezadoConsulta = document.getElementById('encabezadoConsulta');
             
             if (!searchInput) return;
 
             btn.innerText = "...";
             btn.disabled = true;
-            resultDiv.classList.add('hidden'); 
-            resultDiv.classList.remove('flex');
             errorDiv.classList.add('hidden');
             
             try {
@@ -845,11 +888,15 @@
                 btn.disabled = false;
 
                 if (result.status === "found") {
-                    document.getElementById('consultaNameDisplay').innerText = result.name;
-                    document.getElementById('consultaPax').innerText = result.pax;
+                    // Setear info en el div nuevo de tarjeta oficial
+                    document.getElementById('nombrePase').innerText = result.name;
+                    document.getElementById('pasesAprobados').innerText = result.pax;
 
-                    resultDiv.classList.remove('hidden');
-                    resultDiv.classList.add('flex');
+                    // Ocultar buscador e info de error, mostrar tarjeta y btn descarga
+                    encabezadoConsulta.classList.add('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.remove('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.add('flex');
+                    document.getElementById('btnDescargarPase').classList.remove('hidden');
                 } else {
                     errorDiv.classList.remove('hidden');
                 }
@@ -858,6 +905,53 @@
                 btn.innerText = "Buscar";
                 btn.disabled = false;
             }
+        }
+
+        // ==========================================
+        // FUNCIÓN PARA DESCARGAR EL PASE COMO IMAGEN
+        // ==========================================
+        function descargarPase() {
+            const paseOficial = document.getElementById('contenedorPaseOficial');
+            const btnDescargar = document.getElementById('btnDescargarPase');
+            
+            btnDescargar.innerText = "Generando imagen HD...";
+            
+            html2canvas(paseOficial, {
+                scale: 4, 
+                backgroundColor: "#8496B0", // Fondo azul que coincide con la clase
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                let nombreInvitado = document.getElementById('nombrePase').innerText.trim().replace(/\s+/g, '_');
+                if(!nombreInvitado) nombreInvitado = "XVs_Suelen";
+                const fileName = `Pase_${nombreInvitado}.png`;
+
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], fileName, { type: 'image/png' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Pase de Acceso XVs Suelen',
+                            text: 'Aquí está mi tarjeta de acceso.'
+                        }).then(() => {
+                            btnDescargar.innerText = "Descargar Tarjeta";
+                        }).catch((error) => {
+                            btnDescargar.innerText = "Descargar Tarjeta";
+                        });
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = fileName;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                        btnDescargar.innerText = "Descargar Tarjeta";
+                    }
+                }, 'image/png', 1.0);
+
+            }).catch(err => {
+                btnDescargar.innerText = "Error al generar";
+                setTimeout(() => btnDescargar.innerText = "Descargar Tarjeta", 2000);
+            });
         }
     </script>
 
