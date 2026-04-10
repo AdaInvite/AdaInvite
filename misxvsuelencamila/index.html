@@ -48,16 +48,31 @@
             --font-numbers: 'Cinzel', serif; 
         }
 
-        body, html {
+                body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             font-family: var(--font-elegant);
             background-color: var(--blanco-perla);
+            /* --- NUEVO FONDO DE TEXTURA --- */
+            background-image: url('https://i.imgur.com/uPMqC8o.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Mantiene la textura fija al hacer scroll */
+            /* ------------------------------ */
             overflow-x: hidden;
             color: var(--azul-principal);
             scroll-behavior: smooth;
+        }
+
+        /* Modificamos seccion-blanca y agregamos bg-blanco-perla para sobreescribir el color de Tailwind */
+        .seccion-blanca, .bg-blanco-perla { 
+            background-color: var(--blanco-perla); 
+            background-image: url('https://i.imgur.com/uPMqC8o.jpeg') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            color: #2C2A2A;
         }
 
         h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
@@ -72,10 +87,6 @@
         .font-bold, h3, label { font-weight: 700; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        .seccion-blanca { 
-            background-color: var(--blanco-perla); 
-            color: #2C2A2A;
-        }
         
        .seccion-azul {
             position: relative; 
@@ -659,26 +670,16 @@
                 
                 <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto">
                     
-                    <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
-                        </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Cantidad de Personas</label>
-                            <select id="rsvpPax" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left appearance-none">
-                                <option value="" disabled selected class="text-black">Selecciona cantidad</option>
-                                <option value="1" class="text-black">1 Pase</option>
-                                <option value="2" class="text-black">2 Pases</option>
-                                <option value="3" class="text-black">3 Pases</option>
-                                <option value="4" class="text-black">4 Pases</option>
-                                <option value="5" class="text-black">5 Pases (Máximo)</option>
-                            </select>
-                        </div>
-                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
-                            Confirmar
-                        </button>
-                    </form>
+                   <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
+    <div class="border-b border-white/50 pb-2">
+        <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
+        <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+    </div>
+    
+    <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
+        Confirmar
+    </button>
+</form>
 
                 </div>
             </div>
@@ -851,14 +852,13 @@
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
 
-        // ==========================================
+                // ==========================================
         // RSVP - CONFIRMAR ASISTENCIA Y GUARDAR
         // ==========================================
         document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value;
             const btnSubmit = document.getElementById('btnSubmitRSVP');
 
             const originalText = btnSubmit.innerText;
@@ -866,16 +866,18 @@
             btnSubmit.disabled = true;
 
             try {
+                // Se envía "N/A" o "Por confirmar" en personas para que tu Google Apps Script no marque error si espera ese dato
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
+                    body: JSON.stringify({ action: "rsvp", nombre: name, personas: "N/A" })
                 });
             } catch (error) {
                 console.error("Error al guardar respaldo:", error);
             }
 
             const numDestino = "526642803730"; 
-            const mensajeTxt = `Hola, confirmo mi asistencia a tus XV.%0ANombre: ${name}%0ACantidad de adultos: ${pax}`;
+            // Mensaje de WhatsApp actualizado sin la cantidad de pases
+            const mensajeTxt = `Hola, confirmo mi asistencia a tus XV.%0ANombre: ${name}`;
             const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
 
             window.location.href = waLink; 
