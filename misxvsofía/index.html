@@ -38,6 +38,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
             --lila: #B599D4;
@@ -91,8 +93,8 @@
 
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(181, 153, 212, 0.4); }
+        .text-shadow-none { text-shadow: none; }
 
-        /* Filtro para igualar el tono lila en imágenes */
         .filtro-lila {
             filter: brightness(0) saturate(100%) invert(75%) sepia(18%) saturate(839%) hue-rotate(227deg) brightness(96%) contrast(92%);
         }
@@ -115,16 +117,13 @@
         }
 
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
-        
         .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
         .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.4)); isolation: isolate; }
 
         .flap { 
-            width: 100%; 
-            height: 100%; 
+            width: 100%; height: 100%; 
             background-image: linear-gradient(var(--lila), var(--lila)), url("https://i.imgur.com/arqV06S.jpeg"); 
-            background-size: cover; 
-            background-blend-mode: multiply; 
+            background-size: cover; background-blend-mode: multiply; 
         }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
@@ -142,56 +141,19 @@
 
         #section-main { display: none; }
 
-        /* ANIMACIONES Y EFECTOS */
         .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal { transform: translateY(40px); }
         .reveal-left { transform: translateX(-50px); }
         .reveal-right { transform: translateX(50px); }
         .reveal-scale { transform: scale(0.85); }
         .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
-
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
-        .delay-300 { transition-delay: 300ms; }
-
-        .timeline-line {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--lila), transparent);
-        }
-
-        .btn-calendar {
-            border: 1px solid var(--lila); padding: 14px 32px; font-size: 6px;
-            letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease;
-            display: inline-flex; align-items: center; gap: 10px; border-radius: 0px;
-            color: var(--lila); background-color: transparent;
-        }
-        .btn-calendar:hover { background: var(--lila); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(181, 153, 212, 0.3); }
-
-        .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 30px; padding: 20px 0; scrollbar-width: none; justify-content: start; }
-        .chambelanes-slider::-webkit-scrollbar { display: none; }
-        .chambelan-card {
-            flex: 0 0 220px; scroll-snap-align: center;
-            transition: transform 0.4s ease; display: flex; flex-direction: column; items-center;
-        }
-        .chambelan-card:hover { transform: translateY(-5px); }
-        .chambelan-img-wrapper {
-            width: 180px; height: 180px; margin: 0 auto; border-radius: 50%; overflow: hidden;
-            border: 4px solid var(--lila); box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
-
-        .music-float { animation: floatingMusic 3s ease-in-out infinite; }
-        @keyframes floatingMusic {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-8px) scale(1.05); }
-        }
-
-        .spin-slow { animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 40px; padding: 40px 20px; scrollbar-width: none; }
         .slider-historia::-webkit-scrollbar { display: none; }
@@ -208,50 +170,22 @@
         .tarjeta-nueva:hover .img-historia { filter: none; }
         .info-historia { width: 100%; text-align: center; margin-top: 20px; }
         
-        .año-badge {
-            color: var(--lila); font-size: 14px; letter-spacing: 3px;
-            font-family: var(--font-numbers); font-weight: 600; margin-bottom: 5px;
-            border-bottom: 1px solid var(--lila); padding-bottom: 5px; display: inline-block;
-        }
-
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
         #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 300; line-height: 1; transition: color 0.5s ease; }
         #countdown .time-label { font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; font-family: var(--font-elegant); transition: color 0.5s ease; }
-
-        .btn-trivia { transition: all 0.3s ease; }
-        .btn-trivia.correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; }
-        .btn-trivia.incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; }
-        .btn-trivia:disabled { cursor: not-allowed; opacity: 0.9; }
 
         .separador-img {
             min-height: 100svh; width: 100%; height: auto; border: 0; box-shadow: none; object-fit: cover; border-radius: 0;
         }
         
         input[type=range] {
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            height: 4px;
-            outline: none;
+            -webkit-appearance: none; background: rgba(255, 255, 255, 0.3); border-radius: 8px; height: 4px; outline: none;
         }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         input[type=range]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            width: 14px; height: 14px; border-radius: 50%; background: #ffffff; cursor: pointer; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -264,12 +198,8 @@
     <div id="envelope-wrapper">
         <div class="envelope-bg"></div>
         <div id="envelope-container" class="w-full h-full relative z-10">
-            <div class="flap-wrapper flap-left-wrapper">
-                <div class="flap flap-left"></div>
-            </div>
-            <div class="flap-wrapper flap-right-wrapper">
-                <div class="flap flap-right"></div>
-            </div>
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="text-[9px] tracking-[3px] uppercase mb-4 animate-bounce text-white font-bold drop-shadow-md">Toca para abrir</div>
                 <img src="https://i.imgur.com/Pj247cC.png" class="w-[120px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
@@ -284,42 +214,37 @@
             
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-25 text-center mt-12 md:mt-20">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
-                    
                     <h2 class="font-script text-5xl md:text-4xl text-lila mb-2 drop-shadow-sm">Mis 15</h2>
                     <img src="https://i.imgur.com/sc1Veyg.png" alt="Corona" class="w-36 md:w-30 mb-2 relative z-10 drop-shadow-sm filtro-lila">
                     <h1 class="name-header text-lila mb-12 relative z-10 drop-shadow-md">Sofía</h1>
                     
-                        <div class="flex items-center justify-center gap-4 w-full px-6">
-    <div class="w-full flex justify-center items-center gap-4 border-t border-b border-lila py-3">
-        <span class="text-lg md:text-xl font-light font-elegant">May</span>
-    </div>
-    
-    <span class="text-[3rem] md:text-[3rem] leading-none font-numbers mx-2">02</span>
-    
-    <div class="w-full flex justify-center items-center gap-4 border-t border-b border-lila py-3">
-        <span class="text-lg md:text-xl font-light font-elegant tracking-widest">2026</span>
-    </div>
-</div>
+                    <div class="flex items-center justify-center gap-4 w-full px-6">
+                        <div class="w-full flex justify-center items-center gap-4 border-t border-b border-lila py-3">
+                            <span class="text-lg md:text-xl font-light font-elegant">May</span>
+                        </div>
+                        <span class="text-[3rem] md:text-[3rem] leading-none font-numbers mx-2">02</span>
+                        <div class="w-full flex justify-center items-center gap-4 border-t border-b border-lila py-3">
+                            <span class="text-lg md:text-xl font-light font-elegant tracking-widest">2026</span>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="relative z-10 w-full pb-8 flex flex-col items-center reveal-scale active delay-100 text-center">
-    <svg class="w-6 h-6 text-lila animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-    </svg>
-</div>
+                <svg class="w-6 h-6 text-lila animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
         </header>
 
-                <div class="w-full bg-blanco-perla flex justify-center items-center reveal-scale">
+        <div class="w-full bg-blanco-perla flex justify-center items-center reveal-scale">
             <img src="https://i.imgur.com/GC2dG0e.jpeg" class="separador-img" alt="Sofía">
         </div>
 
         <section class="min-h-[100svh] flex flex-col justify-center py-1 px-15 text-center relative seccion-clara">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
                 
-                                                <div class="w-full max-w-[280px] mx-auto py-1 bg-lila/95 backdrop-blur-md rounded-2xl p-4 md:p-5 shadow-xl mb-12 reveal-scale text-white border border-white/10">
-                    
+                <div class="w-full max-w-[280px] mx-auto py-1 bg-lila/95 backdrop-blur-md rounded-2xl p-4 md:p-5 shadow-xl mb-12 reveal-scale text-white border border-white/10">
                     <div class="text-left mb-4">
                         <h3 class="text-lg font-bold mb-0.5 font-elegant tracking-wide">Lo que soy</h3>
                         <p class="text-[10px] font-light text-white/70 font-elegant">Sofía the First</p>
@@ -335,12 +260,10 @@
                         <button class="text-white hover:text-white/70 transition-colors opacity-80 focus:outline-none">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                         </button>
-
                         <button onclick="toggleAudio()" class="w-12 h-12 bg-white text-lila rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
                             <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </button>
-
                         <button class="text-white hover:text-white/70 transition-colors opacity-80 focus:outline-none">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
@@ -363,7 +286,6 @@
                         <p class="text-sm md:text-base font-light">Raúl Palacios Mendoza</p>
                     </div>
                 </div>
-                
             </div>
         </section>
 
@@ -377,144 +299,74 @@
                 <div id="historia-container" class="slider-historia">
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/LiWetrb.jpeg" class="img-historia" alt="Historia 1">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">El primer capítulo de mi vida</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">El primer capítulo de mi vida</h4></div>
                     </div>
-
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/gjl2dTQ.jpeg" class="img-historia" alt="Historia 2">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis primeros pasos</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis primeros pasos</h4></div>
                     </div>
-
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/MZhX3bC.jpeg" class="img-historia" alt="Historia 3">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis primeros pasos</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis primeros pasos</h4></div>
                     </div>
-
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/MPXn4eR.jpeg" class="img-historia" alt="Historia 4">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4></div>
                     </div>
-
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/j6SS0t9.jpeg" class="img-historia" alt="Historia 5">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4></div>
                     </div>
-
                     <div class="tarjeta-nueva">
                         <img src="https://i.imgur.com/w2cSA7o.jpeg" class="img-historia" alt="Historia 6">
-                        <div class="info-historia">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4>
-                        </div>
+                        <div class="info-historia"><h4 class="text-xl text-[#2C2A2A] font-bold mt-2">Mis aventuras</h4></div>
                     </div>
                 </div>
                 <p class="text-center text-white/80 text-[10px] mt-6 uppercase tracking-[0.4em] font-light">Arrastra para ver más →</p>
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-20 seccion-clara overflow-hidden relative">
-            <div class="max-w-6xl mx-auto w-full reveal relative z-10">
-                <div class="text-center mb-16">
-                    <h2 class="text-5xl font-script text-lila text-shadow-light mb-2">Mis Chambelanes</h2>
-                </div>
-                
-                <div class="chambelanes-slider px-2">
-                    <div class="chambelan-card">
-                        <div class="chambelan-img-wrapper">
-                            <img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Mateo">
-                        </div>
-                        <div class="pt-6 text-center">
-                            <h4 class="text-xl text-lila font-bold">Mateo García</h4>
-                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mt-1">Chambelán de Honor</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="chambelan-img-wrapper">
-                            <img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Santiago">
-                        </div>
-                        <div class="pt-6 text-center">
-                            <h4 class="text-xl text-lila font-bold">Santiago Ruíz</h4>
-                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mt-1">Chambelán</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="chambelan-img-wrapper">
-                            <img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Daniel">
-                        </div>
-                        <div class="pt-6 text-center">
-                            <h4 class="text-xl text-lila font-bold">Daniel Ortiz</h4>
-                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mt-1">Chambelán</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="chambelan-img-wrapper">
-                            <img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián">
-                        </div>
-                        <div class="pt-6 text-center">
-                            <h4 class="text-xl text-lila font-bold">Sebastián Díaz</h4>
-                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mt-1">Chambelán</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-[#2C2A2A]/60 text-[10px] mt-10 uppercase tracking-[0.3em] font-light">Desliza para ver más →</p>
-            </div>
-        </section>
-
-        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-6 px-5 seccion-lila relative">
-            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 mb-10 relative z-10 w-full px-4">
-                <div class="bg-transparent p-4 md:p-8 reveal flex flex-col h-full rounded-xl">
+        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-6 px-5 seccion-clara relative">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 mb-10 relative z-10 w-full px-4 mt-8">
+                <div class="bg-lila/95 backdrop-blur-md p-4 md:p-8 reveal flex flex-col h-full rounded-xl text-white shadow-xl">
                     <div class="text-center mb-8">
                         <div class="mx-auto mb-6 flex items-center justify-center opacity-90">
                             <img src="https://i.imgur.com/lR5CuR5.png" class="w-20 h-20 md:w-28 md:h-28 filtro-blanco" alt="Ceremonia">
                         </div>
                         <h1 class="text-5xl mb-6 font-script reveal-scale">Ceremonia</h1>
-                        <p class="text-white/90 font-light text-sm tracking-wide">Santuario del Señor San José Tlaxcala<br>Calle 1 de Mayo 4, Centro<br>90000 Tlaxcala de Xicohténcatl, Tlax.</p>
-                        <p class="text-white font-bold mt-2">4:00 p.m.</p>
+                        <p class="font-light text-sm tracking-wide">Santuario del Señor San José Tlaxcala<br>Calle 1 de Mayo 4, Centro<br>90000 Tlaxcala de Xicohténcatl, Tlax.</p>
+                        <p class="font-bold mt-2">4:00 p.m.</p>
                     </div>
                     
-                    <div class="flex-grow w-full relative min-h-[300px] rounded-sm overflow-hidden border border-white/20 mb-8 shadow-xl">
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-sm overflow-hidden border border-white/20 mb-8 shadow-inner">
                         <iframe 
                             src="https://maps.app.goo.gl/raX8CsxF5PCDUhoL9?g_st=aw" 
                             class="absolute top-0 left-0 w-full h-full" 
                             style="filter: grayscale(100%) sepia(20%) hue-rotate(227deg) brightness(90%) contrast(110%); border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
                     <a href="https://maps.app.goo.gl/raX8CsxF5PCDUhoL9?g_st=aw" target="_blank" class="w-full block text-center bg-white border border-white text-lila font-bold px-8 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-transparent hover:text-white transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none">Abrir en App de Mapas</a>
                 </div>
 
-                <div class="bg-transparent p-4 md:p-8 reveal flex flex-col h-full rounded-xl">
+                <div class="bg-lila/95 backdrop-blur-md p-4 md:p-8 reveal flex flex-col h-full rounded-xl text-white shadow-xl">
                     <div class="text-center mb-8">
                         <div class="mx-auto mb-6 flex items-center justify-center opacity-90">
                             <img src="https://i.imgur.com/AIApde9.png" class="w-20 h-20 md:w-28 md:h-28 filtro-blanco" alt="Recepción">
                         </div>
                         <h1 class="text-5xl mb-6 font-script reveal-scale">Recepción</h1>
-                        <p class="text-white/90 font-light text-sm tracking-wide">Salón Karlo III<br>Av. Gasoducto 268<br>90111 San Sebastián Atlahapa, Tlax.</p>
-                        <p class="text-white font-bold mt-2">5:20 p.m.</p>
+                        <p class="font-light text-sm tracking-wide">Salón Karlo III<br>Av. Gasoducto 268<br>90111 San Sebastián Atlahapa, Tlax.</p>
+                        <p class="font-bold mt-2">5:20 p.m.</p>
                     </div>
                     
-                    <div class="flex-grow w-full relative min-h-[300px] rounded-sm overflow-hidden border border-white/20 mb-8 shadow-xl">
+                    <div class="flex-grow w-full relative min-h-[300px] rounded-sm overflow-hidden border border-white/20 mb-8 shadow-inner">
                         <iframe 
                             src="https://maps.app.goo.gl/wWsDod9k5ZTDvQ7P9?g_st=aw" 
                             class="absolute top-0 left-0 w-full h-full" 
                             style="filter: grayscale(100%) sepia(20%) hue-rotate(227deg) brightness(90%) contrast(110%); border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
-
                     <a href="https://maps.app.goo.gl/wWsDod9k5ZTDvQ7P9?g_st=aw" target="_blank" class="w-full block text-center bg-white border border-white text-lila font-bold px-8 py-4 text-[9px] tracking-[0.2em] uppercase hover:bg-transparent hover:text-white transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-none">Abrir en App de Mapas</a>
                 </div>
             </div>
@@ -524,9 +376,8 @@
             <img src="https://i.imgur.com/sZBODda.jpeg" class="separador-img" alt="Sofía">
         </div>
 
-                <section class="min-h-[100svh] flex flex-col justify-center py-6 px-15 text-center relative seccion-clara">
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-15 text-center relative seccion-clara">
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full">
-                
                 <h3 class="text-5xl font-script text-lila text-shadow-light mb-12">Faltan solo...</h3>
 
                 <div id="countdown" class="flex gap-4 md:gap-10 justify-center px-20 mb-16">
@@ -567,18 +418,7 @@
             </div>
         </section>
         
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-10 seccion-lila text-center relative overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
-                <h2 class="text-5xl mb-4 font-script drop-shadow-lg">Clima del Día</h2>
-                <p class="text-[9px] uppercase tracking-[0.5em] mb-12 font-light opacity-90">Pronóstico por hora. Tlaxcala, Tlax.</p>
-                
-                <div id="weather-container" class="w-full max-w-xl mx-auto">
-                    <p class="text-sm w-full animate-pulse font-light drop-shadow-md text-center">Cargando pronóstico...</p>
-                </div>
-            </div>
-        </section>
-        
-                            <section class="min-h-[100svh] flex flex-col justify-center py-6 px-15 md:px-20 seccion-clara relative overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-15 md:px-20 seccion-clara relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <div class="text-center mb-14">
                     <h1 class="text-5xl mb-4 text-lila font-script reveal-scale text-shadow-light">Itinerario</h1>
@@ -589,7 +429,6 @@
                     <div class="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-lila/30 z-0"></div>
                     
                     <div class="space-y-5">
-                        
                         <div class="flex items-center w-full relative z-10 reveal-left">
                             <div class="w-1/2 flex justify-center filtro-lila pr-4 md:pr-8">
                                 <img src="https://i.imgur.com/lR5CuR5.png" class="w-20 md:w-28 object-contain opacity-90 filtro-lila relative z-10 drop-shadow-sm px-2 py-4">
@@ -629,7 +468,7 @@
                                 <img src="https://i.imgur.com/tRNwEAy.png" class="w-20 md:w-28 object-contain opacity-90 filtro-lila relative z-10 drop-shadow-sm px-2 py-4">
                             </div>
                         </div>
-<div class="flex items-center w-full relative z-10 reveal-left">
+                        <div class="flex items-center w-full relative z-10 reveal-left">
                             <div class="w-1/2 flex justify-center filtro-lila pr-4 md:pr-8">
                                 <img src="https://i.imgur.com/AEpfW9Z.png" class="w-20 md:w-28 object-contain opacity-90 filtro-lila relative z-10 drop-shadow-sm px-2 py-4">
                             </div>
@@ -639,33 +478,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-10 seccion-lila text-center relative overflow-hidden">
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full">
-                <h1 class="text-5xl mb-4 font-script">Trivia</h1>
-                <p class="text-[9px] uppercase tracking-[0.5em] mb-12 opacity-90 font-light drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
-                
-                <div id="trivia-container" class="bg-white/10 p-6 md:p-10 rounded-none shadow-xl border border-white/20 backdrop-blur-sm transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
-                    
-                    <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-white/70 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
-                        <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-white mb-8 font-light">Pregunta aquí</h3>
-                        <div id="trivia-options" class="flex flex-col gap-4">
-                        </div>
-                    </div>
-
-                    <div id="trivia-result" class="hidden">
-                        <h3 class="font-script text-7xl mb-4">¡Terminaste!</h3>
-                        <p class="text-xl mb-2 font-light">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
-                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest opacity-90 mb-8 font-bold"></p>
-                        <button onclick="resetTrivia()" class="bg-transparent text-white border border-white px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-lila transition-all duration-300 rounded-none active:scale-95">Jugar de nuevo</button>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -729,92 +541,83 @@
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md px-6 text-lila">Confirmar Asistencia</h2>
                 <p class="text-[9px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold text-[#2C2A2A]">Confirmar antes del <span class="font-numbers">25</span> de Abril de <span class="font-numbers">2026</span></p>
                 
-                <form id="rsvpForm" class="space-y-12 text-left bg-lila/95 p-8 md:p-12 rounded-none backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500">
-                    <div class="grid md:grid-cols-2 gap-10">
+                <form id="rsvpForm" class="w-[85%] max-w-[320px] mx-auto space-y-6 text-left bg-lila/95 p-6 rounded-none backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 mb-4">
+                    <div class="grid md:grid-cols-1 gap-6">
                         <div class="border-b border-white/50 pb-2">
                             <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required class="w-full bg-transparent py-2 outline-none text-xl text-white font-light placeholder-white/50">
+                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-1 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
                         <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Personas</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light appearance-none">
-                                <option class="text-black" value="1 Persona">1 Persona</option>
-                                <option class="text-black" value="2 Personas">2 Personas</option>
-                                <option class="text-black" value="3 Personas">3 Personas</option>
-                                <option class="text-black" value="4 Personas">4 Personas</option>
-                                <option class="text-black" value="5 Personas">5 Personas</option>
-                            </select>
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Cantidad de Personas</label>
+                            <input type="tel" inputmode="numeric" pattern="[0-9]*" id="rsvpPax" required placeholder="Ej. 2" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-transparent py-1 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
                     </div>
-                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-white text-lila font-bold py-5 uppercase tracking-[0.3em] text-[9px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-none">Confirmar y Generar Pase</button>
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-transparent text-white font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-white hover:bg-white hover:text-lila transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-none text-center leading-tight">Confirmar</button>
                     
                     <p class="text-center text-xs text-white mt-6 font-light">¿Dudas? Contáctame: <a href="https://wa.me/522461744217" target="_blank" class="font-bold underline">246 174 4217</a></p>
                 </form>
 
-                <div id="loadingMessage" class="hidden mt-10 bg-black/40 backdrop-blur-md border border-white/30 p-12 rounded-none flex-col items-center justify-center transition-all duration-500">
-                    <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                    <p class="text-5xl font-script text-white mb-2">Generando Pase...</p>
-                    <p class="text-[9px] uppercase tracking-[0.3em] opacity-90 font-bold text-white">Validando tu registro</p>
-                </div>
-
-                <div id="errorMessage" class="hidden mt-10 bg-red-900/60 backdrop-blur-md border border-red-500/50 p-12 rounded-none flex-col items-center transition-all duration-500">
-                    <p class="text-3xl font-light text-white mb-2">Ya estás en la lista</p>
-                    <p class="text-[11px] uppercase tracking-widest text-red-100 mb-8 font-light">Este nombre ya generó un pase anteriormente.</p>
-                    <button onclick="resetForm()" class="bg-transparent text-white border border-white/50 px-8 py-4 rounded-none text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-red-900 transition-colors">Intentar otro nombre</button>
-                </div>
-
-                <div id="successMessage" class="hidden mt-10 transition-all duration-500">
-                    <div class="bg-lila backdrop-blur-md border-2 border-white p-10 rounded-none relative overflow-hidden shadow-2xl">
-                        <p class="text-5xl md:text-6xl font-script text-white mb-2 mt-4">¡Pase Confirmado!</p>
-                        <p class="text-[11px] uppercase tracking-widest text-gray-200 mb-8 font-light">Toma captura y muestra este código en la entrada</p>
-                        <div class="bg-white/20 p-6 rounded-none mb-8 flex flex-col items-center">
-                            <p class="text-[11px] uppercase tracking-widest font-bold mb-4 text-white">Código de Acceso</p>
-                            <img id="ticketQR" src="" alt="QR" class="w-40 h-40 object-contain bg-white p-3 rounded-none mb-4 hidden shadow-md">
-                            <p id="ticketFolio" class="text-3xl font-light tracking-widest font-numbers text-white"></p>
-                        </div>
-                        <p id="ticketName" class="text-3xl font-light mb-2 text-white"></p>
-                        <p id="ticketPax" class="text-xs uppercase tracking-widest opacity-90 font-bold text-white"></p>
+                <div id="rsvpLoadingContext" class="hidden w-[85%] max-w-[320px] mx-auto flex-col items-center justify-center mt-4 transition-all duration-500">
+                    <div id="rsvpSpinner" class="w-12 h-12 border-4 border-lila/30 border-t-lila rounded-full animate-spin mb-4"></div>
+                    
+                    <div id="rsvpSuccessIcon" class="hidden w-16 h-16 rounded-full items-center justify-center mb-4 border border-[#10B981] bg-[#10B981]/10 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                        <svg class="w-8 h-8 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
+                    
+                    <p id="rsvpMessage" class="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-[#2C2A2A] text-center leading-relaxed">
+                        Guardando confirmación...
+                    </p>
                 </div>
             </div>
         </section>
         
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-20 seccion-clara text-center relative overflow-hidden">
-            <div class="max-w-2xl mx-auto reveal relative z-10 border-t border-lila/30 pt-16 w-full">
-                <h3 class="text-5xl md:text-6xl font-script text-lila text-shadow-light mb-4">Recuperar mi Pase</h3>
-                <p class="text-[9px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-light">Ingresa tu nombre para ver tu código QR</p>
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-10 seccion-lila text-center relative overflow-hidden">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 border-t border-white/30 pt-16 w-full flex flex-col items-center">
                 
-                <div class="flex flex-col md:flex-row gap-4">
-                    <input type="text" id="searchName" placeholder="Ej. María Pérez" class="w-full bg-white border border-gray-300 rounded-none px-6 py-4 outline-none text-xs text-center text-[#2C2A2A] uppercase shadow-sm font-light">
-                    <button onclick="consultarPase()" id="btnConsultar" class="bg-lila text-white px-10 py-4 rounded-none font-bold text-[11px] uppercase tracking-widest hover:bg-transparent hover:text-lila border border-lila transition-all duration-300 flex-shrink-0 shadow-md">Buscar</button>
+                <div id="encabezadoConsulta" class="transition-all duration-300">
+                    <h2 class="text-5xl font-script mb-2 px-4 text-white w-full mt-4 text-shadow-none">Consultar Pase</h2>
+                    <p class="text-[9px] uppercase tracking-[0.5em] mb-6 font-bold w-full leading-relaxed px-4 text-white">Una vez que te asignen pases, ingresa el nombre con el que confirmaste</p>
                 </div>
                 
-                <div id="consultaResult" class="hidden mt-12 bg-white shadow-2xl border border-gray-100 p-10 rounded-none flex-col items-center transition-all duration-500 relative overflow-hidden">
-                    <p class="text-[12px] uppercase tracking-widest text-lila font-bold mb-6">Pase Encontrado</p>
-                    
-                    <div class="bg-gray-50 border border-gray-200 p-6 rounded-none mb-8 flex flex-col items-center w-full max-w-[300px] mx-auto">
-                        <p class="text-sm uppercase tracking-widest text-lila font-bold mb-4">Código de Acceso</p>
-                        <img id="consultaQR" src="" alt="QR de Acceso" class="w-40 h-40 object-contain bg-white p-3 rounded-none mb-4 hidden shadow-md">
-                        <p id="consultaFolio" class="text-3xl font-light tracking-widest text-[#2C2A2A] font-numbers"></p>
+                <div id="consultaFormContainer" class="transition-all duration-300 w-full">
+                    <div class="w-[85%] max-w-[320px] mx-auto space-y-4 text-left mb-6">
+                        <div class="border-b border-white/50 pb-2">
+                            <input type="text" id="inputConsultaNombre" placeholder="Ej. Juan Pérez" class="w-full bg-transparent py-1 outline-none text-xl text-white font-light text-center placeholder-white/40">
+                        </div>
+                        <button onclick="consultarPase()" id="btnConsultar" class="w-full bg-transparent text-white font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-white hover:bg-white hover:text-lila transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-none text-center">Buscar mi Pase</button>
                     </div>
-
-                    <p id="consultaNameDisplay" class="text-3xl font-light text-[#2C2A2A] mb-2"></p>
-                    <p id="consultaPax" class="text-xs uppercase tracking-widest text-gray-500 font-bold"></p>
                 </div>
 
-                <div id="consultaError" class="hidden mt-8 bg-red-50 border border-red-200 p-6 rounded-none shadow-sm">
-                    <p class="text-xs text-red-500 font-light uppercase tracking-widest leading-relaxed">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando confirmaste.</p>
+                <p id="msgConsulta" class="text-xs font-bold text-white mt-2 hidden"></p>
+
+                <div id="contenedorPaseOficial" class="hidden my-auto w-[90%] max-w-[320px] mx-auto py-8 px-4 bg-[#B599D4] border-2 border-white/40 rounded-none shadow-2xl text-white relative flex flex-col items-center">
+                    
+                    <img src="https://i.imgur.com/sc1Veyg.png" alt="Corona" class="w-20 mb-3 mt-2 drop-shadow-sm filtro-blanco">
+                    
+                    <div class="w-full text-center pb-8 pt-2">
+                        <p class="text-4xl tracking-widest font-script leading-none m-0 p-0">Pase de Acceso</p>
+                    </div>
+                    <div class="w-full h-px bg-white/40 mb-6"></div>
+                    
+                    <p id="nombrePase" class="text-2xl font-bold mb-2 mt-4 text-center px-4"></p>
+                    <p class="text-sm tracking-widest font-light mb-8">Pases asignados: <span id="pasesAprobados" class="font-bold text-lg ml-1"></span></p>
+                    
+                    <p class="text-[9px] uppercase tracking-[0.15em] opacity-90 mt-2 mb-4 leading-relaxed font-bold border-t border-white/40 pt-6 px-2 w-full text-center">
+                        Muestra este pase en recepción<br>para tener acceso al evento
+                    </p>
+                    
+                    <p class="text-[10px] opacity-80 font-numbers mb-2 mt-2">Folio: <span id="folioPaseImpreso"></span></p>
+                    
                 </div>
+
+                <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 mb-10 bg-transparent text-white border border-white py-3 px-1 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-lila transition-all duration-300 rounded-none font-bold">Descargar Imagen</button>
             </div>
         </section>
         
         <footer class="min-h-[100svh] flex flex-col justify-center py-6 px-10 text-center relative z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/JIvmnsC.jpeg');">
             <div class="absolute inset-0 bg-lila/80"></div>
-       
-                <p class="text-7xl md:text-8xl font-script mb-6 text-white drop-shadow-md">¡No faltes!</p>
-            
-                <p class="text-xs md:text-xs font-elegant mb-30 text-white drop-shadow-md">AdaInvite © 2026</p>
-            </div>
+            <p class="text-7xl md:text-8xl font-script mb-6 text-white drop-shadow-md">¡No faltes!</p>
+            <p class="text-xs md:text-xs font-elegant mb-30 text-white drop-shadow-md">AdaInvite © 2026</p>
         </footer>
     </main>
 
@@ -823,8 +626,6 @@
             document.getElementById('section-main').style.display = 'block';
             
             initObserver();
-            fetchWeather();
-            loadQuestion();
             playAudio(); 
 
             document.getElementById('envelope-wrapper').classList.add('open');
@@ -834,7 +635,7 @@
             }, 1800);
         }
 
-                const audio = document.getElementById("bg-music");
+        const audio = document.getElementById("bg-music");
         let isPlaying = false;
 
         function playAudio() {
@@ -967,311 +768,170 @@
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
 
-        // API DEL CLIMA (Coordenadas de Tlaxcala, Tlax)
-        async function fetchWeather() {
-            const lat = 19.3139; 
-            const lon = -98.2403; 
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                renderWeather(data);
-            } catch (error) {
-                document.getElementById('weather-container').innerHTML = '<p class="text-sm text-white drop-shadow-md w-full">El clima no está disponible en este momento.</p>';
-            }
-        }
-
-        function getWeatherIcon(code) {
-            const baseClass = "w-10 h-10 mx-auto mb-4 text-white transition-colors duration-500";
-            
-            if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
-            if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-            if ((code >= 51 && code <= 77) || (code >= 80 && code <= 82)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 19l-2 3m6-3l-2 3"></path></svg>`;
-            if (code >= 95 && code <= 99) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
-            
-            return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-        }
-
-        function getConditionText(code) {
-            if (code === 0) return "Despejado";
-            if (code >= 1 && code <= 3) return "Parcialmente nublado";
-            if (code >= 45 && code <= 48) return "Niebla";
-            if (code >= 51 && code <= 77) return "Llovizna";
-            if (code >= 80 && code <= 82) return "Lluvia";
-            if (code >= 95 && code <= 99) return "Tormenta";
-            return "Nublado";
-        }
-
-        function renderWeather(data) {
-            const container = document.getElementById('weather-container');
-            const now = new Date();
-            
-            const todayTemps = data.hourly.temperature_2m.slice(0, 24);
-            const maxTemp = Math.round(Math.max(...todayTemps));
-            const minTemp = Math.round(Math.min(...todayTemps));
-
-            let hourlyHTML = '';
-            let hoursShown = 0;
-            let currentTemp = 0;
-            let currentCode = 0;
-
-            for (let i = 0; i < data.hourly.time.length; i++) {
-                const forecastDate = new Date(data.hourly.time[i]);
-                
-                if (forecastDate >= now && hoursShown < 6) {
-                    const temp = Math.round(data.hourly.temperature_2m[i]);
-                    const weatherCode = data.hourly.weathercode[i];
-                    
-                    if (hoursShown === 0) {
-                        currentTemp = temp;
-                        currentCode = weatherCode;
-                    }
-
-                    let hour = forecastDate.getHours();
-                    const ampm = hour >= 12 ? 'pm' : 'am';
-                    hour = hour % 12;
-                    hour = hour ? hour : 12;
-                    const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
-
-                    let iconSVG = getWeatherIcon(weatherCode);
-                    iconSVG = iconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-6 h-6 md:w-8 md:h-8 mx-auto my-2');
-
-                    hourlyHTML += `
-                        <div class="flex flex-col items-center justify-center flex-1">
-                            <span class="text-[10px] md:text-xs font-light opacity-90">${hourStr}</span>
-                            ${iconSVG}
-                            <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
-                        </div>
-                    `;
-                    hoursShown++;
-                }
-            }
-
-            const conditionText = getConditionText(currentCode);
-            
-            let mainIconSVG = getWeatherIcon(currentCode);
-            mainIconSVG = mainIconSVG.replace('w-10 h-10 mx-auto mb-4', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
-
-            container.innerHTML = `
-                <div class="bg-white/10 backdrop-blur-md rounded-none p-6 md:p-10 text-white text-left shadow-xl border border-white/20 mx-auto font-sans w-full">
-                    <div class="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-light flex items-center gap-2">
-                                Tlaxcala
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
-                            </h3>
-                            <div class="text-[60px] md:text-[80px] font-light leading-none mt-2 font-numbers">${currentTemp}°</div>
-                        </div>
-                        <div class="text-right flex flex-col items-end pt-1">
-                            ${mainIconSVG}
-                            <p class="text-sm md:text-base font-medium mt-2">${conditionText}</p>
-                            <p class="text-[10px] md:text-xs opacity-80 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center w-full pt-6 border-t border-white/20">
-                        ${hourlyHTML}
-                    </div>
-                </div>
-            `;
-        }
         
-        const triviaData = [
-            { question: "¿Cuál es mi postre favorito?", options: ["Helado de vainilla", "Pastel de Chocolate", "Crepas dulces", "Fresas con crema"], answer: 1 },
-            { question: "¿A dónde me gustaría viajar?", options: ["París", "Tokio", "Nueva York", "Londres"], answer: 0 },
-            { question: "¿Cuál es mi serie favorita?", options: ["Stranger Things", "Bridgerton", "Friends", "Gossip Girl"], answer: 3 }
-        ];
-
-        let currentQuestion = 0;
-        let score = 0;
-
-        function loadQuestion() {
-            const qText = document.getElementById("trivia-q-text");
-            const optionsContainer = document.getElementById("trivia-options");
-            
-            document.getElementById("trivia-current-num").innerText = currentQuestion + 1;
-            document.getElementById("trivia-total-num").innerText = triviaData.length;
-            
-            qText.innerText = triviaData[currentQuestion].question;
-            optionsContainer.innerHTML = "";
-
-            triviaData[currentQuestion].options.forEach((opt, index) => {
-                const btn = document.createElement("button");
-                btn.innerText = opt;
-                btn.className = "btn-trivia w-full text-left px-6 py-5 rounded-none border border-white/40 text-white font-bold bg-transparent hover:bg-white hover:text-lila text-sm tracking-wide";
-                btn.onclick = () => checkAnswer(index, btn);
-                optionsContainer.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(selectedIndex, btnElement) {
-            const correctIndex = triviaData[currentQuestion].answer;
-            const allBtns = document.querySelectorAll('.btn-trivia');
-            allBtns.forEach(b => b.disabled = true);
-
-            if (selectedIndex === correctIndex) {
-                btnElement.classList.add('correct');
-                score++;
-            } else {
-                btnElement.classList.add('incorrect');
-                allBtns[correctIndex].classList.add('correct');
-            }
-
-            setTimeout(() => {
-                currentQuestion++;
-                if (currentQuestion < triviaData.length) {
-                    loadQuestion();
-                } else {
-                    showTriviaResults();
-                }
-            }, 1500);
-        }
-
-        function showTriviaResults() {
-            document.getElementById("trivia-question-container").classList.add("hidden");
-            document.getElementById("trivia-result").classList.remove("hidden");
-            
-            document.getElementById("trivia-score").innerText = score;
-            document.getElementById("trivia-total-score").innerText = triviaData.length;
-
-            const feedback = document.getElementById("trivia-feedback");
-            if (score === triviaData.length) {
-                feedback.innerText = "¡Wow! Me conoces a la perfección";
-            } else if (score >= triviaData.length / 2) {
-                feedback.innerText = "¡Nada mal! Me conoces bastante bien";
-            } else {
-                feedback.innerText = "¡Uy! Necesitamos platicar más en la fiesta jeje";
-            }
-        }
-
-        function resetTrivia() {
-            currentQuestion = 0;
-            score = 0;
-            document.getElementById("trivia-question-container").classList.remove("hidden");
-            document.getElementById("trivia-result").classList.add("hidden");
-            loadQuestion();
-        }
-        
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqlVgEkOu4EWRXbOnrui2FTG9CRR-gZjgXfDhs9wHZihajsJ3-qTyrJA2wBzu0Blto/exec'; 
+        // --- LÓGICA DE PASES (Sin QR) ---
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyz3yy625GdJ0e3eOlpwyWizIU-HsBE0M-ntRNRNInjKr_H9I0J8tp8eNeNXP99VnGsXA/exec";  
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('rsvpName').value.trim();
             const pax = document.getElementById('rsvpPax').value;
-            const folio = `XV-${Math.floor(1000 + Math.random() * 9000)}`;
             
-            document.getElementById('rsvpForm').style.display = 'none';
-            const loader = document.getElementById('loadingMessage');
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
+            const form = document.getElementById('rsvpForm');
+            const loadingContext = document.getElementById('rsvpLoadingContext');
+            const spinner = document.getElementById('rsvpSpinner');
+            const successIcon = document.getElementById('rsvpSuccessIcon');
+            const message = document.getElementById('rsvpMessage');
+            
+            form.style.display = 'none';
+            loadingContext.classList.remove('hidden');
+            loadingContext.classList.add('flex');
+            spinner.classList.remove('hidden');
+            successIcon.classList.add('hidden');
+            successIcon.classList.remove('flex');
+            message.innerText = "Guardando confirmación...";
 
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}&folio=${folio}`);
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
+                });
+                
                 const result = await response.json();
                 
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
-
-                if(result.status === "success") {
-                    document.getElementById('ticketFolio').innerText = folio;
-                    document.getElementById('ticketName').innerText = name;
-                    document.getElementById('ticketPax').innerText = pax;
-
-                    const qrImg = document.getElementById('ticketQR');
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${folio}`;
+                if (result.status === 'success') {
+                    spinner.classList.add('hidden');
+                    successIcon.classList.remove('hidden');
+                    successIcon.classList.add('flex');
                     
-                    qrImg.onload = () => {
-                        qrImg.classList.remove('hidden');
-                        document.getElementById('successMessage').classList.remove('hidden');
-                    };
-                } else if (result.status === "exists") {
-                    document.getElementById('errorMessage').classList.remove('hidden');
-                    document.getElementById('errorMessage').classList.add('flex');
+                    message.innerHTML = "¡Confirmación exitosa!<br><br><span class='text-[8px] opacity-80'>Espera, te redirigiremos a WhatsApp para finalizar...</span>";
+                    
+                    setTimeout(() => {
+                        const numDestino = "522461744217"; 
+                        const mensajeTxt = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Sofía.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos!`;
+                        const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
+                        window.location.href = waLink; 
+                    }, 3000);
                 }
             } catch (error) {
-                alert("Hubo un problema de conexión. Intenta de nuevo.");
-                resetForm();
+                alert("Hubo un error al guardar. Por favor revisa tu conexión e intenta de nuevo.");
+                loadingContext.classList.add('hidden');
+                loadingContext.classList.remove('flex');
+                form.style.display = 'block';
             }
         });
 
-        function resetForm() {
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('errorMessage').classList.remove('flex');
-            document.getElementById('loadingMessage').classList.add('hidden');
-            document.getElementById('rsvpForm').style.display = 'block';
-            document.getElementById('rsvpName').value = '';
-        }
-
+        // CONSULTAR PASE
         async function consultarPase() {
-            const searchInput = document.getElementById('searchName').value.trim();
-            const resultDiv = document.getElementById('consultaResult');
-            const errorDiv = document.getElementById('consultaError');
+            const nombre = document.getElementById('inputConsultaNombre').value.trim();
+            const msg = document.getElementById('msgConsulta');
             const btn = document.getElementById('btnConsultar');
             
-            if (!searchInput) return;
+            if(!nombre) {
+                msg.innerText = "Por favor, ingresa tu nombre completo.";
+                msg.classList.remove('hidden');
+                return;
+            }
 
-            btn.innerText = "...";
-            btn.disabled = true;
-            resultDiv.classList.add('hidden'); 
-            resultDiv.classList.remove('flex');
-            errorDiv.classList.add('hidden');
-            
+            btn.innerText = "Buscando...";
+            msg.classList.add('hidden');
+
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`);
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "consultar", nombre: nombre }) 
+                });
+                
                 const result = await response.json();
                 
-                btn.innerText = "Buscar";
-                btn.disabled = false;
-
-                if (result.status === "found") {
-                    document.getElementById('consultaNameDisplay').innerText = result.name;
-                    document.getElementById('consultaPax').innerText = result.pax;
-                    document.getElementById('consultaFolio').innerText = result.folio;
-
-                    const qrImg = document.getElementById('consultaQR');
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/Portafolio/acceso.html?folio=${result.folio}`;
+                if (result.status === 'ready') {
+                    document.getElementById('nombrePase').innerText = result.nombre;
+                    document.getElementById('pasesAprobados').innerText = result.pasesAsignados;
+                    document.getElementById('folioPaseImpreso').innerText = result.folio;
                     
-                    qrImg.onload = () => {
-                        qrImg.classList.remove('hidden');
-                        resultDiv.classList.remove('hidden');
-                        resultDiv.classList.add('flex');
-                    };
+                    document.getElementById('encabezadoConsulta').classList.add('hidden');
+                    document.getElementById('consultaFormContainer').classList.add('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.remove('hidden');
+                    document.getElementById('btnDescargarPase').classList.remove('hidden');
+                    msg.classList.add('hidden');
+                    
+                }  else if (result.status === 'pending') {
+                    msg.innerText = "Tus pases aún están siendo procesados por el anfitrión. Vuelve a consultar más tarde.";
+                    msg.classList.remove('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.add('hidden');
+                    document.getElementById('btnDescargarPase').classList.add('hidden');
                 } else {
-                    errorDiv.classList.remove('hidden');
+                    msg.innerText = "Nombre no encontrado. Verifica escribirlo exactamente como lo registraste.";
+                    msg.classList.remove('hidden');
                 }
-            } catch (error) { 
-                alert("Error al buscar. Revisa tu conexión.");
-                btn.innerText = "Buscar";
-                btn.disabled = false;
+            } catch (error) {
+                msg.innerText = "Error de conexión. Intenta de nuevo.";
+                msg.classList.remove('hidden');
             }
+            btn.innerText = "Buscar mi Pase";
+        }
+
+        // DESCARGAR PASE
+        function descargarPase() {
+            const paseOficial = document.getElementById('contenedorPaseOficial');
+            const btnDescargar = document.getElementById('btnDescargarPase');
+            
+            btnDescargar.innerText = "Generando imagen HD...";
+            
+            html2canvas(paseOficial, {
+                scale: 4, 
+                backgroundColor: "#B599D4", 
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                let nombreInvitado = document.getElementById('nombrePase').innerText.trim().replace(/\s+/g, '_');
+                if(!nombreInvitado) nombreInvitado = "XVs_Sofia";
+                const fileName = `Pase_${nombreInvitado}.png`;
+
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], fileName, { type: 'image/png' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Pase de Acceso XVs Sofía',
+                            text: 'Aquí está mi pase de acceso.'
+                        }).then(() => {
+                            btnDescargar.innerText = "Descargar Imagen";
+                        }).catch((error) => {
+                            btnDescargar.innerText = "Descargar Imagen";
+                        });
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = fileName;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                        btnDescargar.innerText = "Descargar Imagen";
+                    }
+                }, 'image/png', 1.0);
+
+            }).catch(err => {
+                btnDescargar.innerText = "Error al generar";
+                setTimeout(() => btnDescargar.innerText = "Descargar Imagen", 2000);
+            });
         }
     </script>
-     <script>
-      // 1. Bloqueo de teclado e inspección básica
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      }, false);
-
+    <script>
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
       document.onkeydown = function(e) {
-        if (e.keyCode == 123) return false; // F12
+        if (e.keyCode == 123) return false; 
         if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ver código
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
       };
 
-      // 2. Debugger Infinito (Se activa si logran abrir la consola)
       (function() {
         (function() {
           var block = function() {
             setInterval(function() {
-              (function() {
-                return function(a) {}
-              })().constructor("debugger")();
+              (function() { return function(a) {} })().constructor("debugger")();
             }, 50);
           };
-          try {
-            block();
-          } catch (err) {}
+          try { block(); } catch (err) {}
         })();
       })();
     </script>
