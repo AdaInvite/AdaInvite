@@ -74,9 +74,85 @@
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
         .filtro-rosa {
-            /* Filtro CSS aproximado para pintar SVGs/Iconos negros a #B5737A */
             filter: invert(53%) sepia(16%) saturate(1048%) hue-rotate(303deg) brightness(91%) contrast(87%);
         }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: visibility 1.8s;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
+            background-size: cover;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
+            background-size: cover;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
 
         .bg-texture-main {
             background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
@@ -142,6 +218,10 @@
         .audio-btn:hover { transform: scale(1.1); }
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
 
         /* Esconder flechas de input number */
         input[type=number]::-webkit-inner-spin-button, 
@@ -159,15 +239,34 @@
     <audio id="bg-music" loop>
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
     </audio>
-    <div id="audio-btn" class="audio-btn" onclick="toggleAudio()">
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
         <img id="audio-icon" src="https://i.imgur.com/DxCMVS8.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-[#2C2A2A] font-bold">Toca para abrir</div>
+                <img src="https://i.imgur.com/uVECUte.png" 
+                     class="w-[100px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
     </div>
 
     <main id="section-main" class="block">
         
         <header class="relative min-h-[100svh] flex flex-col px-8 py-10 box-border"> 
             <div class="absolute inset-0 bg-cover bg-center z-0 opacity-100" style="background-image: url('https://i.imgur.com/DopPMka.jpeg');"></div>
-            <div class="absolute inset-0 bg-black/40 z-0"></div> <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-rosa-elegante rounded-[150px] md:rounded-[150px] shadow-2xl pt-20 pb-8 px-6">
+            <div class="absolute inset-0 bg-black/40 z-0"></div>
+            
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-rosa-elegante rounded-[150px] md:rounded-[150px] shadow-2xl pt-20 pb-8 px-6">
                 
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
                     
@@ -428,18 +527,34 @@
         // ==========================================
         // URL DE TU GOOGLE APPS SCRIPT PARA PASES
         // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7h4M37RaPZxHxwU8HgI-Zsu_aHK-zOjiCIQiaYCzVX2tJvFzT4Pzhf1NPUpzmNu66lg/exec'; // <--- PEGA TU NUEVA URL AQUÍ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7h4M37RaPZxHxwU8HgI-Zsu_aHK-zOjiCIQiaYCzVX2tJvFzT4Pzhf1NPUpzmNu66lg/exec'; 
 
-        // --- INICIALIZADOR (Como ya no hay sobre, iniciamos directo) ---
+        // --- OBSERVER PARA ANIMACIONES ---
         document.addEventListener('DOMContentLoaded', () => {
-            initObserver();
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
             
-            // Intento de autoplay de la música
-            document.body.addEventListener('click', function initAudio() {
-                playAudio();
-                document.body.removeEventListener('click', initAudio);
-            }, { once: true });
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         });
+
+        // --- LÓGICA DEL SOBRE ---
+        function openEnvelope() {
+            playAudio(); 
+            document.getElementById('envelope-wrapper').classList.add('open');
+            
+            setTimeout(() => {
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+            }, 1000);
+
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
 
         // --- REPRODUCTOR DE MÚSICA ---
         const audio = document.getElementById("bg-music");
@@ -466,19 +581,6 @@
             isPlaying = !isPlaying;
         }
 
-        // --- OBSERVER PARA ANIMACIONES ---
-        function initObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
-        }
-
         // --- ENVÍO DE FORMULARIO RSVP (WHATSAPP + APPS SCRIPT) ---
         document.getElementById('rsvpForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -492,7 +594,6 @@
             btnSubmit.disabled = true;
 
             try {
-                // Envío silencioso al backend si se requiere (Opcional)
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -503,7 +604,7 @@
             }
 
             // REDIRECCIÓN A WHATSAPP
-            const phone = "525527602216"; // Número de la invitacion original
+            const phone = "525527602216";
             const text = `¡Hola! Confirmo mi asistencia a los XV de Regina.%0A%0A*Nombre:* ${name}%0A*Cantidad de personas:* ${pax}`;
             
             window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
@@ -582,7 +683,7 @@
             
             html2canvas(paseOficial, {
                 scale: 4, 
-                backgroundColor: "#B5737A", // Color rosa elegante para fondo en vez del azul
+                backgroundColor: "#B5737A", 
                 useCORS: true,
                 allowTaint: true
             }).then(canvas => {
