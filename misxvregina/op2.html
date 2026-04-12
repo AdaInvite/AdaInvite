@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Regina</title>
+    
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/50/d4af37/crown.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mis XV Regina">
+
+    <meta name="theme-color" content="#F3C6D3">
+    <meta property="og:title" content="Mis XV Regina">
+    <meta property="og:description" content="Hay momentos inolvidables que se atesoran en el corazón para siempre...">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: {
+                            pastel: '#F3C6D3', /* Rosa pastel */
+                            oscuro: '#D998A8'
+                        },
+                        beige: {
+                            claro: '#FDFBF7',
+                            oscuro: '#F5E6D3' /* Beige más notorio para acentos */
+                        },
+                        dorado: {
+                            brillante: '#D4AF37', /* Dorado elegante */
+                            oscuro: '#AA8822'
+                        },
+                        texto: {
+                            principal: '#4A4A4A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rosa-pastel: #F3C6D3;
+            --beige-claro: #FDFBF7;
+            --dorado: #D4AF37;
+            --font-elegant: 'Cormorant Garamond', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-numbers: 'Cinzel', serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-elegant);
+            background-color: var(--beige-claro);
+            overflow-x: hidden;
+            color: #4A4A4A;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif, label, input, select, button, span { 
+            font-family: var(--font-elegant); 
+        }
+
+        .font-numbers {
+            font-family: var(--font-numbers) !important;
+        }
+
+        body, p, span, input, select { font-weight: 400; }
+        .font-bold, h3, label { font-weight: 700; }
+        .font-script { font-family: var(--font-script); font-weight: 400; }
+
+        /* Degradados dorados para texto */
+        .texto-dorado {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: visibility 1.8s;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-color: var(--beige-claro);
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(212, 175, 55, 0.15));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(212, 175, 55, 0.2));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-color: #FDFBF7;
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: radial-gradient(circle, rgba(243,198,211,0.8) 0%, rgba(245,230,211,0.9) 100%);
+            background-image: url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: #4A4A4A;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 2px 2px 10px rgba(255,255,255,0.8); color: var(--dorado); }
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        .btn-calendar {
+            border: 1px solid var(--dorado);
+            padding: 12px 28px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 4px;
+            color: var(--dorado);
+        }
+        .btn-calendar:hover { background: var(--dorado); color: white; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(37, 211, 102, 0.4); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 45px; 
+            height: 45px; 
+            background: var(--beige-claro);
+            color: var(--dorado);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--dorado);
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Contadores */
+        #countdown { display: flex; justify-content: center; align-items: center; }
+        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; color: var(--dorado); line-height: 1; }
+        #countdown .time-label { color: #888; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; }
+
+        /* Separadores decorativos */
+        .decorador-floral {
+            width: 150px;
+            margin: 0 auto 30px auto;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=piano-moment-9835.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" id="audio-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+        </svg>
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-texto-principal font-bold">Toca para abrir</div>
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-dorado-brillante to-dorado-oscuro flex items-center justify-center border-4 border-beige-claro shadow-xl" style="animation: floating 4s infinite ease-in-out">
+                    <span class="font-script text-4xl text-white">R</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="section-intro" onclick="showMainContent()">
+        <header><h1 class="name-header">Regina</h1></header>
+        <div>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="text-xl tracking-[0.4em] uppercase text-texto-principal drop-shadow-md">Sábado</span>
+                    <span class="text-[6rem] leading-none font-light texto-dorado drop-shadow-md font-numbers">27</span>
+                </div>
+                <div class="w-px h-24 bg-dorado-brillante shadow-sm"></div>
+                <div class="text-left">
+                    <span class="text-4xl tracking-widest block text-texto-principal drop-shadow-md">JUN</span>
+                    <span class="text-2xl tracking-[0.6em] text-dorado-brillante drop-shadow-md font-numbers">2026</span>
+                </div>
+            </section>
+            <p class="text-[10px] tracking-[0.5em] uppercase animate-pulse text-texto-principal font-bold">Toca para continuar</p>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <header class="relative min-h-screen flex flex-col bg-cover bg-center bg-beige-oscuro" style="background-image: url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2000&auto=format&fit=crop');">
+            <div class="absolute inset-0 bg-white/70"></div>
+            
+            <div class="relative z-10 w-full mt-auto text-center px-4 pb-24 md:pb-32">
+                <h1 class="text-7xl md:text-9xl mb-6 texto-dorado font-script reveal-scale pr-6">Mis XV</h1>
+                <p class="text-[12px] uppercase tracking-[0.4em] text-texto-principal pb-8 font-bold">Faltan solo...</p>
+                
+                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100 bg-white/60 p-6 rounded-2xl border border-dorado-brillante/30 backdrop-blur-sm max-w-3xl mx-auto shadow-lg">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="time-num text-4xl md:text-7xl">00</span>
+                        <span class="time-label">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="time-num text-4xl md:text-7xl">00</span>
+                        <span class="time-label">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="time-num text-4xl md:text-7xl">00</span>
+                        <span class="time-label">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="time-num text-4xl md:text-7xl">00</span>
+                        <span class="time-label">Seg</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="pt-24 lg:pt-32 pb-24 px-6 text-center bg-beige-claro relative border-b border-rosa-pastel/30">
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <img src="https://img.icons8.com/ios/100/d4af37/rose.png" class="decorador-floral" alt="Flor">
+                
+                <h1 class="text-5xl md:text-8xl mb-8 text-rosa-oscuro font-script reveal-scale">Regina</h1>
+                <p class="text-xl md:text-3xl italic text-texto-principal leading-relaxed font-light mb-16 px-4 border-l-4 border-r-4 border-dorado-brillante/40 py-4">
+                    "Hay momentos inolvidables que se atesoran en el corazón para siempre, por esa razón, quiero que compartas conmigo éste día tan especial."
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-16 mt-10">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-dorado-brillante/20">
+                        <h3 class="text-[14px] uppercase tracking-[0.4em] mb-6 font-bold text-dorado-oscuro">Mis Padres</h3>
+                        <p class="text-2xl text-texto-principal mb-2">Blanca Guevara Nava</p>
+                        <p class="text-2xl text-texto-principal">José Alaníz Mondragón</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-dorado-brillante/20">
+                        <h3 class="text-[14px] uppercase tracking-[0.4em] mb-6 font-bold text-dorado-oscuro">Mis Padrinos</h3>
+                        <p class="text-2xl text-texto-principal mb-2">Gisela López Colin</p>
+                        <p class="text-2xl text-texto-principal">Francisco Mondragón Lagunes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-6 bg-rosa-pastel/10 relative text-center">
+            <div class="max-w-3xl mx-auto reveal-scale">
+                <h2 class="text-4xl md:text-6xl mb-8 font-script text-dorado-oscuro">Agradecimiento</h2>
+                <p class="text-lg md:text-2xl text-texto-principal leading-relaxed italic bg-white p-10 rounded-2xl shadow-md border border-rosa-pastel/50">
+                    "Gracias por acompañarme en mis quince años. Estoy inmensamente agradecida con mis papás por este sueño hecho realidad, y con cada uno de ustedes por tomarse el tiempo de celebrar conmigo."
+                </p>
+            </div>
+        </section>
+
+        <section id="ubicaciones" class="pt-24 lg:pt-32 pb-24 px-6 bg-beige-claro relative text-texto-principal">
+            <div class="max-w-4xl mx-auto reveal">
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl md:text-7xl mb-4 text-rosa-oscuro font-script">Dónde Celebraremos</h1>
+                    <p class="text-sm uppercase tracking-widest text-dorado-oscuro font-bold">Ceremonia y Recepción</p>
+                </div>
+
+                <div class="bg-white p-6 md:p-10 border border-dorado-brillante/30 shadow-lg flex flex-col h-full rounded-2xl">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-6 flex items-center justify-center opacity-80">
+                            <img src="https://img.icons8.com/ios/100/d4af37/wine-glass.png" class="w-16 h-16 md:w-20 md:h-20" alt="Recepción">
+                        </div>
+                        <h2 class="text-3xl md:text-4xl mb-4 texto-dorado font-bold">Salón Royal Rizzo Lindavista</h2>
+                        <p class="text-texto-principal text-lg mb-4">Av. Insurgentes Norte No. <span class="font-numbers">1970</span><br>Gustavo A. Madero, C.P. <span class="font-numbers">07300</span> CDMX</p>
+                        <p class="text-2xl text-rosa-oscuro font-bold tracking-widest mt-4">Hora: <span class="font-numbers">6:00</span> P.M.</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[350px] rounded-xl overflow-hidden border border-dorado-brillante/20 mb-8 shadow-inner">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.543666068694!2d-99.1228516!3d19.4752538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f99c36294d11%3A0xe67dbbaaf7f94bbd!2sSal%C3%B3n%20Royal%20Rizzo%20Lindavista!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button onclick="calendarLink('Mis XV Regina - Royal Rizzo', 'Av. Insurgentes Norte No. 1970 Gustavo A. Madero', '20260627T180000')" class="btn-calendar bg-transparent hover:-translate-y-1">
+                            AGREGAR AL CALENDARIO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-6 bg-rosa-pastel/10 text-center relative border-y border-rosa-pastel/30">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 reveal-scale">
+                
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-dorado-brillante/20">
+                    <img src="https://img.icons8.com/ios/100/d4af37/suit.png" class="w-16 h-16 mx-auto mb-6 opacity-80" alt="Código de Vestimenta">
+                    <h2 class="text-4xl mb-4 font-script text-rosa-oscuro">Código de Vestimenta</h2>
+                    <p class="text-2xl uppercase tracking-[0.2em] text-texto-principal font-bold mb-4">Formal</p>
+                    <p class="text-gray-500 text-sm italic">Te pedimos amablemente respetar la formalidad del evento.</p>
+                </div>
+
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-dorado-brillante/20 flex flex-col justify-center items-center">
+                    <img src="https://img.icons8.com/ios/100/d4af37/gift.png" class="w-16 h-16 mx-auto mb-6 opacity-80" alt="Regalos">
+                    <h2 class="text-4xl mb-4 font-script text-rosa-oscuro">Mesa de Regalos</h2>
+                    
+                    <div class="mb-6 w-full">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-2">Liverpool</p>
+                        <p class="text-lg text-texto-principal">Evento de XV años No. <span class="font-numbers font-bold text-dorado-oscuro">51983470</span></p>
+                    </div>
+
+                    <div class="w-full border-t border-gray-100 pt-6">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-2">Lluvia de Sobres</p>
+                        <p class="text-sm text-texto-principal italic">También contaremos con un buzón en la entrada del salón si prefieres dar un regalo en efectivo.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="pt-32 pb-32 px-6 bg-beige-claro text-center relative overflow-hidden">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10"> 
+                <h2 class="text-5xl md:text-6xl font-script text-rosa-oscuro mb-6">Confirmar Asistencia</h2>
+                
+                <div class="bg-white p-10 rounded-2xl shadow-lg border border-dorado-brillante/30 mt-8">
+                    <p class="text-[12px] uppercase tracking-[0.2em] mb-6 text-gray-500 font-bold">Hemos reservado pases por familia para ti.</p>
+                    <p class="text-lg text-texto-principal mb-10">Por favor, confirma tu asistencia antes del<br><span class="font-numbers font-bold text-rosa-oscuro text-xl">10 de Junio de 2026</span></p>
+                    
+                    <a href="https://wa.me/525527602216?text=¡Hola!%20Confirmo%20nuestra%20asistencia%20a%20los%20XV%20de%20Regina." target="_blank" class="btn-whatsapp justify-center w-full md:w-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.347-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                        </svg>
+                        CONFIRMAR POR WHATSAPP
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pt-20 pb-16 text-center bg-white relative z-10 border-t border-rosa-pastel/20">
+            <img src="https://img.icons8.com/ios-filled/50/d4af37/crown.png" class="w-12 h-12 mx-auto mb-4 opacity-80" alt="Corona">
+            <p class="text-6xl font-script mb-2 text-rosa-oscuro">Regina</p>
+            <p class="text-[11px] text-dorado-oscuro uppercase tracking-[0.5em] mb-8 font-bold"><span class="font-numbers">27</span> • Junio • <span class="font-numbers">2026</span></p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-intro').classList.add('active');
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            
+            playAudio(); 
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                initObserver();
+            }, 1200);
+        }
+
+        // --- REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioBtn.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioBtn.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioBtn.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR (27 Junio 2026) ---
+        const targetDate = new Date("June 27, 2026 18:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
