@@ -1,1 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumpleaños - Tayoz Bebe</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/50/ffffff/rock-music.png">
 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tayoz Bebe">
+
+    <meta name="theme-color" content="#111111">
+    <meta property="og:title" content="Cumpleaños Tayoz Bebe">
+    <meta property="og:description" content="Viernes de caguamas. Prepara el hígado.">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rock: {
+                            red: '#B91C1C', /* Rojo sangre/rock */
+                            dark: '#0A0A0A',
+                            gray: '#1F2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Rock+Salt&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rojo-rock: #B91C1C;
+            --negro-fondo: #0A0A0A;
+            --gris-oscuro: #111111;
+            /* Fondos rockeros genéricos (puedes cambiar los URLs por tus fotos) */
+            --bg-intro: url('https://images.unsplash.com/photo-1598387181032-a3103a2db733?q=80&w=2000&auto=format&fit=crop');
+            --bg-textura: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            --font-display: 'Rock Salt', cursive;
+            --font-title: 'Oswald', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            background-color: var(--negro-fondo);
+            overflow-x: hidden;
+            color: #E5E7EB;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .title-hard {
+            font-family: var(--font-title);
+            text-transform: uppercase;
+        }
+
+        .font-crazy {
+            font-family: var(--font-display);
+        }
+
+        /* --- CORTES EN TRIÁNGULO AL CENTRO --- */
+        .corte-pico {
+            clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        .corte-valle {
+            clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- SECCIÓN 1: SOBRE OSCURO --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: visibility 1.8s;
+            background-color: #000;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-color: #1a1a1a;
+            background-image: var(--bg-textura);
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.8));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.8));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            background-image: var(--bg-textura);
+            border: 1px solid #333;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6), rgba(0,0,0,0.9)), var(--bg-intro);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-display); font-size: clamp(3rem, 12vw, 6rem); text-shadow: 0px 5px 30px rgba(185, 28, 28, 0.8); color: var(--rojo-rock); line-height: 1.5;}
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; }
+
+        .bg-texture-main {
+            background-image: var(--bg-textura);
+            opacity: 0.5;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        .btn-calendar {
+            border: 2px solid var(--rojo-rock);
+            padding: 15px 30px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: transparent;
+            color: white;
+        }
+        .btn-calendar:hover { background: var(--rojo-rock); color: white; box-shadow: 0 0 20px rgba(185, 28, 28, 0.6); }
+
+        .chambelanes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .chambelan-card {
+            flex: 0 0 280px;
+            scroll-snap-align: center;
+            background: #111;
+            border: 1px solid #333;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+        }
+        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(185, 28, 28, 0.3); border-color: var(--rojo-rock); }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 50px; 
+            height: 50px; 
+            background: #111;
+            color: var(--rojo-rock);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 0 15px rgba(185, 28, 28, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--rojo-rock);
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 3s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Filtro oscuro para los mapas de Google */
+        .dark-map iframe {
+            filter: invert(90%) hue-rotate(180deg) contrast(100%) sepia(20%);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <span id="audio-icon" class="text-2xl">🎸</span>
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-body text-[12px] tracking-[4px] uppercase mb-4 animate-bounce text-white font-bold bg-rock-red px-4 py-1 rounded">Ábrelo si te atreves</div>
+                <div class="w-[100px] h-[100px] bg-rock-red rounded-full flex items-center justify-center border-4 border-black text-4xl" style="box-shadow: 0 0 20px rgba(185,28,28,0.8);">💀</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="section-intro" onclick="showMainContent()">
+        <header><h1 class="name-header">Tayoz Bebe</h1></header>
+        <div>
+            <h2 class="text-2xl tracking-[0.3em] uppercase text-white mb-8 title-hard">Viernes de Caguamas</h2>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="title-hard text-xl tracking-[0.2em] text-gray-400">Miércoles</span>
+                    <span class="title-hard text-[6rem] leading-none text-white">10</span>
+                </div>
+                <div class="w-px h-24 bg-rock-red"></div>
+                <div class="text-left">
+                    <span class="title-hard text-4xl tracking-widest block text-white">FEB</span>
+                    <span class="title-hard text-2xl tracking-[0.4em] text-rock-red">2027</span>
+                </div>
+            </section>
+            <p class="font-body text-[10px] tracking-[0.5em] uppercase animate-pulse text-gray-400 font-bold">Toca para echar desmadre</p>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <header class="relative min-h-screen flex flex-col bg-rock-dark pb-12 border-b-4 border-rock-red">
+            <div class="h-[60vh] w-full overflow-hidden relative">
+                <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover opacity-60">
+                <div class="absolute inset-0 bg-gradient-to-t from-rock-dark to-transparent"></div>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-5 relative z-10 -mt-20">
+                <h1 class="text-5xl md:text-7xl mb-2 text-white title-hard reveal-scale text-shadow">¡Es mi puto cumpleaños!</h1>
+                <p class="text-[14px] uppercase tracking-[0.2em] text-rock-red pb-8 font-bold font-crazy">Viernes de Caguamas</p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 pb-5">Falta esta madre para la peda:</p>
+                
+                <div id="countdown" class="flex gap-6 md:gap-10 justify-center reveal-scale delay-100 bg-rock-gray/50 p-6 rounded-lg border border-rock-red/30">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="title-hard text-4xl md:text-6xl text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] mt-2 text-rock-red font-bold">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="title-hard text-4xl md:text-6xl text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] mt-2 text-rock-red font-bold">Hrs</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="title-hard text-4xl md:text-6xl text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] mt-2 text-rock-red font-bold">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="title-hard text-4xl md:text-6xl text-white">00</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] mt-2 text-rock-red font-bold">Seg</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="pt-24 lg:pt-32 pb-32 px-6 text-center bg-gris-oscuro relative corte-pico">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h2 class="text-4xl md:text-6xl mb-10 text-white title-hard border-b-2 border-rock-red inline-block pb-2">Los Culpables</h2>
+                <p class="font-body text-lg md:text-xl text-gray-300 leading-relaxed mb-16">
+                    Sobreviví otro año más y lo vamos a festejar con madre. Todo esto es culpa de mis creadores y de la que me solapa las pendejadas.
+                </p>
+                <div class="grid md:grid-cols-2 gap-16 bg-rock-dark p-8 border border-gray-800">
+                    <div>
+                        <h3 class="text-[16px] md:text-[18px] uppercase tracking-[0.3em] mb-4 font-bold text-rock-red">Mis Jefes</h3>
+                        <p class="text-xl title-hard text-white tracking-wide">Ricardo Alfaro Cuellar</p>
+                        <p class="text-xl title-hard text-white tracking-wide">Carmen Martinez Castillo</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[16px] md:text-[18px] uppercase tracking-[0.3em] mb-4 font-bold text-rock-red">La Madrina</h3>
+                        <p class="text-xl title-hard text-white tracking-wide">Daniela Arellano Gomez</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-20 lg:pt-32 pb-32 px-6 bg-rock-dark overflow-hidden relative corte-pico border-t border-gray-800">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-6xl mx-auto reveal">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl mb-4 title-hard text-white">Mi Historia</h2>
+                    <p class="text-rock-red font-crazy text-sm md:text-lg">Un colapso mental rockero</p>
+                </div>
+                <div class="chambelanes-slider px-2">
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-gray-900 flex items-center justify-center p-6 text-center">
+                            <h4 class="text-3xl font-crazy text-white">Yo loco</h4>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-gray-900 flex items-center justify-center p-6 text-center">
+                            <h4 class="text-3xl font-crazy text-white">Yo más loco</h4>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-gray-900 flex items-center justify-center p-6 text-center border-b-4 border-rock-red">
+                            <h4 class="text-3xl font-crazy text-rock-red">Loco y...</h4>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-gray-900 flex items-center justify-center p-6 text-center">
+                            <h4 class="text-4xl title-hard text-white tracking-widest">ALOKOCHON</h4>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-gray-900 flex items-center justify-center p-6 text-center">
+                            <h4 class="text-3xl font-crazy text-white">Jajajaja</h4>
+                        </div>
+                    </div>
+                    <div class="chambelan-card">
+                        <div class="h-64 bg-rock-red flex items-center justify-center p-6 text-center">
+                            <h4 class="text-xl font-bold text-white break-words w-full" style="word-break: break-all;">snjxasiocniuaasoichaiosjcaoic</h4>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-gray-500 text-[10px] mt-5 uppercase tracking-[0.3em] font-bold">Desliza para ver mi locura →</p>
+            </div>
+        </section>
+
+        <section class="py-20 px-6 bg-gris-oscuro border-y-4 border-rock-red">
+            <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 text-center reveal-scale">
+                <div class="bg-rock-dark p-8 border border-gray-800">
+                    <div class="text-4xl mb-4">🎸</div>
+                    <h3 class="title-hard text-xl text-rock-red mb-2">Itinerario</h3>
+                    <p class="text-gray-300 font-bold">Como quieras.</p>
+                    <p class="text-sm text-gray-500 mt-2">Ven a echar desmadre, no hay reglas.</p>
+                </div>
+                <div class="bg-rock-dark p-8 border border-gray-800">
+                    <div class="text-4xl mb-4">👕</div>
+                    <h3 class="title-hard text-xl text-rock-red mb-2">Dress Code</h3>
+                    <p class="text-gray-300 font-bold">Ninguno.</p>
+                    <p class="text-sm text-gray-500 mt-2">Vengan como quieran, pero vístanse por favor. Todo de negro o rockero suma puntos.</p>
+                </div>
+                <div class="bg-rock-dark p-8 border border-gray-800">
+                    <div class="text-4xl mb-4">💸</div>
+                    <h3 class="title-hard text-xl text-rock-red mb-2">Regalos</h3>
+                    <p class="text-gray-300 font-bold">Lluvia de Sobres</p>
+                    <p class="text-sm text-gray-500 mt-2">Puro cashas y propiedades. Cero licuadoras.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ubicaciones" class="pt-24 lg:pt-32 pb-32 px-6 bg-rock-dark relative text-white corte-pico">
+            <div class="bg-texture-main opacity-20"></div>
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
+                
+                <div class="bg-gris-oscuro p-4 md:p-8 border border-gray-800 reveal flex flex-col h-full">
+                    <div class="text-center mb-8">
+                        <div class="text-5xl mb-4">⛪</div>
+                        <h1 class="text-4xl mb-2 title-hard text-white">Pa' Persignarse</h1>
+                        <p class="text-rock-red font-bold uppercase tracking-widest text-sm mb-2">7:00 P.M.</p>
+                        <p class="text-gray-400 text-sm">Templo Nuestra Señora del Refugio<br>Cañada Honda, Jardín Principal</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] border border-gray-700 mb-6 dark-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118434.90382352103!2d-102.316886!3d21.885256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429b9f9db195e09%3A0xcf8241b714b60e!2sAguascalientes%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1700000000000!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="bg-gris-oscuro p-4 md:p-8 border border-rock-red reveal flex flex-col h-full">
+                    <div class="text-center mb-8">
+                        <div class="text-5xl mb-4">🍻</div>
+                        <h1 class="text-4xl mb-2 title-hard text-white">La Peda</h1>
+                        <p class="text-rock-red font-bold uppercase tracking-widest text-sm mb-2">Hasta las 8:00 A.M.</p>
+                        <p class="text-gray-400 text-sm">Salón El Profe<br>Cañada</p>
+                        <p class="text-[10px] text-gray-500 mt-2 uppercase">Niños y adultos, me da igual. Jálense.</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[300px] border border-rock-red mb-6 dark-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118434.90382352103!2d-102.316886!3d21.885256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429b9f9db195e09%3A0xcf8241b714b60e!2sAguascalientes%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1700000000000!5m2!1ses-419!2smx" 
+                            class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
+                <p class="text-[12px] uppercase tracking-[0.2em] mb-6 text-gray-400 font-bold">Guarda la fecha para que no haya excusas</p>
+                <div class="flex justify-center">
+                    <button onclick="calendarLink('Cumpleaños Tayoz Bebe (Viernes de Caguamas)', 'Salón El Profe, Cañada', '20270210T190000')" class="btn-calendar">
+                        AGREGAR AL CALENDARIO
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-32 pb-32 px-6 bg-gris-oscuro text-white text-center relative overflow-hidden corte-pico border-t-2 border-gray-800">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h2 class="text-4xl md:text-5xl title-hard text-rock-red mb-4">Pasa lista o te quedas fuera</h2>
+                <p class="text-[12px] uppercase tracking-[0.3em] mb-10 text-gray-400 font-bold">Confirma antes del 1 de Enero de 2027</p>
+                
+                <form id="rsvpForm" class="space-y-8 text-left bg-rock-dark p-8 border border-gray-700 shadow-2xl">
+                    <p class="text-center text-sm text-gray-500 mb-6 uppercase">Tus datos se irán directo a mi Excel mamalón.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="border-b border-rock-red/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-rock-red font-bold">¿Quién chingados eres?</label>
+                            <input type="text" required class="w-full bg-transparent py-2 outline-none font-body font-bold text-lg text-white" placeholder="Tu nombre...">
+                        </div>
+                        <div class="border-b border-rock-red/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-rock-red font-bold">¿Cuántos vienen?</label>
+                            <select class="w-full bg-transparent py-2 outline-none font-body font-bold text-lg text-white appearance-none">
+                                <option class="text-black">Voy solo/a</option>
+                                <option class="text-black">Llevo a mi +1</option>
+                                <option class="text-black">Llevo a toda la jauría</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-rock-red text-white font-bold py-4 uppercase tracking-[0.3em] text-[14px] hover:bg-white hover:text-rock-red transition-all shadow-lg mt-8 border-2 border-rock-red">¡A HUEVO, AHÍ ESTARÉ!</button>
+                </form>
+                
+                <div id="successMessage" class="hidden p-10 border-2 border-rock-red mt-10 bg-rock-dark">
+                    <p class="text-3xl font-crazy text-white">¡Arre!<br><span class="text-lg font-body mt-4 block text-gray-400">Ahí nos vemos para destruir el hígado.</span></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pt-24 pb-16 text-center bg-black relative z-10 border-t border-gray-900">
+            <h1 class="text-5xl font-crazy mb-4 text-white">Tayoz Bebe</h1>
+            <p class="text-[12px] text-rock-red uppercase tracking-[0.5em] mb-6 font-bold">10 • Feb • 2027</p>
+            <p class="text-[10px] text-gray-600 uppercase tracking-[0.2em] font-bold">¡Que quede con madre!</p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-intro').classList.add('active');
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            
+            playAudio(); 
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                initObserver();
+            }, 1200);
+        }
+
+        // --- REPRODUCTOR DE MÚSICA ---
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioBtn.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioBtn.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioBtn.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR (10 Feb 2027) ---
+        const targetDate = new Date("February 10, 2027 19:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        // Simulación del envío al archivo de Google Sheets (Excel)
+        document.getElementById('rsvpForm').onsubmit = (e) => {
+            e.preventDefault();
+            e.target.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        };
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
