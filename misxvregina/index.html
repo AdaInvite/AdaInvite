@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitación - Mis XV Regina</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
-
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -39,12 +38,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         :root {
             --rosa-elegante: #B5737A;
             --blanco-perla: #FDFBFB;
-            --bg-regina: url('https://i.imgur.com/EYjfsMz.jpeg');
-            --bg-floral: url('https://i.imgur.com/1jA6vDL.jpeg');
             --font-elegant: 'Cormorant Garamond', serif;
             --font-script: 'Pinyon Script', cursive;
             --font-numbers: 'Cinzel', serif;
@@ -72,110 +71,12 @@
 
         body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 700; }
-        .font-script { font-family: var(--font-script); font-weight: 400; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        /* --- SECCIÓN 1: SOBRE --- */
-        #envelope-wrapper {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: visibility 1.8s;
+        .filtro-rosa {
+            /* Filtro CSS aproximado para pintar SVGs/Iconos negros a #B5737A */
+            filter: invert(53%) sepia(16%) saturate(1048%) hue-rotate(303deg) brightness(91%) contrast(87%);
         }
-
-        .envelope-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
-            background-size: cover;
-            transition: opacity 1.2s ease-in-out;
-            z-index: 1;
-        }
-
-        .flap-wrapper {
-            position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
-            will-change: transform;
-        }
-
-        .flap-left-wrapper {
-            left: 0;
-            z-index: 6;
-            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.15));
-        }
-
-        .flap-right-wrapper {
-            right: 0;
-            z-index: 5;
-            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.2));
-        }
-
-        .flap {
-            width: 100%;
-            height: 100%;
-            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
-            background-size: cover;
-        }
-
-        .flap-left {
-            clip-path: polygon(0 0, 100% 50%, 0 100%);
-            background-position: left center;
-        }
-
-        .flap-right {
-            clip-path: polygon(100% 0, 0 50%, 100% 100%);
-            background-position: right center;
-        }
-
-        .seal-wrapper {
-            position: absolute;
-            top: 50%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        #envelope-wrapper.open .envelope-bg { opacity: 0; }
-        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
-        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
-        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
-
-        /* --- SECCIÓN 2: PANTALLA INTRO --- */
-        #section-intro {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3), rgba(0,0,0,0.8)), var(--bg-regina);
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4rem 2rem;
-            text-align: center;
-            color: white;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1.2s ease-in-out;
-            cursor: pointer;
-        }
-
-        #section-intro.active { opacity: 1; visibility: visible; }
-        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 22vw, 12rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.6); }
-
-        /* --- SECCIÓN 3: CONTENIDO --- */
-        #section-main { display: none; }
 
         .bg-texture-main {
             background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
@@ -204,12 +105,6 @@
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
 
-        .bg-floral-section {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-floral);
-            background-size: cover;
-            background-position: center;
-        }
-
         .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
 
         .btn-calendar {
@@ -225,11 +120,6 @@
             border-radius: 4px;
         }
         .btn-calendar:hover { background: var(--rosa-elegante); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(181, 115, 122, 0.2); }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(1deg); }
-        }
 
         .audio-btn {
             position: fixed;
@@ -253,32 +143,14 @@
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- CONTADOR MINIMALISTA --- */
-        #countdown {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            backdrop-filter: none !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Esconder flechas de input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
         }
-
-        #countdown span.time-num {
-            font-family: var(--font-numbers) !important; 
-            font-weight: 400; 
-            color: white;
-            line-height: 1;
-        }
-
-        #countdown .time-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 700;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-top: 8px;
-            font-family: var(--font-elegant);
+        input[type=number] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
@@ -287,76 +159,44 @@
     <audio id="bg-music" loop>
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Ed%20Sheeran%20-%20photograph%20%20sub%20espa%C3%B1ol.mp3" type="audio/mpeg">
     </audio>
-    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+    <div id="audio-btn" class="audio-btn" onclick="toggleAudio()">
         <img id="audio-icon" src="https://i.imgur.com/DxCMVS8.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
     </div>
 
-    <div id="envelope-wrapper">
-        <div class="envelope-bg"></div>
-        <div id="envelope-container" class="w-full h-full relative z-10">
-            <div class="flap-wrapper flap-left-wrapper">
-                <div class="flap flap-left"></div>
-            </div>
-            <div class="flap-wrapper flap-right-wrapper">
-                <div class="flap flap-right"></div>
-            </div>
-            <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-[#2C2A2A] font-bold">Toca para abrir</div>
-                <img src="https://i.imgur.com/uVECUte.png" 
-                     class="w-[100px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
-            </div>
-        </div>
-    </div>
-
-    <div id="section-intro" onclick="showMainContent()">
-        <header><h1 class="name-header text-white">Regina</h1></header>
-        <div>
-            <section class="flex items-center gap-8 justify-center mb-8">
-                <div class="flex flex-col items-center">
-                    <span class="text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
-                    <span class="text-[6rem] leading-none font-light text-white drop-shadow-md font-numbers">27</span>
-                </div>
-                <div class="w-px h-24 bg-white/60 shadow-sm"></div>
-                <div class="text-left">
-                    <span class="text-4xl tracking-widest block text-white drop-shadow-md">JUN</span>
-                    <span class="text-2xl tracking-[0.6em] text-white drop-shadow-md font-numbers">2026</span>
-                </div>
-            </section>
-            <p class="text-[9px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para continuar</p>
-        </div>
-    </div>
-
-    <main id="section-main">
+    <main id="section-main" class="block">
         
-        <header class="relative min-h-screen bg-cover bg-center flex flex-col justify-end pb-20" 
-            style="background-image: url('https://i.imgur.com/DopPMka.jpeg');">
-        
-            <div class="absolute inset-0 bg-black/50 z-0"></div>
-        
-            <div class="relative z-10 w-full mt-auto text-center px-4 pb-20 md:pb-24">
-                <h1 class="text-7xl md:text-9xl mb-6 text-white font-script reveal-scale pr-6">Mis XV</h1>
-                <p class="text-[11px] uppercase tracking-[0.3em] text-white/80 pb-6 font-bold">Faltan solo...</p>
+        <header class="relative min-h-[100svh] flex flex-col px-8 py-10 box-border"> 
+            <div class="absolute inset-0 bg-cover bg-center z-0 opacity-100" style="background-image: url('https://i.imgur.com/DopPMka.jpeg');"></div>
+            <div class="absolute inset-0 bg-black/40 z-0"></div> <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-rosa-elegante rounded-[150px] md:rounded-[150px] shadow-2xl pt-20 pb-8 px-6">
                 
-                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale delay-100">
-                    <div class="flex flex-col items-center">
-                        <span id="days" class="time-num text-4xl md:text-8xl">00</span>
-                        <span class="time-label">Días</span>
-                    </div>
+                <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
                     
-                    <div class="flex flex-col items-center">
-                        <span id="hours" class="time-num text-4xl md:text-8xl">00</span>
-                        <span class="time-label">Horas</span>
-                    </div>
+                    <svg width="250" height="90" viewBox="0 0 250 90" class="absolute -top-16 md:-top-20 mt-8 mb-6 overflow-visible">
+                        <path id="curve-text" d="M 20,80 Q 125,5 230,80" fill="transparent" />
+                        <text width="250" text-anchor="middle">
+                            <textPath href="#curve-text" startOffset="50%" class="fill-rosa-elegante font-bold" style="font-family: var(--font-elegant); font-size: 22px; letter-spacing: 0.25em; text-transform: uppercase;">Mis XV</textPath>
+                        </text>
+                    </svg>
 
-                    <div class="flex flex-col items-center">
-                        <span id="minutes" class="time-num text-4xl md:text-8xl">00</span>
-                        <span class="time-label">Min</span>
+                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-28 md:w-28 mb-8 relative z-10 drop-shadow-sm filtro-rosa">
+                    
+                    <h1 class="font-script text-[6rem] md:text-[9rem] leading-none text-rosa-elegante mb-4 md:mb-8 relative z-10 text-center">Regina</h1>
+                    
+                    <div class="flex items-center gap-6 md:gap-10 justify-center">
+                        <div class="flex flex-col items-center text-center text-[#2C2A2A]">
+                            <span class="text-sm md:text-xl tracking-[0.4em] uppercase drop-shadow-md">Sábado</span>
+                            <span class="text-[3.5rem] md:text-[7rem] leading-none drop-shadow-md font-numbers text-rosa-elegante">27</span>
+                        </div>
+                        <div class="w-px h-16 md:h-20 bg-black/30 shadow-sm"></div>
+                        <div class="text-left text-[#2C2A2A]">
+                            <span class="text-2xl md:text-4xl tracking-widest block drop-shadow-md">JUN</span>
+                            <span class="text-lg md:text-2xl tracking-[0.6em] drop-shadow-md font-numbers text-rosa-elegante">2026</span>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="flex flex-col items-center">
-                        <span id="seconds" class="time-num text-4xl md:text-8xl">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
+                <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
+                    <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
                 </div>
             </div>
         </header>
@@ -424,7 +264,7 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section relative text-center">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 relative text-center" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://i.imgur.com/1jA6vDL.jpeg'); background-size: cover; background-position: center;">
             <div class="max-w-3xl mx-auto reveal-scale">
                 <div class="mx-auto mb-8 flex items-center justify-center">
                     <img src="https://i.imgur.com/ruhzeF1.png" class="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-sm invert opacity-90" alt="Código de Vestimenta">
@@ -485,7 +325,6 @@
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] drop-shadow-sm font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
                 
                 <div class="flex flex-col md:flex-row gap-6 md:gap-8 justify-center">
-                    
                     <a href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51983470" target="_blank" class="mx-auto my-1 bg-white border border-gray-100 group shadow-sm rounded-xl h-48 w-full md:w-64 overflow-hidden flex items-center justify-center reveal-scale delay-200 transition-all hover:-translate-y-1 hover:shadow-lg hover:border-rosa-elegante/50 duration-500">
                         <img src="https://i.imgur.com/Ch17jC4.png" class="w-40 h-auto object-contain transition duration-700 group-hover:scale-105" alt="Liverpool">
                     </a>
@@ -496,7 +335,6 @@
                         </svg>
                         <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 group-hover:text-rosa-elegante transition duration-700 text-center">Tendré una urna en la entrada del salón para sobres</p>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -509,7 +347,7 @@
             </div>
         </section>
 
-        <section class="pt-20 lg:pt-32 pb-20 px-6 bg-floral-section text-white text-center relative overflow-hidden">
+        <section class="pt-20 lg:pt-32 pb-20 px-6 text-white text-center relative overflow-hidden" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.30), rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://i.imgur.com/1jA6vDL.jpeg'); background-size: cover; background-position: center;">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 min-h-[500px] flex flex-col justify-start"> 
                 <h2 class="text-5xl md:text-5xl font-script text-white mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 drop-shadow-md font-bold">Confirmar antes del <span class="font-numbers">10</span> de Junio de <span class="font-numbers">2026</span></p>
@@ -520,15 +358,10 @@
                             <label class="text-[10px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Nombre Completo</label>
                             <input type="text" id="rsvpName" required class="w-full bg-transparent py-2 outline-none text-xl text-white">
                         </div>
+                        
                         <div class="border-b border-rosa-elegante/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Modalidad</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none text-xl text-white appearance-none">
-                                <option class="text-black" value="1 Persona">1 Persona</option>
-                                <option class="text-black" value="2 Personas">2 Personas</option>
-                                <option class="text-black" value="3 Personas">3 Personas</option>
-                                <option class="text-black" value="4 Personas">4 Personas</option>
-                                <option class="text-black" value="Familia Completa">Familia Completa</option>
-                            </select>
+                            <label class="text-[10px] uppercase tracking-widest opacity-80 text-rosa-elegante font-bold">Cantidad de Personas</label>
+                            <input type="number" id="rsvpPax" min="1" placeholder="Ej. 2" required class="w-full bg-transparent py-2 outline-none text-xl text-white appearance-none">
                         </div>
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa-elegante text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-white hover:text-rosa-elegante transition-all hover:scale-105 active:scale-95 shadow-lg mt-8 duration-300 rounded-md">Confirmar por WhatsApp</button>
@@ -538,7 +371,51 @@
             </div>
         </section>
 
-        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-white relative z-10">
+        <section class="min-h-[60svh] flex flex-col justify-center py-8 px-6 bg-white text-center relative overflow-hidden pb-20">
+            <div class="bg-texture-main opacity-10"></div>
+            <div class="max-w-2xl mx-auto reveal relative z-10 border-t border-rosa-elegante/30 pt-16 w-full flex flex-col">
+                
+                <div id="encabezadoConsulta">
+                    <h3 class="text-5xl font-script text-rosa-elegante text-shadow-light mb-4">Consultar Pases</h3>
+                    <p class="text-[11px] uppercase tracking-[0.3em] mb-10 text-[#2C2A2A] font-bold">Ingresa tu nombre para ver la cantidad de pases asignados</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <input type="text" id="searchName" placeholder="Ej. Familia Martínez" class="w-full bg-blanco-perla border border-gray-300 rounded-xl px-6 py-4 outline-none text-xl text-center text-[#2C2A2A] uppercase shadow-sm font-bold">
+                        <button onclick="consultarPase()" id="btnConsultar" class="bg-rosa-elegante text-white px-10 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-transparent hover:text-rosa-elegante border border-rosa-elegante transition-all duration-300 flex-shrink-0 shadow-md">Buscar</button>
+                    </div>
+                </div>
+
+                <div id="consultaError" class="hidden mt-4 mb-4 bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
+                    <p class="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando te asignaron los pases o contacta a la anfitriona.</p>
+                </div>
+
+                <div id="contenedorPaseOficial" class="hidden my-auto w-[90%] max-w-[340px] mx-auto py-8 px-4 bg-blanco-perla border-2 border-rosa-elegante rounded-2xl shadow-2xl text-rosa-elegante relative flex-col items-center mt-6 transition-all duration-500">
+                    
+                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-20 mb-3 mt-2 drop-shadow-sm mx-auto filtro-rosa" crossOrigin="anonymous">
+                    
+                    <div class="w-full text-center pb-6 pt-2">
+                        <p class="text-4xl tracking-widest font-script leading-none m-0 p-0 text-rosa-elegante">Pase de Acceso</p>
+                    </div>
+                    
+                    <div class="w-full h-px bg-rosa-elegante/30 mb-6"></div>
+                    
+                    <p id="nombrePase" class="text-3xl font-bold mb-6 text-[#2C2A2A] text-center w-full"></p>
+                    
+                    <div class="flex flex-col justify-center items-center mb-8 w-full">
+                        <span class="text-xs uppercase tracking-[0.2em] font-bold text-rosa-elegante mb-2">Pases asignados</span>
+                        <span id="pasesAprobados" class="text-7xl font-bold font-numbers text-[#2C2A2A] leading-none block"></span>
+                    </div>
+                    
+                    <p class="text-[10px] uppercase tracking-[0.15em] opacity-90 mt-4 mb-2 leading-relaxed font-bold border-t border-rosa-elegante/30 pt-4 px-2 w-full text-center text-rosa-elegante">
+                        Muestra esta tarjeta en recepción<br>para tener acceso al evento
+                    </p>
+                </div>
+
+                <button id="btnDescargarPase" onclick="descargarPase()" class="hidden w-[85%] max-w-[320px] mx-auto mt-6 mb-10 bg-white text-rosa-elegante border border-rosa-elegante py-4 px-1 uppercase tracking-[0.2em] text-[11px] hover:bg-rosa-elegante hover:text-white transition-all duration-300 rounded-xl font-bold shadow-md">Descargar Tarjeta</button>
+            </div>
+        </section>
+
+        <footer class="pt-20 lg:pt-32 pb-24 text-center bg-blanco-perla relative z-10 border-t border-rosa-elegante/20">
             <img src="https://i.imgur.com/i5thAjI.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-rosa-elegante shadow-md">
             <p class="text-6xl font-script mb-2 text-rosa-elegante">Regina</p>
             <p class="text-[10px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-4 font-bold"><span class="font-numbers">27</span> • Junio • <span class="font-numbers">2026</span></p>
@@ -548,31 +425,24 @@
     </main>
 
     <script>
-        function openEnvelope() {
-            document.getElementById('section-intro').classList.add('active');
-            document.getElementById('envelope-wrapper').classList.add('open');
-            setTimeout(() => {
-                document.getElementById('envelope-wrapper').style.display = 'none';
-            }, 1800);
-        }
+        // ==========================================
+        // URL DE TU GOOGLE APPS SCRIPT PARA PASES
+        // ==========================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7h4M37RaPZxHxwU8HgI-Zsu_aHK-zOjiCIQiaYCzVX2tJvFzT4Pzhf1NPUpzmNu66lg/exec'; // <--- PEGA TU NUEVA URL AQUÍ
 
-        function showMainContent() {
-            const intro = document.getElementById('section-intro');
-            intro.style.opacity = '0';
+        // --- INICIALIZADOR (Como ya no hay sobre, iniciamos directo) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initObserver();
             
-            playAudio(); 
-
-            setTimeout(() => {
-                intro.style.display = 'none';
-                document.getElementById('section-main').style.display = 'block';
-                document.getElementById('audio-btn').classList.remove('hidden'); 
-                initObserver();
-            }, 1200);
-        }
+            // Intento de autoplay de la música
+            document.body.addEventListener('click', function initAudio() {
+                playAudio();
+                document.body.removeEventListener('click', initAudio);
+            }, { once: true });
+        });
 
         // --- REPRODUCTOR DE MÚSICA ---
         const audio = document.getElementById("bg-music");
-        const audioBtn = document.getElementById("audio-btn");
         const audioIcon = document.getElementById("audio-icon");
         let isPlaying = false;
 
@@ -596,25 +466,7 @@
             isPlaying = !isPlaying;
         }
 
-        // --- CONTADOR (27 Junio 2026) ---
-        const targetDate = new Date("June 27, 2026 19:00:00").getTime();
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-            if (distance < 0) return;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
-            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
-            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
+        // --- OBSERVER PARA ANIMACIONES ---
         function initObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -627,42 +479,143 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // --- ENVÍO DE FORMULARIO (WHATSAPP + APPS SCRIPT) ---
-        document.getElementById('rsvpForm').onsubmit = (e) => {
+        // --- ENVÍO DE FORMULARIO RSVP (WHATSAPP + APPS SCRIPT) ---
+        document.getElementById('rsvpForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('rsvpName').value;
-            const pax = document.getElementById('rsvpPax').value;
-            
-            // 1. ESPACIO PARA TU FETCH A GOOGLE APPS SCRIPT
-            // Descomenta y ajusta la URL de tu WebApp cuando la tengas lista
-            /*
-            const googleWebAppUrl = "TU_URL_DE_APPS_SCRIPT_AQUI";
-            fetch(googleWebAppUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    evento: "51983470",
-                    nombre: name,
-                    modalidad: pax
-                })
-            }).catch(err => console.log(err));
-            */
+            const name = document.getElementById('rsvpName').value.trim();
+            const pax = document.getElementById('rsvpPax').value.trim();
+            const btnSubmit = document.getElementById('btnSubmitRSVP');
 
-            // 2. REDIRECCIÓN A WHATSAPP
-            const phone = "525527602216"; // Lada de México por defecto
-            const text = `¡Hola! Confirmo mi asistencia a los XV de Regina.%0A%0A*Nombre:* ${name}%0A*Modalidad:* ${pax}`;
+            const originalText = btnSubmit.innerText;
+            btnSubmit.innerText = "Guardando...";
+            btnSubmit.disabled = true;
+
+            try {
+                // Envío silencioso al backend si se requiere (Opcional)
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
+                });
+            } catch (error) {
+                console.error("Error al guardar respaldo:", error);
+            }
+
+            // REDIRECCIÓN A WHATSAPP
+            const phone = "525527602216"; // Número de la invitacion original
+            const text = `¡Hola! Confirmo mi asistencia a los XV de Regina.%0A%0A*Nombre:* ${name}%0A*Cantidad de personas:* ${pax}`;
+            
             window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 
-            // 3. ACTUALIZAR INTERFAZ
+            // ACTUALIZAR INTERFAZ
             e.target.classList.add('hidden');
             document.getElementById('successMessage').classList.remove('hidden');
+            
+            setTimeout(() => {
+                btnSubmit.innerText = originalText;
+                btnSubmit.disabled = false;
+            }, 2000);
         };
 
         function calendarLink(title, loc, date) {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
             window.open(url, '_blank');
+        }
+
+        // ==========================================
+        // BÚSQUEDA DE PASES (API)
+        // ==========================================
+        async function consultarPase() {
+            const searchInput = document.getElementById('searchName').value.trim();
+            const errorDiv = document.getElementById('consultaError');
+            const btn = document.getElementById('btnConsultar');
+            const encabezadoConsulta = document.getElementById('encabezadoConsulta');
+            
+            if (!searchInput) return;
+
+            btn.innerText = "...";
+            btn.disabled = true;
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=consultar&name=${encodeURIComponent(searchInput)}`);
+                const result = await response.json();
+                
+                btn.innerText = "Buscar";
+                btn.disabled = false;
+
+                if (result.status === "ready") {
+                    document.getElementById('nombrePase').innerText = result.name;
+                    document.getElementById('pasesAprobados').innerText = result.pax;
+
+                    encabezadoConsulta.classList.add('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.remove('hidden');
+                    document.getElementById('contenedorPaseOficial').classList.add('flex');
+                    document.getElementById('btnDescargarPase').classList.remove('hidden');
+                    
+                } else if (result.status === "pending") {
+                    errorDiv.className = "mt-4 mb-4 p-6 rounded-2xl shadow-sm bg-blue-50 border border-blue-200";
+                    errorDiv.innerHTML = '<p class="text-xs text-blue-600 font-bold uppercase tracking-widest leading-relaxed">Tus pases aún están siendo procesados por el anfitrión. Vuelve a consultar más tarde.</p>';
+                    errorDiv.classList.remove('hidden');
+                    
+                } else {
+                    errorDiv.className = "mt-4 mb-4 p-6 rounded-2xl shadow-sm bg-red-50 border border-red-200";
+                    errorDiv.innerHTML = '<p class="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed">No encontramos un pase con ese nombre. Verifica que esté escrito igual que cuando te asignaron los pases o contacta a la anfitriona.</p>';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) { 
+                alert("Error al buscar. Revisa tu conexión.");
+                btn.innerText = "Buscar";
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // FUNCIÓN PARA DESCARGAR EL PASE COMO IMAGEN
+        // ==========================================
+        function descargarPase() {
+            const paseOficial = document.getElementById('contenedorPaseOficial');
+            const btnDescargar = document.getElementById('btnDescargarPase');
+            
+            btnDescargar.innerText = "Generando imagen HD...";
+            
+            html2canvas(paseOficial, {
+                scale: 4, 
+                backgroundColor: "#B5737A", // Color rosa elegante para fondo en vez del azul
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                let nombreInvitado = document.getElementById('nombrePase').innerText.trim().replace(/\s+/g, '_');
+                if(!nombreInvitado) nombreInvitado = "XVs_Regina";
+                const fileName = `Pase_${nombreInvitado}.png`;
+
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], fileName, { type: 'image/png' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Pase de Acceso XVs Regina',
+                            text: 'Aquí está mi tarjeta de acceso.'
+                        }).then(() => {
+                            btnDescargar.innerText = "Descargar Tarjeta";
+                        }).catch((error) => {
+                            btnDescargar.innerText = "Descargar Tarjeta";
+                        });
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = fileName;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                        btnDescargar.innerText = "Descargar Tarjeta";
+                    }
+                }, 'image/png', 1.0);
+
+            }).catch(err => {
+                btnDescargar.innerText = "Error al generar";
+                setTimeout(() => btnDescargar.innerText = "Descargar Tarjeta", 2000);
+            });
         }
     </script>
 </body>
