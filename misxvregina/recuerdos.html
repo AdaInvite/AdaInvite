@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XV Regina - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#DB9596">
+    <meta property="og:title" content="XV Regina - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la fiesta.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: {
+                            elegante: '#DB9596'
+                        },
+                        blanco: {
+                            perla: '#FDFBFB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --rosa-elegante: #DB9596;
+            --blanco-perla: #FDFBFB;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100svh;
+            font-family: var(--font-elegant); 
+            background-color: var(--blanco-perla);
+            color: #2C2A2A;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, p, select, button, label, input { font-family: var(--font-elegant); font-weight: 300; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+        .font-bold { font-weight: 600; }
+
+        .bg-texture-main {
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
+            background-size: 400px;
+            opacity: 0.08;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .filtro-rosa {
+            filter: invert(53%) sepia(16%) saturate(1048%) hue-rotate(303deg) brightness(91%) contrast(87%);
+        }
+
+        .sombra-ligera {
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        select option { background-color: #ffffff; color: #2C2A2A; }
+        select { text-align-last: center; } 
+        
+        .input-regina {
+            background-color: transparent; 
+            border: 1px solid rgba(219, 149, 150, 0.4);
+            color: #2C2A2A;
+            border-radius: 8px; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: rgba(255,255,255,0.7);
+        }
+        .input-regina:focus { border-color: var(--rosa-elegante); outline: none; background-color: #ffffff; box-shadow: 0 4px 12px rgba(219, 149, 150, 0.1); }
+        .input-regina::placeholder { color: rgba(44, 42, 42, 0.4); font-style: italic; }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-start min-h-[100svh]">
+
+    <div class="bg-texture-main"></div>
+
+    <img src="https://i.imgur.com/osMy601.png" class="fixed top-0 left-0 w-32 md:w-56 z-0 pointer-events-none transform scale-y-[-1]" alt="Deco">
+    <img src="https://i.imgur.com/osMy601.png" class="fixed top-0 right-0 w-32 md:w-56 z-0 pointer-events-none transform rotate-180" alt="Deco">
+    <img src="https://i.imgur.com/osMy601.png" class="fixed bottom-0 left-0 w-32 md:w-56 z-0 pointer-events-none" alt="Deco">
+    <img src="https://i.imgur.com/osMy601.png" class="fixed bottom-0 right-0 w-32 md:w-56 z-0 pointer-events-none transform scale-x-[-1]" alt="Deco">
+
+    <div class="max-w-5xl w-full flex flex-col items-center pt-16 pb-12 px-6 relative z-10" id="mainContainer">
+        
+        <img src="https://i.imgur.com/uKWPyOY.png" class="w-20 md:w-24 mb-6 drop-shadow-sm filtro-rosa" alt="Corona">
+        
+        <h1 class="text-7xl md:text-9xl font-script text-rosa-elegante mb-2 text-center sombra-ligera">Recuerdos</h1>
+        <p class="text-[10px] md:text-[12px] tracking-[0.4em] uppercase text-[#2C2A2A] font-bold mb-8 text-center">Mis XV Regina</p>
+
+        <p class="text-sm md:text-lg italic text-[#2C2A2A] leading-relaxed mb-10 text-center max-w-lg">
+            "Hay momentos inolvidables que se atesoran en el corazón para siempre."<br>Comparte los tuyos aquí.
+        </p>
+
+        <button id="openModalBtn" class="bg-rosa-elegante text-white font-bold py-4 px-10 rounded-md uppercase tracking-[0.2em] text-[10px] shadow-lg hover:bg-white hover:text-rosa-elegante hover:border-rosa-elegante transition-all active:scale-95 border border-transparent duration-300">
+            Subir mis fotos 
+        </button>
+
+        <div class="w-full pt-16 mt-6 flex flex-col items-center">
+            <p class="text-[9px] text-rosa-elegante uppercase tracking-[0.3em] mb-4 font-bold">Vista de Galería</p>
+            <div class="bg-white/50 backdrop-blur-md border border-rosa-elegante/20 rounded-md p-1 flex inline-flex shadow-sm mb-10">
+                <button id="btn1Col" class="px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white bg-rosa-elegante rounded-sm transition-all">1 Columna</button>
+                <button id="btn2Col" class="px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-rosa-elegante hover:bg-rosa-elegante/10 rounded-sm transition-all">2 Columnas</button>
+            </div>
+            
+            <div id="muro" class="columns-1 md:columns-3 gap-6 w-full px-2">
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden">
+        <div class="relative bg-blanco-perla border border-rosa-elegante/30 rounded-2xl w-full max-w-md p-8 shadow-2xl flex flex-col items-center max-h-[90vh] overflow-y-auto overflow-x-hidden">
+            
+            <img src="https://i.imgur.com/osMy601.png" class="absolute top-0 left-0 w-24 opacity-40 pointer-events-none transform scale-y-[-1]" alt="Deco">
+            <img src="https://i.imgur.com/osMy601.png" class="absolute top-0 right-0 w-24 opacity-40 pointer-events-none transform rotate-180" alt="Deco">
+            
+            <button id="closeModalBtnIcon" class="absolute top-5 right-5 text-rosa-elegante/60 hover:text-rosa-elegante transition-colors z-20 bg-white/50 rounded-full p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <img src="https://i.imgur.com/uKWPyOY.png" class="w-12 mb-2 mt-4 drop-shadow-sm filtro-rosa relative z-10" alt="Corona">
+            <h2 class="text-5xl font-script text-rosa-elegante mb-8 text-center relative z-10 sombra-ligera">Tus Momentos</h2>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-5 text-left relative z-10 px-2">
+                <div>
+                    <label class="text-[#2C2A2A] text-[9px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-80">Familia / Nombre</label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Familia Alaníz" class="input-regina py-3 px-4 w-full text-center">
+                </div>
+                
+                <div>
+                    <label class="text-[#2C2A2A] text-[9px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-80">Momento del evento</label>
+                    <select id="folderSelect" class="input-regina py-3 px-4 w-full cursor-pointer appearance-none text-center">
+                        <option value="" disabled selected class="italic">Elige una opción...</option>
+                        <option value="La Recepción">La Recepción</option>
+                        <option value="La Cena">La Cena</option>
+                        <option value="El Vals">El Vals</option>
+                        <option value="El Baile">El Baile</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-[#2C2A2A] text-[9px] font-bold tracking-[0.2em] uppercase mb-2 block opacity-80">Seleccionar archivos</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-rosa-elegante/50 bg-white/50 rounded-xl p-8 text-center transition-colors hover:bg-white cursor-pointer shadow-sm">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-8 h-8 mx-auto text-rosa-elegante mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-[#2C2A2A] text-[10px] font-bold uppercase tracking-widest">Toca aquí para elegir</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-rosa-elegante/20 rounded-xl bg-white shadow-sm overflow-hidden">
+                        <p class="text-[8px] text-[#2C2A2A] text-center py-3 uppercase font-bold border-b border-rosa-elegante/10 tracking-[0.2em]">Archivos seleccionados:</p>
+                        <div id="previewContainer"></div>
+                        <button id="removePreviewBtn" class="w-full py-3 text-[9px] text-red-500 bg-red-50/50 uppercase font-bold hover:bg-red-100 transition-colors tracking-widest border-t border-red-100">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-white border border-rosa-elegante/30 text-[#2C2A2A] font-bold rounded-md py-3.5 text-[9px] tracking-[0.2em] uppercase hover:bg-gray-50 transition-colors shadow-sm">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-rosa-elegante text-white border border-rosa-elegante font-bold rounded-md py-3.5 text-[9px] tracking-[0.2em] uppercase shadow-md hover:-translate-y-1 transition-transform">Subir Álbum</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest font-bold mt-6 text-rosa-elegante bg-white p-4 rounded-md border border-rosa-elegante/30 hidden text-center w-full relative z-10 shadow-sm"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // NOTA: Configuración de Firebase (asegúrate de colocar las de tu proyecto si cambias).
+        // Colección adaptada a "muro_regina"
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6oWLoLyRL3AUUpWceHQWlTHDZ4-wQ7tI",
+            authDomain: "xv-mayte-3f7c3.firebaseapp.com",
+            projectId: "xv-mayte-3f7c3",
+            storageBucket: "xv-mayte-3f7c3.firebasestorage.app",
+            messagingSenderId: "24046456453",
+            appId: "1:24046456453:web:2aef8664b2c4343ebae3ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        archivoInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            dropZone.classList.add('hidden');
+            previsualizacion.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+
+            files.forEach(file => {
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-gray-100 rounded-md overflow-hidden shadow-sm border border-gray-200";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/30"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            });
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) return alert("Por favor, completa todos los campos para continuar.");
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_regina/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_regina"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡Recuerdos guardados con éxito!";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // Alternar vistas
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white bg-rosa-elegante rounded-sm transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-rosa-elegante hover:bg-rosa-elegante/10 rounded-sm transition-all";
+            muro.className = "columns-1 md:columns-2 gap-6 w-full px-2";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-rosa-elegante bg-white rounded-sm transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white bg-rosa-elegante rounded-sm transition-all";
+            muro.className = "columns-2 md:columns-3 gap-6 w-full px-1";
+        });
+
+        // Dibujar Muro
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_regina"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="font-light text-[#2C2A2A]/70 text-lg col-span-full py-12 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero en subir un momento mágico!</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto rounded-t-xl bg-gray-100 cursor-pointer object-cover border-b border-rosa-elegante/10"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-t-xl object-cover border-b border-rosa-elegante/10">`;
+                    
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "break-inside-avoid mb-8 bg-white rounded-xl shadow-lg border border-rosa-elegante/20 flex flex-col group hover:-translate-y-1 transition-transform duration-300";
+                    
+                    divTarjeta.innerHTML = `
+                        <div class="relative">
+                            <span class="absolute top-3 right-3 bg-white text-rosa-elegante text-[8px] font-bold px-3 py-1.5 rounded-md uppercase z-10 shadow-sm tracking-[0.2em] border border-rosa-elegante/20">${datos.momento}</span>
+                            ${media}
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white rounded-b-xl">
+                            <h4 class="text-[#2C2A2A] font-bold uppercase text-[10px] tracking-[0.2em] truncate flex-1">${datos.nombre}</h4>
+                            <div class="flex items-center gap-2">
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1.5 text-rosa-elegante/70 hover:text-rosa-elegante transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                    <span id="contador-likes-${id}" class="font-bold text-sm num-likes">${datos.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        window.darLike = async function(id) {
+            const docRef = doc(db, "muro_regina", id);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
