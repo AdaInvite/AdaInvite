@@ -223,40 +223,75 @@
         const estadoCarga = document.getElementById('estadoCarga');
         const btnSubir = document.getElementById("btnSubir");
 
+        // NUEVO: Array para guardar únicamente los archivos que pasan la validación
+        let archivosConfirmados = [];
+
+        // Función auxiliar para medir duración de video
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
         openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        archivoInput.addEventListener('change', (e) => {
+        archivoInput.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
-            dropZone.classList.add('hidden');
-            previsualizacion.classList.remove('hidden');
             previewContainer.innerHTML = "";
+            let validFiles = [];
 
-            files.forEach(file => {
+            for (const file of files) {
+                // Si es video, comprobamos duración
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        alert(`El video "${file.name}" dura más de 30 segundos y no será subido.`);
+                        continue; // Salta este archivo
+                    }
+                }
+                validFiles.push(file);
+                
+                // Crear preview
                 const url = URL.createObjectURL(file);
                 const thumb = document.createElement('div');
                 thumb.className = "relative h-20 bg-gray-100 rounded-md overflow-hidden shadow-sm border border-gray-200";
-                
                 if (file.type.includes("image")) {
                     thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
                 } else {
                     thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/30"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
                 }
                 previewContainer.appendChild(thumb);
-            });
+            }
+
+            archivosConfirmados = validFiles; // Almacenamos la selección filtrada
+
+            if (validFiles.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; // Si no quedó ningún archivo válido, limpiamos el input
+            }
         });
 
         document.getElementById('removePreviewBtn').addEventListener('click', () => {
             archivoInput.value = "";
+            archivosConfirmados = []; // Limpiamos la lista filtrada
             previsualizacion.classList.add('hidden');
             dropZone.classList.remove('hidden');
         });
 
         btnSubir.addEventListener("click", async () => {
-            const archivos = Array.from(archivoInput.files);
+            const archivos = archivosConfirmados; // Utilizamos únicamente los validados
             const nombre = document.getElementById("nombreInput").value;
             const momento = document.getElementById("folderSelect").value;
 
@@ -302,13 +337,13 @@
         const muro = document.getElementById('muro');
 
         btn1Col.addEventListener('click', () => {
-            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-lila bg-white rounded-full transition-all";
-            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/20 rounded-full transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white bg-lila rounded-full transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-lila hover:bg-lila/10 rounded-full transition-all";
             muro.className = "columns-1 md:columns-2 gap-6 w-full px-2";
         });
         btn2Col.addEventListener('click', () => {
-            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/20 rounded-full transition-all";
-            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-lila bg-white rounded-full transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-lila hover:bg-lila/10 rounded-full transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white bg-lila rounded-full transition-all";
             muro.className = "columns-2 md:columns-3 gap-6 w-full px-1";
         });
 
@@ -318,7 +353,7 @@
         
         onSnapshot(q, (snapshot) => {
             if (snapshot.empty && muro.innerHTML.trim() === "") {
-                muro.innerHTML = `<div id="emptyMessage" class="font-light text-white/80 text-lg col-span-full py-12 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero en subir un momento mágico!</div>`;
+                muro.innerHTML = `<div id="emptyMessage" class="font-light text-lila/80 text-lg col-span-full py-12 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero en subir un momento mágico!</div>`;
                 return;
             }
 
