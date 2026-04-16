@@ -203,28 +203,56 @@
             document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all";
         });
 
-        archivoInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
-            dropZone.classList.add('hidden');
-            previsualizacion.classList.remove('hidden');
-            previewContainer.innerHTML = "";
-            files.forEach(file => {
-                const url = URL.createObjectURL(file);
-                const thumb = document.createElement('div');
-                thumb.className = "relative h-20 bg-black rounded-lg overflow-hidden border border-white/10";
-                thumb.innerHTML = file.type.includes("image") 
-                    ? `<img src="${url}" class="w-full h-full object-cover">`
-                    : `<video src="${url}" autoplay muted loop class="w-full h-full object-cover"></video>`;
-                previewContainer.appendChild(thumb);
-            });
-        });
+        archivoInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
-        document.getElementById('removePreviewBtn').addEventListener('click', () => {
-            archivoInput.value = "";
-            previsualizacion.classList.add('hidden');
-            dropZone.classList.remove('hidden');
-        });
+    previewContainer.innerHTML = "";
+    // Usamos DataTransfer para "limpiar" el input y dejar solo los archivos válidos
+    const validFiles = new DataTransfer(); 
+
+    for (const file of files) {
+        if (file.type.includes("video")) {
+            // Creamos un elemento de video temporal para leer su duración
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            const duration = await new Promise((resolve) => {
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+
+            if (duration > 30.5) { // Un pequeño margen de medio segundo
+                alert(`El video "${file.name}" dura más de 30s y no se puede subir.`);
+                continue;
+            }
+        }
+        
+        validFiles.items.add(file);
+
+        // Crear la miniatura para la previsualización
+        const url = URL.createObjectURL(file);
+        const thumb = document.createElement('div');
+        thumb.className = "relative h-20 bg-black rounded-lg overflow-hidden border border-white/10";
+        thumb.innerHTML = file.type.includes("image") 
+            ? `<img src="${url}" class="w-full h-full object-cover">`
+            : `<video src="${url}" autoplay muted loop class="w-full h-full object-cover"></video>`;
+        previewContainer.appendChild(thumb);
+    }
+
+    // Actualizamos el input con solo los archivos que pasaron la prueba
+    archivoInput.files = validFiles.files;
+
+    if (archivoInput.files.length > 0) {
+        dropZone.classList.add('hidden');
+        previsualizacion.classList.remove('hidden');
+    } else {
+        previsualizacion.classList.add('hidden');
+        dropZone.classList.remove('hidden');
+    }
+});
 
         btnSubir.addEventListener("click", async () => {
             const archivos = Array.from(archivoInput.files);
