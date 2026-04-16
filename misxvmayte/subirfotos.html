@@ -204,15 +204,37 @@
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        archivoInput.addEventListener('change', (e) => {
+                // BUSCA ESTA LÍNEA Y REEMPLAZA TODO EL BLOQUE HASTA EL CIERRE DEL EVENTO
+        archivoInput.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
-            dropZone.classList.add('hidden');
-            previsualizacion.classList.remove('hidden');
             previewContainer.innerHTML = "";
+            // Usamos DataTransfer para manejar los archivos válidos
+            const validFiles = new DataTransfer(); 
 
-            files.forEach(file => {
+            for (const file of files) {
+                if (file.type.includes("video")) {
+                    // Validación de duración
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    const duration = await new Promise((resolve) => {
+                        video.onloadedmetadata = () => {
+                            window.URL.revokeObjectURL(video.src);
+                            resolve(video.duration);
+                        };
+                        video.src = URL.createObjectURL(file);
+                    });
+
+                    if (duration > 30.5) {
+                        alert(`El video "${file.name}" dura más de 30s. Por favor elige uno más corto.`);
+                        continue;
+                    }
+                }
+                
+                validFiles.items.add(file);
+
+                // Previsualización elegante para Mayte
                 const url = URL.createObjectURL(file);
                 const thumb = document.createElement('div');
                 thumb.className = "relative h-20 bg-gray-200 rounded-md overflow-hidden shadow-sm";
@@ -223,13 +245,18 @@
                     thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/30"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
                 }
                 previewContainer.appendChild(thumb);
-            });
-        });
+            }
 
-        document.getElementById('removePreviewBtn').addEventListener('click', () => {
-            archivoInput.value = "";
-            previsualizacion.classList.add('hidden');
-            dropZone.classList.remove('hidden');
+            // Actualizar el input con los archivos filtrados
+            archivoInput.files = validFiles.files;
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                previsualizacion.classList.add('hidden');
+                dropZone.classList.remove('hidden');
+            }
         });
 
         btnSubir.addEventListener("click", async () => {
