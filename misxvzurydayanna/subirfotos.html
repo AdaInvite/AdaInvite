@@ -230,15 +230,37 @@
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
 
-        archivoInput.addEventListener('change', (e) => {
+                archivoInput.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
-            dropZone.classList.add('hidden');
-            previsualizacion.classList.remove('hidden');
             previewContainer.innerHTML = "";
+            // Usamos DataTransfer para filtrar y dejar solo los archivos que cumplen la regla
+            const validFiles = new DataTransfer(); 
 
-            files.forEach(file => {
+            for (const file of files) {
+                if (file.type.includes("video")) {
+                    // Validación de duración para Zury
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    const duration = await new Promise((resolve) => {
+                        video.onloadedmetadata = () => {
+                            window.URL.revokeObjectURL(video.src);
+                            resolve(video.duration);
+                        };
+                        video.src = URL.createObjectURL(file);
+                    });
+
+                    // Si el video dura más de 30 segundos, avisamos y lo saltamos
+                    if (duration > 30.5) {
+                        alert(`El video "${file.name}" es muy largo. El límite para el muro de Zury es de 30 segundos.`);
+                        continue;
+                    }
+                }
+                
+                validFiles.items.add(file);
+
+                // Crear miniatura para la previsualización
                 const url = URL.createObjectURL(file);
                 const thumb = document.createElement('div');
                 thumb.className = "relative h-20 bg-gray-100 rounded-sm overflow-hidden shadow-sm border border-gray-200";
@@ -249,13 +271,18 @@
                     thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/30"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
                 }
                 previewContainer.appendChild(thumb);
-            });
-        });
+            }
 
-        document.getElementById('removePreviewBtn').addEventListener('click', () => {
-            archivoInput.value = "";
-            previsualizacion.classList.add('hidden');
-            dropZone.classList.remove('hidden');
+            // Actualizamos el input original con la lista de archivos filtrados
+            archivoInput.files = validFiles.files;
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                previsualizacion.classList.add('hidden');
+                dropZone.classList.remove('hidden');
+            }
         });
 
         btnSubir.addEventListener("click", async () => {
