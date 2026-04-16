@@ -584,19 +584,14 @@
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md px-6 text-lila">Confirmar Asistencia</h2>
                 <p class="text-[9px] uppercase tracking-[0.5em] mb-12 font-bold text-[#2C2A2A]">Porfavor, confirma antes del 25 de Abril de 2026</p>
                 
-                <form id="rsvpForm" class="w-[90%] mx-auto space-y-6 text-left bg-lila/95 p-6 rounded-none backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 mb-4">
+               <form id="rsvpForm" class="w-[90%] mx-auto space-y-6 text-left bg-lila/95 p-6 rounded-none backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 mb-4">
                     <div class="grid md:grid-cols-1 gap-6">
                         <div class="border-b border-white/50 pb-2">
                             <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
                             <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-1 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Cantidad de Personas</label>
-                            <input type="tel" inputmode="numeric" pattern="[0-9]*" id="rsvpPax" required placeholder="Ej. 2" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-transparent py-1 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
-                        </div>
                     </div>
                     <button type="submit" id="btnSubmitRSVP" class="w-full bg-transparent text-white font-bold py-3 px-1 uppercase tracking-[0.2em] text-[10px] border border-white hover:bg-white hover:text-lila transition-all hover:scale-105 active:scale-95 shadow-xl mt-4 duration-300 rounded-none text-center leading-tight">Confirmar</button>
-                    
                 </form>
 
                 <div id="rsvpLoadingContext" class="hidden w-[85%] max-w-[320px] mx-auto flex-col items-center justify-center mt-4 transition-all duration-500">
@@ -817,54 +812,54 @@
         // --- LÓGICA DE PASES (Sin QR) ---
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxlbtOgdOUWF05qTNW21ezcJm1eRi2azxdL08GsObeGAeYBYGKpYKz9h0iPCRw88Iqa/exec";  
 
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value;
-            
-            const form = document.getElementById('rsvpForm');
-            const loadingContext = document.getElementById('rsvpLoadingContext');
-            const spinner = document.getElementById('rsvpSpinner');
-            const successIcon = document.getElementById('rsvpSuccessIcon');
-            const message = document.getElementById('rsvpMessage');
-            
-            form.style.display = 'none';
-            loadingContext.classList.remove('hidden');
-            loadingContext.classList.add('flex');
-            spinner.classList.remove('hidden');
-            successIcon.classList.add('hidden');
-            successIcon.classList.remove('flex');
-            message.innerText = "Guardando confirmación...";
+       document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('rsvpName').value.trim();
+    
+    const form = document.getElementById('rsvpForm');
+    const loadingContext = document.getElementById('rsvpLoadingContext');
+    const spinner = document.getElementById('rsvpSpinner');
+    const successIcon = document.getElementById('rsvpSuccessIcon');
+    const message = document.getElementById('rsvpMessage');
+    
+    form.style.display = 'none';
+    loadingContext.classList.remove('hidden');
+    loadingContext.classList.add('flex');
+    spinner.classList.remove('hidden');
+    successIcon.classList.add('hidden');
+    successIcon.classList.remove('flex');
+    message.innerText = "Guardando confirmación...";
 
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: "rsvp", nombre: name, personas: pax })
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    spinner.classList.add('hidden');
-                    successIcon.classList.remove('hidden');
-                    successIcon.classList.add('flex');
-                    
-                    message.innerHTML = "¡Confirmación exitosa!<br><br><span class='text-[8px] opacity-80'>Espera, te redirigiremos a WhatsApp para finalizar...</span>";
-                    
-                    setTimeout(() => {
-                        const numDestino = "522461744217"; 
-                        const mensajeTxt = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Sofía.%0A%0A*Nombre:* ${name}%0A*Personas solicitadas:* ${pax}%0A%0A¡Ahí nos vemos!`;
-                        const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
-                        window.location.href = waLink; 
-                    }, 3000);
-                }
-            } catch (error) {
-                alert("Hubo un error al guardar. Por favor revisa tu conexión e intenta de nuevo.");
-                loadingContext.classList.add('hidden');
-                loadingContext.classList.remove('flex');
-                form.style.display = 'block';
-            }
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "rsvp", nombre: name }) // Solo mandamos el nombre
         });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            spinner.classList.add('hidden');
+            successIcon.classList.remove('hidden');
+            successIcon.classList.add('flex');
+            
+            message.innerHTML = "¡Confirmación exitosa!<br><br><span class='text-[8px] opacity-80'>Espera, te redirigiremos a WhatsApp para finalizar...</span>";
+            
+            setTimeout(() => {
+                const numDestino = "522461744217"; 
+                // Actualizado: Mensaje sin el número de personas
+                const mensajeTxt = `¡Hola! Acabo de confirmar mi asistencia a los XV años de Sofía.%0A%0A*Nombre:* ${name}%0A%0A¡Ahí nos vemos!`;
+                const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
+                window.location.href = waLink; 
+            }, 3000);
+        }
+    } catch (error) {
+        alert("Hubo un error al guardar. Por favor revisa tu conexión e intenta de nuevo.");
+        loadingContext.classList.add('hidden');
+        loadingContext.classList.remove('flex');
+        form.style.display = 'block';
+    }
+});
 
         // CONSULTAR PASE
         async function consultarPase() {
