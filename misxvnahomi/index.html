@@ -748,55 +748,114 @@
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
         
-        // ==========================================
-        // LÓGICA DE CONFIRMACIÓN POR WHATSAPP
-        // ==========================================
-        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value;
-            
-            document.getElementById('rsvpForm').style.display = 'none';
-            const loader = document.getElementById('loadingMessage');
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
+     // ==========================================
+// CONFIGURACIÓN DE APPS SCRIPT
+// ==========================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxkQXHIni-XsmCUlY8olBFEapUDtqbJeCSyHT9BvaYx7ozujTM5GHFljxGMriL7XJKVA/exec";
 
-            // Simular carga para experiencia de usuario
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
+// ==========================================
+// LÓGICA DE CONFIRMACIÓN (RSVP)
+// ==========================================
+document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('rsvpName').value.trim();
+    const pax = document.getElementById('rsvpPax').value;
+    
+    const form = document.getElementById('rsvpForm');
+    const loader = document.getElementById('loadingMessage');
+    
+    form.style.display = 'none';
+    loader.classList.remove('hidden');
+    loader.classList.add('flex');
 
-                document.getElementById('ticketName').innerText = name;
-                document.getElementById('ticketPax').innerText = pax;
-
-                // Generar enlace de WhatsApp
-                const numeroWhatsApp = "524495502437";
-                const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${pax}.`;
-                const enlaceWA = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-                
-                document.getElementById('waConfirmBtn').href = enlaceWA;
-                
-                const successDiv = document.getElementById('successMessage');
-                successDiv.classList.remove('hidden');
-                successDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
-            }, 1500);
+    try {
+        // Enviar a Google Sheets
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'rsvp', nombre: name, pax: pax }),
+            // text/plain evita problemas de CORS con Apps Script
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
         });
 
-        // ==========================================
-        // LÓGICA DE BÚSQUEDA DE PASE (Simulación)
-        // ==========================================
-        document.getElementById('searchPassForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const resultDiv = document.getElementById('searchResultMessage');
-            resultDiv.classList.remove('hidden');
-            resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
-            
-            setTimeout(() => {
-                resultDiv.classList.add('hidden');
-                resultDiv.classList.remove('flex');
-            }, 4000); // Se oculta tras 4 segundos (como simulación)
-        });
+        // Inmediatamente después de guardar, redirigir a WhatsApp
+        const numeroWhatsApp = "524495502437";
+        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${pax}.`;
+        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+        
+    } catch(error) {
+        console.error("Error al guardar:", error);
+        alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
+        // Fallback en caso de error
+        const numeroWhatsApp = "524495502437";
+        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${pax}.`;
+        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    }
+});
 
+// ==========================================
+// LÓGICA DE BÚSQUEDA DE PASE (Consultar)
+// ==========================================
+document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('searchName').value.trim();
+    const resultDiv = document.getElementById('searchResultMessage');
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    
+    // Estado de carga
+    btnSubmit.innerText = "Buscando...";
+    btnSubmit.disabled = true;
+    resultDiv.classList.add('hidden');
+
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'consultar', nombre: name }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        
+        const res = await response.json();
+        
+        resultDiv.classList.remove('hidden');
+        resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+        if (res.status === 'aprobado') {
+            // El anfitrión ya validó y asignó pases
+            resultDiv.innerHTML = `
+                <div id="paseDescargable" class="bg-white/95 backdrop-blur-md border-2 border-dashed border-rosa-pastel p-10 rounded-3xl relative overflow-hidden shadow-2xl flex flex-col items-center">
+                    <h3 class="text-4xl font-script text-rosa-pastel mb-4 text-center">Pase Oficial</h3>
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-gray-500">Invitado</p>
+                    <p class="text-2xl font-bold mb-4 text-[#2C2A2A] text-center">${name}</p>
+                    <div class="w-full h-px bg-gray-300 mb-4"></div>
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-gray-500">Accesos Permitidos</p>
+                    <p class="text-4xl font-numbers font-bold text-rosa-pastel mb-6">${res.pases}</p>
+                    <button onclick="window.print()" class="bg-rosa-pastel text-white font-bold py-3 px-8 uppercase tracking-widest text-[10px] rounded-xl shadow-md hover:bg-rosa-pastel/90 transition-all">Guardar / Imprimir Pase</button>
+                </div>
+            `;
+        } else if (res.status === 'pendiente') {
+            // Está en la base de datos, pero la columna D está vacía
+            resultDiv.innerHTML = `
+                <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
+                    <p class="text-white font-bold mb-2">¡Tenemos tu registro!</p>
+                    <p class="text-white/80 text-sm">Pero el anfitrión aún no ha validado y generado tu pase final. Vuelve a consultar más tarde.</p>
+                </div>
+            `;
+        } else {
+            // No existe en la base de datos
+            resultDiv.innerHTML = `
+                <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
+                    <p class="text-white font-bold mb-2">Reserva no encontrada.</p>
+                    <p class="text-white/80 text-sm">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error("Error al buscar:", error);
+        alert("Error de conexión al buscar el pase.");
+    } finally {
+        btnSubmit.innerText = "Buscar mi Pase";
+        btnSubmit.disabled = false;
+    }
+});
     </script>
 
     <script>
