@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Mis XV Nahomi</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mis XV Nahomi">
+    <meta name="theme-color" content="#E6A8B8">
+    <meta property="og:title" content="Mis XV Nahomi Alexa">
+    <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: { pastel: '#E6A8B8' },
+                        blanco: { perla: '#F0EFEA' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rosa-pastel: #E6A8B8;
+            --blanco-perla: #F0EFEA;
+            --font-elegant: 'Lora', serif;
+            --font-script: 'Great Vibes', cursive;
+            --font-numbers: 'Cinzel', serif; 
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant); background-color: var(--blanco-perla);
+            overflow-x: hidden; color: var(--rosa-pastel); scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
+            font-family: var(--font-elegant); 
+        }
+
+        .font-numbers { font-family: var(--font-numbers) !important; }
+        body, p, span, input, select { font-weight: 400; }
+        .font-bold, h3, label { font-weight: 700; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+
+        .seccion-blanca { background-color: var(--blanco-perla); color: #2C2A2A; }
+        
+        .seccion-rosa {
+            position: relative; overflow: hidden; z-index: 1;
+            color: var(--blanco-perla); width: 100%; border-radius: 40px;
+            margin: 20px 0; box-shadow: 0 15px 35px rgba(230, 168, 184, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .seccion-rosa::before {
+            content: ""; position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px; z-index: -1; 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.imgur.com/MmXulZL.gif');
+            background-size: cover; background-position: center; filter: blur(8px);
+        }
+
+        @media (min-width: 768px) {
+            .seccion-rosa { border-radius: 60px; margin: 40px 0; }
+        }
+
+        .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(230, 168, 184, 0.5); }
+        .filtro-rosa { filter: invert(75%) sepia(21%) saturate(666%) hue-rotate(298deg) brightness(96%) contrast(92%); }
+        .filtro-blanco { filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%); }
+
+        /* SOBRE INICIAL */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url("https://i.imgur.com/3CAvnBj.jpeg");
+            background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/3CAvnBj.jpeg"); background-size: cover; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        .name-header { font-family: var(--font-script); font-size: clamp(5rem, 18vw, 10rem); line-height: 1.1; }
+        #section-main { display: none; }
+
+        /* ANIMACIONES Y EFECTOS */
+        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        .timeline-line {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--rosa-pastel), transparent);
+        }
+
+        .btn-calendar {
+            border: 1px solid var(--rosa-pastel); padding: 12px 28px; font-size: 11px;
+            letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease;
+            display: inline-flex; align-items: center; gap: 10px; border-radius: 4px;
+            color: var(--rosa-pastel);
+        }
+        .btn-calendar:hover { background: var(--rosa-pastel); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(230, 168, 184, 0.3); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 30px; padding: 40px 20px; scrollbar-width: none; }
+        .slider-historia::-webkit-scrollbar { display: none; }
+        .tarjeta-nueva {
+            flex: 0 0 280px; scroll-snap-align: center; position: relative;
+            background: var(--blanco-perla); padding: 12px; border-radius: 16px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); transform: rotate(-1deg); 
+            transition: all 0.4s ease; border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
+        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .img-historia { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; }
+        .info-flotante {
+            position: absolute; bottom: 25px; left: 25px; right: 25px;
+            background: rgba(240, 239, 234, 0.95); backdrop-filter: blur(8px);
+            padding: 15px; border-radius: 12px; border: 1px solid rgba(230, 168, 184, 0.3);
+        }
+        .año-badge {
+            position: absolute; top: -15px; right: 15px; background: var(--rosa-pastel);
+            color: white; padding: 6px 18px; border-radius: 20px; font-size: 15px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); letter-spacing: 1px;
+            font-family: var(--font-numbers); font-weight: 500;
+        }
+
+        #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
+        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; line-height: 1; transition: color 0.5s ease; }
+        #countdown .time-label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); transition: color 0.5s ease; }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/ArianaGrande-intro(end%20of%20the%20world).mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="fixed bottom-[30px] right-[20px] w-[40px] h-[40px] bg-transparent text-rosa-pastel flex items-center justify-center z-[999] cursor-pointer transition-all duration-300 hover:scale-110 hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/GbsF6Vh.png" class="w-full h-full object-cover" alt="Música">
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
+                <img src="https://i.imgur.com/mF0ZsJq.png" 
+                     class="w-[120px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <header class="relative min-h-[100svh] flex flex-col px-8 py-10 box-border"> 
+            <div class="absolute inset-0 bg-cover bg-center filtro-rosa z-0 opacity-100" style="background-image: url('https://i.imgur.com/7uC7inm.png');"></div>
+            
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-rosa-pastel rounded-[150px] md:rounded-[150px] shadow-2xl pt-20 pb-8 px-6">
+                
+                <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
+                    
+                    <svg width="250" height="90" viewBox="0 0 250 90" class="absolute -top-16 md:-top-20 mt-8 mb-6 overflow-visible">
+                        <path id="curve-text" d="M 20,80 Q 125,5 230,80" fill="transparent" />
+                        <text width="250" text-anchor="middle">
+                            <textPath href="#curve-text" startOffset="50%" class="fill-rosa-pastel font-bold" style="font-family: var(--font-elegant); font-size: 22px; letter-spacing: 0.25em; text-transform: uppercase;">Mis XV</textPath>
+                        </text>
+                    </svg>
+
+                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-20 md:w-28 mb-4 relative z-10 drop-shadow-sm filtro-rosa">
+                    
+                    <h1 class="name-header text-rosa-pastel mb-2 relative z-10">Nahomi</h1>
+                    <h1 class="text-4xl md:text-6xl font-script text-rosa-pastel mb-8 relative z-10">Alexa</h1>
+                    
+                    <div class="flex items-center gap-6 md:gap-10 justify-center">
+                        <div class="flex flex-col items-center text-center text-[#2C2A2A]">
+                            <span class="text-sm md:text-xl tracking-[0.4em] uppercase drop-shadow-md">Sábado</span>
+                            <span class="text-[3.5rem] md:text-[7rem] leading-none drop-shadow-md font-numbers text-rosa-pastel">13</span>
+                        </div>
+                        <div class="w-px h-16 md:h-20 bg-black/30 shadow-sm"></div>
+                        <div class="text-left text-[#2C2A2A]">
+                            <span class="text-2xl md:text-4xl tracking-widest block drop-shadow-md">JUN</span>
+                            <span class="text-lg md:text-2xl tracking-[0.6em] drop-shadow-md font-numbers text-rosa-pastel">2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
+                    <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
+                </div>
+                
+            </div>
+        </header>
+
+       <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
+            
+            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
+                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-rosa" alt="decoración">
+            </div>
+
+            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-10">
+                <p class="text-lg md:text-2xl italic leading-relaxed font-light mb-16 px-8 md:px-24 lg:px-40">
+                    "Hoy celebro la vida, los sueños que comienzan a florecer y la ilusión de una nueva etapa. Mis quince años representan un momento inolvidable, y con mucho cariño te invito a compartir conmigo esta hermosa celebración."
+                </p>
+                <div class="grid md:grid-cols-2 gap-12 md:gap-16 mt-10">
+                    <div>
+                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80">Mis Padres</h3>
+                        <p class="text-lg md:text-xl">Jaqueline Martínez Martínez</p>
+                        <p class="text-lg md:text-xl">Carlos González Lucero</p>
+                    </div>
+                    <div>
+                        <h3 class="text-[13px] md:text-[15px] uppercase tracking-[0.4em] mb-6 font-bold opacity-80">Mis Padrinos</h3>
+                        <p class="text-lg md:text-xl">Ma. de Lourdes Martínez Delgado</p>
+                        <p class="text-lg md:text-xl">Armando Silva Arjon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none rotate-180">
+                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-rosa" alt="decoración">
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-rosa relative overflow-hidden">
+            <div class="max-w-6xl mx-auto relative z-10 w-full">
+                <div class="text-center mb-8 reveal">
+                    <h2 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Mi Historia</h2>
+                    <p class="text-[11px] uppercase tracking-[0.5em] font-bold opacity-90">Línea del tiempo</p>
+                </div>
+
+                <div id="historia-container" class="slider-historia">
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge font-numbers">2011</div>
+                        <img src="https://drive.google.com/uc?export=view&id=1vENVzPn5gCw2XnVjDp1Lx8uMSpFZg3Bo" class="img-historia" onerror="this.src='https://i.imgur.com/RT0PL5u.jpeg'">
+                        <div class="info-flotante">
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis Inicios</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">El comienzo de una historia llena de sueños y amor</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge font-numbers">2014</div>
+                        <img src="https://drive.google.com/uc?export=view&id=1SJxc_jDJS8gDOtUd3bX-Q2yTpLsqrYyo" class="img-historia" onerror="this.src='https://i.imgur.com/gvDr1zc.jpeg'">
+                        <div class="info-flotante">
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Recuerdos</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Una etapa llena de magia, ternura, soñando y descubriendo el mundo.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge font-numbers">2015</div>
+                        <img src="https://drive.google.com/uc?export=view&id=1ZwLWNr42_BFq_ztfN7g6pZpXETCvyUey" class="img-historia" onerror="this.src='https://i.imgur.com/Nz8kcYE.jpeg'">
+                        <div class="info-flotante">
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Creciendo</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Imaginando un mundo lleno de colores y felicidad.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-nueva">
+                        <div class="año-badge font-numbers">2016</div>
+                        <img src="https://drive.google.com/uc?export=view&id=1uJeuQrjs2gys74L3yLQ0yL0c1DS1BPTw" class="img-historia" onerror="this.src='https://i.imgur.com/dFhik27.jpeg'">
+                        <div class="info-flotante">
+                            <h4 class="text-xl text-[#2C2A2A] font-bold">Inolvidables</h4>
+                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Pequeños instantes que me marcaron para siempre</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-white/80 text-[10px] mt-2 uppercase tracking-[0.4em] font-bold">Arrastra para ver más →</p>
+            </div>
+        </section>
+
+        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-20 relative z-10 w-full px-4">
+                <div class="bg-white p-4 md:p-8 reveal flex flex-col h-full rounded-3xl border border-rosa-pastel/30 shadow-xl">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
+                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 h-24 md:w-32 md:h-32 filtro-rosa" alt="Ceremonia">
+                        </div>
+                        <h1 class="text-5xl mb-6 font-script text-rosa-pastel drop-shadow-md reveal-scale">Ceremonia</h1>
+                        <p class="text-[#2C2A2A] italic text-sm">Templo de La Merced<br>Venustiano Carranza y Mariano Matamoros Nte., Zona Centro, Ags.</p>
+                        <p class="text-rosa-pastel font-numbers font-bold text-xl mt-4">3:00 p.m.</p>
+                    </div>
+                    
+                    <a href="https://share.google/sVEbDLipTZRFFLuBv" target="_blank" class="w-full block text-center bg-rosa-pastel border border-rosa-pastel text-white font-bold px-8 py-4 text-[12px] tracking-widest uppercase hover:bg-transparent hover:text-rosa-pastel shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mt-auto">Abrir en App de Mapas</a>
+                </div>
+
+                <div class="bg-white p-4 md:p-8 reveal flex flex-col h-full rounded-3xl border border-rosa-pastel/30 shadow-xl">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
+                            <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 md:w-32 md:h-32 filtro-rosa" alt="Recepción">
+                        </div>
+                        <h1 class="text-5xl mb-6 font-script text-rosa-pastel drop-shadow-md reveal-scale">Recepción</h1>
+                        <p class="text-[#2C2A2A] italic text-sm">Jardín El Mezquite<br>Independencia 802, Puertecito de la Virgen, Ags.</p>
+                        <p class="text-rosa-pastel font-numbers font-bold text-xl mt-4">5:00 p.m.</p>
+                    </div>
+                    
+                    <a href="https://share.google/4woLtu4X2uVWLwYW2" target="_blank" class="w-full block text-center bg-rosa-pastel border border-rosa-pastel text-white font-bold px-8 py-4 text-[12px] tracking-widest uppercase hover:bg-transparent hover:text-rosa-pastel shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mt-auto">Abrir en App de Mapas</a>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-rosa overflow-hidden">
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full py-10">
+                <h3 class="text-5xl font-script text-white text-shadow-light mb-16">Faltan solo...</h3>
+
+                <div id="countdown" class="flex gap-6 md:gap-14 justify-center mb-16">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="time-num text-4xl md:text-7xl text-white">00</span>
+                        <span class="time-label text-white/90 mt-4 font-bold">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="time-num text-4xl md:text-7xl text-white">00</span>
+                        <span class="time-label text-white/90 mt-4 font-bold">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="time-num text-4xl md:text-7xl text-white">00</span>
+                        <span class="time-label text-white/90 mt-4 font-bold">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="time-num text-4xl md:text-7xl text-white">00</span>
+                        <span class="time-label text-white/90 mt-4 font-bold">Seg</span>
+                    </div>
+                </div>
+
+                <div class="reveal-scale delay-200 mt-8">
+                    <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-white font-bold">Reserva el momento en tu calendario</p>
+                    <div class="flex justify-center">
+                        <button onclick="calendarLink('Mis XV Nahomi', 'Templo de La Merced, Aguascalientes', '20260613T150000')" class="btn-calendar bg-transparent text-white border border-white font-bold rounded-md hover:bg-white hover:text-rosa-pastel">
+                            Agregar al calendario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative overflow-hidden">
+            <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
+                <div class="text-center mb-24">
+                    <h1 class="text-5xl mb-6 text-rosa-pastel font-script reveal-scale text-shadow-light">Itinerario</h1>
+                    <p class="text-[11px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold">Los momentos de mi gran día</p>
+                </div>
+
+                <div class="relative space-y-16 md:space-y-24">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="flex items-center justify-between relative z-10 reveal-left">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Cóctel de Bienvenida</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://i.imgur.com/AIApde9.png" class="w-20 md:w-24 object-contain opacity-90 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">5:00 PM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Cóctel</h3></div>
+                    </div>
+
+                    <div class="flex items-center justify-between relative z-10 reveal-right">
+                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">5:30 PM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Comida</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://i.imgur.com/6YWudkf.png" class="w-20 md:w-24 object-contain opacity-80 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Comida</h3></div>
+                    </div>
+
+                    <div class="flex items-center justify-between relative z-10 reveal-left">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Vals</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://i.imgur.com/tRNwEAy.png" class="w-20 md:w-24 object-contain opacity-90 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">7:00 PM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Vals</h3></div>
+                    </div>
+
+                    <div class="flex items-center justify-between relative z-10 reveal-right">
+                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">7:30 PM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">DJ</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3293/3293046.png" class="w-20 md:w-24 object-contain opacity-80 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Música DJ</h3></div>
+                    </div>
+
+                    <div class="flex items-center justify-between relative z-10 reveal-left">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Música en Vivo</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://cdn-icons-png.flaticon.com/512/10542/10542617.png" class="w-20 md:w-24 object-contain opacity-90 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">12:00 AM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Banda</h3></div>
+                    </div>
+
+                    <div class="flex items-center justify-between relative z-10 reveal-right">
+                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-rosa-pastel font-numbers font-bold">1:00 AM</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Fin</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-rosa-pastel/20 shadow-md reveal-scale delay-200 bg-white">
+                            <img src="https://cdn-icons-png.flaticon.com/512/7664/7664205.png" class="w-20 md:w-24 object-contain opacity-80 filtro-rosa">
+                        </div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Término del Evento</h3></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative text-center">
+            <div class="max-w-3xl mx-auto reveal-scale">
+                <div class="mx-auto mb-8 flex items-center justify-center">
+                    <img src="https://i.imgur.com/ruhzeF1.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-rosa" alt="Código de Vestimenta">
+                </div>
+                <h2 class="text-5xl mb-8 font-script text-rosa-pastel text-shadow-light">Código de Vestimenta</h2>
+                <p class="text-[11px] uppercase tracking-[0.5em] text-blanco-perla mb-10 font-bold bg-rosa-pastel inline-block px-6 py-2 rounded-full shadow-sm">Formal</p>
+                <p class="text-lg md:text-2xl italic text-[#2C2A2A] mb-8 leading-relaxed px-4">Por favor, reserva los colores dorado, cualquier tono en rosa y blanco exclusivamente para la quinceañera.</p>
+                
+                <div class="flex justify-center gap-8 mt-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-full bg-white border border-gray-200 shadow-md relative"></div>
+                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#2C2A2A] font-bold">Blanco</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-full bg-[#E6A8B8] border border-rosa-pastel/50 shadow-md relative"></div>
+                        <span class="text-[10px] uppercase tracking-widest mt-4 text-rosa-pastel font-bold">Rosa</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-full bg-[#D4AF37] border border-yellow-500/50 shadow-md relative"></div>
+                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#D4AF37] font-bold">Dorado</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="min-h-[50svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+            <div class="max-w-4xl mx-auto reveal relative z-10 w-full border-t border-rosa-pastel/20 pt-16">
+                <h1 class="text-5xl mb-6 text-rosa-pastel font-script reveal-scale text-shadow-light">Lluvia de Sobres</h1>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] drop-shadow-sm font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="bg-white p-8 md:p-12 border border-gray-200 shadow-lg rounded-3xl w-full max-w-sm flex flex-col items-center justify-center reveal-scale transition-all hover:-translate-y-2 hover:shadow-xl hover:border-rosa-pastel/50 duration-500 cursor-default">
+                        <svg class="w-16 h-16 mb-4 text-rosa-pastel" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
+                        </svg>
+                        <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-[#2C2A2A] text-center leading-relaxed">Tendré una urna en la entrada del salón para sus detalles en efectivo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-rosa text-center relative overflow-hidden">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Confirmar antes del <span class="font-numbers">10</span> de Mayo de <span class="font-numbers">2026</span></p>
+                
+                <form id="rsvpForm" class="space-y-12 text-left bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
+                            <input type="text" id="rsvpName" required placeholder="Ej. Familia Martínez" class="w-full bg-transparent py-2 outline-none text-xl text-white font-bold placeholder-white/40">
+                        </div>
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Número de Asistentes</label>
+                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none text-xl text-white font-bold appearance-none">
+                                <option class="text-black" value="1">1 Persona</option>
+                                <option class="text-black" value="2">2 Personas</option>
+                                <option class="text-black" value="3">3 Personas</option>
+                                <option class="text-black" value="4">4 Personas</option>
+                                <option class="text-black" value="5">5 Personas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-white text-rosa-pastel font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Enviar WhatsApp y Generar Pase</button>
+                </form>
+
+                <div id="loadingMessage" class="hidden mt-10 bg-black/40 backdrop-blur-md border border-white/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
+                    <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                    <p class="text-4xl font-script text-white mb-2">Generando...</p>
+                </div>
+
+                <div id="successMessage" class="hidden mt-10 transition-all duration-500">
+                    <div class="bg-black/40 backdrop-blur-md border-2 border-dashed border-white p-10 rounded-3xl relative overflow-hidden shadow-2xl">
+                        <div class="absolute -left-5 top-1/2 w-10 h-10 bg-rosa-pastel rounded-full transform -translate-y-1/2"></div>
+                        <div class="absolute -right-5 top-1/2 w-10 h-10 bg-rosa-pastel rounded-full transform -translate-y-1/2"></div>
+                        
+                        <p class="text-[11px] uppercase tracking-widest text-white/80 mb-2 font-bold">Pase de Entrada</p>
+                        <p class="text-5xl font-script text-white mb-8 border-b border-white/20 pb-6">Mis XV Nahomi</p>
+                        
+                        <p id="ticketName" class="text-4xl font-bold mb-2 uppercase tracking-wide"></p>
+                        <p id="ticketPax" class="text-sm uppercase tracking-[0.3em] opacity-90 font-bold bg-white/20 inline-block px-6 py-2 rounded-full mt-4"></p>
+                        
+                        <p class="text-[10px] uppercase tracking-widest text-gray-200 mt-10 opacity-70">Toma captura de este pase para mostrarlo en la entrada</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="min-h-[100svh] flex flex-col justify-center py-20 px-6 text-center seccion-blanca relative z-10">
+            <div class="max-w-2xl mx-auto">
+                <p class="text-7xl font-script mb-4 text-rosa-pastel drop-shadow-md">¡No faltes!</p>
+                <p class="text-[11px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-10 font-bold font-numbers">13 • Junio • 2026</p>
+                <p class="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold">AdaInvite © <span class="font-numbers">2026</span></p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            playAudio(); 
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => { document.getElementById('audio-btn').classList.remove('hidden'); }, 1000);
+            setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
+        }
+
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => { console.log("Autoplay bloqueado."); });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Cuenta regresiva adaptada a las 3:00 PM
+        const targetDate = new Date("June 13, 2026 15:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('active'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+        
+        // Scroll historia
+        const historiaSlider = document.getElementById('historia-container');
+        let scrollInterval;
+        function iniciarAutoScroll() {
+            if (scrollInterval) clearInterval(scrollInterval);
+            scrollInterval = setInterval(() => {
+                if (historiaSlider.scrollLeft + historiaSlider.offsetWidth >= historiaSlider.scrollWidth) {
+                    historiaSlider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    historiaSlider.scrollBy({ left: 300, behavior: 'smooth' });
+                }
+            }, 4000); 
+        }
+        const detenerCualquierInteraccion = () => { clearInterval(scrollInterval); };
+        historiaSlider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
+        historiaSlider.addEventListener('mousedown', detenerCualquierInteraccion);
+        const observerHistoria = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) iniciarAutoScroll();
+                else detenerCualquierInteraccion();
+            });
+        }, { threshold: 0.5 });
+        observerHistoria.observe(document.getElementById('historia-container'));
+
+        // Lógica de WhatsApp y Pase (Sin QR, sin base de datos)
+        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const pax = document.getElementById('rsvpPax').value;
+            const numeroTel = "524495502437";
+            const textoMensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi. Mi nombre es ${name} y asistiremos ${pax} persona(s).`;
+            const waLink = `https://wa.me/${numeroTel}?text=${encodeURIComponent(textoMensaje)}`;
+            
+            document.getElementById('rsvpForm').style.display = 'none';
+            const loader = document.getElementById('loadingMessage');
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+                
+                document.getElementById('ticketName').innerText = name;
+                document.getElementById('ticketPax').innerText = pax === "1" ? "1 Persona" : `${pax} Personas`;
+                
+                document.getElementById('successMessage').classList.remove('hidden');
+                
+                // Redirigir a WhatsApp después de 1 segundo para que alcancen a ver que se generó
+                setTimeout(() => {
+                    window.open(waLink, '_blank');
+                }, 1000);
+            }, 1500);
+        });
+
+    </script>
+</body>
+</html>
