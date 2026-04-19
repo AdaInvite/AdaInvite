@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XV Isabel - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="XV Isabel - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la fiesta.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#2A2A2A',
+                        blanco: {
+                            perla: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --terracota: #2A2A2A; 
+            --blanco-perla: #FFFFFF;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Imperial Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100svh;
+            font-family: var(--font-elegant); 
+            background-color: #000000;
+            color: var(--blanco-perla);
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, p, select, button, label, input { font-family: var(--font-elegant); font-weight: 300; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+        .font-bold { font-weight: 600; }
+
+        /* Fondo principal animado heredado de la invitación */
+        .bg-animado-oscuro {
+            background-image: url('https://i.imgur.com/b8LgH93.gif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.85; /* Ligera opacidad para que resalten los elementos */
+        }
+
+        .filtro-blanco { filter: brightness(0) invert(1); }
+
+        .text-shadow-light { 
+            text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.8); 
+        }
+
+        select option { background-color: #2A2A2A; color: #FFFFFF; }
+        select { text-align-last: center; } 
+        
+        .input-isabel {
+            background-color: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            border-radius: 8px; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .input-isabel:focus { border-color: #FFFFFF; outline: none; background-color: rgba(255,255,255,0.1); box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .input-isabel::placeholder { color: rgba(255, 255, 255, 0.4); font-style: italic; }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
+        
+        /* Glassmorphism custom classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-start min-h-[100svh]">
+
+    <div class="bg-animado-oscuro"></div>
+
+    <img src="https://i.imgur.com/vhIj49i.png" class="fixed top-0 left-0 w-28 md:w-40 z-0 pointer-events-none transform scale-y-[-1] opacity-70 filtro-blanco" alt="Deco">
+    <img src="https://i.imgur.com/vhIj49i.png" class="fixed top-0 right-0 w-28 md:w-40 z-0 pointer-events-none transform rotate-180 opacity-70 filtro-blanco" alt="Deco">
+    <img src="https://i.imgur.com/vhIj49i.png" class="fixed bottom-0 left-0 w-28 md:w-40 z-0 pointer-events-none opacity-70 filtro-blanco" alt="Deco">
+    <img src="https://i.imgur.com/vhIj49i.png" class="fixed bottom-0 right-0 w-28 md:w-40 z-0 pointer-events-none transform scale-x-[-1] opacity-70 filtro-blanco" alt="Deco">
+
+    <div class="max-w-5xl w-full flex flex-col items-center pt-16 pb-12 px-6 relative z-10" id="mainContainer">
+        
+        <img src="https://i.imgur.com/TyJ42pL.png" class="w-20 md:w-28 mb-4 drop-shadow-sm filtro-blanco" alt="Corona">
+        
+        <h1 class="text-7xl md:text-9xl font-script text-white mb-2 text-center text-shadow-light">Recuerdos</h1>
+        <p class="text-[10px] md:text-[12px] tracking-[0.4em] uppercase text-white/80 font-bold mb-8 text-center drop-shadow-sm">Mis XV Isabel</p>
+
+        <p class="text-sm md:text-lg italic text-white/90 leading-relaxed mb-10 text-center max-w-lg">
+            "Hay momentos inolvidables que se atesoran en el corazón para siempre."<br>Comparte los tuyos aquí.
+        </p>
+
+        <button id="openModalBtn" class="glass-panel text-white font-bold py-4 px-10 rounded-full uppercase tracking-[0.2em] text-[10px] shadow-lg hover:bg-white hover:text-black transition-all active:scale-95 duration-300">
+            Subir mis fotos 
+        </button>
+
+        <div class="w-full pt-16 mt-6 flex flex-col items-center">
+            <p class="text-[9px] text-white/60 uppercase tracking-[0.3em] mb-4 font-bold drop-shadow-sm">Vista de Galería</p>
+            <div class="glass-panel rounded-full p-1 flex inline-flex shadow-sm mb-10">
+                <button id="btn1Col" class="px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-black bg-white rounded-full transition-all">1 Columna</button>
+                <button id="btn2Col" class="px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-full transition-all">2 Columnas</button>
+            </div>
+            
+            <div id="muro" class="columns-1 md:columns-3 gap-6 w-full px-2">
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="relative bg-[#1A1A1A]/90 backdrop-blur-xl border border-white/20 rounded-3xl w-full max-w-md p-8 shadow-2xl flex flex-col items-center max-h-[90vh] overflow-y-auto overflow-x-hidden">
+            
+            <img src="https://i.imgur.com/vhIj49i.png" class="absolute top-0 left-0 w-20 opacity-30 pointer-events-none transform scale-y-[-1] filtro-blanco" alt="Deco">
+            <img src="https://i.imgur.com/vhIj49i.png" class="absolute top-0 right-0 w-20 opacity-30 pointer-events-none transform rotate-180 filtro-blanco" alt="Deco">
+            
+            <button id="closeModalBtnIcon" class="absolute top-5 right-5 text-white/60 hover:text-white transition-colors z-20 bg-white/10 rounded-full p-1 shadow-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <img src="https://i.imgur.com/TyJ42pL.png" class="w-14 mb-2 mt-4 drop-shadow-sm filtro-blanco relative z-10" alt="Corona">
+            <h2 class="text-6xl font-script text-white mb-8 text-center relative z-10 text-shadow-light">Tus Momentos</h2>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-5 text-left relative z-10 px-2">
+                <div>
+                    <label class="text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-80">Familia / Nombre</label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Familia Morales" class="input-isabel py-3 px-4 w-full text-center">
+                </div>
+                
+                <div>
+                    <label class="text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-80">Momento del evento</label>
+                    <select id="folderSelect" class="input-isabel py-3 px-4 w-full cursor-pointer appearance-none text-center">
+                        <option value="" disabled selected class="italic text-white/50">Elige una opción...</option>
+                        <option value="Ceremonia">La Ceremonia</option>
+                        <option value="Recepción">La Recepción</option>
+                        <option value="Cena">La Cena</option>
+                        <option value="Vals">El Vals</option>
+                        <option value="Baile">El Baile</option>
+                        <option value="Tornafiesta">La Tornafiesta</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-2 block opacity-80">Seleccionar archivos</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-white/30 bg-white/5 rounded-xl p-8 text-center transition-colors hover:bg-white/10 cursor-pointer shadow-sm">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-8 h-8 mx-auto text-white/70 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-white text-[10px] font-bold uppercase tracking-widest">Toca aquí para elegir</p>
+                        <p class="text-white/50 text-[8px] font-bold uppercase tracking-widest mt-2">(Videos máximo 30s)</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-white/20 rounded-xl bg-white/10 shadow-sm overflow-hidden backdrop-blur-md">
+                        <p class="text-[8px] text-white text-center py-3 uppercase font-bold border-b border-white/10 tracking-[0.2em]">Archivos seleccionados:</p>
+                        <div id="previewContainer"></div>
+                        <button id="removePreviewBtn" class="w-full py-3 text-[9px] text-red-400 bg-red-500/10 uppercase font-bold hover:bg-red-500/20 transition-colors tracking-widest border-t border-white/10">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-transparent border border-white/30 text-white font-bold rounded-full py-3.5 text-[9px] tracking-[0.2em] uppercase hover:bg-white/10 transition-colors shadow-sm">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-white text-black border border-white font-bold rounded-full py-3.5 text-[9px] tracking-[0.2em] uppercase shadow-md hover:scale-105 transition-transform">Subir Álbum</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest font-bold mt-6 text-black bg-white p-4 rounded-xl border border-white/30 hidden text-center w-full relative z-10 shadow-sm"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // Configuración de Firebase - Asegúrate de colocar las credenciales del proyecto de Isabel
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6oWLoLyRL3AUUpWceHQWlTHDZ4-wQ7tI",
+            authDomain: "xv-mayte-3f7c3.firebaseapp.com",
+            projectId: "xv-mayte-3f7c3",
+            storageBucket: "xv-mayte-3f7c3.firebasestorage.app",
+            messagingSenderId: "24046456453",
+            appId: "1:24046456453:web:2aef8664b2c4343ebae3ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+
+        // Array para guardar únicamente los archivos que pasan la validación de 30s
+        let archivosConfirmados = [];
+
+        // Función auxiliar para medir duración de video
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // Validación al seleccionar archivos (Límite 30s)
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            previewContainer.innerHTML = "";
+            let validFiles = [];
+
+            for (const file of files) {
+                // Si es video, comprobamos duración
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        alert(`El video "${file.name}" dura más de 30 segundos y no será subido.`);
+                        continue; // Salta este archivo
+                    }
+                }
+                validFiles.push(file);
+                
+                // Crear preview
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-white/10 rounded-md overflow-hidden shadow-sm border border-white/20";
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/50"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivosConfirmados = validFiles;
+
+            if (validFiles.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            archivosConfirmados = []; 
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        btnSubir.addEventListener("click", async () => {
+            const archivos = archivosConfirmados; 
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) return alert("Por favor, completa todos los campos para continuar.");
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_isabel/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_isabel"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡Recuerdos guardados con éxito!";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // Alternar vistas
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-black bg-white rounded-full transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-full transition-all";
+            muro.className = "columns-1 md:columns-2 gap-6 w-full px-2";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-full transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[9px] font-bold uppercase tracking-[0.2em] text-black bg-white rounded-full transition-all";
+            muro.className = "columns-2 md:columns-3 gap-6 w-full px-1";
+        });
+
+        // Dibujar Muro
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_isabel"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="font-light text-white/60 text-lg col-span-full py-12 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero en subir un momento inolvidable!</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto rounded-t-xl bg-black/20 cursor-pointer object-cover border-b border-white/10"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto rounded-t-xl object-cover border-b border-white/10">`;
+                    
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "break-inside-avoid mb-8 glass-panel rounded-xl shadow-2xl flex flex-col group hover:-translate-y-1 transition-transform duration-300";
+                    
+                    divTarjeta.innerHTML = `
+                        <div class="relative">
+                            <span class="absolute top-3 right-3 bg-white text-black text-[8px] font-bold px-3 py-1.5 rounded-full uppercase z-10 shadow-md tracking-[0.2em]">${datos.momento}</span>
+                            ${media}
+                        </div>
+                        <div class="flex items-center justify-between p-4 rounded-b-xl bg-black/40">
+                            <h4 class="text-white font-bold uppercase text-[10px] tracking-[0.2em] truncate flex-1">${datos.nombre}</h4>
+                            <div class="flex items-center gap-2">
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                    <span id="contador-likes-${id}" class="font-bold text-sm num-likes text-white">${datos.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        window.darLike = async function(id) {
+            const docRef = doc(db, "muro_isabel", id);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
