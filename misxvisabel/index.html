@@ -780,38 +780,125 @@
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
 
-        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const nombre = document.getElementById('rsvpName').value.trim();
-            const pax = document.getElementById('rsvpPax').value.trim();
-            
-            const message = `¡Hola! Quiero confirmar la asistencia de la familia ${nombre} para los XV de Isabel. Seremos ${pax} personas.`;
-            const whatsappUrl = `https://wa.me/527228793504?text=${encodeURIComponent(message)}`;
-            
-            window.open(whatsappUrl, '_blank');
-            e.target.reset();
+        // ==========================================
+// CONFIGURACIÓN DE APPS SCRIPT
+// ==========================================
+// Reemplaza esto con la nueva URL generada para el Sheet de Isabel
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxkQXHIni-XsmCUlY8olBFEapUDtqbJeCSyHT9BvaYx7ozujTM5GHFljxGMriL7XJKVA/exec"; 
+
+// ==========================================
+// LÓGICA DE CONFIRMACIÓN (RSVP)
+// ==========================================
+document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById('rsvpName').value.trim();
+    const pax = document.getElementById('rsvpPax').value.trim();
+    const btnSubmit = document.getElementById('btnSubmitRSVP');
+    
+    // Cambiar texto del botón para feedback visual del usuario
+    const originalText = btnSubmit.innerText;
+    btnSubmit.innerText = "Confirmando...";
+    btnSubmit.disabled = true;
+
+    try {
+        // 1. Guardar silenciosamente en Google Sheets
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'rsvp', nombre: nombre, pax: pax }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
         });
 
-        function consultarPase() {
-            const nombre = document.getElementById('inputConsultaNombre').value.trim();
-            const msg = document.getElementById('msgConsulta');
-            
-            if(!nombre) {
-                msg.innerText = "Por favor, ingresa el nombre de tu familia.";
-                msg.classList.remove('hidden');
-                return;
-            }
+        // 2. Redirigir a WhatsApp usando el número de esta invitación
+        const message = `¡Hola! Quiero confirmar la asistencia de la familia ${nombre} para los XV de Isabel. Seremos ${pax} personas.`;
+        const whatsappUrl = `https://wa.me/527228793504?text=${encodeURIComponent(message)}`;
+        
+        window.open(whatsappUrl, '_blank');
+        e.target.reset();
+        
+        // Restaurar botón
+        btnSubmit.innerText = "¡Confirmado!";
+        setTimeout(() => {
+            btnSubmit.innerText = originalText;
+            btnSubmit.disabled = false;
+        }, 3000);
 
-            msg.classList.add('hidden');
-            
+    } catch (error) {
+        console.error("Error al guardar:", error);
+        
+        // Fallback: Si el fetch falla por alguna razón (red, etc), aún así los mandamos a WhatsApp
+        const message = `¡Hola! Quiero confirmar la asistencia de la familia ${nombre} para los XV de Isabel. Seremos ${pax} personas.`;
+        const whatsappUrl = `https://wa.me/527228793504?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+        
+        btnSubmit.innerText = originalText;
+        btnSubmit.disabled = false;
+    }
+});
+
+// ==========================================
+// LÓGICA DE BÚSQUEDA DE PASE (Consultar)
+// ==========================================
+async function consultarPase() {
+    const nombre = document.getElementById('inputConsultaNombre').value.trim();
+    const msg = document.getElementById('msgConsulta');
+    const btnConsultar = document.getElementById('btnConsultar');
+    
+    // Validación de input vacío
+    if(!nombre) {
+        msg.innerText = "Por favor, ingresa el nombre de tu familia.";
+        msg.classList.remove('hidden');
+        return;
+    }
+
+    msg.classList.add('hidden');
+    
+    // Feedback de carga
+    const originalText = btnConsultar.innerText;
+    btnConsultar.innerText = "Buscando...";
+    btnConsultar.disabled = true;
+
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'consultar', nombre: nombre }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        
+        const res = await response.json();
+        
+        if (res.status === 'aprobado') {
+            // El anfitrión ya llenó la columna D
             document.getElementById('nombrePase').innerText = `Fam. ${nombre}`;
-            document.getElementById('pasesAprobados').innerText = document.getElementById('rsvpPax')?.value || "Asignados";
-            document.getElementById('folioPaseImpreso').innerText = "XV-ISABEL-001";
+            // Inyectamos el valor exacto que el anfitrión puso en el excel
+            document.getElementById('pasesAprobados').innerText = res.pases; 
             
+            // Generamos un folio estético y único basado en un random
+            const folio = "XV-ISA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            document.getElementById('folioPaseImpreso').innerText = folio;
+            
+            // Animación de UI: Ocultar form, mostrar pase
             document.getElementById('consultaFormContainer').classList.add('hidden');
             document.getElementById('contenedorPaseOficial').classList.remove('hidden');
             document.getElementById('btnDescargarPase').classList.remove('hidden');
+            
+        } else if (res.status === 'pendiente') {
+            // Está en Excel pero sin número asignado
+            msg.innerText = "¡Tenemos tu registro! Pero el anfitrión aún está preparando tu pase final. Vuelve a consultar pronto.";
+            msg.classList.remove('hidden');
+        } else {
+            // No existe la fila
+            msg.innerText = "Reserva no encontrada. Revisa que el nombre esté escrito exactamente como en tu confirmación.";
+            msg.classList.remove('hidden');
         }
+    } catch (error) {
+        console.error("Error al buscar:", error);
+        msg.innerText = "Error de conexión. Intenta de nuevo más tarde.";
+        msg.classList.remove('hidden');
+    } finally {
+        btnConsultar.innerText = originalText;
+        btnConsultar.disabled = false;
+    }
+}
 
         function descargarPase() {
             const paseOficial = document.getElementById('contenedorPaseOficial');
