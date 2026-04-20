@@ -867,20 +867,71 @@ async function consultarPase() {
         const res = await response.json();
         
         if (res.status === 'aprobado') {
-            // El anfitrión ya llenó la columna D
-            document.getElementById('nombrePase').innerText = `Fam. ${nombre}`;
-            // Inyectamos el valor exacto que el anfitrión puso en el excel
-            document.getElementById('pasesAprobados').innerText = res.pases; 
-            
-            // Generamos un folio estético y único basado en un random
-            const folio = "XV-ISA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-            document.getElementById('folioPaseImpreso').innerText = folio;
-            
-            // Animación de UI: Ocultar form, mostrar pase
+            // Ocultamos el formulario
             document.getElementById('consultaFormContainer').classList.add('hidden');
-            document.getElementById('contenedorPaseOficial').classList.remove('hidden');
-            document.getElementById('btnDescargarPase').classList.remove('hidden');
             
+            // Seleccionamos el contenedor y limpiamos sus clases para inyectar el nuevo diseño
+            const resultDiv = document.getElementById('contenedorPaseOficial');
+            resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
+            
+            // Generamos un folio estético
+            const folio = "XV-ISA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+            // Inyectamos la estructura del pase
+            resultDiv.innerHTML = `
+                <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border border-terracota/30 rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-terracota"></div>
+                    
+                    <img src="https://i.imgur.com/TyJ42pL.png" crossorigin="anonymous" class="w-16 mx-auto mb-4 opacity-80" alt="Corona">
+                    
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-terracota font-bold mb-2">Pase Oficial</p>
+                    <h4 class="font-script text-4xl md:text-5xl text-terracota mb-6 leading-tight capitalize">Fam. ${nombre}</h4>
+                    
+                    <div class="inline-block border-t border-b border-terracota/40 py-4 px-10 mb-6 w-full">
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-terracota/70 font-bold mb-1">Pases Asignados</p>
+                        <p class="font-numbers text-5xl md:text-6xl text-terracota font-bold drop-shadow-sm">${res.pases}</p>
+                    </div>
+                    
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-terracota/60 font-numbers mb-2">Folio: ${folio}</p>
+                    <p class="text-[8px] uppercase tracking-[0.2em] text-terracota/80">Muestra esta tarjeta en recepción</p>
+                </div>
+                
+                <button id="btnDescargarImagen" class="mt-6 bg-transparent text-white border border-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-black transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Descargar Imagen
+                </button>
+            `;
+
+            // Ocultamos el botón de descarga viejito que tenías en el HTML
+            const btnViejo = document.getElementById('btnDescargarPase');
+            if(btnViejo) btnViejo.style.display = 'none';
+
+            // LÓGICA DE DESCARGA CON HTML2CANVAS
+            const btnDescargarNueva = document.getElementById('btnDescargarImagen');
+            btnDescargarNueva.addEventListener('click', () => {
+                const tarjeta = document.getElementById('tarjetaPaseDigital');
+                const originalText = btnDescargarNueva.innerHTML;
+                btnDescargarNueva.innerText = "Generando imagen...";
+                
+                html2canvas(tarjeta, {
+                    backgroundColor: "#ffffff", // Fondo blanco sólido
+                    scale: 3, // Alta resolución
+                    useCORS: true // Indispensable para cargar la corona correctamente
+                }).then(canvas => {
+                    const enlace = document.createElement('a');
+                    enlace.download = 'Pase_XV_Isabel.png';
+                    enlace.href = canvas.toDataURL('image/png');
+                    enlace.click();
+                    btnDescargarNueva.innerHTML = originalText;
+                }).catch(error => {
+                    console.error("Error al generar la imagen: ", error);
+                    btnDescargarNueva.innerHTML = "Error al descargar";
+                    setTimeout(() => {
+                        btnDescargarNueva.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+
         } else if (res.status === 'pendiente') {
             // Está en Excel pero sin número asignado
             msg.innerText = "¡Tenemos tu registro! Pero el anfitrión aún está preparando tu pase final. Vuelve a consultar pronto.";
