@@ -146,7 +146,9 @@
                 <div>
                     <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 block">Archivos *</label>
                     <div id="dropZone" class="relative border-2 border-dashed border-dorado-elegante/50 bg-black/30 rounded-xl p-6 text-center cursor-pointer">
-                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*, .heic, .heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
+                        <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
                         <svg class="w-8 h-8 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                         <p class="text-white text-xs font-bold uppercase tracking-widest">Toca para elegir fotos o videos</p>
                     </div>
@@ -206,38 +208,55 @@
             document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all";
         });
 
-        // NUEVA LÓGICA DE PROCESAMIENTO (CON HEIC2ANY)
+        // NUEVA LÓGICA DE PROCESAMIENTO (CON HEIC2ANY Y ANTI-CONGELAMIENTO)
         archivoInput.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
             dropZone.classList.add('hidden');
             previsualizacion.classList.remove('hidden');
-            previewContainer.innerHTML = "<p class='text-white text-[10px] uppercase tracking-widest w-full col-span-full text-center py-4'>Procesando archivos...</p>";
+            
+            // Creamos un texto dinámico para que el usuario vea que sí está avanzando
+            previewContainer.innerHTML = `<p id="textoCarga" class='text-white text-[10px] uppercase tracking-widest w-full col-span-full text-center py-4'>Procesando archivos...</p>`;
 
             const validFiles = new DataTransfer();
 
-            for (let file of files) {
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
                 const fileName = file.name.toLowerCase();
                 
+                // Actualizamos el texto en pantalla
+                const textoCarga = document.getElementById('textoCarga');
+                if (textoCarga) textoCarga.innerText = `Optimizando archivo ${i + 1} de ${files.length}...`;
+
+                // Pausa de 150ms obligatoria para que la pantalla del celular no se congele
+                await new Promise(resolve => setTimeout(resolve, 150));
+
                 // DETECTAR Y CONVERTIR HEIC A JPG
                 if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
                     try {
-                        const convertedBlob = await heic2any({
+                        // Ponemos un límite de tiempo (15 segundos) para que no se quede cargando infinito
+                        const conversionPromise = heic2any({
                             blob: file,
                             toType: "image/jpeg",
-                            quality: 0.8
+                            quality: 0.5 // Bajamos la calidad para que sea MUCHÍSIMO más rápido
                         });
+
+                        const timeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error("Tiempo agotado")), 15000)
+                        );
+
+                        // Gana el que termine primero (la conversión o el límite de tiempo)
+                        const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
                         
                         const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-                        
                         file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), {
                             type: "image/jpeg"
                         });
                     } catch (err) {
-                        console.error("Error al convertir HEIC:", err);
-                        alert(`No pudimos procesar la foto ${file.name}.`);
-                        continue;
+                        console.warn("Fallo al convertir foto:", err);
+                        alert(`La foto ${file.name} es muy pesada y no se pudo procesar. Intenta con otra.`);
+                        continue; // Si falla, nos saltamos esta foto pero continuamos con las demás
                     }
                 }
 
@@ -264,6 +283,7 @@
                 validFiles.items.add(file);
             }
 
+            // Una vez procesados todos, creamos las previsualizaciones
             previewContainer.innerHTML = "";
             
             Array.from(validFiles.files).forEach(file => {
@@ -281,6 +301,7 @@
 
             archivoInput.files = validFiles.files;
 
+            // Si al final ningún archivo sobrevivió a los filtros, regresamos al estado inicial
             if (archivoInput.files.length === 0) {
                 previsualizacion.classList.add('hidden');
                 dropZone.classList.remove('hidden');
