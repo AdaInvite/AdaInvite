@@ -11,6 +11,9 @@
     <meta name="theme-color" content="#042853">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
     <script>
         tailwind.config = { theme: { extend: { colors: { dorado: { elegante: '#D4AF37' } } } } }
     </script>
@@ -27,18 +30,18 @@
         }
 
         .background-fijo {
-    position: fixed;
-    /* Le damos margen extra arriba y abajo para que la barra de Safari no lo recorte */
-    top: -10vh; left: 0;
-    width: 100%; 
-    height: 120vh; 
-    background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: black;
-    z-index: 0;
-}
+            position: fixed;
+            /* Le damos margen extra arriba y abajo para que la barra de Safari no lo recorte */
+            top: -10vh; left: 0;
+            width: 100%; 
+            height: 120vh; 
+            background-image: url('https://i.imgur.com/VBju3Lm.jpeg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: black;
+            z-index: 0;
+        }
 
         .font-script { font-family: 'Great Vibes', cursive; }
         
@@ -143,7 +146,7 @@
                 <div>
                     <label class="text-dorado-elegante text-[11px] font-bold tracking-widest uppercase mb-1.5 block">Archivos *</label>
                     <div id="dropZone" class="relative border-2 border-dashed border-dorado-elegante/50 bg-black/30 rounded-xl p-6 text-center cursor-pointer">
-                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*, .heic, .heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                         <svg class="w-8 h-8 mx-auto text-dorado-elegante mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                         <p class="text-white text-xs font-bold uppercase tracking-widest">Toca para elegir fotos o videos</p>
                     </div>
@@ -190,7 +193,7 @@
         document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); });
         document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); });
 
-        // VISTAS DE COLUMNAS (Aquí están de vuelta)
+        // VISTAS DE COLUMNAS 
         document.getElementById('btn1Col').addEventListener('click', () => {
             document.getElementById('muro').className = "columns-1 md:columns-2 lg:columns-3 gap-6 w-full px-2";
             document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-black bg-dorado-elegante rounded-md transition-all";
@@ -203,56 +206,94 @@
             document.getElementById('btn1Col').className = "px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-dorado-elegante hover:bg-white/10 rounded-md transition-all";
         });
 
+        // NUEVA LÓGICA DE PROCESAMIENTO (CON HEIC2ANY)
         archivoInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
 
-    previewContainer.innerHTML = "";
-    // Usamos DataTransfer para "limpiar" el input y dejar solo los archivos válidos
-    const validFiles = new DataTransfer(); 
+            dropZone.classList.add('hidden');
+            previsualizacion.classList.remove('hidden');
+            previewContainer.innerHTML = "<p class='text-white text-[10px] uppercase tracking-widest w-full col-span-full text-center py-4'>Procesando archivos...</p>";
 
-    for (const file of files) {
-        if (file.type.includes("video")) {
-            // Creamos un elemento de video temporal para leer su duración
-            const video = document.createElement('video');
-            video.preload = 'metadata';
-            const duration = await new Promise((resolve) => {
-                video.onloadedmetadata = () => {
-                    window.URL.revokeObjectURL(video.src);
-                    resolve(video.duration);
-                };
-                video.src = URL.createObjectURL(file);
+            const validFiles = new DataTransfer();
+
+            for (let file of files) {
+                const fileName = file.name.toLowerCase();
+                
+                // DETECTAR Y CONVERTIR HEIC A JPG
+                if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                    try {
+                        const convertedBlob = await heic2any({
+                            blob: file,
+                            toType: "image/jpeg",
+                            quality: 0.8
+                        });
+                        
+                        const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                        
+                        file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), {
+                            type: "image/jpeg"
+                        });
+                    } catch (err) {
+                        console.error("Error al convertir HEIC:", err);
+                        alert(`No pudimos procesar la foto ${file.name}.`);
+                        continue;
+                    }
+                }
+
+                const isVideo = file.type.includes("video") || fileName.match(/\.(mp4|mov|webm)$/i);
+                
+                if (isVideo) {
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    const duration = await new Promise((resolve) => {
+                        video.onloadedmetadata = () => {
+                            window.URL.revokeObjectURL(video.src);
+                            resolve(video.duration);
+                        };
+                        video.onerror = () => resolve(0);
+                        video.src = URL.createObjectURL(file);
+                    });
+
+                    if (duration > 30.5) {
+                        alert(`El video "${file.name}" dura más de 30s y no se puede subir.`);
+                        continue;
+                    }
+                }
+                
+                validFiles.items.add(file);
+            }
+
+            previewContainer.innerHTML = "";
+            
+            Array.from(validFiles.files).forEach(file => {
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-black rounded-lg overflow-hidden border border-white/10";
+                
+                const isVideo = file.type.includes("video") || file.name.toLowerCase().match(/\.(mp4|mov|webm)$/i);
+                
+                thumb.innerHTML = !isVideo 
+                    ? `<img src="${url}" class="w-full h-full object-cover">`
+                    : `<video src="${url}" autoplay muted loop class="w-full h-full object-cover"></video>`;
+                previewContainer.appendChild(thumb);
             });
 
-            if (duration > 30.5) { // Un pequeño margen de medio segundo
-                alert(`El video "${file.name}" dura más de 30s y no se puede subir.`);
-                continue;
+            archivoInput.files = validFiles.files;
+
+            if (archivoInput.files.length === 0) {
+                previsualizacion.classList.add('hidden');
+                dropZone.classList.remove('hidden');
             }
-        }
-        
-        validFiles.items.add(file);
+        });
 
-        // Crear la miniatura para la previsualización
-        const url = URL.createObjectURL(file);
-        const thumb = document.createElement('div');
-        thumb.className = "relative h-20 bg-black rounded-lg overflow-hidden border border-white/10";
-        thumb.innerHTML = file.type.includes("image") 
-            ? `<img src="${url}" class="w-full h-full object-cover">`
-            : `<video src="${url}" autoplay muted loop class="w-full h-full object-cover"></video>`;
-        previewContainer.appendChild(thumb);
-    }
-
-    // Actualizamos el input con solo los archivos que pasaron la prueba
-    archivoInput.files = validFiles.files;
-
-    if (archivoInput.files.length > 0) {
-        dropZone.classList.add('hidden');
-        previsualizacion.classList.remove('hidden');
-    } else {
-        previsualizacion.classList.add('hidden');
-        dropZone.classList.remove('hidden');
-    }
-});
+        // Limpiar selección de vista previa
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previewContainer.innerHTML = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
 
         btnSubir.addEventListener("click", async () => {
             const archivos = Array.from(archivoInput.files);
@@ -261,6 +302,8 @@
             if (archivos.length === 0 || !nombre || !momento) return alert("Completa todos los campos");
 
             btnSubir.disabled = true;
+            document.getElementById('estadoCarga').classList.remove('hidden');
+            
             for (let i = 0; i < archivos.length; i++) {
                 const file = archivos[i];
                 const storageRef = ref(storage, 'xv_mila/' + Date.now() + "_" + file.name);
@@ -269,7 +312,8 @@
                     uploadTask.on('state_changed', 
                         (snapshot) => {
                             const p = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                            btnSubir.innerText = `Subiendo ${i+1}/${archivos.length}: ${p}%`;
+                            document.getElementById('estadoCarga').innerText = `Subiendo ${i+1}/${archivos.length}: ${p}%`;
+                            btnSubir.innerText = "Subiendo...";
                         }, null, async () => {
                             const url = await getDownloadURL(uploadTask.snapshot.ref);
                             await addDoc(collection(db, "muro_mila"), {
@@ -289,7 +333,6 @@
         onSnapshot(q, (snapshot) => {
             const muro = document.getElementById('muro');
             
-            // LÓGICA DE MURO VACÍO
             if (snapshot.empty) {
                 muro.innerHTML = `
                     <div class="col-span-full py-20 text-center flex flex-col items-center">
