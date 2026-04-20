@@ -554,26 +554,25 @@
                 <h2 class="text-5xl font-script mb-6 text-rosa-pastel text-shadow-light">Confirmar Asistencia</h2>
                 <p class="text-sm md:text-lg italic leading-relaxed px-4 text-[#2C2A2A] mb-12">Confirmar antes del 10 de Mayo de 2026</p>
                 
-                <form id="rsvpForm" class="space-y-12 text-left bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-xl transition-all duration-500">
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required placeholder="Ej. Familia Pérez" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold placeholder-gray-400">
-                        </div>
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Cantidad de Personas</label>
-                            <select id="rsvpPax" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold appearance-none">
-                                <option class="text-black" value="1 Persona">1 Persona</option>
-                                <option class="text-black" value="2 Personas">2 Personas</option>
-                                <option class="text-black" value="3 Personas">3 Personas</option>
-                                <option class="text-black" value="4 Personas">4 Personas</option>
-                                <option class="text-black" value="5 Personas">5 Personas</option>
-                                <option class="text-black" value="6 Personas">6 Personas</option>
-                            </select>
-                        </div>
+            <form id="rsvpForm" class="space-y-12 text-left bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-xl transition-all duration-500">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="border-b border-gray-300 pb-2 md:col-span-2">
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Nombre Completo</label>
+                        <input type="text" id="rsvpName" required placeholder="Ej. Familia Pérez" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold placeholder-gray-400">
                     </div>
-                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa-pastel text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-rosa-pastel/90 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Confirmar</button>
-                </form>
+                    
+                    <div class="border-b border-gray-300 pb-2">
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Adultos</label>
+                        <input type="number" id="rsvpAdultos" required min="1" placeholder="¿Cuántos adultos?" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold placeholder-gray-400">
+                    </div>
+            
+                    <div class="border-b border-gray-300 pb-2">
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Niños</label>
+                        <input type="number" id="rsvpNinos" required min="0" placeholder="¿Cuántos niños?" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold placeholder-gray-400">
+                    </div>
+                </div>
+                <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa-pastel text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-rosa-pastel/90 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Confirmar</button>
+            </form>
 
                 <div id="loadingMessage" class="hidden mt-10 bg-white/95 backdrop-blur-md border border-rosa-pastel/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
                     <div class="w-16 h-16 border-4 border-rosa-pastel border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
@@ -752,7 +751,7 @@
      // ==========================================
 // CONFIGURACIÓN DE APPS SCRIPT
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEO_XF1ZPsHusLYm5jdbp5W4j0iGHC0re6nxGs4fhGuw3F8uBXStL4GWnE26U5FMtZ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-CWtILqvMZDCMrn4zZUVMXXdX84qjz6ArCX1l8JvsjTjG8bKDNXJYwm1Pjl9Om50L/exec";
 
 // ==========================================
 // LÓGICA DE CONFIRMACIÓN (RSVP)
@@ -760,7 +759,12 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEO_XF1ZPsHusLYm5jd
 document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('rsvpName').value.trim();
-    const pax = document.getElementById('rsvpPax').value;
+    const numAdultos = document.getElementById('rsvpAdultos').value;
+    const numNinos = document.getElementById('rsvpNinos').value;
+    
+    // Formateamos el texto para que en tu Excel y WhatsApp se lea claramente
+    const textoAdultos = numAdultos + (numAdultos == 1 ? " Adulto" : " Adultos");
+    const textoNinos = numNinos + (numNinos == 1 ? " Niño" : " Niños");
     
     const form = document.getElementById('rsvpForm');
     const loader = document.getElementById('loadingMessage');
@@ -773,14 +777,13 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
         // Enviar a Google Sheets
         await fetch(SCRIPT_URL, {
             method: 'POST',
-            body: JSON.stringify({ action: 'rsvp', nombre: name, pax: pax }),
-            // text/plain evita problemas de CORS con Apps Script
+            body: JSON.stringify({ action: 'rsvp', nombre: name, adultos: textoAdultos, ninos: textoNinos }),
             headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
         });
 
         // Inmediatamente después de guardar, redirigir a WhatsApp
         const numeroWhatsApp = "524495502437";
-        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${pax}.`;
+        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${textoAdultos} y ${textoNinos}.`;
         window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
         
     } catch(error) {
@@ -788,11 +791,10 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
         alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
         // Fallback en caso de error
         const numeroWhatsApp = "524495502437";
-        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${pax}.`;
+        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${textoAdultos} y ${textoNinos}.`;
         window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     }
 });
-
 // ==========================================
 // LÓGICA DE BÚSQUEDA DE PASE (Consultar)
 // ==========================================
