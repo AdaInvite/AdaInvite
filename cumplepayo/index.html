@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación - Mis 20 Danna Paola</title>
+    <!-- 1. Icono para la pestaña del navegador -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+
+    <!-- 2. Icono para Pantalla de Inicio en iOS -->
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <!-- 3. Configuración PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mis 20 Danna Paola">
+
+    <!-- 4. Metadatos -->
+    <meta name="theme-color" content="#800020">
+    <meta property="og:title" content="Mis 20 Danna Paola">
+    <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/IenUTwH.jpeg">
+    
+    <!-- Scripts y Fuentes Elegantes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vino: {
+                            tinto: '#800020'
+                        },
+                        blanco: {
+                            hueso: '#FAF9F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --vino-tinto: #800020;
+            --blanco-hueso: #FAF9F6;
+            --bg-intro: url('https://i.imgur.com/IenUTwH.jpeg');
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-body);
+            background-color: #050505; /* Fondo negro sólido */
+            overflow-x: hidden;
+            color: var(--blanco-hueso);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        .font-script {
+            font-family: var(--font-script);
+        }
+
+        /* --- CORTES EN TRIÁNGULO AL CENTRO --- */
+        .corte-pico {
+            clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        .corte-valle {
+            clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
+            margin-top: -5.9vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Utilidad para fondos oscuros */
+        .bg-section-dark {
+            background-color: #050505;
+        }
+
+        /* --- SECCIÓN 1: SOBRE --- */
+        #envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            transition: visibility 1.8s;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("https://i.imgur.com/NitACsF.jpeg");
+            background-size: cover;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .flap-wrapper {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            will-change: transform;
+        }
+
+        .flap-left-wrapper {
+            left: 0;
+            z-index: 6;
+            filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.4));
+        }
+
+        .flap-right-wrapper {
+            right: 0;
+            z-index: 5;
+            filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.5));
+        }
+
+        .flap {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.imgur.com/NitACsF.jpeg");
+            background-size: cover;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            background-position: left center;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            background-position: right center;
+        }
+
+        .seal-wrapper {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* --- SECCIÓN 2: PANTALLA INTRO --- */
+        #section-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.4), rgba(0,0,0,0.9)), var(--bg-intro);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #section-intro.active { opacity: 1; visibility: visible; }
+        .name-header { font-family: var(--font-script); font-size: clamp(5rem, 18vw, 10rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); }
+
+        /* --- SECCIÓN 3: CONTENIDO --- */
+        #section-main { display: none; background-color: #050505; }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .parallax-section { background-position: center; background-size: cover; background-attachment: scroll; }
+
+        .btn-calendar {
+            border: 1px solid var(--vino-tinto);
+            padding: 12px 24px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-calendar:hover { background: var(--vino-tinto); color: var(--blanco-hueso); }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 35px; 
+            height: 35px; 
+            background: var(--vino-tinto);
+            color: var(--blanco-hueso);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--blanco-hueso);
+        }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        #countdown span {
+            font-family: var(--font-body) !important;
+            font-weight: 300; 
+            color: white;
+            line-height: 1;
+        }
+
+        /* --- EFECTOS DE FLOTACIÓN --- */
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REPRODUCTOR DE MÚSICA -->
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/Kenia%20Os-RuletaRusa.mp3" type="audio/mpeg">
+    </audio>
+    <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/Sw3ov4v.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <!-- SECCIÓN 1: EL SOBRE -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-semibold">Toca para abrir</div>
+                <img src="https://i.imgur.com/0G79UsQ.png" 
+                     class="w-[120px]" style="animation: floating 6s infinite ease-in-out; filter: drop-shadow(0px 5px 15px rgba(0,0,0,0.5));" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: PANTALLA INTRO -->
+    <div id="section-intro" onclick="showMainContent()">
+        <header><h1 class="name-header text-vino-tinto">Danna Paola</h1></header>
+        <div>
+            <section class="flex items-center gap-8 justify-center mb-8">
+                <div class="flex flex-col items-center">
+                    <span class="serif text-xl tracking-[0.4em] uppercase text-white shadow-black drop-shadow-md">Sábado</span>
+                    <span class="serif text-[6rem] leading-none font-light text-vino-tinto drop-shadow-md">25</span>
+                </div>
+                <div class="w-px h-24 bg-white/50 shadow-sm"></div>
+                <div class="text-left">
+                    <span class="serif text-4xl tracking-widest block text-white drop-shadow-md">ABR</span>
+                    <span class="serif text-2xl tracking-[0.6em] text-white drop-shadow-md">2026</span>
+                </div>
+            </section>
+            <p class="font-body text-[10px] tracking-[0.5em] uppercase animate-pulse text-white drop-shadow-md font-bold">Toca para continuar</p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: CONTENIDO PRINCIPAL -->
+    <main id="section-main">
+        
+        <!-- 1. Hero (Imagen) -->
+        <header class="relative min-h-screen flex flex-col bg-black pb-12">
+            <div class="h-[65vh] w-full overflow-hidden relative">
+                <img src="https://i.imgur.com/IenUTwH.jpeg" class="w-full h-full object-cover opacity-90">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-8 relative bg-section-dark">
+                <h1 class="text-6xl md:text-8xl mb-5 text-vino-tinto font-script reveal-scale pr-6 drop-shadow-md">Mis 20</h1>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-white pb-5 opacity-80">Faltan solo...</p>
+                
+                <div id="countdown" class="flex gap-8 md:gap-14 justify-center reveal-scale">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="serif text-3xl md:text-7xl text-white">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-vino-tinto font-bold">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="serif text-3xl md:text-7xl text-white">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-vino-tinto font-bold">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="serif text-3xl md:text-7xl text-white">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-vino-tinto font-bold">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="serif text-3xl md:text-7xl text-white">00</span>
+                        <span class="text-[8px] uppercase tracking-[0.3em] mt-2 text-vino-tinto font-bold">Seg</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. Bienvenida -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-section-dark relative corte-pico">
+            <div class="max-w-4xl mx-auto reveal relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-6 text-vino-tinto font-script reveal-scale drop-shadow-md">Danna Paola</h1>
+                <p class="serif text-xl md:text-3xl italic text-white/90 leading-relaxed font-light mb-8">
+                    "Hoy comienzo una nueva etapa en mi vida, llena de ilusiones y sueños. Quiero compartir este momento tan especial con las personas que más amo."
+                </p>
+            </div>
+        </section>
+
+        <!-- Separador Parallax -->
+        <section class="h-[60vh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/IenUTwH.jpeg');"></section>
+
+        <!-- 3. Ubicaciones -->
+        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-section-dark relative text-white corte-pico">
+            <div class="max-w-2xl mx-auto mb-16 relative z-10">
+                <div class="bg-black/80 p-6 md:p-10 border border-vino-tinto/40 rounded-xl shadow-2xl reveal flex flex-col h-full">
+                    <div class="text-center mb-8">
+                        <div class="mx-auto mb-4 flex items-center justify-center">
+                            <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png?raw=true" class="w-16 h-16 md:w-20 md:h-20 filter invert opacity-80" alt="Recepción">
+                        </div>
+                        <h1 class="text-5xl md:text-8xl mb-6 text-vino-tinto font-script reveal-scale drop-shadow-md">La Fiesta</h1>
+                        <p class="text-white/90 italic text-lg mb-2">Casa de Mi mamá</p>
+                        <p class="serif text-2xl text-vino-tinto mb-4">15:00 HRS</p>
+                    </div>
+                    <a href="https://maps.app.goo.gl/2KryQ7pCeuCYkNih8" target="_blank" class="w-full block text-center bg-vino-tinto border border-vino-tinto text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-transparent hover:text-vino-tinto shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-sm">Abrir en Google Maps</a>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
+                <button onclick="calendarLink('Mis 20 Danna Paola', 'Casa de Mi mamá', '20260425T150000')" class="btn-calendar bg-transparent text-vino-tinto border border-vino-tinto hover:bg-vino-tinto hover:text-white font-bold rounded-sm transition-all duration-300 px-10 py-4 justify-center">
+                    Agregar al calendario
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. Código de Vestimenta -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-black text-center corte-valle">
+            <div class="max-w-3xl mx-auto reveal-scale">
+                <div class="mx-auto mb-8 flex items-center justify-center">
+                    <img src="https://github.com/AdaInvite/AdaInvite/blob/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png?raw=true" class="w-20 h-20 md:w-24 md:h-24 object-contain invert opacity-80" alt="Dress Code">
+                </div>
+                <h2 class="text-5xl md:text-8xl mb-8 font-script text-vino-tinto drop-shadow-lg">Código de Vestimenta</h2>
+                <p class="serif text-3xl md:text-4xl italic text-white drop-shadow-md mb-6 leading-relaxed">Casual</p>
+                <p class="text-[12px] uppercase tracking-[0.4em] text-white/80 font-bold drop-shadow-md">Cualquier Color</p>
+                <div class="mt-16 reveal">
+                    <img src="https://i.imgur.com/vEGhGmh.jpeg" class="w-full max-w-md mx-auto rounded-xl shadow-2xl border border-vino-tinto/30 object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Álbum Compartido -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-section-dark text-white text-center relative corte-pico">
+            <div class="max-w-3xl mx-auto reveal-scale relative z-10">
+                <h1 class="text-5xl md:text-8xl mb-6 text-vino-tinto font-script reveal-scale drop-shadow-md">Álbum Compartido</h1>
+                <p class="text-xs md:text-base font-light tracking-widest mb-10 leading-relaxed text-white/90">
+                    Ayúdame a capturar los mejores momentos de esta fiesta inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
+                </p>
+                <div class="mx-auto bg-white p-4 rounded-xl shadow-lg inline-block mb-10 border-2 border-vino-tinto/80">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tus-fotos-aqui.com" alt="QR" class="w-40 h-40">
+                </div>
+                <br>
+                <a href="#" target="_blank" class="inline-block bg-vino-tinto text-white border border-vino-tinto px-10 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-vino-tinto transition-all hover:-translate-y-1 duration-300 rounded-sm">
+                    Subir fotos aquí
+                </a>
+            </div>
+        </section>
+
+        <!-- 6. RSVP -->
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-black text-white text-center relative corte-valle">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10">
+                <h2 class="text-5xl md:text-7xl font-script text-vino-tinto mb-6 drop-shadow-md">Confirmar Asistencia</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white/80 font-bold">Confirmar antes del 10 de Abril de 2026</p>
+                <form id="rsvpForm" class="space-y-12 text-left bg-white/5 p-8 rounded-xl border border-vino-tinto/30 shadow-2xl">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="border-b border-vino-tinto/50"><label class="text-[9px] uppercase tracking-widest opacity-70">Nombre</label><input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white"></div>
+                        <div class="border-b border-vino-tinto/50"><label class="text-[9px] uppercase tracking-widest opacity-70">Personas</label><select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none"><option class="text-black">1 Persona</option><option class="text-black">2 Personas</option><option class="text-black">Familia</option></select></div>
+                    </div>
+                    <button type="submit" class="w-full bg-vino-tinto text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-transparent hover:text-vino-tinto border border-vino-tinto transition-all duration-300 rounded-sm">Confirmar</button>
+                </form>
+                <div id="successMessage" class="hidden p-12 border border-vino-tinto/50 mt-10 bg-black/60 rounded-xl"><p class="text-4xl font-script text-vino-tinto">¡Te espero para celebrar!</p></div>
+            </div>
+        </section>
+
+        <!-- 7. Footer -->
+        <footer class="pt-32 lg:pt-40 pb-24 text-center bg-[#050505] corte-pico relative z-10">
+            <img src="https://i.imgur.com/IenUTwH.jpeg" class="w-24 h-24 rounded-full mx-auto mb-8 object-cover border-2 border-vino-tinto shadow-lg opacity-90">
+            <p class="text-6xl font-script mb-2 text-vino-tinto drop-shadow-sm">Danna Paola</p>
+            <p class="text-[9px] text-white/60 uppercase tracking-[0.5em] mb-8">25 • Abril • 2026</p>
+            <p class="text-[8px] text-white/40 uppercase tracking-[0.2em] font-light">AdaInvite ©️ 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-intro').classList.add('active');
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function showMainContent() {
+            const intro = document.getElementById('section-intro');
+            intro.style.opacity = '0';
+            playAudio(); 
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('section-main').style.display = 'block';
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+                initObserver();
+            }, 1200);
+        }
+
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(e => console.log("Audio play blocked"));
+        }
+
+        function toggleAudio() {
+            if (isPlaying) { audio.pause(); audioIcon.classList.remove('spin-slow'); }
+            else { audio.play(); audioIcon.classList.add('spin-slow'); }
+            isPlaying = !isPlaying;
+        }
+
+        const targetDate = new Date("April 25, 2026 15:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        document.getElementById('rsvpForm').onsubmit = (e) => {
+            e.preventDefault();
+            e.target.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        };
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+
+        // Seguridad básica
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
+        };
+    </script>
+</body>
+</html>
