@@ -227,11 +227,11 @@
             <div class="absolute inset-0 bg-gradient-to-t from-azul-rey/70 via-azul-rey/30 to-transparent z-0"></div>
             
             <div id="seccion-pases-inicio" class="w-full max-w-[280px] mx-auto mt-20 hidden reveal-scale active delay-200 relative z-20">
-                <div class="bg-black/30 backdrop-blur-md border border-white/20 rounded-lg p-4 shadow-2xl text-center">
+                <div class="bg-azul-rey/90 backdrop-blur-md border border-white/30 rounded-lg p-4 shadow-2xl text-center">
                     <p class="text-xs uppercase tracking-widest text-white/90 font-light mb-1">Invitación especial para</p>
                     <p id="nombre-invitado-inicio" class="text-4xl font-script text-white mb-2 drop-shadow-md capitalize"></p>
-                    <div class="flex items-center justify-center gap-2 mt-2 border-t border-white/20 pt-2 w-[80%] mx-auto">
-                        <span class="text-[10px] uppercase tracking-widest text-white/80">Pases:</span>
+                    <div class="flex items-center justify-center gap-2 mt-2 border-t border-white/30 pt-2 w-[80%] mx-auto">
+                        <span class="text-[10px] uppercase tracking-widest text-white/90">Pases:</span>
                         <span id="pases-invitado-inicio" class="font-numbers font-bold text-xl text-white"></span>
                     </div>
                 </div>
@@ -411,7 +411,7 @@
                 </div>
                 <p class="text-sm mb-12 drop-shadow-sm font-light text-[#2C2A2A]">Por favor, confirmar antes del 30 de Mayo de 2026</p>
                 
-                <div class="bg-white p-8 md:p-10 rounded-xl border border-azul-rey/20 shadow-2xl w-full max-w-sm mx-auto">
+                <div id="cajaConfirmacion" class="bg-white p-8 md:p-10 rounded-xl border border-azul-rey/20 shadow-2xl w-full max-w-sm mx-auto">
                     <form id="rsvpForm" class="w-full space-y-6 text-left bg-transparent transition-all duration-500 mb-4">
                         <div class="space-y-4">
                             <div class="border-b border-azul-rey/50 pb-2">
@@ -432,6 +432,7 @@
                         <button type="submit" id="btnSubmitRSVP" class="w-full bg-azul-rey text-white font-light py-4 text-sm hover:bg-transparent border border-azul-rey hover:text-azul-rey shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded uppercase tracking-widest">Confirmar</button>
                     </form>
                 </div>
+
             </div>
         </section>
 
@@ -465,7 +466,6 @@
     </main>
 
     <script>
-        // Funciones originales de Animación y Música
         function openEnvelope() {
             document.getElementById('section-intro').classList.add('active');
             document.getElementById('envelope-wrapper').classList.add('open');
@@ -553,10 +553,9 @@
         }
 
         // ==========================================
-        // LÓGICA DE CONFIRMACIÓN (RSVP) + GENERACIÓN DE PASE
+        // LÓGICA DE CONFIRMACIÓN (RSVP) + GENERACIÓN DE PASE AL INSTANTE
         // ==========================================
-        // IMPORTANTE: PON AQUÍ TU LINK DEL GOOGLE APPS SCRIPT DE DORIAN
-        const SCRIPT_URL = "https://script.google.com/macros/s/TU_LINK_AQUI/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxkQXHIni-XsmCUlY8olBFEapUDtqbJeCSyHT9BvaYx7ozujTM5GHFljxGMriL7XJKVA/exec"; 
 
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -568,7 +567,6 @@
             if (paxTotal === 0) { alert("Debes confirmar al menos 1 persona."); return; }
 
             const btnSubmit = document.getElementById('btnSubmitRSVP');
-            const originalText = btnSubmit.innerText;
             btnSubmit.innerText = "Generando pase...";
             btnSubmit.disabled = true;
 
@@ -580,30 +578,23 @@
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
                 });
 
-                // Ocultar form y mostrar éxito
-                document.getElementById('rsvpForm').innerHTML = `<p class="text-azul-rey font-script text-4xl text-center mt-6 mb-2">¡Asistencia Confirmada!</p><p class="text-xs text-center text-azul-rey uppercase tracking-widest font-light">Desliza hacia abajo</p>`;
-                document.getElementById('consultaFormContainer').classList.add('hidden');
-                if(document.getElementById('msgConsulta')) document.getElementById('msgConsulta').classList.add('hidden');
-
-                // Generar pase visual
-                const resultDiv = document.getElementById('contenedorPaseOficial');
-                resultDiv.classList.remove('hidden');
-                resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 max-w-sm mx-auto"; 
-                
+                // Reemplazamos el formulario con el pase generado
+                const cajaConfirmacion = document.getElementById('cajaConfirmacion');
                 const folio = "XV-DOR-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                
-                // Mensaje WA con el número de Dorian
                 const mensajeWa = `¡Hola! Confirmo la asistencia de la familia ${nombre} para los XV de Dorian. Seremos ${paxTotal} personas en total (${adultos} adultos y ${ninos} niños).`;
                 const waLink = `https://wa.me/528332187771?text=${encodeURIComponent(mensajeWa)}`;
 
-                resultDiv.innerHTML = `
-                    <div id="tarjetaPaseDigital" class="relative w-full bg-white border border-azul-rey/30 rounded shadow-2xl text-center overflow-hidden p-8">
+                cajaConfirmacion.innerHTML = `
+                    <p class="text-azul-rey font-script text-4xl text-center mb-2">¡Asistencia Confirmada!</p>
+                    <p class="text-xs text-center text-azul-rey uppercase tracking-widest font-light mb-6">Este es tu pase oficial</p>
+                    
+                    <div id="tarjetaPaseDigitalRSVP" class="relative w-full bg-white border border-azul-rey/30 rounded shadow-lg text-center overflow-hidden p-6 mx-auto">
                         <div class="absolute top-0 left-0 w-full h-2 bg-azul-rey"></div>
-                        <img src="https://i.imgur.com/kD805Ba.png" crossorigin="anonymous" class="w-16 h-16 rounded-full object-cover mx-auto mb-4 border border-azul-rey/20" alt="Dorian">
+                        <img src="https://i.imgur.com/kD805Ba.png" crossorigin="anonymous" class="w-14 h-14 rounded-full object-cover mx-auto mb-4 border border-azul-rey/20" alt="Dorian">
                         <p class="text-[9px] uppercase tracking-[0.4em] text-azul-rey font-bold mb-2">Pase Oficial</p>
-                        <h4 class="font-script text-4xl md:text-5xl text-azul-rey mb-6 leading-tight capitalize">Fam. ${nombre}</h4>
+                        <h4 class="font-script text-3xl md:text-4xl text-azul-rey mb-4 leading-tight capitalize">Fam. ${nombre}</h4>
                         
-                        <div class="inline-block border-t border-b border-azul-rey/20 py-4 px-10 mb-6 w-full">
+                        <div class="inline-block border-t border-b border-azul-rey/20 py-3 px-8 mb-4 w-full">
                             <p class="text-[10px] uppercase tracking-[0.3em] text-azul-rey/80 font-bold mb-1">Pases Confirmados</p>
                             <p class="font-numbers text-5xl md:text-6xl text-azul-rey font-bold drop-shadow-sm">${paxTotal}</p>
                         </div>
@@ -613,7 +604,7 @@
                     </div>
                     
                     <div class="flex flex-col gap-3 w-full mt-6">
-                        <button id="btnDescargarImagen" class="bg-transparent text-white border border-white font-light py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-azul-rey transition-all duration-300 rounded shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                        <button id="btnDescargarImagenRSVP" class="bg-azul-rey text-white font-light py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-azul-rey border border-transparent hover:border-azul-rey transition-all duration-300 rounded shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Descargar Imagen
                         </button>
@@ -624,22 +615,22 @@
                     </div>
                 `;
 
-                // Descarga
-                const btnDescargarNueva = document.getElementById('btnDescargarImagen');
-                btnDescargarNueva.addEventListener('click', () => {
-                    const tarjeta = document.getElementById('tarjetaPaseDigital');
-                    const txtOriginal = btnDescargarNueva.innerHTML;
-                    btnDescargarNueva.innerText = "Procesando...";
+                // Botón de descargar imagen del nuevo pase
+                const btnDescargarRSVP = document.getElementById('btnDescargarImagenRSVP');
+                btnDescargarRSVP.addEventListener('click', () => {
+                    const tarjeta = document.getElementById('tarjetaPaseDigitalRSVP');
+                    const txtOriginal = btnDescargarRSVP.innerHTML;
+                    btnDescargarRSVP.innerText = "Procesando...";
                     html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
                         const enlace = document.createElement('a');
                         enlace.download = 'Pase_XV_Dorian.png';
                         enlace.href = canvas.toDataURL('image/png');
                         enlace.click();
-                        btnDescargarNueva.innerHTML = txtOriginal;
+                        btnDescargarRSVP.innerHTML = txtOriginal;
                     });
                 });
 
-                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                cajaConfirmacion.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             } catch (error) {
                 console.error("Error:", error);
@@ -683,7 +674,7 @@
                     const folio = "XV-DOR-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
                     resultDiv.innerHTML = `
-                        <div id="tarjetaPaseDigital" class="relative w-full bg-white border border-azul-rey/30 rounded shadow-2xl text-center overflow-hidden p-8">
+                        <div id="tarjetaPaseDigitalConsulta" class="relative w-full bg-white border border-azul-rey/30 rounded shadow-2xl text-center overflow-hidden p-8">
                             <div class="absolute top-0 left-0 w-full h-2 bg-azul-rey"></div>
                             <img src="https://i.imgur.com/kD805Ba.png" crossorigin="anonymous" class="w-16 h-16 rounded-full object-cover mx-auto mb-4 border border-azul-rey/20" alt="Dorian">
                             <p class="text-[9px] uppercase tracking-[0.4em] text-azul-rey font-bold mb-2">Pase Oficial</p>
@@ -698,23 +689,23 @@
                             <p class="text-[8px] uppercase tracking-[0.2em] text-azul-rey/80">Muestra esta tarjeta en recepción</p>
                         </div>
                         
-                        <button id="btnDescargarImagen" class="mt-6 bg-transparent text-white border border-white font-light py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-azul-rey transition-all duration-300 rounded shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                        <button id="btnDescargarImagenConsulta" class="mt-6 bg-transparent text-white border border-white font-light py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-azul-rey transition-all duration-300 rounded shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Descargar Imagen
                         </button>
                     `;
 
-                    const btnDescargarNueva = document.getElementById('btnDescargarImagen');
-                    btnDescargarNueva.addEventListener('click', () => {
-                        const tarjeta = document.getElementById('tarjetaPaseDigital');
-                        const originalText = btnDescargarNueva.innerHTML;
-                        btnDescargarNueva.innerText = "Generando imagen...";
+                    const btnDescargarConsulta = document.getElementById('btnDescargarImagenConsulta');
+                    btnDescargarConsulta.addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalConsulta');
+                        const txtOri = btnDescargarConsulta.innerHTML;
+                        btnDescargarConsulta.innerText = "Generando imagen...";
                         html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
                             const enlace = document.createElement('a');
                             enlace.download = 'Pase_XV_Dorian.png';
                             enlace.href = canvas.toDataURL('image/png');
                             enlace.click();
-                            btnDescargarNueva.innerHTML = originalText;
+                            btnDescargarConsulta.innerHTML = txtOri;
                         });
                     });
 
