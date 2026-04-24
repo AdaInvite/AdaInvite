@@ -407,10 +407,10 @@
                     Ayúdame a capturar los mejores momentos de esta fiesta inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
                 </p>
                 <div class="mx-auto bg-white p-4 rounded-xl shadow-lg inline-block mb-10 border-2 border-vino-tinto/80">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tus-fotos-aqui.com" alt="QR" class="w-40 h-40">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://adainvite.com/cumplepayo/recuerdos" alt="QR" class="w-40 h-40">
                 </div>
                 <br>
-                <a href="#" target="_blank" class="inline-block bg-vino-tinto text-white border border-vino-tinto px-10 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-vino-tinto transition-all hover:-translate-y-1 duration-300 rounded-sm">
+                <a href="https://adainvite.com/cumplepayo/recuerdos" target="_blank" class="inline-block bg-vino-tinto text-white border border-vino-tinto px-10 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-vino-tinto transition-all hover:-translate-y-1 duration-300 rounded-sm">
                     Subir fotos aquí
                 </a>
             </div>
@@ -422,12 +422,22 @@
                 <h2 class="text-5xl md:text-7xl font-script text-vino-tinto mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-white/80 font-bold">Confirmar antes del 10 de Abril de 2026</p>
                 <form id="rsvpForm" class="space-y-12 text-left bg-white/5 p-8 rounded-xl border border-vino-tinto/30 shadow-2xl">
-                    <div class="grid md:grid-cols-2 gap-10">
-                        <div class="border-b border-vino-tinto/50"><label class="text-[9px] uppercase tracking-widest opacity-70">Nombre</label><input type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white"></div>
-                        <div class="border-b border-vino-tinto/50"><label class="text-[9px] uppercase tracking-widest opacity-70">Personas</label><select class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none"><option class="text-black">1 Persona</option><option class="text-black">2 Personas</option><option class="text-black">Familia</option></select></div>
-                    </div>
-                    <button type="submit" class="w-full bg-vino-tinto text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-transparent hover:text-vino-tinto border border-vino-tinto transition-all duration-300 rounded-sm">Confirmar</button>
-                </form>
+    <div class="grid md:grid-cols-2 gap-10">
+        <div class="border-b border-vino-tinto/50">
+            <label class="text-[9px] uppercase tracking-widest opacity-70">Nombre</label>
+            <input id="nombre" type="text" required class="w-full bg-transparent py-2 outline-none serif text-xl text-white">
+        </div>
+        <div class="border-b border-vino-tinto/50">
+            <label class="text-[9px] uppercase tracking-widest opacity-70">Personas</label>
+            <select id="personas" class="w-full bg-transparent py-2 outline-none serif text-xl text-white appearance-none">
+                <option class="text-black">1 Persona</option>
+                <option class="text-black">2 Personas</option>
+                <option class="text-black">Familia</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="w-full bg-vino-tinto text-white font-bold py-5 uppercase tracking-[0.5em] text-[11px] hover:bg-transparent hover:text-vino-tinto border border-vino-tinto transition-all duration-300 rounded-sm">Confirmar</button>
+</form>
                 <div id="successMessage" class="hidden p-12 border border-vino-tinto/50 mt-10 bg-black/60 rounded-xl"><p class="text-4xl font-script text-vino-tinto">¡Te espero para celebrar!</p></div>
             </div>
         </section>
@@ -504,10 +514,28 @@
         }
 
         document.getElementById('rsvpForm').onsubmit = (e) => {
-            e.preventDefault();
-            e.target.classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-        };
+    e.preventDefault();
+    
+    // 1. Obtener los valores ingresados por el usuario
+    const nombre = document.getElementById('nombre').value;
+    const personas = document.getElementById('personas').value;
+    
+    // 2. Construir el mensaje formateado
+    const mensaje = `¡Hola! Confirmo mi asistencia para tu cumpleaños.%0A%0A*Nombre:* ${nombre}%0A*Cantidad:* ${personas}`;
+    
+    // 3. Número de WhatsApp (Con el código de país "52" para México al inicio)
+    const telefono = "524492232751";
+    
+    // 4. Crear el enlace de la API de WhatsApp
+    const url = `https://wa.me/${telefono}?text=${mensaje}`;
+    
+    // 5. Ocultar el formulario y mostrar el mensaje de éxito en la web
+    e.target.classList.add('hidden');
+    document.getElementById('successMessage').classList.remove('hidden');
+    
+    // 6. Abrir WhatsApp en una nueva pestaña
+    window.open(url, '_blank');
+};
 
         function calendarLink(title, loc, date) {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
