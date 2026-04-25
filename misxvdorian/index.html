@@ -567,7 +567,7 @@
         // ==========================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwn3r43e1YXrl2tXpmZdPijUeAyDnL4ONr15qI_Vk8N8cuUm3w-sn9tGnKruxxYO9de/exec"; 
 
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+       document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nombre = document.getElementById('rsvpName').value.trim();
             const adultos = parseInt(document.getElementById('rsvpAdultos').value.replace(/[^0-9]/g, '')) || 0;
@@ -577,11 +577,33 @@
             if (paxTotal === 0) { alert("Debes confirmar al menos 1 persona."); return; }
 
             const btnSubmit = document.getElementById('btnSubmitRSVP');
-            btnSubmit.innerText = "Generando pase...";
+            btnSubmit.innerText = "Verificando...";
             btnSubmit.disabled = true;
 
             try {
-                // Guardar silenciosamente en Google Sheets
+                // ==========================================
+                // 1. VERIFICACIÓN DE INVITADO EXISTENTE
+                // ==========================================
+                const checkResponse = await fetch(SCRIPT_URL, {
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'consultar', nombre: nombre }), 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+                const checkRes = await checkResponse.json();
+
+                // Si el invitado ya está en la base de datos (aprobado o pendiente)
+                if (checkRes.status === 'aprobado' || checkRes.status === 'pendiente') {
+                    alert("¡Tu asistencia ya fue registrada anteriormente!\n\nPor favor, desliza hacia abajo a la sección 'Recuperar Pase' para descargar tu acceso.");
+                    btnSubmit.innerText = "Confirmar";
+                    btnSubmit.disabled = false;
+                    return; // Detenemos la ejecución para que no guarde el duplicado
+                }
+
+                // ==========================================
+                // 2. SI NO EXISTE, PROCEDEMOS A GUARDARLO
+                // ==========================================
+                btnSubmit.innerText = "Generando pase...";
+
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'rsvp', nombre: nombre, pax: paxTotal, adultos: adultos, ninos: ninos }),
@@ -644,7 +666,7 @@
 
             } catch (error) {
                 console.error("Error:", error);
-               const mensajeWa = `¡Hola! Confirmo mi asistencia soy ${nombre} para los XV de Dorian. Seremos ${paxTotal} personas en total (${adultos} adultos y ${ninos} niños).`;
+                const mensajeWa = `¡Hola! Confirmo mi asistencia soy ${nombre} para los XV de Dorian. Seremos ${paxTotal} personas en total (${adultos} adultos y ${ninos} niños).`;
                 window.open(`https://wa.me/528332187771?text=${encodeURIComponent(mensajeWa)}`, '_blank');
                 btnSubmit.innerText = "Confirmar";
                 btnSubmit.disabled = false;
