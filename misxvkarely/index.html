@@ -787,15 +787,8 @@
             loadQuestion();
         }
 
-        // ==========================================
-        // CONFIGURACIÓN DE APPS SCRIPT
-        // ==========================================
-        // RECUERDA: Reemplazar esta URL por el Web App de la hoja de Karely
         const SCRIPT_URL = "https://script.google.com/macros/s/SU_SCRIPT_AQUI/exec"; 
 
-        // ==========================================
-        // LÓGICA DE CONFIRMACIÓN (RSVP) + GENERACIÓN DE PASE
-        // ==========================================
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nombre = document.getElementById('rsvpName').value.trim();
@@ -807,28 +800,24 @@
             btnSubmit.disabled = true;
 
             try {
-                // 1. Guardar silenciosamente en Google Sheets
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'rsvp', nombre: nombre, pax: pax }),
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
                 });
 
-                // 2. Ocultar el formulario de RSVP y mostrar agradecimiento
                 document.getElementById('rsvpForm').innerHTML = `<p class="text-white font-script text-4xl text-center mt-6 mb-2">¡Asistencia Confirmada!</p><p class="text-xs text-center text-white/80 uppercase tracking-widest font-bold">Desliza hacia abajo</p>`;
 
-                // 3. Ocultar el formulario de Consulta (ya no lo necesitan)
                 document.getElementById('consultaFormContainer').classList.add('hidden');
                 if(document.getElementById('msgConsulta')) document.getElementById('msgConsulta').classList.add('hidden');
 
-                // 4. Generar el pase visualmente en la sección de abajo
                 const resultDiv = document.getElementById('contenedorPaseOficial');
                 resultDiv.classList.remove('hidden');
                 resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
                 
                 const folio = "XV-KAR-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
                 const mensajeWa = `¡Hola! Confirmo la asistencia de la familia ${nombre} para los XV de Karely. Seremos ${pax} personas.`;
-                const waLink = `https://wa.me/527228793504?text=${encodeURIComponent(mensajeWa)}`; // Asegúrate de cambiar el número
+                const waLink = `https://wa.me/527228793504?text=${encodeURIComponent(mensajeWa)}`;
 
                 resultDiv.innerHTML = `
                     <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border border-terracota/30 rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
@@ -859,7 +848,6 @@
                     </div>
                 `;
 
-                // Lógica de descarga nativa con html2canvas
                 const btnDescargarNueva = document.getElementById('btnDescargarImagen');
                 btnDescargarNueva.addEventListener('click', () => {
                     const tarjeta = document.getElementById('tarjetaPaseDigital');
@@ -879,29 +867,23 @@
                     });
                 });
 
-                // 5. Hacer scroll suave hasta donde se dibujó el pase
                 resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             } catch (error) {
                 console.error("Error al guardar:", error);
-                // Fallback: Si algo falla con la hoja de cálculo, al menos los manda a WhatsApp
                 const mensajeWa = `¡Hola! Confirmo la asistencia de la familia ${nombre} para los XV de Karely. Seremos ${pax} personas.`;
-                const waLink = `https://wa.me/527228793504?text=${encodeURIComponent(mensajeWa)}`; // Mismo número a cambiar
+                const waLink = `https://wa.me/527228793504?text=${encodeURIComponent(mensajeWa)}`;
                 window.open(waLink, '_blank');
                 btnSubmit.innerText = "Confirmar";
                 btnSubmit.disabled = false;
             }
         });
 
-        // ==========================================
-        // LÓGICA DE BÚSQUEDA DE PASE (Consultar)
-        // ==========================================
         async function consultarPase() {
             const nombre = document.getElementById('inputConsultaNombre').value.trim();
             const msg = document.getElementById('msgConsulta');
             const btnConsultar = document.getElementById('btnConsultar');
             
-            // Validación de input vacío
             if(!nombre) {
                 msg.innerText = "Por favor, ingresa el nombre de tu familia.";
                 msg.classList.remove('hidden');
@@ -910,7 +892,6 @@
 
             msg.classList.add('hidden');
             
-            // Feedback de carga
             const originalText = btnConsultar.innerText;
             btnConsultar.innerText = "Buscando...";
             btnConsultar.disabled = true;
@@ -925,17 +906,13 @@
                 const res = await response.json();
                 
                 if (res.status === 'aprobado') {
-                    // Ocultamos el formulario
                     document.getElementById('consultaFormContainer').classList.add('hidden');
                     
-                    // Seleccionamos el contenedor y limpiamos sus clases para inyectar el nuevo diseño
                     const resultDiv = document.getElementById('contenedorPaseOficial');
                     resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
                     
-                    // Generamos un folio estético
                     const folio = "XV-KAR-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
-                    // Inyectamos la estructura del pase
                     resultDiv.innerHTML = `
                         <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border border-terracota/30 rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
                             <div class="absolute top-0 left-0 w-full h-3 bg-terracota"></div>
@@ -960,7 +937,6 @@
                         </button>
                     `;
 
-                    // LÓGICA DE DESCARGA CON HTML2CANVAS
                     const btnDescargarNueva = document.getElementById('btnDescargarImagen');
                     btnDescargarNueva.addEventListener('click', () => {
                         const tarjeta = document.getElementById('tarjetaPaseDigital');
@@ -987,11 +963,9 @@
                     });
 
                 } else if (res.status === 'pendiente') {
-                    // Está en Excel pero sin número asignado
                     msg.innerText = "¡Tenemos tu registro! Pero el anfitrión aún está preparando tu pase final. Vuelve a consultar pronto.";
                     msg.classList.remove('hidden');
                 } else {
-                    // No existe la fila
                     msg.innerText = "Reserva no encontrada. Revisa que el nombre esté escrito exactamente como en tu confirmación.";
                     msg.classList.remove('hidden');
                 }
@@ -1025,26 +999,33 @@
                 document.getElementById('nombre-invitado-inicio').innerText = familia;
                 document.getElementById('pases-invitado-inicio').innerText = pases;
 
-                // Pre-llenar formularios
+                // Pre-llenar formularios y bloquearlos
                 const rsvpName = document.getElementById('rsvpName');
                 const rsvpPax = document.getElementById('rsvpPax');
                 const inputConsulta = document.getElementById('inputConsultaNombre');
 
-                if (rsvpName) rsvpName.value = familia;
-                if (inputConsulta) inputConsulta.value = familia;
+                if (rsvpName) {
+                    rsvpName.value = familia;
+                    rsvpName.setAttribute('readonly', true); // Bloquea la escritura
+                    rsvpName.classList.add('cursor-not-allowed', 'opacity-60'); // Estilo bloqueado
+                }
+                
+                if (inputConsulta) {
+                    inputConsulta.value = familia;
+                    inputConsulta.setAttribute('readonly', true); // Bloquea la escritura
+                    inputConsulta.classList.add('cursor-not-allowed', 'opacity-60'); // Estilo bloqueado
+                }
                 
                 if (rsvpPax) {
                     rsvpPax.value = pases;
                     
                     // BLOQUEO DE INPUT: No permitir más pases de los asignados
                     rsvpPax.addEventListener('input', function() {
-                        // Quitamos letras o símbolos y lo pasamos a número
                         let val = parseInt(this.value.replace(/[^0-9]/g, '')) || 0;
                         
                         if (val > maxPasesGlobal) {
-                            this.value = maxPasesGlobal; // Lo forzamos al máximo permitido
+                            this.value = maxPasesGlobal; 
                             
-                            // Feedback visual en el botón para que entiendan por qué se bloquea
                             const btn = document.getElementById('btnSubmitRSVP');
                             const originalTxt = btn.innerText;
                             btn.innerText = `Límite: ${maxPasesGlobal} pases`;
