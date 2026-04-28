@@ -667,20 +667,26 @@ let isPlaying = false;
     const playIcon = document.getElementById("icon-play");
     const pauseIcon = document.getElementById("icon-pause");
     
-    // Forzamos el volumen aquí también
-    audio.volume = 0.1; 
+    // 1. Aseguramos que el audio está cargado o cargando
+    audio.load(); 
+    
+    // 2. Esperamos un milisegundo antes de bajar el volumen y dar play
+    setTimeout(() => {
+        audio.volume = 0.05; // Lo bajamos al 5% para probar si reacciona
 
-    audio.play().then(() => {
-        isPlaying = true;
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
-    }).catch(error => {
-        console.log("Autoplay bloqueado");
-        isPlaying = false;
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-    });
+        audio.play().then(() => {
+            isPlaying = true;
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+        }).catch(error => {
+            console.log("Autoplay bloqueado");
+            isPlaying = false;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+        });
+    }, 50);
 }
+
 
 
         function toggleAudio() {
