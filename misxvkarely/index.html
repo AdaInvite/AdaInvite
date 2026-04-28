@@ -649,7 +649,7 @@
             loadQuestion();
             playAudio(); 
             // Agrega esto dentro de openEnvelope
-            audio.volume = 0.4; 
+            audio.volume = 0.3; 
 
             document.getElementById('envelope-wrapper').classList.add('open');
 
@@ -659,23 +659,29 @@
         }
 
         const audio = document.getElementById("bg-music");
-        let isPlaying = false;
+audio.volume = 0.3; // Ajuste inmediato al cargar el script
+let isPlaying = false;
+
 
         function playAudio() {
-            const playIcon = document.getElementById("icon-play");
-            const pauseIcon = document.getElementById("icon-pause");
-            
-            audio.play().then(() => {
-                isPlaying = true;
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-            }).catch(error => {
-                console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
-                isPlaying = false;
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-            });
-        }
+    const playIcon = document.getElementById("icon-play");
+    const pauseIcon = document.getElementById("icon-pause");
+    
+    // Forzamos el volumen aquí también
+    audio.volume = 0.3; 
+
+    audio.play().then(() => {
+        isPlaying = true;
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+    }).catch(error => {
+        console.log("Autoplay bloqueado");
+        isPlaying = false;
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+    });
+}
+
 
         function toggleAudio() {
             const playIcon = document.getElementById("icon-play");
