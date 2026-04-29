@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Pases | AdaInvite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-xl p-8 border border-gray-100">
+        <div class="text-center mb-8">
+            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png" alt="AdaInvite" class="w-16 mx-auto mb-4 opacity-80">
+            <h1 class="text-2xl font-bold text-gray-800">Generador de Pases</h1>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">XV Analiz</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Familia / Invitado</label>
+                <input type="text" id="inputFamilia" placeholder="Ej. Familia Pérez" class="w-full border-b-2 border-gray-200 py-2 focus:outline-none focus:border-black transition-colors bg-transparent text-lg">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Cantidad de Pases</label>
+                <input type="tel" id="inputPases" placeholder="Ej. 4" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full border-b-2 border-gray-200 py-2 focus:outline-none focus:border-black transition-colors bg-transparent text-lg">
+            </div>
+
+            <button onclick="generarLink()" class="w-full bg-black text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs hover:bg-gray-800 transition-all active:scale-95 shadow-md mt-4">
+                Generar Enlace
+            </button>
+        </div>
+
+        <div id="resultadoContainer" class="hidden mt-8 pt-6 border-t border-gray-100">
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-2 text-center font-bold">Enlace Listo</p>
+            
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4 break-all text-sm text-gray-700 font-light" id="linkGenerado">
+                </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="copiarLink()" id="btnCopiar" class="flex items-center justify-center gap-2 bg-white border border-black text-black py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-all active:scale-95">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copiar
+                </button>
+                
+                <button onclick="enviarWhatsApp()" class="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#20b858] transition-all active:scale-95 shadow-md">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL base actualizada para Analiz
+        const URL_BASE_INVITACION = "https://adainvite.com/misxvanaliz/";
+        let linkFinal = "";
+
+        function generarLink() {
+            const familia = document.getElementById('inputFamilia').value.trim();
+            const pases = document.getElementById('inputPases').value.trim();
+
+            if(!familia || !pases) {
+                alert("Por favor, llena ambos campos antes de generar el enlace.");
+                return;
+            }
+
+            // Codificamos el nombre para que la URL sea válida
+            const familiaCodificada = encodeURIComponent(familia);
+            
+            // Agregamos el query param directamente a la ruta enviada
+            linkFinal = `${URL_BASE_INVITACION}?n=${familiaCodificada}&pases=${pases}`;
+
+            // Mostramos el resultado
+            document.getElementById('linkGenerado').innerText = linkFinal;
+            document.getElementById('resultadoContainer').classList.remove('hidden');
+        }
+
+        function copiarLink() {
+            navigator.clipboard.writeText(linkFinal).then(() => {
+                const btn = document.getElementById('btnCopiar');
+                const htmlOriginal = btn.innerHTML;
+                
+                btn.innerHTML = "¡Copiado!";
+                btn.classList.add('bg-black', 'text-white');
+                btn.classList.remove('bg-white', 'text-black');
+
+                setTimeout(() => {
+                    btn.innerHTML = htmlOriginal;
+                    btn.classList.remove('bg-black', 'text-white');
+                    btn.classList.add('bg-white', 'text-black');
+                }, 2000);
+            });
+        }
+
+       function enviarWhatsApp() {
+            const mensaje = `\n\n${linkFinal} \n¡Hola! ✨ \nSe acerca mi gran día y me haría muchísima ilusión que me acompañaras. \nTe comparto el enlace con todos los detalles de mis XV años. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo. `;
+            
+            // Se agregó el número de teléfono con el código de país de México (+52)
+            const urlWa = `https://api.whatsapp.com/send?phone=523313088678&text=${encodeURIComponent(mensaje)}`;
+            
+            window.open(urlWa, '_blank');
+        }
+    </script>
+</body>
+</html>
