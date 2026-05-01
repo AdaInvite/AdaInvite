@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XV Diana</title>
+    <title>Invitación - Mis XV Diana</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="XV Diana">
+    <meta name="apple-mobile-web-app-title" content="Mis XV Diana">
     <meta name="theme-color" content="#7D0F0D">
     <meta property="og:title" content="Mis XV Diana">
     <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
@@ -57,10 +57,10 @@
             justify-content: center; 
         }
 
-        /* 2. Creamos el contenedor que simulará la pantalla del celular */
+        /* 2. Creamos el contenedor que simulará la pantalla del celular (Más ancho: 480px) */
         .mobile-container {
             width: 100%;
-            max-width: 430px; 
+            max-width: 480px; /* <--- Ancho incrementado */
             height: 100%;
             min-height: 100svh;
             background-color: var(--blanco-perla); 
@@ -106,6 +106,7 @@
             width: 100%;
         }
 
+       /* Se cambió 95vw por 95% para evitar que rompa el contenedor de PC */
        .forma-ovalada {
             background-color: var(--terracota);
             color: var(--blanco-perla);
@@ -118,8 +119,8 @@
             margin: 0 auto;
             position: relative;
             z-index: 10;
-            width: 95vw;
-            max-width: 480px; 
+            width: 95%; /* <--- CORRECCIÓN CLAVE */
+            max-width: 460px; 
             height: 96svh; 
             padding: 5% 6%; 
             overflow: hidden; 
@@ -135,7 +136,8 @@
 
         /* SOBRE INICIAL */
         #envelope-wrapper {
-            position: fixed; inset: 0; z-index: 100;
+            position: absolute; /* Cambiado a absolute para respetar el mobile-container */
+            inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
             transition: visibility 1.8s;
         }
@@ -170,7 +172,9 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: clamp(6rem, 25vw, 14rem); line-height: 1; margin-top: -10px; }
+        /* Ajuste de tipografía sin VW para que no crezca descontroladamente en PC */
+        .name-header { font-family: var(--font-script); font-size: 6.5rem; line-height: 1; margin-top: -10px; }
+        @media (min-width: 380px) { .name-header { font-size: 7.5rem; } }
 
         #section-main { display: none; }
 
@@ -253,7 +257,7 @@
 </head>
 <body>
 
-    <!-- CONTENEDOR MÓVIL: En PC se centra y mide 430px -->
+    <!-- CONTENEDOR MÓVIL: En PC se centra y mide 480px -->
     <div class="mobile-container">
 
         <audio id="bg-music" loop>
@@ -281,7 +285,7 @@
         <main id="section-main">
             
             <!-- HERO -->
-            <header class="relative min-h-[100svh] flex flex-col px-10 py-10 bg-blanco-perla bg-cover bg-center" style="background-image: url('https://i.imgur.com/RFUz4sr.jpeg');"> 
+            <header class="relative min-h-[100svh] flex flex-col px-6 py-10 bg-blanco-perla bg-cover bg-center" style="background-image: url('https://i.imgur.com/RFUz4sr.jpeg');"> 
                 <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-12 md:mt-20">
                     <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
                         
@@ -348,11 +352,11 @@
                     </div>
                     
                     <div class="flex-grow flex flex-col justify-center mt-36">
-                        <p class="text-sm md:text-base text-black italic leading-relaxed font-bold mb-8 px-4 md:px-24 lg:px-40">
+                        <p class="text-sm md:text-base text-black italic leading-relaxed font-bold mb-8 px-4 md:px-10 lg:px-20">
                             "Hoy comienza un nuevo día. Tendré muchas alegrías y recuerdos de mi infancia. Por eso quiero que estés presente para celebrar juntos mis XV años."
                         </p>
                         
-                        <div class="grid md:grid-cols-2 gap-10 md:gap-16">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
                             <div>
                                 <h3 class="text-[12px] md:text-[14px] uppercase tracking-[0.4em] mb-4 font-bold text-terracota">Mis Padres</h3>
                                 <p class="text-sm md:text-base text-black font-bold mb-1">Claudia Neeggetath Vera</p>
@@ -448,30 +452,30 @@
             <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla relative overflow-hidden">
                 <div class="forma-ovalada w-full mx-auto reveal text-center">
                     
-                    <h3 class="text-6xl font-script text-white drop-shadow-sm mb-12">Faltan solo...</h3>
+                    <h3 class="text-5xl md:text-6xl font-script text-white drop-shadow-sm mb-12">Faltan solo...</h3>
 
-                    <div id="countdown" class="flex gap-4 md:gap-10 justify-center px-4 md:px-10 mb-16 w-full">
+                    <div id="countdown" class="flex gap-4 md:gap-8 justify-center px-2 md:px-10 mb-16 w-full">
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 md:w-24 md:h-24 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
-                                <span id="days" class="time-num text-3xl md:text-3xl text-white">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
+                                <span id="days" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
                             <span class="time-label text-white font-bold">Días</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 md:w-24 md:h-24 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
-                                <span id="hours" class="time-num text-3xl md:text-3xl text-white">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
+                                <span id="hours" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
                             <span class="time-label text-white font-bold">Horas</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 md:w-24 md:h-24 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
-                                <span id="minutes" class="time-num text-3xl md:text-3xl text-white">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
+                                <span id="minutes" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
                             <span class="time-label text-white font-bold">Min</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 md:w-24 md:h-24 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
-                                <span id="seconds" class="time-num text-3xl md:text-3xl text-white">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/20 border border-white/40 shadow-lg flex items-center justify-center mb-4">
+                                <span id="seconds" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
                             <span class="time-label text-white font-bold">Seg</span>
                         </div>
@@ -479,8 +483,8 @@
 
                     <div class="reveal-scale delay-200 mt-6 w-full">
                         <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-white font-bold">Reserva el momento <br> en tu calendario</p>
-                        <div class="flex justify-center">
-                            <button onclick="calendarLink('Mis XV Diana', 'Salón Katsa', '20260829T143000')" class="bg-white text-terracota px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-white border border-white transition-all duration-300 shadow-md">
+                        <div class="flex justify-center w-full px-4">
+                            <button onclick="calendarLink('Mis XV Diana', 'Salón Katsa', '20260829T143000')" class="w-full max-w-[280px] bg-white text-terracota px-6 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-white border border-white transition-all duration-300 shadow-md">
                                 Agregar al calendario
                             </button>
                         </div>
@@ -494,45 +498,45 @@
             </div>
 
             <!-- ITINERARIO (BG INTERCALADO) -->
-            <section class="min-h-[100svh] flex flex-col justify-center py-10 px-10 md:px-20 bg-intercalado relative overflow-hidden">
+            <section class="min-h-[100svh] flex flex-col justify-center py-10 px-6 md:px-16 bg-intercalado relative overflow-hidden">
                 <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                     <div class="text-center mb-14">
                         <h1 class="text-6xl mb-4 text-terracota font-script reveal-scale text-shadow-light">Itinerario</h1>
                         <p class="text-[10px] uppercase tracking-[0.5em] text-black font-bold">Los momentos <br> que tendremos</p>
                     </div>
 
-                    <div class="relative w-full max-w-lg mx-auto">
+                    <div class="relative w-full mx-auto">
                         <div class="absolute left-1/2 transform -translate-x-1/2 w-px h-full bg-terracota/30 z-0"></div>
                         
                         <div class="space-y-5">
                             
                             <div class="flex items-center w-full relative z-10 reveal-left">
-                                <div class="w-1/2 flex justify-center pr-4 md:pr-8">
-                                    <img src="https://i.imgur.com/AIApde9.png" class="w-20 md:w-28 object-contain opacity-90 filtro-blanco relative z-10 drop-shadow-sm px-2 py-4">
+                                <div class="w-1/2 flex justify-end pr-4 md:pr-8">
+                                    <img src="https://i.imgur.com/AIApde9.png" class="w-16 md:w-20 object-contain opacity-90 filtro-blanco relative z-10 drop-shadow-sm py-4">
                                 </div>
                                 <div class="w-1/2 text-left pl-4 md:pl-8">
-                                    <span class="text-base md:text-base text-terracota font-numbers italic font-bold">2:30 PM</span>
-                                    <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">Recepción</h3>
+                                    <span class="text-sm md:text-base text-terracota font-numbers italic font-bold">2:30 PM</span>
+                                    <h3 class="text-sm md:text-base text-[#2C2A2A] font-bold mt-1">Recepción</h3>
                                 </div>
                             </div>
 
                             <div class="flex items-center w-full relative z-10 reveal-right">
                                 <div class="w-1/2 text-right pr-4 md:pr-8">
-                                    <span class="text-base md:text-base text-terracota font-numbers italic font-bold">4:00 PM</span>
-                                    <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">Comida</h3>
+                                    <span class="text-sm md:text-base text-terracota font-numbers italic font-bold">4:00 PM</span>
+                                    <h3 class="text-sm md:text-base text-[#2C2A2A] font-bold mt-1">Comida</h3>
                                 </div>
-                                <div class="w-1/2 flex justify-center pl-4 md:pl-8">
-                                    <img src="https://i.imgur.com/6YWudkf.png" class="w-20 md:w-28 object-contain opacity-80 filtro-blanco relative z-10 drop-shadow-sm px-2 py-4">
+                                <div class="w-1/2 flex justify-start pl-4 md:pl-8">
+                                    <img src="https://i.imgur.com/6YWudkf.png" class="w-16 md:w-20 object-contain opacity-80 filtro-blanco relative z-10 drop-shadow-sm py-4">
                                 </div>
                             </div>
 
                             <div class="flex items-center w-full relative z-10 reveal-left">
-                                <div class="w-1/2 flex justify-center pr-4 md:pr-8">
-                                    <img src="https://i.imgur.com/AEpfW9Z.png" class="w-20 md:w-28 object-contain opacity-90 filtro-blanco relative z-10 drop-shadow-sm px-2 py-4">
+                                <div class="w-1/2 flex justify-end pr-4 md:pr-8">
+                                    <img src="https://i.imgur.com/AEpfW9Z.png" class="w-16 md:w-20 object-contain opacity-90 filtro-blanco relative z-10 drop-shadow-sm py-4">
                                 </div>
                                 <div class="w-1/2 text-left pl-4 md:pl-8">
-                                    <span class="text-base md:text-base text-terracota font-numbers italic font-bold">12:00 AM</span>
-                                    <h3 class="text-base md:text-base text-[#2C2A2A] font-bold mt-1">Fin del evento</h3>
+                                    <span class="text-sm md:text-base text-terracota font-numbers italic font-bold">12:00 AM</span>
+                                    <h3 class="text-sm md:text-base text-[#2C2A2A] font-bold mt-1">Fin del evento</h3>
                                 </div>
                             </div>
 
@@ -547,9 +551,9 @@
                     <div class="mx-auto mb-10 flex items-center justify-center">
                         <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-blanco" alt="Código de Vestimenta">
                     </div>
-                    <h2 class="text-6xl mb-8 font-script text-white text-shadow-light">Código de<br> Vestimenta</h2>
+                    <h2 class="text-5xl md:text-6xl mb-8 font-script text-white text-shadow-light">Código de<br> Vestimenta</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] text-terracota mb-10 font-bold bg-white inline-block px-8 py-3 rounded-none shadow-sm">Semi formal</p>
-                    <p class="text-sm md:text-base font-light text-white mb-8 leading-relaxed px-10 md:px-20">Por favor, reserva el color rojo exclusivamente para la quinceañera.</p>
+                    <p class="text-sm md:text-base font-light text-white mb-8 leading-relaxed px-6 md:px-16">Por favor, reserva el color rojo exclusivamente para la quinceañera.</p>
                     
                     <div class="flex justify-center gap-10 mt-6">
                         <div class="flex flex-col items-center">
@@ -566,7 +570,7 @@
             </div>
 
             <!-- REGALOS (BG INTERCALADO) -->
-            <section class="min-h-[100svh] flex flex-col justify-center py-12 px-10 bg-intercalado text-center relative overflow-hidden">
+            <section class="min-h-[100svh] flex flex-col justify-center py-12 px-6 bg-intercalado text-center relative overflow-hidden">
                 <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                     <svg class="w-16 h-16 mx-auto mb-6 text-terracota" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"></path>
@@ -589,7 +593,7 @@
                     
                     <h1 class="text-5xl mb-4 font-script reveal-scale text-white w-full">Álbum Compartido</h1>
                     
-                    <p class="text-sm md:text-base font-light tracking-wide mb-6 leading-relaxed text-white/90 w-full max-w-sm mx-auto">
+                    <p class="text-sm md:text-base font-light tracking-wide mb-6 leading-relaxed text-white/90 w-full max-w-sm mx-auto px-4">
                         Ayúdame a capturar los mejores momentos de esta noche inolvidable. ¡Escanea el código para subir tus fotos!
                     </p>
 
@@ -609,7 +613,7 @@
                     <h2 class="text-6xl font-script mb-4 text-terracota text-shadow-light w-full mt-4">Asistencia</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] mb-8 font-bold text-[#2C2A2A] w-full">Confirmar antes del 15 de Agosto de 2026</p>
                     
-                    <form id="rsvpForm" class="w-full space-y-6 text-left transition-all duration-500 mb-4 bg-white/60 p-8 rounded-none shadow-sm border border-terracota/20">
+                    <form id="rsvpForm" class="w-full space-y-6 text-left transition-all duration-500 mb-4 bg-white/60 p-6 md:p-8 rounded-none shadow-sm border border-terracota/20">
                         <div class="space-y-6">
                             <div class="border-b border-terracota/50 pb-2">
                                 <label class="text-[10px] uppercase tracking-widest text-terracota font-bold">Nombre de Familia o Invitado</label>
