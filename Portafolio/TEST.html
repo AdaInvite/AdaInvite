@@ -1015,22 +1015,26 @@
 
                     
         
-                    // ==========================================
+                      // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
-        const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
+        const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
         
-        // 1. Guardamos las áreas que ya tienen firmas para evitar que se empalmen.
+        // 1. Guardamos las áreas que ya tienen firmas.
         // Protegemos el centro desde el inicio (donde dice Suelen Camila).
         let zonasOcupadas = [
             { left: 15, right: 85, top: 35, bottom: 65 } 
         ];
 
         // 2. Función matemática para buscar un hueco libre en la pizarra
-        function obtenerPosicionLibre() {
-            let maxIntentos = 150; 
-            let anchoFirma = 14; // Reducido: El % de ancho que ocupa la firma
-            let altoFirma = 10;  // Reducido: El % de alto que ocupa la firma
+        // AHORA RECIBE EL MENSAJE PARA SABER SU TAMAÑO
+        function obtenerPosicionLibre(mensaje) {
+            let maxIntentos = 300; 
+            let numCaracteres = mensaje.length;
+
+            // Calculamos cuánto espacio va a necesitar dependiendo de qué tan largo es
+            let anchoFirma = numCaracteres > 50 ? 28 : (numCaracteres > 20 ? 20 : 12); 
+            let altoFirma = numCaracteres > 50 ? 25 : (numCaracteres > 20 ? 15 : 8);
 
             for (let i = 0; i < maxIntentos; i++) {
                 // Generar posición aleatoria
@@ -1040,31 +1044,31 @@
                 let right = left + anchoFirma;
                 let bottom = top + altoFirma;
 
-                // Checar si la posición choca con alguna zona ya ocupada o con el centro
+                // Checar si choca con otra firma o con el centro
                 let hayColision = zonasOcupadas.some(zona => {
                     return !(right < zona.left || left > zona.right || bottom < zona.top || top > zona.bottom);
                 });
 
-                // Si hay espacio libre, lo guardamos como ocupado para la siguiente firma
+                // Si hay espacio libre, lo guardamos con un pequeño margen extra
                 if (!hayColision) {
                     zonasOcupadas.push({ 
-                        left: left - 1, // Margen de respiración un poco más pequeño
-                        right: right + 1, 
-                        top: top - 1, 
-                        bottom: bottom + 1 
+                        left: left - 2, 
+                        right: right + 2, 
+                        top: top - 2, 
+                        bottom: bottom + 2 
                     });
-                    return { left, top };
+                    return { left, top, numCaracteres };
                 }
             }
             
-            // PLAN B: Si el muro ya está súper lleno, lo pone al azar PERO forzando que esquive el centro
+            // PLAN B: Forzar posición esquivando el centro si ya está muy lleno
             let leftRespaldo, topRespaldo;
             do {
                 leftRespaldo = Math.floor(Math.random() * (100 - anchoFirma));
                 topRespaldo = Math.floor(Math.random() * (100 - altoFirma));
-            } while (leftRespaldo > 15 && leftRespaldo < 85 && topRespaldo > 35 && topRespaldo < 65);
+            } while (leftRespaldo > 10 && leftRespaldo < 90 && topRespaldo > 30 && topRespaldo < 70);
             
-            return { left: leftRespaldo, top: topRespaldo };
+            return { left: leftRespaldo, top: topRespaldo, numCaracteres };
         }
 
         // 3. Función para pintar una firma en el lienzo
@@ -1075,23 +1079,25 @@
             element.className = 'absolute text-[#2C2A2A] opacity-90 hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center';
 
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            const randomRotation = Math.floor(Math.random() * 24) - 12; 
-            
-            // AQUÍ REDUCIMOS EL TAMAÑO: Textos entre 11px y 14px
-            const randomSize = Math.floor(Math.random() * 4) + 11; 
+            const randomRotation = Math.floor(Math.random() * 20) - 10; 
+            const randomSize = Math.floor(Math.random() * 4) + 12; // Tamaño de letra entre 12px y 15px
 
-            // Buscar lugar donde no haya texto
-            const posicion = obtenerPosicionLibre();
+            // Pasamos el mensaje para que el algoritmo busque el tamaño adecuado
+            const posicion = obtenerPosicionLibre(mensaje);
 
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.transform = `rotate(${randomRotation}deg)`;
             element.style.top = `${posicion.top}%`;
             element.style.left = `${posicion.left}%`;
             element.style.fontSize = `${randomSize}px`;
-            element.style.maxWidth = '110px'; // Evita que se alarguen mucho en una sola línea
-            element.style.lineHeight = '1.2';
+            
+            // AHORA EL ANCHO MÁXIMO DEPENDE DE QUÉ TAN LARGO ES EL TEXTO
+            let maxAncho = posicion.numCaracteres > 50 ? '220px' : (posicion.numCaracteres > 20 ? '160px' : '100px');
+            element.style.maxWidth = maxAncho; 
+            
+            element.style.lineHeight = '1.3';
 
-            element.innerHTML = `<div class="leading-tight text-center break-words">${mensaje}</div><div class="font-bold text-right mt-1 text-[0.8em] text-azul-principal">- ${nombre}</div>`;
+            element.innerHTML = `<div class="text-center break-words">${mensaje}</div><div class="font-bold text-right mt-1 text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
             container.appendChild(element);
         }
@@ -1126,10 +1132,10 @@
             btnSubmit.disabled = true;
 
             try {
-                // Pintarla visualmente
+                // Pintarla visualmente de inmediato para el usuario
                 pintarFirmaEnMuro(nombre, mensaje);
 
-                // Mandarla a guardar
+                // Mandarla a guardar a Google Sheets
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: "firma", nombre: nombre, mensaje: mensaje })
