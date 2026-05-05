@@ -1014,7 +1014,10 @@
         }
 
       
-                  // ==========================================
+                  
+            
+            
+                        // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
         const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
@@ -1022,11 +1025,9 @@
         let zonasOcupadas = [];
         // Protegemos el centro exactamente donde está el nombre 
         const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
-        let totalFirmasGlobal = 0; 
+        let factorEscalaGlobal = 1; 
 
-        function pintarFirmaEnMuro(nombre, mensaje, esNueva = false) {
-            if (esNueva) totalFirmasGlobal++;
-
+        function pintarFirmaEnMuro(nombre, mensaje) {
             const container = document.getElementById('firmas-container');
             const element = document.createElement('div');
             
@@ -1035,22 +1036,20 @@
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
             const randomRotation = Math.floor(Math.random() * 20) - 10; 
 
-            // 1. TAMAÑOS MÁS PEQUEÑOS DESDE EL INICIO (Entre 10px y 13px)
-            let finalSize = Math.floor(Math.random() * 4) + 10; 
+            // El tamaño base, multiplicado por el factor que se reduce cada 10 firmas
+            const baseSize = Math.floor(Math.random() * 4) + 14; 
+            const finalSize = Math.max(8, Math.floor(baseSize * factorEscalaGlobal)); // El límite mínimo es 8px para que siempre se lea
             
-            // Si llegas a tener una locura de firmas (más de 50), las hace un pelín más chiquitas
-            if (totalFirmasGlobal > 50) finalSize = Math.max(8, finalSize - 2);
-
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.fontSize = `${finalSize}px`;
-            element.style.maxWidth = '110px'; // Mantiene los textos en forma de cuadrito y no de línea larga
+            element.style.maxWidth = `${Math.floor(130 * factorEscalaGlobal)}px`; // La caja también se encoge
             element.style.width = 'max-content';
             element.style.lineHeight = '1.15';
-            element.style.opacity = '0'; // Se crea invisible para medirlo
+            element.style.opacity = '0'; // Invisible temporalmente para medir
 
             element.innerHTML = `<div class="text-center break-words w-full">${mensaje}</div><div class="font-bold text-right mt-1 w-full text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
-            // Lo metemos al HTML para que la pantalla calcule su tamaño real en píxeles
+            // Metemos el texto al HTML para medir sus píxeles reales
             container.appendChild(element);
 
             const contWidth = container.offsetWidth || 1;
@@ -1062,50 +1061,56 @@
             let topPos = 0;
             let colocado = false;
 
-            // 2. BUSCADOR IMPLACABLE: Le damos 1,000 intentos para buscar un hueco perfecto
-            for (let i = 0; i < 1000; i++) {
+            // BUSCADOR ULTRA ESTRICTO: 2000 intentos para buscar un hueco perfecto
+            for (let i = 0; i < 2000; i++) {
                 let testLeft = 2 + Math.random() * (96 - wPct);
                 let testTop = 2 + Math.random() * (96 - hPct);
                 let testRight = testLeft + wPct;
                 let testBottom = testTop + hPct;
 
-                // REGLA 1: ¡Jamás tocar el centro donde dice Suelen Camila!
+                // REGLA 1: JAMÁS tocar el centro
                 if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) {
-                    continue; // Choca con el centro, volvemos a intentar
+                    continue; 
                 }
 
-                // REGLA 2: ¡CERO EMPALMES! Busca un espacio 100% limpio
+                // REGLA 2: CERO EMPALMES. 
+                // Al principio pide 2% de espacio en blanco alrededor. Si le cuesta trabajo, permite que casi se rocen (0%), pero NUNCA se enciman.
+                let margen = i > 1000 ? 0 : 2; 
+
                 let chocaOtra = zonasOcupadas.some(zona => {
-                    return !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom);
+                    return !(testRight < (zona.left - margen) || testLeft > (zona.right + margen) || testBottom < (zona.top - margen) || testTop > (zona.bottom + margen));
                 });
 
-                // Si no choca con absolutamente nada, ¡encontramos el lugar ideal!
                 if (!chocaOtra) { 
                     leftPos = testLeft;
                     topPos = testTop;
                     colocado = true;
-                    // Guardamos la zona como ocupada con un mini margen del 1% para que respiren
+                    // Guardamos la zona exacta ocupada
                     zonasOcupadas.push({
-                        left: testLeft - 1,
-                        right: testRight + 1,
-                        top: testTop - 1,
-                        bottom: testBottom + 1
+                        left: testLeft,
+                        right: testRight,
+                        top: testTop,
+                        bottom: testBottom
                     });
-                    break;
+                    break; // ¡Encontramos lugar, salimos del buscador!
                 }
             }
 
-            // 3. Lo colocamos en su posición ganadora
-            if (colocado) {
-                element.style.left = `${leftPos}%`;
-                element.style.top = `${topPos}%`;
-                element.style.transform = `rotate(${randomRotation}deg)`;
-                setTimeout(() => { element.style.opacity = '0.9'; }, 50);
-            } else {
-                // Si de milagro después de 1,000 intentos de plano no cabe, lo borramos silenciosamente
-                // (Pero como ahora son muy pequeñas, cabrán muchísimas antes de que esto pase)
-                element.remove();
+            // PLAN B: Si después de 2000 intentos milagrosamente no cabe de forma limpia,
+            // lo ponemos esquivando el centro. Con la reducción de tamaño esto casi nunca pasará, 
+            // pero garantiza que NUNCA se borre ninguna firma.
+            if (!colocado) {
+                do {
+                    leftPos = 2 + Math.random() * (96 - wPct);
+                    topPos = 2 + Math.random() * (96 - hPct);
+                } while (!(leftPos + wPct < ZONA_CENTRAL.left || leftPos > ZONA_CENTRAL.right || topPos + hPct < ZONA_CENTRAL.top || topPos > ZONA_CENTRAL.bottom));
             }
+
+            // Aparece la firma
+            element.style.left = `${leftPos}%`;
+            element.style.top = `${topPos}%`;
+            element.style.transform = `rotate(${randomRotation}deg)`;
+            setTimeout(() => { element.style.opacity = '0.9'; }, 50);
         }
 
         // Cargar firmas desde Google Sheets
@@ -1117,10 +1122,19 @@
                     document.getElementById('firmas-container').innerHTML = '';
                     zonasOcupadas = [];
                     
-                    totalFirmasGlobal = result.data.length; 
+                    let totalFirmas = result.data.length; 
                     
+                    // ESCALA EXACTA DE 10 EN 10
+                    if (totalFirmas <= 10) factorEscalaGlobal = 1;
+                    else if (totalFirmas <= 20) factorEscalaGlobal = 0.85; // Se encoge al 85%
+                    else if (totalFirmas <= 30) factorEscalaGlobal = 0.75; // Se encoge al 75%
+                    else if (totalFirmas <= 40) factorEscalaGlobal = 0.65; // Se encoge al 65%
+                    else if (totalFirmas <= 50) factorEscalaGlobal = 0.55; // Se encoge al 55%
+                    else if (totalFirmas <= 60) factorEscalaGlobal = 0.45; // Se encoge al 45%
+                    else factorEscalaGlobal = 0.40;                        // Límite máximo de reducción
+
                     result.data.forEach(firma => {
-                        pintarFirmaEnMuro(firma.nombre, firma.mensaje, false);
+                        pintarFirmaEnMuro(firma.nombre, firma.mensaje);
                     });
                 }
             } catch (error) {
@@ -1143,8 +1157,7 @@
             btnSubmit.disabled = true;
 
             try {
-                pintarFirmaEnMuro(nombre, mensaje, true);
-
+                // Guardamos en Google Sheets
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: "firma", nombre: nombre, mensaje: mensaje })
@@ -1155,6 +1168,9 @@
                 btnSubmit.classList.replace('border-azul-principal', 'border-green-600');
                 
                 document.getElementById('firmaForm').reset();
+                
+                // Recargamos TODO el muro para aplicar la reducción de tamaño si se pasó de los 10, 20, 30...
+                cargarFirmas();
                 
                 setTimeout(() => {
                     btnSubmit.innerText = originalText;
