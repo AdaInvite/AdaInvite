@@ -1008,41 +1008,86 @@
                 setTimeout(() => btnDescargar.innerText = "Descargar Tarjeta", 2000);
             });
         }
-     // ==========================================
+// ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
         const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
+        
+        // 1. Guardamos las áreas que ya tienen firmas para evitar que se empalmen.
+        // Protegemos el centro desde el inicio (donde dice Suelen Camila).
+        // Valores en porcentajes de pantalla: left, right, top, bottom
+        let zonasOcupadas = [
+            { left: 25, right: 75, top: 40, bottom: 60 } 
+        ];
 
-        // 1. Función para pintar una firma en el lienzo
+        // 2. Función matemática para buscar un hueco libre en la pizarra
+        function obtenerPosicionLibre() {
+            let maxIntentos = 100;
+            let anchoFirma = 18; // El % de ancho que ocupa aprox una firma
+            let altoFirma = 12;  // El % de alto que ocupa aprox una firma
+
+            for (let i = 0; i < maxIntentos; i++) {
+                // Generar posición aleatoria
+                let left = Math.floor(Math.random() * (100 - anchoFirma)); 
+                let top = Math.floor(Math.random() * (100 - altoFirma));
+                
+                let right = left + anchoFirma;
+                let bottom = top + altoFirma;
+
+                // Checar si la posición choca con alguna zona ya ocupada o con el centro
+                let hayColision = zonasOcupadas.some(zona => {
+                    return !(right < zona.left || left > zona.right || bottom < zona.top || top > zona.bottom);
+                });
+
+                // Si hay espacio libre, lo guardamos como ocupado para la siguiente firma
+                if (!hayColision) {
+                    zonasOcupadas.push({ 
+                        left: left - 2, // Le damos un ligero margen extra para que no se peguen mucho
+                        right: right + 2, 
+                        top: top - 2, 
+                        bottom: bottom + 2 
+                    });
+                    return { left, top };
+                }
+            }
+            // Si el muro ya está súper lleno, lo pone al azar como respaldo
+            return { 
+                left: Math.floor(Math.random() * 80), 
+                top: Math.floor(Math.random() * 80) 
+            };
+        }
+
+        // 3. Función para pintar una firma en el lienzo
         function pintarFirmaEnMuro(nombre, mensaje) {
             const container = document.getElementById('firmas-container');
             const element = document.createElement('div');
             
             // Clases base para el mensaje
-            element.className = 'absolute text-[#2C2A2A] opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-300 p-2 cursor-default drop-shadow-sm';
+            element.className = 'absolute text-[#2C2A2A] opacity-90 hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center';
 
-            // Aleatoriedad para simular escritura real
+            // Aleatoriedad más sutil y pequeña
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            const randomRotation = Math.floor(Math.random() * 40) - 20; // Rotación entre -20 y 20 grados
-            const randomTop = Math.floor(Math.random() * 80) + 5; // Posición Y (5% a 85%)
-            const randomLeft = Math.floor(Math.random() * 80) + 5; // Posición X (5% a 85%)
-            const randomSize = Math.floor(Math.random() * 10) + 20; // Tamaño entre 20px y 30px
+            const randomRotation = Math.floor(Math.random() * 24) - 12; // Rotación más leve (-12 a 12 grados)
+            const randomSize = Math.floor(Math.random() * 5) + 14; // Textos más pequeños (14px a 18px)
+
+            // Buscar lugar donde no haya texto
+            const posicion = obtenerPosicionLibre();
 
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.transform = `rotate(${randomRotation}deg)`;
-            element.style.top = `${randomTop}%`;
-            element.style.left = `${randomLeft}%`;
+            element.style.top = `${posicion.top}%`;
+            element.style.left = `${posicion.left}%`;
             element.style.fontSize = `${randomSize}px`;
-            element.style.maxWidth = '200px';
-            element.style.lineHeight = '1.1';
+            element.style.maxWidth = '150px'; // Evita que los textos se alarguen mucho
+            element.style.lineHeight = '1.2';
 
             // Estructura del texto
-            element.innerHTML = `<p class="leading-tight text-center">${mensaje}</p><p class="font-bold text-right mt-2 text-[0.8em] text-azul-principal">- ${nombre}</p>`;
+            element.innerHTML = `<p class="leading-tight text-center break-words">${mensaje}</p><p class="font-bold text-right mt-1 text-[0.8em] text-azul-principal">- ${nombre}</p>`;
 
             container.appendChild(element);
         }
 
-        // 2. Cargar firmas desde Google Sheets al abrir la página
+        // 4. Cargar firmas desde Google Sheets al abrir la página
         async function cargarFirmas() {
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=get_firmas`);
@@ -1057,10 +1102,9 @@
             }
         }
 
-        // Ejecutar carga al iniciar
         document.addEventListener('DOMContentLoaded', cargarFirmas);
 
-        // 3. Enviar nueva firma
+        // 5. Enviar nueva firma
         document.getElementById('firmaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
