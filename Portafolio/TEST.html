@@ -35,7 +35,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    
+    <!-- Agrega esto debajo de tus otros links de fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -652,28 +653,36 @@
             <img src="https://i.imgur.com/PQ132cI.jpeg" class="min-h-[100svh] w-full h-auto rounded-[40px] md:rounded-[60px] border-0 shadow-0 object-cover" alt="Separador">
         </div>
 
-        <!-- MURO DE FIRMAS -->
+      <!-- MURO DE FIRMAS -->
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative overflow-hidden text-center">
-            <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full">
-                <h2 class="text-5xl font-script text-azul-principal mb-4 drop-shadow-md">Libro de Firmas</h2>
+            <div class="max-w-5xl mx-auto reveal-scale relative z-10 w-full">
+                <h2 class="text-5xl font-script text-azul-principal mb-4 drop-shadow-md">Muro de los Buenos Deseos</h2>
                 <p class="text-[11px] uppercase tracking-[0.4em] mb-10 text-[#2C2A2A] font-bold">Déjale un lindo mensaje a Suelen</p>
                 
-                <div class="bg-white p-8 md:p-12 rounded-3xl border border-azul-principal/30 shadow-xl transition-all duration-500 w-full mx-auto relative">
-                    <!-- Decoración opcional en la esquina -->
-                    <img src="https://i.imgur.com/MTE3z9r.png" class="absolute top-0 left-0 w-32 opacity-20 filtro-azul transform -translate-x-4 -translate-y-4 pointer-events-none" alt="decoración">
-                    
+                <!-- ESTE ES EL LIENZO DONDE SE PINTARÁN LAS FIRMAS -->
+                <div id="muro-firmas-canvas" class="relative w-full h-[500px] md:h-[600px] bg-white rounded-3xl shadow-inner border-2 border-gray-200 overflow-hidden mb-10">
+                    <!-- Centro del muro con el nombre (fondo semi-transparente para que siempre se lea) -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20 bg-white/40 backdrop-blur-[2px]">
+                        <h2 class="text-6xl md:text-8xl font-script text-azul-principal text-shadow-light">Suelen Camila</h2>
+                        <p class="text-sm tracking-[0.5em] uppercase font-bold text-[#2C2A2A] mt-2">Mis XV Años</p>
+                    </div>
+                    <!-- Aquí caerán las firmas dinámicamente -->
+                    <div id="firmas-container" class="absolute inset-0 w-full h-full z-10"></div>
+                </div>
+
+                <!-- FORMULARIO -->
+                <div class="bg-white p-8 md:p-12 rounded-3xl border border-azul-principal/30 shadow-xl transition-all duration-500 w-full max-w-3xl mx-auto relative">
                     <form id="firmaForm" class="space-y-6 text-left bg-transparent relative z-10">
                         <div class="border-b border-azul-principal/50 pb-2">
                             <label class="text-[10px] uppercase tracking-widest text-azul-principal font-bold">Tu Nombre</label>
-                            <input type="text" id="firmaNombre" required placeholder="Ej. Familia García" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light placeholder-gray-400">
+                            <input type="text" id="firmaNombre" required placeholder="Ej. Familia García" maxlength="25" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light placeholder-gray-400">
                         </div>
                         <div class="border-b border-azul-principal/50 pb-2">
                             <label class="text-[10px] uppercase tracking-widest text-azul-principal font-bold">Tu Mensaje</label>
-                            <textarea id="firmaMensaje" required rows="3" placeholder="Escribe tus buenos deseos aquí..." class="w-full bg-transparent py-2 outline-none text-lg text-[#2C2A2A] font-light placeholder-gray-400 resize-none"></textarea>
+                            <textarea id="firmaMensaje" required rows="2" placeholder="Escribe tus buenos deseos aquí..." maxlength="120" class="w-full bg-transparent py-2 outline-none text-lg text-[#2C2A2A] font-light placeholder-gray-400 resize-none"></textarea>
                         </div>
-                        
-                        <button type="submit" id="btnSubmitFirma" class="w-full inline-block bg-azul-principal text-white font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-transparent hover:text-azul-principal border border-azul-principal transition-all hover:scale-105 active:scale-95 shadow-lg duration-300 rounded-xl text-center mt-6">
-                            Dejar Mensaje
+                        <button type="submit" id="btnSubmitFirma" class="w-full inline-block bg-azul-principal text-white font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-transparent hover:text-azul-principal border border-azul-principal transition-all shadow-lg duration-300 rounded-xl text-center mt-6">
+                            Firmar el Muro
                         </button>
                     </form>
                 </div>
@@ -755,7 +764,7 @@
         // ==========================================
         // URL DE TU GOOGLE APPS SCRIPT
         // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzWjpBnN3MRS6ToekCOBWPn7lGZaOkxbs8rVsh5Pz_Kz1vzHyM-EC_8hhxbLWvByrc/exec'; // <--- PEGA TU NUEVA URL AQUÍ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2QpWb-TYGhoBdouzCKfc82PCe-pNIZWPau0rbQcTVPaoZ_LNZ_dRqU4ZiwEThfLrDUg/exec'; // <--- PEGA TU NUEVA URL AQUÍ
 
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
@@ -999,9 +1008,59 @@
                 setTimeout(() => btnDescargar.innerText = "Descargar Tarjeta", 2000);
             });
         }
-      // ==========================================
-        // MURO DE FIRMAS - ENVIAR MENSAJE
+     // ==========================================
+        // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
+        const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
+
+        // 1. Función para pintar una firma en el lienzo
+        function pintarFirmaEnMuro(nombre, mensaje) {
+            const container = document.getElementById('firmas-container');
+            const element = document.createElement('div');
+            
+            // Clases base para el mensaje
+            element.className = 'absolute text-[#2C2A2A] opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-300 p-2 cursor-default drop-shadow-sm';
+
+            // Aleatoriedad para simular escritura real
+            const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
+            const randomRotation = Math.floor(Math.random() * 40) - 20; // Rotación entre -20 y 20 grados
+            const randomTop = Math.floor(Math.random() * 80) + 5; // Posición Y (5% a 85%)
+            const randomLeft = Math.floor(Math.random() * 80) + 5; // Posición X (5% a 85%)
+            const randomSize = Math.floor(Math.random() * 10) + 20; // Tamaño entre 20px y 30px
+
+            element.style.fontFamily = `"${randomFont}", cursive`;
+            element.style.transform = `rotate(${randomRotation}deg)`;
+            element.style.top = `${randomTop}%`;
+            element.style.left = `${randomLeft}%`;
+            element.style.fontSize = `${randomSize}px`;
+            element.style.maxWidth = '200px';
+            element.style.lineHeight = '1.1';
+
+            // Estructura del texto
+            element.innerHTML = `<p class="leading-tight text-center">${mensaje}</p><p class="font-bold text-right mt-2 text-[0.8em] text-azul-principal">- ${nombre}</p>`;
+
+            container.appendChild(element);
+        }
+
+        // 2. Cargar firmas desde Google Sheets al abrir la página
+        async function cargarFirmas() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=get_firmas`);
+                const result = await response.json();
+                if(result.status === "success" && result.data) {
+                    result.data.forEach(firma => {
+                        pintarFirmaEnMuro(firma.nombre, firma.mensaje);
+                    });
+                }
+            } catch (error) {
+                console.log("Error cargando el muro de firmas", error);
+            }
+        }
+
+        // Ejecutar carga al iniciar
+        document.addEventListener('DOMContentLoaded', cargarFirmas);
+
+        // 3. Enviar nueva firma
         document.getElementById('firmaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1010,25 +1069,25 @@
             const btnSubmit = document.getElementById('btnSubmitFirma');
 
             const originalText = btnSubmit.innerText;
-            btnSubmit.innerText = "Enviando...";
+            btnSubmit.innerText = "Escribiendo en el muro...";
             btnSubmit.disabled = true;
 
             try {
-                // Usamos el mismo SCRIPT_URL, pero con un "action" diferente
+                // Pintarla visualmente de inmediato para el usuario
+                pintarFirmaEnMuro(nombre, mensaje);
+
+                // Mandarla a guardar a Google Sheets
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: "firma", nombre: nombre, mensaje: mensaje })
                 });
                 
-                // Éxito visual
-                btnSubmit.innerText = "¡Mensaje Enviado!";
+                btnSubmit.innerText = "¡Muro Firmado!";
                 btnSubmit.classList.replace('bg-azul-principal', 'bg-green-600');
                 btnSubmit.classList.replace('border-azul-principal', 'border-green-600');
-                btnSubmit.classList.replace('text-azul-principal', 'text-white'); // Por si estaba en hover
                 
                 document.getElementById('firmaForm').reset();
                 
-                // Regresar el botón a la normalidad después de 3 segundos
                 setTimeout(() => {
                     btnSubmit.innerText = originalText;
                     btnSubmit.classList.replace('bg-green-600', 'bg-azul-principal');
@@ -1037,7 +1096,6 @@
                 }, 3000);
                 
             } catch (error) {
-                console.error("Error al enviar firma:", error);
                 btnSubmit.innerText = "Error, intenta de nuevo";
                 setTimeout(() => {
                     btnSubmit.innerText = originalText;
