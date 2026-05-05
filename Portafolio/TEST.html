@@ -35,7 +35,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    <!-- Agrega esto debajo de tus otros links de fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -48,7 +47,7 @@
             --font-numbers: 'Cinzel', serif; 
         }
 
-                body, html {
+        body, html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -244,8 +243,7 @@
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
-                <img src="https://i.imgur.com/mF0ZsJq.png" 
-                     class="w-[120px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+                <img src="https://i.imgur.com/mF0ZsJq.png" class="w-[120px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
         </div>
     </div>
@@ -659,9 +657,8 @@
                 <h2 class="text-5xl font-script text-azul-principal mb-4 drop-shadow-md">Muro de Firmas</h2>
                 <p class="text-[11px] uppercase tracking-[0.4em] mb-10 text-[#2C2A2A] font-bold">Déjale un lindo mensaje a Suelen</p>
                 
-                <!-- ESTE ES EL LIENZO DONDE SE PINTARÁN LAS FIRMAS -->
-                              <!-- ESTE ES EL LIENZO DONDE SE PINTARÁN LAS FIRMAS -->
-                <div id="muro-firmas-canvas" class="relative w-full h-[500px] md:h-[600px] bg-white rounded-3xl shadow-inner border-2 border-gray-200 overflow-hidden mb-10">
+                <!-- ESTE ES EL LIENZO DONDE SE PINTARÁN LAS FIRMAS (Aquí aumenté la altura a 650px / 800px) -->
+                <div id="muro-firmas-canvas" class="relative w-full h-[650px] md:h-[800px] bg-white rounded-3xl shadow-inner border-2 border-gray-200 overflow-hidden mb-10">
                     
                     <!-- CORRECCIÓN AQUÍ: Centramos exactamente el texto y le damos un difuminado blanco solo al rededor del nombre -->
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-30 bg-white/60 px-8 py-6 rounded-full shadow-[0_0_30px_30px_rgba(255,255,255,0.9)]">
@@ -672,7 +669,6 @@
                     <!-- Aquí caerán las firmas dinámicamente -->
                     <div id="firmas-container" class="absolute inset-0 w-full h-full z-10"></div>
                 </div>
-
 
                 <!-- FORMULARIO -->
                 <div class="bg-white p-8 md:p-12 rounded-3xl border border-azul-principal/30 shadow-xl transition-all duration-500 w-full max-w-3xl mx-auto relative">
@@ -696,7 +692,7 @@
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Confirmar antes del 20 de Mayo de 2026</span></p>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Confirmar antes del 20 de Mayo de 2026</p>
                 
                 <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto">
                     
@@ -768,9 +764,9 @@
         // ==========================================
         // URL DE TU GOOGLE APPS SCRIPT
         // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2QpWb-TYGhoBdouzCKfc82PCe-pNIZWPau0rbQcTVPaoZ_LNZ_dRqU4ZiwEThfLrDUg/exec'; // <--- PEGA TU NUEVA URL AQUÍ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2QpWb-TYGhoBdouzCKfc82PCe-pNIZWPau0rbQcTVPaoZ_LNZ_dRqU4ZiwEThfLrDUg/exec';
 
-             function openEnvelope() {
+        function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             
             // ¡LA MAGIA AQUÍ! 
@@ -889,7 +885,7 @@
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
 
-                // ==========================================
+        // ==========================================
         // RSVP - CONFIRMAR ASISTENCIA Y GUARDAR
         // ==========================================
         document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
@@ -1020,36 +1016,34 @@
             });
         }
             
-                   // ==========================================
+        // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL MEJORADA
         // ==========================================
         const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
         
         let zonasOcupadas = [];
-        // Protegemos el centro exactamente donde está el nombre 
-        const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
+        // 1. Reducimos el campo de fuerza a los lados para que las firmas puedan rodear el nombre
+        const ZONA_CENTRAL = { left: 25, right: 75, top: 35, bottom: 65 };
         let factorEscalaGlobal = 1; 
 
-        
-                    function pintarFirmaEnMuro(nombre, mensaje) {
+        function pintarFirmaEnMuro(nombre, mensaje) {
             const container = document.getElementById('firmas-container');
             const element = document.createElement('div');
             
             element.className = 'absolute text-[#2C2A2A] hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center items-center';
 
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            
-            // Ya no hay randomRotation
-
             const baseSize = Math.floor(Math.random() * 4) + 14; 
             const finalSize = Math.max(8, Math.floor(baseSize * factorEscalaGlobal)); 
             
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.fontSize = `${finalSize}px`;
-            element.style.maxWidth = `${Math.floor(130 * factorEscalaGlobal)}px`; 
-            element.style.width = 'max-content';
+            
+            // 2. Adiós a los "textos tren". Forzamos a que sean bloques más cuadrados
+            element.style.maxWidth = `${Math.floor(180 * factorEscalaGlobal)}px`; 
+            element.style.width = 'fit-content'; // Permite que el texto baje a la siguiente línea
             element.style.lineHeight = '1.15';
-            element.style.opacity = '0'; // Invisible temporalmente
+            element.style.opacity = '0'; 
 
             element.innerHTML = `<div class="text-center break-words w-full">${mensaje}</div><div class="font-bold text-right mt-1 w-full text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
@@ -1058,8 +1052,7 @@
             const contWidth = container.offsetWidth || 1;
             const contHeight = container.offsetHeight || 1;
             
-            // Reducimos la burbuja de seguridad porque sin rotación la medida es exacta (dejamos un 2% de respiro)
-            const paddingSeguridad = 1.1; 
+            const paddingSeguridad = 1.05; 
             const wPct = ((element.offsetWidth * paddingSeguridad) / contWidth) * 100;
             const hPct = ((element.offsetHeight * paddingSeguridad) / contHeight) * 100;
 
@@ -1074,24 +1067,19 @@
                 let testRight = testLeft + wPct;
                 let testBottom = testTop + hPct;
 
-                if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) {
-                    continue; 
-                }
+                if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) continue;
 
-                let chocaOtra = zonasOcupadas.some(zona => {
-                    return !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom);
-                });
+                let chocaOtra = zonasOcupadas.some(zona => !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom));
 
                 if (!chocaOtra) { 
-                    leftPos = testLeft; topPos = testTop; colocado = true;
-                    break;
+                    leftPos = testLeft; topPos = testTop; colocado = true; break; 
                 }
             }
 
-            // PLAN B INTELIGENTE (Búsqueda Sistemática)
+            // PLAN B: Búsqueda Sistemática (Escáner Tetris)
             if (!colocado) {
-                for (let top = 1; top <= 99 - hPct; top += 0.5) {
-                    for (let left = 1; left <= 99 - wPct; left += 0.5) {
+                for (let top = 1; top <= 99 - hPct; top += 1) {
+                    for (let left = 1; left <= 99 - wPct; left += 1) {
                         let testRight = left + wPct;
                         let testBottom = top + hPct;
 
@@ -1099,32 +1087,36 @@
 
                         let choca = zonasOcupadas.some(z => !(testRight < z.left || left > z.right || testBottom < z.top || top > z.bottom));
                         
-                        if (!choca) {
-                            leftPos = left; topPos = top; colocado = true;
-                            break;
-                        }
+                        if (!choca) { leftPos = left; topPos = top; colocado = true; break; }
+                    }
+                    if (colocado) break;
+                }
+            }
+            
+            // PLAN C: Modo Supervivencia (Si la pantalla está llenísima, eliminamos el padding para que entren rozándose)
+            if (!colocado) {
+                const wReal = (element.offsetWidth / contWidth) * 100;
+                const hReal = (element.offsetHeight / contHeight) * 100;
+                for (let top = 1; top <= 99 - hReal; top += 1) {
+                    for (let left = 1; left <= 99 - wReal; left += 1) {
+                        if (!(left + wReal < ZONA_CENTRAL.left || left > ZONA_CENTRAL.right || top + hReal < ZONA_CENTRAL.top || top > ZONA_CENTRAL.bottom)) continue;
+                        
+                        let choca = zonasOcupadas.some(z => !(left + wReal < z.left || left > z.right || top + hReal < z.top || top > z.bottom));
+                        if (!choca) { leftPos = left; topPos = top; colocado = true; break; }
                     }
                     if (colocado) break;
                 }
             }
 
-            // Plan C Extremo
+            // Plan D: Extremo de seguridad
             if (!colocado) {
-                do {
-                    leftPos = 1 + Math.random() * (98 - wPct);
-                    topPos = 1 + Math.random() * (98 - hPct);
-                } while (!(leftPos + wPct < ZONA_CENTRAL.left || leftPos > ZONA_CENTRAL.right || topPos + hPct < ZONA_CENTRAL.top || topPos > ZONA_CENTRAL.bottom));
+                leftPos = 2 + Math.random() * 90;
+                topPos = 2 + Math.random() * 90;
             }
 
-            // Registramos la zona permanentemente
             zonasOcupadas.push({ left: leftPos, right: leftPos + wPct, top: topPos, bottom: topPos + hPct });
-
-            // Aparece la firma sin aplicarle transformación de rotación
             element.style.left = `${leftPos}%`;
             element.style.top = `${topPos}%`;
-            
-            // Al no inyectar transform aquí, la clase de Tailwind "hover:scale-125 transition-transform" funcionará perfectamente sola.
-            
             setTimeout(() => { element.style.opacity = '0.9'; }, 50);
         }
 
@@ -1138,12 +1130,9 @@
                     
                     let totalFirmas = result.data.length; 
                     
-                    // SOLUCIÓN 3: ESCALA DINÁMICA INFINITA
-                    // En lugar de "escalones" duros, usa una curva matemática (Raíz Cuadrada).
-                    // Se adapta sola sin importar si tienes 20, 100 o 300 firmas.
-                    // Tiene un límite inferior de 0.35 para que se sigan pudiendo leer.
-                    const capacidadBase = 15; 
-                    factorEscalaGlobal = Math.max(0.35, Math.sqrt(capacidadBase / Math.max(capacidadBase, totalFirmas)));
+                    // 3. Curva más agresiva: empieza a encoger desde la firma 8, haciéndolas pequeñas más rápido
+                    const capacidadBase = 8; 
+                    factorEscalaGlobal = Math.max(0.20, Math.sqrt(capacidadBase / Math.max(capacidadBase, totalFirmas)));
 
                     result.data.forEach(firma => {
                         pintarFirmaEnMuro(firma.nombre, firma.mensaje);
