@@ -770,9 +770,16 @@
         // ==========================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2QpWb-TYGhoBdouzCKfc82PCe-pNIZWPau0rbQcTVPaoZ_LNZ_dRqU4ZiwEThfLrDUg/exec'; // <--- PEGA TU NUEVA URL AQUÍ
 
-        function openEnvelope() {
+             function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             
+            // ¡LA MAGIA AQUÍ! 
+            // 1. Las fuentes cursivas ya cargaron
+            // 2. La pantalla ya no mide 0 píxeles
+            document.fonts.ready.then(() => {
+                cargarFirmas();
+            });
+
             initObserver();
             playAudio(); 
 
@@ -1052,7 +1059,7 @@
             const contHeight = container.offsetHeight || 1;
             
             // Reducimos la burbuja de seguridad porque sin rotación la medida es exacta (dejamos un 2% de respiro)
-            const paddingSeguridad = 1.02; 
+            const paddingSeguridad = 1.1; 
             const wPct = ((element.offsetWidth * paddingSeguridad) / contWidth) * 100;
             const hPct = ((element.offsetHeight * paddingSeguridad) / contHeight) * 100;
 
@@ -1147,7 +1154,6 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', cargarFirmas);
 
         // Enviar nueva firma
         document.getElementById('firmaForm').addEventListener('submit', async function(e) {
