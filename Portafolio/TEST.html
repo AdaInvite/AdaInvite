@@ -1014,16 +1014,16 @@
         }
 
       
-                    // ==========================================
+                  // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
-        const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
+        const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
         
         let zonasOcupadas = [];
+        // Protegemos el centro exactamente donde está el nombre 
         const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
-        let totalFirmasGlobal = 0; // Guardamos cuántas firmas hay para saber qué tanto encogerlas
+        let totalFirmasGlobal = 0; 
 
-        // La función ahora recibe un tercer parámetro para saber si es una firma recién enviada
         function pintarFirmaEnMuro(nombre, mensaje, esNueva = false) {
             if (esNueva) totalFirmasGlobal++;
 
@@ -1035,27 +1035,22 @@
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
             const randomRotation = Math.floor(Math.random() * 20) - 10; 
 
-            // MAGIA AQUÍ: Calculamos un factor de reducción basado en qué tan lleno está el muro
-            let factorEscala = 1;
-            if (totalFirmasGlobal > 60) factorEscala = 0.5;      // Muy lleno = Textos a la mitad de tamaño
-            else if (totalFirmasGlobal > 40) factorEscala = 0.65; // Lleno = Textos al 65%
-            else if (totalFirmasGlobal > 20) factorEscala = 0.8;  // Medio lleno = Textos al 80%
-            else if (totalFirmasGlobal > 10) factorEscala = 0.9;  // Empezando a llenarse = Textos al 90%
-
-            // Calculamos el tamaño final de la letra usando el factor de escala
-            const baseSize = Math.floor(Math.random() * 4) + 14; 
-            const finalSize = Math.max(9, Math.floor(baseSize * factorEscala)); // Nunca menor a 9px para que se lea
+            // 1. TAMAÑOS MÁS PEQUEÑOS DESDE EL INICIO (Entre 10px y 13px)
+            let finalSize = Math.floor(Math.random() * 4) + 10; 
             
+            // Si llegas a tener una locura de firmas (más de 50), las hace un pelín más chiquitas
+            if (totalFirmasGlobal > 50) finalSize = Math.max(8, finalSize - 2);
+
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.fontSize = `${finalSize}px`;
-            element.style.maxWidth = `${160 * factorEscala}px`; // El cuadro también se encoge
+            element.style.maxWidth = '110px'; // Mantiene los textos en forma de cuadrito y no de línea larga
             element.style.width = 'max-content';
             element.style.lineHeight = '1.15';
             element.style.opacity = '0'; // Se crea invisible para medirlo
 
             element.innerHTML = `<div class="text-center break-words w-full">${mensaje}</div><div class="font-bold text-right mt-1 w-full text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
-            // 1. Lo metemos al HTML para que la pantalla calcule su tamaño real
+            // Lo metemos al HTML para que la pantalla calcule su tamaño real en píxeles
             container.appendChild(element);
 
             const contWidth = container.offsetWidth || 1;
@@ -1065,47 +1060,52 @@
 
             let leftPos = 0;
             let topPos = 0;
+            let colocado = false;
 
-            // 2. Buscamos un lugar (Le damos hasta 500 intentos de búsqueda)
-            for (let i = 0; i < 500; i++) {
+            // 2. BUSCADOR IMPLACABLE: Le damos 1,000 intentos para buscar un hueco perfecto
+            for (let i = 0; i < 1000; i++) {
                 let testLeft = 2 + Math.random() * (96 - wPct);
                 let testTop = 2 + Math.random() * (96 - hPct);
                 let testRight = testLeft + wPct;
                 let testBottom = testTop + hPct;
 
-                // REGLA DE ORO: ¡Jamás tocar el centro donde dice Suelen Camila!
+                // REGLA 1: ¡Jamás tocar el centro donde dice Suelen Camila!
                 if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) {
                     continue; // Choca con el centro, volvemos a intentar
                 }
 
-                // Margen dinámico: Al principio somos estrictos, si no encontramos lugar, somos flexibles
-                let margen = 1;
-                if (i > 300) margen = -3; // Si ya intentamos 300 veces, dejamos que se empalmen un poco
-                if (i > 450) margen = -6; // Ya de plano dejamos que se crucen las letras para que quepan
-
+                // REGLA 2: ¡CERO EMPALMES! Busca un espacio 100% limpio
                 let chocaOtra = zonasOcupadas.some(zona => {
-                    return !(testRight < (zona.left - margen) || testLeft > (zona.right + margen) || testBottom < (zona.top - margen) || testTop > (zona.bottom + margen));
+                    return !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom);
                 });
 
-                // Si no choca con nada (o si es nuestro último intento forzado)
-                if (!chocaOtra || i === 499) { 
+                // Si no choca con absolutamente nada, ¡encontramos el lugar ideal!
+                if (!chocaOtra) { 
                     leftPos = testLeft;
                     topPos = testTop;
+                    colocado = true;
+                    // Guardamos la zona como ocupada con un mini margen del 1% para que respiren
                     zonasOcupadas.push({
-                        left: testLeft,
-                        right: testRight,
-                        top: testTop,
-                        bottom: testBottom
+                        left: testLeft - 1,
+                        right: testRight + 1,
+                        top: testTop - 1,
+                        bottom: testBottom + 1
                     });
                     break;
                 }
             }
 
             // 3. Lo colocamos en su posición ganadora
-            element.style.left = `${leftPos}%`;
-            element.style.top = `${topPos}%`;
-            element.style.transform = `rotate(${randomRotation}deg)`;
-            setTimeout(() => { element.style.opacity = '0.9'; }, 50);
+            if (colocado) {
+                element.style.left = `${leftPos}%`;
+                element.style.top = `${topPos}%`;
+                element.style.transform = `rotate(${randomRotation}deg)`;
+                setTimeout(() => { element.style.opacity = '0.9'; }, 50);
+            } else {
+                // Si de milagro después de 1,000 intentos de plano no cabe, lo borramos silenciosamente
+                // (Pero como ahora son muy pequeñas, cabrán muchísimas antes de que esto pase)
+                element.remove();
+            }
         }
 
         // Cargar firmas desde Google Sheets
@@ -1117,7 +1117,6 @@
                     document.getElementById('firmas-container').innerHTML = '';
                     zonasOcupadas = [];
                     
-                    // Asignamos el total de firmas antes de empezar a pintar para que sepa de qué tamaño hacerlas
                     totalFirmasGlobal = result.data.length; 
                     
                     result.data.forEach(firma => {
@@ -1144,7 +1143,6 @@
             btnSubmit.disabled = true;
 
             try {
-                // Se manda pintar con "true" para que se sume al conteo global
                 pintarFirmaEnMuro(nombre, mensaje, true);
 
                 await fetch(SCRIPT_URL, {
