@@ -1016,21 +1016,23 @@
                    // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL MEJORADA
         // ==========================================
-        const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
+        const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
         
         let zonasOcupadas = [];
         // Protegemos el centro exactamente donde está el nombre 
         const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
         let factorEscalaGlobal = 1; 
 
-        function pintarFirmaEnMuro(nombre, mensaje) {
+        
+                    function pintarFirmaEnMuro(nombre, mensaje) {
             const container = document.getElementById('firmas-container');
             const element = document.createElement('div');
             
             element.className = 'absolute text-[#2C2A2A] hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center items-center';
 
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            const randomRotation = Math.floor(Math.random() * 20) - 10; 
+            
+            // Ya no hay randomRotation
 
             const baseSize = Math.floor(Math.random() * 4) + 14; 
             const finalSize = Math.max(8, Math.floor(baseSize * factorEscalaGlobal)); 
@@ -1049,8 +1051,8 @@
             const contWidth = container.offsetWidth || 1;
             const contHeight = container.offsetHeight || 1;
             
-            // SOLUCIÓN 1: "Burbuja" de seguridad (1.1) para absorber el espacio de las esquinas rotadas
-            const paddingSeguridad = 1.1; 
+            // Reducimos la burbuja de seguridad porque sin rotación la medida es exacta (dejamos un 2% de respiro)
+            const paddingSeguridad = 1.02; 
             const wPct = ((element.offsetWidth * paddingSeguridad) / contWidth) * 100;
             const hPct = ((element.offsetHeight * paddingSeguridad) / contHeight) * 100;
 
@@ -1058,7 +1060,7 @@
             let topPos = 0;
             let colocado = false;
 
-            // PLAN A: Búsqueda Aleatoria Rápida (Sigue siendo genial para desorden natural)
+            // PLAN A: Búsqueda Aleatoria Rápida
             for (let i = 0; i < 2000; i++) {
                 let testLeft = 1 + Math.random() * (98 - wPct);
                 let testTop = 1 + Math.random() * (98 - hPct);
@@ -1079,8 +1081,7 @@
                 }
             }
 
-            // SOLUCIÓN 2: PLAN B INTELIGENTE (Búsqueda Sistemática)
-            // Si hay tantas firmas que el azar falló, escaneamos la pantalla milímetro a milímetro.
+            // PLAN B INTELIGENTE (Búsqueda Sistemática)
             if (!colocado) {
                 for (let top = 1; top <= 99 - hPct; top += 0.5) {
                     for (let left = 1; left <= 99 - wPct; left += 0.5) {
@@ -1096,11 +1097,11 @@
                             break;
                         }
                     }
-                    if (colocado) break; // Salimos de ambos ciclos si ya cabe
+                    if (colocado) break;
                 }
             }
 
-            // Plan C Extremo: Si físicamente el monitor entero está lleno (rara vez pasará por la nueva escala)
+            // Plan C Extremo
             if (!colocado) {
                 do {
                     leftPos = 1 + Math.random() * (98 - wPct);
@@ -1111,10 +1112,12 @@
             // Registramos la zona permanentemente
             zonasOcupadas.push({ left: leftPos, right: leftPos + wPct, top: topPos, bottom: topPos + hPct });
 
-            // Aparece la firma
+            // Aparece la firma sin aplicarle transformación de rotación
             element.style.left = `${leftPos}%`;
             element.style.top = `${topPos}%`;
-            element.style.transform = `rotate(${randomRotation}deg)`;
+            
+            // Al no inyectar transform aquí, la clase de Tailwind "hover:scale-125 transition-transform" funcionará perfectamente sola.
+            
             setTimeout(() => { element.style.opacity = '0.9'; }, 50);
         }
 
