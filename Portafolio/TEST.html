@@ -1014,72 +1014,95 @@
         }
 
                     
-        
-                   // ==========================================
+           // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
         const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
         
-        // Cuadrícula invisible de 10 posiciones exactas (esquivando el centro)
-        // Usamos X y Y como porcentajes para ubicar el centro exacto de cada firma
-        const casillas = [
-            { x: 20, y: 12 }, { x: 50, y: 10 }, { x: 80, y: 12 }, // Fila 1 (Arriba)
-            { x: 15, y: 35 },                   { x: 85, y: 35 }, // Fila 2 (Medio alto)
-            { x: 15, y: 65 },                   { x: 85, y: 65 }, // Fila 3 (Medio bajo)
-            { x: 20, y: 88 }, { x: 50, y: 90 }, { x: 80, y: 88 }  // Fila 4 (Abajo)
-        ];
+        let zonasOcupadas = [];
+        // Protegemos el centro exactamente donde está el nombre (con un buen margen de seguridad)
+        const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
 
-        let contadorFirmas = 0; // Para ir rotando los espacios
-        
-        // Función para pintar una firma
         function pintarFirmaEnMuro(nombre, mensaje) {
             const container = document.getElementById('firmas-container');
-            
-            // Asignamos la casilla. Si llega a 10, vuelve a empezar para reciclar espacio y no saturar
-            const casillaDestino = contadorFirmas % casillas.length; 
-            
-            // Si ya hay un mensaje en este espacio, lo quitamos suavemente
-            const elementoExistente = document.getElementById(`firma-slot-${casillaDestino}`);
-            if(elementoExistente) {
-                elementoExistente.remove();
-            }
-
             const element = document.createElement('div');
-            element.id = `firma-slot-${casillaDestino}`;
             
-            element.className = 'absolute text-[#2C2A2A] opacity-90 hover:opacity-100 hover:scale-125 transition-all duration-500 p-2 cursor-default drop-shadow-sm flex flex-col justify-center items-center';
+            element.className = 'absolute text-[#2C2A2A] hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center items-center';
 
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            const randomRotation = Math.floor(Math.random() * 20) - 10; // Inclinación sutil
-            const randomSize = Math.floor(Math.random() * 4) + 12; // Tamaño discreto 12px a 15px
-
-            // Pequeña variación para que no parezca una cuadrícula de robot (+- 2%)
-            const offsetX = Math.floor(Math.random() * 4) - 2;
-            const offsetY = Math.floor(Math.random() * 4) - 2;
+            const randomRotation = Math.floor(Math.random() * 16) - 8; // Inclinación súper natural
+            const randomSize = Math.floor(Math.random() * 4) + 12; // Tamaños sutiles (12px a 15px)
 
             element.style.fontFamily = `"${randomFont}", cursive`;
-            
-            // AQUÍ ESTÁ LA MAGIA: Centramos exactamente la caja de texto en su propio cuartito
-            element.style.left = `${casillas[casillaDestino].x + offsetX}%`;
-            element.style.top = `${casillas[casillaDestino].y + offsetY}%`;
-            element.style.transform = `translate(-50%, -50%) rotate(${randomRotation}deg)`;
-            
             element.style.fontSize = `${randomSize}px`;
-            element.style.maxWidth = '110px'; // Límite estricto de ancho
-            element.style.width = 'max-content'; 
+            element.style.maxWidth = '140px'; 
+            element.style.width = 'max-content';
             element.style.lineHeight = '1.2';
+            element.style.opacity = '0'; // Lo creamos invisible para poder medirlo primero
 
             element.innerHTML = `<div class="text-center break-words w-full">${mensaje}</div><div class="font-bold text-right mt-1 w-full text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
-            // Efecto de aparición
-            element.style.opacity = '0';
+            // 1. Lo agregamos al contenedor de forma invisible para que el navegador calcule su tamaño real
             container.appendChild(element);
-            
-            setTimeout(() => {
-                element.style.opacity = '0.9';
-            }, 50);
 
-            contadorFirmas++; // Preparamos el siguiente espacio
+            // 2. Medimos cuánto espacio físico ocupa exactamente esta firma
+            const contWidth = container.offsetWidth;
+            const contHeight = container.offsetHeight;
+            const wPct = (element.offsetWidth / contWidth) * 100;
+            const hPct = (element.offsetHeight / contHeight) * 100;
+
+            // 3. Jugamos al Tetris: Escaneamos buscando un hueco libre donde quepa perfecto
+            let leftPos = 0;
+            let topPos = 0;
+            let colocado = false;
+
+            // Le damos 300 intentos para encontrar un espacio libre
+            for (let i = 0; i < 300; i++) {
+                let testLeft = 2 + Math.random() * (96 - wPct);
+                let testTop = 2 + Math.random() * (96 - hPct);
+                let testRight = testLeft + wPct;
+                let testBottom = testTop + hPct;
+
+                // Revisión 1: ¿Choca con el título del centro?
+                if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) {
+                    continue; // Choca, intentamos otro lugar
+                }
+
+                // Revisión 2: ¿Choca con alguna firma que ya esté pegada en el muro?
+                let chocaOtra = zonasOcupadas.some(zona => {
+                    return !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom);
+                });
+
+                if (!chocaOtra) {
+                    leftPos = testLeft;
+                    topPos = testTop;
+                    colocado = true;
+                    // Encontramos el lugar ideal. Guardamos el espacio como "ocupado" con un 1% extra de margen
+                    zonasOcupadas.push({
+                        element: element,
+                        left: testLeft - 1,
+                        right: testRight + 1,
+                        top: testTop - 1,
+                        bottom: testBottom + 1
+                    });
+                    break;
+                }
+            }
+
+            // 4. Si encontramos lugar, lo mostramos. Si el muro ya está súper lleno, borramos la firma más vieja y repetimos.
+            if (colocado) {
+                element.style.left = `${leftPos}%`;
+                element.style.top = `${topPos}%`;
+                element.style.transform = `rotate(${randomRotation}deg)`; // Le aplicamos la rotación al final
+                setTimeout(() => { element.style.opacity = '0.9'; }, 50); // Lo hacemos visible con suavidad
+            } else {
+                element.remove();
+                if (zonasOcupadas.length > 0) {
+                    const oldest = zonasOcupadas.shift();
+                    oldest.element.remove();
+                    pintarFirmaEnMuro(nombre, mensaje); // Volvemos a intentar ahora que hicimos espacio
+                }
+            }
         }
 
         // Cargar firmas desde Google Sheets
@@ -1088,6 +1111,10 @@
                 const response = await fetch(`${SCRIPT_URL}?action=get_firmas`);
                 const result = await response.json();
                 if(result.status === "success" && result.data) {
+                    // Reseteamos el lienzo por si las dudas
+                    document.getElementById('firmas-container').innerHTML = '';
+                    zonasOcupadas = [];
+                    
                     result.data.forEach(firma => {
                         pintarFirmaEnMuro(firma.nombre, firma.mensaje);
                     });
