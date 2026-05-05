@@ -657,14 +657,10 @@
                 <h2 class="text-5xl font-script text-azul-principal mb-4 drop-shadow-md">Muro de Firmas</h2>
                 <p class="text-[11px] uppercase tracking-[0.4em] mb-10 text-[#2C2A2A] font-bold">Déjale un lindo mensaje a Suelen</p>
                 
-                <!-- ESTE ES EL LIENZO DONDE SE PINTARÁN LAS FIRMAS (Aquí aumenté la altura a 650px / 800px) -->
+                <!-- EL LIENZO TOTALMENTE LIBRE PARA LAS FIRMAS -->
                 <div id="muro-firmas-canvas" class="relative w-full h-[650px] md:h-[800px] bg-white rounded-3xl shadow-inner border-2 border-gray-200 overflow-hidden mb-10">
                     
-                    <!-- CORRECCIÓN AQUÍ: Centramos exactamente el texto y le damos un difuminado blanco solo al rededor del nombre -->
-                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-30 bg-white/60 px-8 py-6 rounded-full shadow-[0_0_30px_30px_rgba(255,255,255,0.9)]">
-                        <h2 class="text-3xl md:text-8xl font-script text-azul-principal text-shadow-light whitespace-nowrap">Suelen Camila</h2>
-                        <p class="text-xs tracking-[0.5em] uppercase font-bold text-[#2C2A2A] mt-2">Mis XV Años</p>
-                    </div>
+                    <!-- TEXTO CENTRAL ELIMINADO -->
 
                     <!-- Aquí caerán las firmas dinámicamente -->
                     <div id="firmas-container" class="absolute inset-0 w-full h-full z-10"></div>
@@ -1017,13 +1013,11 @@
         }
             
         // ==========================================
-        // MURO DE FIRMAS - LÓGICA VISUAL MEJORADA
+        // MURO DE FIRMAS - LÓGICA VISUAL TOTALMENTE LIBRE
         // ==========================================
         const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
         
         let zonasOcupadas = [];
-        // 1. Reducimos el campo de fuerza a los lados para que las firmas puedan rodear el nombre
-        const ZONA_CENTRAL = { left: 25, right: 75, top: 35, bottom: 65 };
         let factorEscalaGlobal = 1; 
 
         function pintarFirmaEnMuro(nombre, mensaje) {
@@ -1039,9 +1033,8 @@
             element.style.fontFamily = `"${randomFont}", cursive`;
             element.style.fontSize = `${finalSize}px`;
             
-            // 2. Adiós a los "textos tren". Forzamos a que sean bloques más cuadrados
             element.style.maxWidth = `${Math.floor(180 * factorEscalaGlobal)}px`; 
-            element.style.width = 'fit-content'; // Permite que el texto baje a la siguiente línea
+            element.style.width = 'fit-content'; 
             element.style.lineHeight = '1.15';
             element.style.opacity = '0'; 
 
@@ -1060,14 +1053,12 @@
             let topPos = 0;
             let colocado = false;
 
-            // PLAN A: Búsqueda Aleatoria Rápida
+            // PLAN A: Búsqueda Aleatoria Rápida (Sin obstáculos centrales)
             for (let i = 0; i < 2000; i++) {
                 let testLeft = 1 + Math.random() * (98 - wPct);
                 let testTop = 1 + Math.random() * (98 - hPct);
                 let testRight = testLeft + wPct;
                 let testBottom = testTop + hPct;
-
-                if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) continue;
 
                 let chocaOtra = zonasOcupadas.some(zona => !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom));
 
@@ -1076,14 +1067,12 @@
                 }
             }
 
-            // PLAN B: Búsqueda Sistemática (Escáner Tetris)
+            // PLAN B: Búsqueda Sistemática (Escáner Tetris puro)
             if (!colocado) {
                 for (let top = 1; top <= 99 - hPct; top += 1) {
                     for (let left = 1; left <= 99 - wPct; left += 1) {
                         let testRight = left + wPct;
                         let testBottom = top + hPct;
-
-                        if (!(testRight < ZONA_CENTRAL.left || left > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || top > ZONA_CENTRAL.bottom)) continue;
 
                         let choca = zonasOcupadas.some(z => !(testRight < z.left || left > z.right || testBottom < z.top || top > z.bottom));
                         
@@ -1093,14 +1082,12 @@
                 }
             }
             
-            // PLAN C: Modo Supervivencia (Si la pantalla está llenísima, eliminamos el padding para que entren rozándose)
+            // PLAN C: Modo Supervivencia (Ajuste rozándose)
             if (!colocado) {
                 const wReal = (element.offsetWidth / contWidth) * 100;
                 const hReal = (element.offsetHeight / contHeight) * 100;
                 for (let top = 1; top <= 99 - hReal; top += 1) {
                     for (let left = 1; left <= 99 - wReal; left += 1) {
-                        if (!(left + wReal < ZONA_CENTRAL.left || left > ZONA_CENTRAL.right || top + hReal < ZONA_CENTRAL.top || top > ZONA_CENTRAL.bottom)) continue;
-                        
                         let choca = zonasOcupadas.some(z => !(left + wReal < z.left || left > z.right || top + hReal < z.top || top > z.bottom));
                         if (!choca) { leftPos = left; topPos = top; colocado = true; break; }
                     }
@@ -1130,7 +1117,6 @@
                     
                     let totalFirmas = result.data.length; 
                     
-                    // 3. Curva más agresiva: empieza a encoger desde la firma 8, haciéndolas pequeñas más rápido
                     const capacidadBase = 8; 
                     factorEscalaGlobal = Math.max(0.20, Math.sqrt(capacidadBase / Math.max(capacidadBase, totalFirmas)));
 
@@ -1142,7 +1128,6 @@
                 console.log("Error cargando el muro de firmas", error);
             }
         }
-
 
         // Enviar nueva firma
         document.getElementById('firmaForm').addEventListener('submit', async function(e) {
@@ -1169,7 +1154,7 @@
                 
                 document.getElementById('firmaForm').reset();
                 
-                // Recargamos TODO el muro para aplicar la reducción de tamaño si se pasó de los 10, 20, 30...
+                // Recargamos TODO el muro 
                 cargarFirmas();
                 
                 setTimeout(() => {
