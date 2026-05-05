@@ -1013,96 +1013,99 @@
             });
         }
 
-                    
-           // ==========================================
+      
+                    // ==========================================
         // MURO DE FIRMAS - LÓGICA VISUAL Y ENVÍO
         // ==========================================
-        const fuentesMarcador = ['Caveat', 'Shadows Into Light'];
+        const fuentesMarcador = ['Caveat', 'Dancing Script', 'Shadows Into Light'];
         
         let zonasOcupadas = [];
-        // Protegemos el centro exactamente donde está el nombre (con un buen margen de seguridad)
         const ZONA_CENTRAL = { left: 15, right: 85, top: 35, bottom: 65 };
+        let totalFirmasGlobal = 0; // Guardamos cuántas firmas hay para saber qué tanto encogerlas
 
-        function pintarFirmaEnMuro(nombre, mensaje) {
+        // La función ahora recibe un tercer parámetro para saber si es una firma recién enviada
+        function pintarFirmaEnMuro(nombre, mensaje, esNueva = false) {
+            if (esNueva) totalFirmasGlobal++;
+
             const container = document.getElementById('firmas-container');
             const element = document.createElement('div');
             
             element.className = 'absolute text-[#2C2A2A] hover:opacity-100 hover:scale-125 transition-transform duration-300 p-2 cursor-default drop-shadow-sm flex flex-col justify-center items-center';
 
             const randomFont = fuentesMarcador[Math.floor(Math.random() * fuentesMarcador.length)];
-            const randomRotation = Math.floor(Math.random() * 16) - 8; // Inclinación súper natural
-            const randomSize = Math.floor(Math.random() * 4) + 12; // Tamaños sutiles (12px a 15px)
+            const randomRotation = Math.floor(Math.random() * 20) - 10; 
 
+            // MAGIA AQUÍ: Calculamos un factor de reducción basado en qué tan lleno está el muro
+            let factorEscala = 1;
+            if (totalFirmasGlobal > 60) factorEscala = 0.5;      // Muy lleno = Textos a la mitad de tamaño
+            else if (totalFirmasGlobal > 40) factorEscala = 0.65; // Lleno = Textos al 65%
+            else if (totalFirmasGlobal > 20) factorEscala = 0.8;  // Medio lleno = Textos al 80%
+            else if (totalFirmasGlobal > 10) factorEscala = 0.9;  // Empezando a llenarse = Textos al 90%
+
+            // Calculamos el tamaño final de la letra usando el factor de escala
+            const baseSize = Math.floor(Math.random() * 4) + 14; 
+            const finalSize = Math.max(9, Math.floor(baseSize * factorEscala)); // Nunca menor a 9px para que se lea
+            
             element.style.fontFamily = `"${randomFont}", cursive`;
-            element.style.fontSize = `${randomSize}px`;
-            element.style.maxWidth = '140px'; 
+            element.style.fontSize = `${finalSize}px`;
+            element.style.maxWidth = `${160 * factorEscala}px`; // El cuadro también se encoge
             element.style.width = 'max-content';
-            element.style.lineHeight = '1.2';
-            element.style.opacity = '0'; // Lo creamos invisible para poder medirlo primero
+            element.style.lineHeight = '1.15';
+            element.style.opacity = '0'; // Se crea invisible para medirlo
 
             element.innerHTML = `<div class="text-center break-words w-full">${mensaje}</div><div class="font-bold text-right mt-1 w-full text-[0.8em] text-azul-principal">- ${nombre}</div>`;
 
-            // 1. Lo agregamos al contenedor de forma invisible para que el navegador calcule su tamaño real
+            // 1. Lo metemos al HTML para que la pantalla calcule su tamaño real
             container.appendChild(element);
 
-            // 2. Medimos cuánto espacio físico ocupa exactamente esta firma
-            const contWidth = container.offsetWidth;
-            const contHeight = container.offsetHeight;
+            const contWidth = container.offsetWidth || 1;
+            const contHeight = container.offsetHeight || 1;
             const wPct = (element.offsetWidth / contWidth) * 100;
             const hPct = (element.offsetHeight / contHeight) * 100;
 
-            // 3. Jugamos al Tetris: Escaneamos buscando un hueco libre donde quepa perfecto
             let leftPos = 0;
             let topPos = 0;
-            let colocado = false;
 
-            // Le damos 300 intentos para encontrar un espacio libre
-            for (let i = 0; i < 300; i++) {
+            // 2. Buscamos un lugar (Le damos hasta 500 intentos de búsqueda)
+            for (let i = 0; i < 500; i++) {
                 let testLeft = 2 + Math.random() * (96 - wPct);
                 let testTop = 2 + Math.random() * (96 - hPct);
                 let testRight = testLeft + wPct;
                 let testBottom = testTop + hPct;
 
-                // Revisión 1: ¿Choca con el título del centro?
+                // REGLA DE ORO: ¡Jamás tocar el centro donde dice Suelen Camila!
                 if (!(testRight < ZONA_CENTRAL.left || testLeft > ZONA_CENTRAL.right || testBottom < ZONA_CENTRAL.top || testTop > ZONA_CENTRAL.bottom)) {
-                    continue; // Choca, intentamos otro lugar
+                    continue; // Choca con el centro, volvemos a intentar
                 }
 
-                // Revisión 2: ¿Choca con alguna firma que ya esté pegada en el muro?
+                // Margen dinámico: Al principio somos estrictos, si no encontramos lugar, somos flexibles
+                let margen = 1;
+                if (i > 300) margen = -3; // Si ya intentamos 300 veces, dejamos que se empalmen un poco
+                if (i > 450) margen = -6; // Ya de plano dejamos que se crucen las letras para que quepan
+
                 let chocaOtra = zonasOcupadas.some(zona => {
-                    return !(testRight < zona.left || testLeft > zona.right || testBottom < zona.top || testTop > zona.bottom);
+                    return !(testRight < (zona.left - margen) || testLeft > (zona.right + margen) || testBottom < (zona.top - margen) || testTop > (zona.bottom + margen));
                 });
 
-                if (!chocaOtra) {
+                // Si no choca con nada (o si es nuestro último intento forzado)
+                if (!chocaOtra || i === 499) { 
                     leftPos = testLeft;
                     topPos = testTop;
-                    colocado = true;
-                    // Encontramos el lugar ideal. Guardamos el espacio como "ocupado" con un 1% extra de margen
                     zonasOcupadas.push({
-                        element: element,
-                        left: testLeft - 1,
-                        right: testRight + 1,
-                        top: testTop - 1,
-                        bottom: testBottom + 1
+                        left: testLeft,
+                        right: testRight,
+                        top: testTop,
+                        bottom: testBottom
                     });
                     break;
                 }
             }
 
-            // 4. Si encontramos lugar, lo mostramos. Si el muro ya está súper lleno, borramos la firma más vieja y repetimos.
-            if (colocado) {
-                element.style.left = `${leftPos}%`;
-                element.style.top = `${topPos}%`;
-                element.style.transform = `rotate(${randomRotation}deg)`; // Le aplicamos la rotación al final
-                setTimeout(() => { element.style.opacity = '0.9'; }, 50); // Lo hacemos visible con suavidad
-            } else {
-                element.remove();
-                if (zonasOcupadas.length > 0) {
-                    const oldest = zonasOcupadas.shift();
-                    oldest.element.remove();
-                    pintarFirmaEnMuro(nombre, mensaje); // Volvemos a intentar ahora que hicimos espacio
-                }
-            }
+            // 3. Lo colocamos en su posición ganadora
+            element.style.left = `${leftPos}%`;
+            element.style.top = `${topPos}%`;
+            element.style.transform = `rotate(${randomRotation}deg)`;
+            setTimeout(() => { element.style.opacity = '0.9'; }, 50);
         }
 
         // Cargar firmas desde Google Sheets
@@ -1111,12 +1114,14 @@
                 const response = await fetch(`${SCRIPT_URL}?action=get_firmas`);
                 const result = await response.json();
                 if(result.status === "success" && result.data) {
-                    // Reseteamos el lienzo por si las dudas
                     document.getElementById('firmas-container').innerHTML = '';
                     zonasOcupadas = [];
                     
+                    // Asignamos el total de firmas antes de empezar a pintar para que sepa de qué tamaño hacerlas
+                    totalFirmasGlobal = result.data.length; 
+                    
                     result.data.forEach(firma => {
-                        pintarFirmaEnMuro(firma.nombre, firma.mensaje);
+                        pintarFirmaEnMuro(firma.nombre, firma.mensaje, false);
                     });
                 }
             } catch (error) {
@@ -1139,7 +1144,8 @@
             btnSubmit.disabled = true;
 
             try {
-                pintarFirmaEnMuro(nombre, mensaje);
+                // Se manda pintar con "true" para que se sume al conteo global
+                pintarFirmaEnMuro(nombre, mensaje, true);
 
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
