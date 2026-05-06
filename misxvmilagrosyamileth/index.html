@@ -899,78 +899,83 @@ function getConditionText(code) {
 }
 
         function renderWeather(data) {
-            const container = document.getElementById('weather-container');
-            const now = new Date();
+    const container = document.getElementById('weather-container');
+    const now = new Date();
+    // Ajustamos 'now' para que busque la hora entera más cercana
+    now.setMinutes(now.getMinutes() - 30); 
+
+    const todayTemps = data.hourly.temperature_2m.slice(0, 24);
+    const maxTemp = Math.round(Math.max(...todayTemps));
+    const minTemp = Math.round(Math.min(...todayTemps));
+
+    let hourlyHTML = '';
+    let hoursShown = 0;
+    let currentTemp = 0;
+    let currentCode = 0;
+
+    for (let i = 0; i < data.hourly.time.length; i++) {
+        const forecastDate = new Date(data.hourly.time[i]);
+        
+        if (forecastDate >= now && hoursShown < 6) {
+            const temp = Math.round(data.hourly.temperature_2m[i]);
+            const weatherCode = data.hourly.weathercode[i];
             
-            const todayTemps = data.hourly.temperature_2m.slice(0, 24);
-            const maxTemp = Math.round(Math.max(...todayTemps));
-            const minTemp = Math.round(Math.min(...todayTemps));
-
-            let hourlyHTML = '';
-            let hoursShown = 0;
-            let currentTemp = 0;
-            let currentCode = 0;
-
-            for (let i = 0; i < data.hourly.time.length; i++) {
-                const forecastDate = new Date(data.hourly.time[i]);
-                
-                if (forecastDate >= now && hoursShown < 6) {
-                    const temp = Math.round(data.hourly.temperature_2m[i]);
-                    const weatherCode = data.hourly.weathercode[i];
-                    
-                    if (hoursShown === 0) {
-                        currentTemp = temp;
-                        currentCode = weatherCode;
-                    }
-
-                    let hour = forecastDate.getHours();
-                    const ampm = hour >= 12 ? 'p.m.' : 'a.m.';
-                    hour = hour % 12;
-                    hour = hour ? hour : 12;
-                    const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
-
-                    let iconSVG = getWeatherIcon(weatherCode);
-                    iconSVG = iconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-6 h-6 md:w-8 md:h-8 mx-auto my-2');
-
-                    hourlyHTML += `
-                        <div class="flex flex-col items-center justify-center flex-1">
-                            <span class="text-[10px] md:text-sm font-medium opacity-90">${hourStr}</span>
-                            ${iconSVG}
-                            <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
-                        </div>
-                    `;
-                    hoursShown++;
-                }
+            if (hoursShown === 0) {
+                currentTemp = temp;
+                currentCode = weatherCode;
             }
 
-            const conditionText = getConditionText(currentCode);
-            let mainIconSVG = getWeatherIcon(currentCode);
-            mainIconSVG = mainIconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
+            let hour = forecastDate.getHours();
+            const ampm = hour >= 12 ? 'p.m.' : 'a.m.';
+            hour = hour % 12 || 12;
+            const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
 
-            container.innerHTML = `
-                <div class="bg-white/10 backdrop-blur-md rounded-[30px] p-6 md:p-8 text-white text-left shadow-xl border border-white/20 mx-auto font-sans w-full">
-                    <div class="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold flex items-center gap-1">
-                                Zona Centro, Ver.
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
-                            </h3>
-                            <div class="text-[60px] md:text-[80px] font-light leading-none mt-1 font-numbers">${currentTemp}°</div>
-                        </div>
-                        <div class="text-right flex flex-col items-end pt-1">
-                            ${mainIconSVG}
-                            <p class="text-sm md:text-base font-medium">${conditionText}</p>
-                            <p class="text-xs md:text-sm opacity-90 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center w-full pt-4 border-t border-white/20">
-                        ${hourlyHTML}
-                    </div>
+            let iconSVG = getWeatherIcon(weatherCode);
+            iconSVG = iconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-6 h-6 md:w-8 md:h-8 mx-auto my-2');
+
+            hourlyHTML += `
+                <div class="flex flex-col items-center justify-center flex-1">
+                    <span class="text-[10px] md:text-sm font-medium opacity-90">${hourStr}</span>
+                    ${iconSVG}
+                    <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
                 </div>
             `;
+            hoursShown++;
         }
-        
+    }
+
+    // Si hace mucho calor (>32°) y el código es de tormenta ligera, 
+    // lo suavizamos a "Parcialmente nublado" para evitar pánico innecesario.
+    let conditionText = getConditionText(currentCode);
+    if (currentTemp > 32 && currentCode >= 95 && currentCode <= 96) {
+        conditionText = "Caluroso / Posible Lluvia";
+    }
+
+    let mainIconSVG = getWeatherIcon(currentCode);
+    mainIconSVG = mainIconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
+
+    container.innerHTML = `
+        <div class="bg-white/10 backdrop-blur-md rounded-[30px] p-6 md:p-8 text-white text-left shadow-xl border border-white/20 mx-auto font-sans w-full">
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold flex items-center gap-1">
+                        Zona Centro, Ver.
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                    </h3>
+                    <div class="text-[60px] md:text-[80px] font-light leading-none mt-1 font-numbers">${currentTemp}°</div>
+                </div>
+                <div class="text-right flex flex-col items-end pt-1">
+                    ${mainIconSVG}
+                    <p class="text-sm md:text-base font-medium">${conditionText}</p>
+                    <p class="text-xs md:text-sm opacity-90 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
+                </div>
+            </div>
+            <div class="flex justify-between items-center w-full pt-4 border-t border-white/20">
+                ${hourlyHTML}
+            </div>
+        </div>
+    `;
+}
         // ==========================================
         // LÓGICA DE LA TRIVIA
         // ==========================================
