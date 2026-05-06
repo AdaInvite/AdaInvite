@@ -28,6 +28,7 @@
         }
     </script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
@@ -267,7 +268,16 @@
                         </div>
                     </div>
                 </div>
-
+    <div id="seccion-pases-inicio" class="w-full max-w-[240px] mx-auto mb-8 hidden reveal-scale active delay-200 relative z-10">
+            <div class="bg-azul-principal/80 border border-azul-principal/20 rounded-xl px-4 py-3 shadow-md text-center transition-all">
+                <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
+                <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
+                <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/20 pt-1.5 w-[70%] mx-auto">
+                    <span class="text-xs uppercase font-bold text-white">Pases:</span>
+                    <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
+                </div>
+            </div>
+        </div>
                 <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
                     <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
                 </div>
@@ -610,7 +620,7 @@
                 
                 <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto">
                     
-                   <form id="rsvpWAForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
+                                     <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
                         <div class="border-b border-white/50 pb-2">
                             <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
                             <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
@@ -624,15 +634,42 @@
                             <input type="number" id="rsvpKids" required placeholder="Ej. 1" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
                         
-                        <button type="button" onclick="confirmWhatsapp()" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
-                            Confirmar por WhatsApp
+                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
+                            Confirmar Asistencia
                         </button>
                     </form>
 
+                    <div id="loadingMessage" class="hidden mt-10 bg-white/95 backdrop-blur-md border border-azul-principal/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
+                        <div class="w-16 h-16 border-4 border-azul-principal border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                        <p class="text-4xl font-script text-azul-principal mb-2">Confirmando...</p>
+                        <p class="text-[11px] uppercase tracking-[0.3em] text-[#2C2A2A] opacity-90 font-bold">Preparando los detalles</p>
+                    </div>
                 </div>
             </div>
         </section>
-        
+                <section class="min-h-[80svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
+                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+            </div>
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                <h2 class="text-5xl font-script mb-6 text-azul-principal text-shadow-light">Recuperar Pase</h2>
+                
+                <form id="searchPassForm" class="space-y-12 text-left bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-xl transition-all duration-500">
+                    <div class="border-b border-gray-300 pb-2">
+                        <label class="text-base uppercase text-[#2C2A2A] font-bold">Nombre/Familia</label>
+                        <input type="text" id="searchName" required placeholder="Nombre" class="w-full bg-transparent py-2 outline-none text-base text-[#2C2A2A] font-bold">
+                    </div>
+                    <button type="submit" class="w-full bg-azul-principal text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-azul-principal/90 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Buscar mi Pase</button>
+                </form>
+
+                <div id="searchResultMessage" class="hidden mt-10 transition-all duration-500">
+                    <div class="bg-white border border-gray-200 p-10 rounded-3xl relative overflow-hidden shadow-xl flex flex-col items-center">
+                        <p class="text-[#2C2A2A] font-bold text-lg">Pase no encontrado o funcionalidad en construcción.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer class="min-h-[60svh] flex flex-col justify-center py-20 px-6 text-center seccion-blanca relative z-10">
             <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-10">
                 <h3 class="text-4xl text-azul-principal font-script mb-6 drop-shadow-md">Gracias</h3>
@@ -961,24 +998,203 @@
         }
 
         // ==========================================
-        // RSVP - CONFIRMAR ASISTENCIA WHATSAPP
-        // ==========================================
-        function confirmWhatsapp() {
-            const name = document.getElementById('rsvpName').value.trim();
-            const adults = document.getElementById('rsvpAdults').value.trim();
-            const kids = document.getElementById('rsvpKids').value.trim();
+// CONEXIÓN A GOOGLE SHEETS Y GENERACIÓN DE PASE
+// ==========================================
+// NOTA: Reemplaza esta URL con el App Script de Milagros si tiene una hoja de Google distinta a la de Analiz.
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWeMfHXBqWoIMea8rHUCvZZdvI4j_aoocZjc1fPDg-3mCyomb7o6WTR0M3XvimEpJ54g/exec";
+
+document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('rsvpName').value.trim();
+    const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
+    const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+    const totalPases = numAdultos + numNinos;
+    
+    // Validación por si se pasan del límite de la URL
+    if (typeof maxPasesGlobal !== 'undefined' && totalPases > maxPasesGlobal) {
+        alert(`Solo tienes asignados ${maxPasesGlobal} pases en total.`);
+        return;
+    }
+    
+    const form = document.getElementById('rsvpForm');
+    const loader = document.getElementById('loadingMessage');
+    
+    form.style.display = 'none';
+    loader.classList.remove('hidden');
+    loader.classList.add('flex');
+
+    try {
+        // Se envía el 'totalPases' como 'pax' para que la hoja de Google lo reconozca
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'rsvp', nombre: name, pax: totalPases }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+        });
+
+        loader.classList.add('hidden');
+        loader.classList.remove('flex');
+
+        const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+        const folio = "XV-MILA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        const numeroWhatsApp = "522294370552"; // Número de Milagros
+        const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
+        const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+
+        const resultDiv = document.createElement('div');
+        resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
+        resultDiv.innerHTML = `
+            <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-white border-2 border-azul-principal rounded-3xl p-8 shadow-lg text-center overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-3 bg-azul-principal"></div>
+                <img src="https://i.imgur.com/xu9ym4s.png" crossorigin="anonymous" class="w-20 mx-auto mb-4 opacity-80 filtro-azul" alt="Corona">
+                <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pase Oficial</p>
+                <h4 class="font-script text-4xl md:text-5xl text-azul-principal mb-6 leading-tight capitalize">${name}</h4>
+                
+                <div class="inline-block border-t border-b border-azul-principal/40 py-4 px-10 mb-6 w-full">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Confirmados</p>
+                    <p class="font-numbers text-5xl md:text-6xl text-azul-principal font-bold drop-shadow-sm">${totalPases}</p>
+                </div>
+                
+                <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2">Folio: ${folio}</p>
+                <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+            </div>
             
-            if (!name || !adults || !kids) {
-                alert("Por favor completa todos los campos antes de confirmar.");
-                return;
-            }
+            <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
+                <button id="btnDescargarImagenRSVP" class="bg-azul-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                    Descargar Pase
+                </button>
+                
+                <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                    Avisar por WhatsApp
+                </a>
+            </div>
+        `;
+        seccionRsvp.appendChild(resultDiv);
 
-            const numDestino = "522294370552"; 
-            const mensajeTxt = `Hola, confirmo mi asistencia a tus XV.%0ANombre: ${name}%0AAdultos: ${adults}%0ANiños: ${kids}`;
-            const waLink = `https://wa.me/${numDestino}?text=${mensajeTxt}`;
+        document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+            const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+            const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
+            document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+            
+            html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = 'Pase_XV_Milagros.png';
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+                document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+            }).catch(err => {
+                console.error("Error", err);
+                document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+            });
+        });
 
-            window.location.href = waLink; 
+    } catch(error) {
+        console.error("Error al guardar:", error);
+        alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
+        const numeroWhatsApp = "522294370552";
+        const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
+        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+    }
+});
+
+// ==========================================
+// LÓGICA DE CONSULTAR / RECUPERAR PASE
+// ==========================================
+document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('searchName').value.trim();
+    const resultDiv = document.getElementById('searchResultMessage');
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    
+    btnSubmit.innerText = "Buscando...";
+    btnSubmit.disabled = true;
+    resultDiv.classList.add('hidden');
+
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'consultar', nombre: name }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        
+        const res = await response.json();
+        
+        resultDiv.classList.remove('hidden');
+        resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+        if (res.status === 'aprobado') {
+            const folio = "XV-MILA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            resultDiv.innerHTML = `
+                <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
+                    
+                    <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-azul-principal rounded-3xl p-8 shadow-lg text-center overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-3 bg-azul-principal"></div>
+                        
+                        <img src="https://i.imgur.com/xu9ym4s.png" crossorigin="anonymous" class="w-20 mx-auto mb-4 opacity-80 filtro-azul" alt="Corona">
+                        
+                        <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pase Oficial</p>
+                        <h4 class="font-script text-4xl md:text-5xl text-azul-principal mb-6 leading-tight capitalize">${name}</h4>
+                        
+                        <div class="inline-block border-t border-b border-azul-principal/40 py-4 px-10 mb-6">
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Asignados</p>
+                            <p class="font-numbers text-5xl md:text-6xl text-azul-principal font-bold drop-shadow-sm">${res.pases}</p>
+                        </div>
+                        
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2">Folio: ${folio}</p>
+                        <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                    </div>
+                    
+                    <button id="btnDescargarPase" class="mt-6 bg-azul-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
+                        Descargar Pase
+                    </button>
+                </div>
+            `;
+
+            const btnDescargarPase = document.getElementById('btnDescargarPase');
+            btnDescargarPase.addEventListener('click', () => {
+                const tarjeta = document.getElementById('tarjetaPaseDigital');
+                const originalText = btnDescargarPase.innerHTML;
+                btnDescargarPase.innerText = "Generando imagen...";
+                
+                html2canvas(tarjeta, {
+                    backgroundColor: "#ffffff", 
+                    scale: 3, 
+                    useCORS: true  
+                }).then(canvas => {
+                    const enlace = document.createElement('a');
+                    enlace.download = 'Pase_XV_Milagros.png';
+                    enlace.href = canvas.toDataURL('image/png');
+                    enlace.click();
+                    btnDescargarPase.innerHTML = originalText;
+                }).catch(error => {
+                    console.error("Error al generar la imagen: ", error);
+                    btnDescargarPase.innerHTML = "Error al descargar";
+                    setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                });
+            });
+
+        } else if (res.status === 'pendiente') {
+            resultDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 shadow-md p-8 rounded-3xl text-center">
+                    <p class="text-[#2C2A2A] font-bold mb-2">¡Tenemos tu registro!</p>
+                    <p class="text-gray-500 text-sm">Pero el anfitrión aún no ha validado tu pase final. Vuelve a consultar más tarde.</p>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 shadow-md p-8 rounded-3xl text-center">
+                    <p class="text-[#2C2A2A] font-bold mb-2">Reserva no encontrada.</p>
+                    <p class="text-gray-500 text-sm">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
+                </div>
+            `;
         }
+    } catch (error) {
+        console.error("Error al buscar:", error);
+        alert("Error de conexión al buscar el pase.");
+    } finally {
+        btnSubmit.innerText = "Buscar mi Pase";
+        btnSubmit.disabled = false;
+    }
+});
     </script>
 
     <script>
