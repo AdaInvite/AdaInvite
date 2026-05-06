@@ -241,7 +241,7 @@
 
     <main id="section-main">
         
-        <header class="relative min-h-[100svh] flex flex-col px-8 py-10 box-border"> 
+        <header class="relative min-h-[100svh] flex flex-col px-8 py-8 md:py-32 box-border"> 
             <div class="absolute inset-0 bg-cover bg-center filtro-azul z-0 opacity-100" style="background-image: url('https://i.imgur.com/7uC7inm.png');"></div>
             
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-azul-principal rounded-[150px] md:rounded-[150px] shadow-2xl pt-20 pb-8 px-6">
@@ -255,7 +255,7 @@
                         </text>
                     </svg>
 
-                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-28 md:w-28 mb-8 relative z-10 drop-shadow-sm">
+                    <img src="https://i.imgur.com/xu9ym4s.png" alt="Corona" class="w-24 md:w-24 mb-8 relative z-10 drop-shadow-sm">
                     
                     <h1 class="name-header text-azul-principal mb-8 md:mb-8 relative z-10">Milagros<br>Yamileth</h1>
                     
@@ -271,7 +271,7 @@
                         </div>
                     </div>
                 </div>
-    <div id="seccion-pases-inicio" class="w-full max-w-[240px] mx-auto mb-8 hidden reveal-scale active delay-200 relative z-10">
+    <div id="seccion-pases-inicio" class="w-full max-w-[220px] mx-auto mb-6 hidden reveal-scale active delay-200 relative z-10">
             <div class="bg-azul-principal/80 border border-azul-principal/20 rounded-xl px-4 py-3 shadow-md text-center transition-all">
                 <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
                 <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
@@ -371,7 +371,7 @@
 
                     <div class="tarjeta-nueva">
                         <div class="año-badge font-numbers">2026</div>
-                        <img src="https://i.imgur.com/AqLKjmx.jpeg" class="img-historia">
+                        <img src="https://i.imgur.com/EEQaUbT.jpeg" class="img-historia">
                         <div class="info-flotante">
                             <h4 class="text-xl text-[#2C2A2A] font-bold">Mis XV años</h4>
                             <p class="text-[12px] text-gray-500 mt-1 leading-tight">Dejo atrás mi niñez para comenzar una nueva etapa.</p>
@@ -870,24 +870,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        function getWeatherIcon(code) {
-            const baseClass = "w-12 h-12 mx-auto mb-4 text-white transition-colors duration-500";
-            if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
-            if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-            if ((code >= 51 && code <= 77) || (code >= 80 && code <= 82)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 19l-2 3m6-3l-2 3"></path></svg>`;
-            if (code >= 95 && code <= 99) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
-            return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-        }
+       function getWeatherIcon(code) {
+    const baseClass = "w-12 h-12 mx-auto mb-4 text-white transition-colors duration-500";
+    
+    // Despejado
+    if (code === 0) return `<svg class="${baseClass}" ...> (Icono Sol) </svg>`;
+    
+    // Nublado / Niebla
+    if (code >= 1 && code <= 48) return `<svg class="${baseClass}" ...> (Icono Nube) </svg>`;
+    
+    // Lluvia / Llovizna
+    if (code >= 51 && code <= 82) return `<svg class="${baseClass}" ...> (Icono Lluvia) </svg>`;
+    
+    // Tormenta (Solo códigos 95, 96, 99)
+    if (code >= 95) return `<svg class="${baseClass}" ...> (Icono Rayo) </svg>`;
+    
+    // Default: Nublado
+    return `<svg class="${baseClass}" ...> (Icono Nube) </svg>`;
+}
 
-        function getConditionText(code) {
-            if (code === 0) return "Despejado";
-            if (code >= 1 && code <= 3) return "Parcialmente nublado";
-            if (code >= 45 && code <= 48) return "Niebla";
-            if (code >= 51 && code <= 77) return "Llovizna";
-            if (code >= 80 && code <= 82) return "Lluvia";
-            if (code >= 95 && code <= 99) return "Tormenta";
-            return "Nublado";
-        }
+function getConditionText(code) {
+    if (code === 0) return "Despejado";
+    if (code >= 1 && code <= 3) return "Parcialmente nublado";
+    if (code >= 45 && code <= 48) return "Niebla";
+    if (code >= 51 && code <= 67) return "Llovizna";
+    if (code >= 71 && code <= 77) return "Nieve ligera";
+    if (code >= 80 && code <= 82) return "Lluvia";
+    if (code >= 95) return "Tormenta"; // Solo mostrará tormenta si la API lo confirma
+    return "Nublado";
+}
 
         function renderWeather(data) {
             const container = document.getElementById('weather-container');
