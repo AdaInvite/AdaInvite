@@ -722,7 +722,47 @@
         const audioBtn = document.getElementById("audio-btn");
         const audioIcon = document.getElementById("audio-icon");
         let isPlaying = false;
+// Variable global para los bloqueos de asistencia
+let maxPasesGlobal = undefined;
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Leer los parámetros de la URL
+    const params = new URLSearchParams(window.location.search);
+    const nombreUrl = params.get('n');       // Lee: ?n=Juan
+    const pasesUrl = params.get('pases');    // Lee: &pases=2
+
+    if (nombreUrl && pasesUrl) {
+        // Asignar el límite para que funcione tu validación de RSVP
+        maxPasesGlobal = parseInt(pasesUrl, 10);
+
+        // Mostrar la bienvenida personalizada en la portada
+        const seccionInicio = document.getElementById('seccion-pases-inicio');
+        const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+        const pasesInvitado = document.getElementById('pases-invitado-inicio');
+
+        if (seccionInicio && nombreInvitado && pasesInvitado) {
+            seccionInicio.classList.remove('hidden'); // Hace visible la tarjeta
+            nombreInvitado.textContent = nombreUrl;   // Escribe el nombre
+            pasesInvitado.textContent = pasesUrl;     // Escribe los pases
+        }
+
+        // 1. Autocompletar y BLOQUEAR el nombre en "Confirmar Asistencia"
+        const formName = document.getElementById('rsvpName');
+        if (formName) {
+            formName.value = nombreUrl;
+            formName.readOnly = true; // Impide que el usuario lo modifique
+            formName.classList.add('cursor-not-allowed', 'opacity-60'); // Indicador visual de bloqueado
+        }
+
+        // 2. Autocompletar y BLOQUEAR el nombre en "Recuperar Pase"
+        const searchName = document.getElementById('searchName');
+        if (searchName) {
+            searchName.value = nombreUrl;
+            searchName.readOnly = true; // Impide que el usuario lo modifique
+            searchName.classList.add('cursor-not-allowed', 'opacity-60'); // Indicador visual de bloqueado
+        }
+    }
+});
         function playAudio() {
             audio.play().then(() => {
                 isPlaying = true;
