@@ -693,159 +693,116 @@
             });
         }, { threshold: 0.5 });
         observerHistoria.observe(document.getElementById('historia-container'));
-        
-     // ==========================================
-// CONFIGURACIÓN DE APPS SCRIPT
-// ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-CWtILqvMZDCMrn4zZUVMXXdX84qjz6ArCX1l8JvsjTjG8bKDNXJYwm1Pjl9Om50L/exec";
+    // ==========================================
+        // CONFIGURACIÓN DE APPS SCRIPT
+        // ==========================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-CWtILqvMZDCMrn4zZUVMXXdX84qjz6ArCX1l8JvsjTjG8bKDNXJYwm1Pjl9Om50L/exec";
 
-// ==========================================
-// LÓGICA DE CONFIRMACIÓN (RSVP)
-// ==========================================
-document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('rsvpName').value.trim();
-    const numAdultos = document.getElementById('rsvpAdultos').value;
-    const numNinos = document.getElementById('rsvpNinos').value;
-    
-    // Formateamos el texto para que en tu Excel y WhatsApp se lea claramente
-    const textoAdultos = numAdultos + (numAdultos == 1 ? " Adulto" : " Adultos");
-    const textoNinos = numNinos + (numNinos == 1 ? " Niño" : " Niños");
-    
-    const form = document.getElementById('rsvpForm');
-    const loader = document.getElementById('loadingMessage');
-    
-    form.style.display = 'none';
-    loader.classList.remove('hidden');
-    loader.classList.add('flex');
+        // ==========================================
+        // LÓGICA DE BÚSQUEDA DE PASE (Consultar)
+        // ==========================================
+        document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('searchName').value.trim();
+            const resultDiv = document.getElementById('searchResultMessage');
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            
+            // Estado de carga
+            btnSubmit.innerText = "Buscando...";
+            btnSubmit.disabled = true;
+            resultDiv.classList.add('hidden');
 
-    try {
-        // Enviar a Google Sheets
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'rsvp', nombre: name, adultos: textoAdultos, ninos: textoNinos }),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-        });
-
-        // Inmediatamente después de guardar, redirigir a WhatsApp
-        const numeroWhatsApp = "524495502437";
-        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${textoAdultos} y ${textoNinos}.`;
-        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-        
-    } catch(error) {
-        console.error("Error al guardar:", error);
-        alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
-        // Fallback en caso de error
-        const numeroWhatsApp = "524495502437";
-        const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Nahomi Alexa. Soy ${name} y asistiremos ${textoAdultos} y ${textoNinos}.`;
-        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-    }
-});
-// ==========================================
-// LÓGICA DE BÚSQUEDA DE PASE (Consultar)
-// ==========================================
-document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('searchName').value.trim();
-    const resultDiv = document.getElementById('searchResultMessage');
-    const btnSubmit = e.target.querySelector('button[type="submit"]');
-    
-    // Estado de carga
-    btnSubmit.innerText = "Buscando...";
-    btnSubmit.disabled = true;
-    resultDiv.classList.add('hidden');
-
-    try {
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'consultar', nombre: name }),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-        });
-        
-        const res = await response.json();
-        
-        resultDiv.classList.remove('hidden');
-        resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
-
-        if (res.status === 'aprobado') {
-            // El anfitrión ya validó y asignó pases: Inyectamos la estructura del pase
-            resultDiv.innerHTML = `
-                <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
-                    
-                    <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-rosa-pastel rounded-3xl p-8 shadow-lg text-center overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-3 bg-rosa-pastel"></div>
-                        
-                        <img src="https://i.imgur.com/yOsSYnN.png" crossorigin="anonymous" class="w-20 mx-auto mb-4 opacity-80" alt="Corona">
-                        
-                        <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pases de acceso</p>
-                        <h4 class="font-script text-4xl md:text-5xl text-rosa-pastel mb-6 leading-tight capitalize">${name}</h4>
-                        
-                        <div class="inline-block border-t border-b border-rosa-pastel/40 py-4 px-10 mb-6">
-                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Asignados</p>
-                            <p class="font-numbers text-5xl md:text-6xl text-rosa-pastel font-bold drop-shadow-sm">${res.pases}</p>
-                        </div>
-                        
-                        <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
-                    </div>
-                    
-                    <button id="btnDescargarPase" class="mt-6 bg-rosa-pastel text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-rosa-pastel/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        Descargar Pase
-                    </button>
-                </div>
-            `;
-
-            // LÓGICA DE HTML2CANVAS (Se ejecuta al hacer clic en el botón recién creado)
-            const btnDescargarPase = document.getElementById('btnDescargarPase');
-            btnDescargarPase.addEventListener('click', () => {
-                const tarjeta = document.getElementById('tarjetaPaseDigital');
-                const originalText = btnDescargarPase.innerHTML;
-                btnDescargarPase.innerText = "Generando imagen...";
-                
-                html2canvas(tarjeta, {
-                    backgroundColor: "#ffffff", // Fondo blanco para que no salga transparente
-                    scale: 3, // Alta resolución 
-                    useCORS: true  // <--- INDISPENSABLE para imágenes externas (como la corona)
-                }).then(canvas => {
-                    const enlace = document.createElement('a');
-                    enlace.download = 'Pase_XV_Nahomi.png';
-                    enlace.href = canvas.toDataURL('image/png');
-                    enlace.click();
-                    btnDescargarPase.innerHTML = originalText;
-                }).catch(error => {
-                    console.error("Error al generar la imagen: ", error);
-                    btnDescargarPase.innerHTML = "Error al descargar";
-                    setTimeout(() => {
-                        btnDescargarPase.innerHTML = originalText;
-                    }, 2000);
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'consultar', nombre: name }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 });
-            });
+                
+                const res = await response.json();
+                
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
 
-        } else if (res.status === 'pendiente') {
-            // Está en la base de datos, pero la columna D está vacía
-            resultDiv.innerHTML = `
-                <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
-                    <p class="text-white font-bold mb-2">¡Tenemos tu registro!</p>
-                    <p class="text-white/80 text-sm">Pero el anfitrión aún no ha validado y generado tu pase final. Vuelve a consultar más tarde.</p>
-                </div>
-            `;
-        } else {
-            // No existe en la base de datos
-            resultDiv.innerHTML = `
-                <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
-                    <p class="text-white font-bold mb-2">Reserva no encontrada.</p>
-                    <p class="text-white/80 text-sm">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
-                </div>
-            `;
-        }
-    } catch (error) {
-        console.error("Error al buscar:", error);
-        alert("Error de conexión al buscar el pase.");
-    } finally {
-        btnSubmit.innerText = "Buscar mi Pase";
-        btnSubmit.disabled = false;
-    }
-});
+                if (res.status === 'aprobado') {
+                    // El anfitrión ya validó y asignó pases: Inyectamos la estructura del pase
+                    resultDiv.innerHTML = `
+                        <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
+                            
+                            <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-rosa-pastel rounded-3xl p-8 shadow-lg text-center overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-3 bg-rosa-pastel"></div>
+                                
+                                <img src="https://i.imgur.com/yOsSYnN.png" crossorigin="anonymous" class="w-20 mx-auto mb-4 opacity-80" alt="Corona">
+                                
+                                <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pases de acceso</p>
+                                <h4 class="font-script text-4xl md:text-5xl text-rosa-pastel mb-6 leading-tight capitalize">${name}</h4>
+                                
+                                <div class="inline-block border-t border-b border-rosa-pastel/40 py-4 px-10 mb-6">
+                                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Asignados</p>
+                                    <p class="font-numbers text-5xl md:text-6xl text-rosa-pastel font-bold drop-shadow-sm">${res.pases}</p>
+                                </div>
+                                
+                                <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                            </div>
+                            
+                            <button id="btnDescargarPase" class="mt-6 bg-rosa-pastel text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-rosa-pastel/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar Pase
+                            </button>
+                        </div>
+                    `;
+
+                    // LÓGICA DE HTML2CANVAS (Se ejecuta al hacer clic en el botón recién creado)
+                    const btnDescargarPase = document.getElementById('btnDescargarPase');
+                    btnDescargarPase.addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigital');
+                        const originalText = btnDescargarPase.innerHTML;
+                        btnDescargarPase.innerText = "Generando imagen...";
+                        
+                        html2canvas(tarjeta, {
+                            backgroundColor: "#ffffff", // Fondo blanco para que no salga transparente
+                            scale: 3, // Alta resolución 
+                            useCORS: true  // <--- INDISPENSABLE para imágenes externas (como la corona)
+                        }).then(canvas => {
+                            const enlace = document.createElement('a');
+                            enlace.download = 'Pase_XV_Nahomi.png';
+                            enlace.href = canvas.toDataURL('image/png');
+                            enlace.click();
+                            btnDescargarPase.innerHTML = originalText;
+                        }).catch(error => {
+                            console.error("Error al generar la imagen: ", error);
+                            btnDescargarPase.innerHTML = "Error al descargar";
+                            setTimeout(() => {
+                                btnDescargarPase.innerHTML = originalText;
+                            }, 2000);
+                        });
+                    });
+
+                } else if (res.status === 'pendiente') {
+                    // Está en la base de datos, pero la columna D está vacía
+                    resultDiv.innerHTML = `
+                        <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
+                            <p class="text-white font-bold mb-2">¡Tenemos tu registro!</p>
+                            <p class="text-white/80 text-sm">Pero el anfitrión aún no ha validado y generado tu pase final. Vuelve a consultar más tarde.</p>
+                        </div>
+                    `;
+                } else {
+                    // No existe en la base de datos
+                    resultDiv.innerHTML = `
+                        <div class="bg-black/40 backdrop-blur-md border border-white/30 p-8 rounded-3xl text-center">
+                            <p class="text-white font-bold mb-2">Reserva no encontrada.</p>
+                            <p class="text-white/80 text-sm">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Error al buscar:", error);
+                alert("Error de conexión al buscar el pase.");
+            } finally {
+                btnSubmit.innerText = "Buscar mi Pase";
+                btnSubmit.disabled = false;
+            }
+        });
     </script>
 
     <script>
