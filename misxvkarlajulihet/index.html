@@ -122,23 +122,33 @@
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
 
-       .bg-gif-section {
-    background-image: var(--bg-gif); /* Quitamos el gradiente oscuro */
-    background-size: cover; 
-    background-position: center;
+     /* 1. El contenedor principal (ya no lleva la imagen aquí) */
+.bg-gif-section {
+    position: relative;
     color: white;
-    position: relative; /* Necesario para que el blur se posicione bien */
+    overflow: hidden; /* Evita que la imagen desenfocada se salga de la pantalla */
 }
 
-/* Esta nueva regla crea una capa invisible que aplica el blur al fondo */
+/* 2. Esta capa contiene tu GIF animado y lo desenfoca desde el origen */
 .bg-gif-section::before {
     content: "";
     position: absolute;
     inset: 0;
-    backdrop-filter: blur(8px); /* Controla qué tan borroso se ve el fondo */
-    -webkit-backdrop-filter: blur(8px); /* Soporte para Safari */
-    background-color: rgba(0, 0, 0, 0.15); /* Un tinte muy ligero para que el texto blanco siga siendo legible */
-    z-index: 1; /* Se mantiene detrás de tu contenido que tiene z-10 */
+    background-image: var(--bg-gif);
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px); /* Desenfoque directo, no satura al navegador */
+    transform: scale(1.1); /* Hacemos el GIF un 10% más grande para que los bordes del blur no se vean blancos */
+    z-index: 0;
+}
+
+/* 3. Esta capa añade el ligero tinte oscuro para que el texto blanco sea legible */
+.bg-gif-section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.15); /* 15% de opacidad oscura */
+    z-index: 1;
 }
 
         .parallax-section { background-position: center; background-size: cover; }
@@ -192,7 +202,6 @@
             position: fixed; bottom: 30px; right: 30px; width: 40px; height: 40px; 
             background: transparent;
             display: flex; align-items: center; justify-content: center; z-index: 90;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.3s;
         }
         .audio-btn:hover { transform: scale(1.1); }
         .spin-slow { animation: spin 4s linear infinite; }
@@ -214,7 +223,7 @@
             <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
             <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-[#4B3621] font-semibold">Toca para abrir</div>
+                <div class="font-body text-[10px] tracking-[3px] uppercase mb-4 animate-bounce text-white font-semibold">Toca para abrir</div>
                 <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/sobreelementos/sellocaballodorado.png" class="w-[140px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
         </div>
@@ -226,7 +235,7 @@
             <section class="flex items-center gap-8 justify-center mb-8">
                 <div class="flex flex-col items-center">
                     <span class="serif text-xl tracking-[0.4em] uppercase opacity-80">Sábado</span>
-                    <span class="serif text-[6rem] leading-none font-light">1</span>
+                    <span class="serif text-[4rem] leading-none font-light">01</span>
                 </div>
                 <div class="w-px h-24 bg-white/40"></div>
                 <div class="text-left">
@@ -277,12 +286,12 @@
                 </p>
                 <div class="grid md:grid-cols-2 gap-16">
                     <div>
-                        <h3 class="text-base md:text-base mb-6 font-script text-beige drop-shadow-sm">Mis Padres</h3>
+                        <h3 class="text-3xl md:text-3xl mb-6 font-script text-beige drop-shadow-sm">Mis Padres</h3>
                         <p class="text-xl serif text-white">Angeles Vargas Martínez</p>
                         <p class="text-xl serif text-white">Carlos Erick Pérez Jiménez</p>
                     </div>
                     <div>
-                        <h3 class="text-base md:text-base mb-6 font-script text-beige drop-shadow-sm">Mis Padrinos</h3>
+                        <h3 class="text-3xl md:text-3xl mb-6 font-script text-beige drop-shadow-sm">Mis Padrinos</h3>
                         <p class="text-xl serif text-white">Josefina Vargas Martínez</p>
                         <p class="text-xl serif text-white">Pablo González Pintor</p>
                     </div>
@@ -294,7 +303,7 @@
 
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-[#FAF9F6] relative overflow-hidden corte-pico">
             <div class="max-w-6xl mx-auto relative z-10 w-full">
-                <div class="text-center mb-12 reveal">
+                <div class="text-center reveal">
                     <h2 class="text-5xl md:text-6xl mb-4 font-script text-negro drop-shadow-sm reveal-scale">Mi Historia</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] text-black/60 font-bold">Un viaje inolvidable</p>
                 </div>
@@ -337,7 +346,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-negro/50 text-[10px] mt-4 uppercase tracking-[0.3em] font-bold">Desliza para ver más →</p>
+                <p class="text-center text-negro/50 text-[10px] uppercase tracking-[0.3em] font-bold">Desliza para ver más →</p>
             </div>
         </section>
 
@@ -386,9 +395,9 @@
                 </div>
             </div>
         </section>
- <section class="min-h-[100svh] parallax-section corte-pico" style="background-image: url('https://i.imgur.com/Pf0Snt8.jpeg');"></section>
+<section class="min-h-[100svh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/Pf0Snt8.jpeg');"></section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden -mt-[12vw]">
+      <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden corte-pico">
             <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
                 <h2 class="text-5xl md:text-6xl mb-6 font-script text-beige drop-shadow-lg">Clima del Día</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold opacity-90 text-white">Pronóstico para la celebración.</p>
@@ -400,7 +409,7 @@
 
        
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-[#FAF9F6] relative overflow-hidden text-negro corte-pico">
+     <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-[#FAF9F6] relative overflow-hidden text-negro corte-valle">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <div class="text-center">
                     <h2 class="text-5xl md:text-6xl mb-4 font-script text-negro drop-shadow-sm">Itinerario</h2>
@@ -469,7 +478,7 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden corte-valle">
+<section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden corte-pico"
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full">
                 <h2 class="text-5xl md:text-6xl mb-4 font-script text-beige">Trivia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold text-white drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
@@ -492,9 +501,9 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] parallax-section corte-pico" style="background-image: url('https://i.imgur.com/9t8bEl3.jpeg');"></section>
+       <section class="min-h-[100svh] parallax-section corte-valle" style="background-image: url('https://i.imgur.com/9t8bEl3.jpeg');"></section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-white relative text-center corte-valle">
+       <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-white relative text-center corte-pico">
             <div class="max-w-3xl mx-auto reveal-scale w-full">
                 <div class="mx-auto mb-8 flex items-center justify-center">
                     <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Dress%20code%20negro.png" class="w-20 h-20 md:w-24 md:h-24 object-contain opacity-90" alt="Código de Vestimenta">
@@ -518,7 +527,7 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-[#FAF9F6] text-center relative overflow-hidden">
+      <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-[#FAF9F6] text-center relative overflow-hidden corte-valle">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <h2 class="text-5xl md:text-6xl mb-6 text-negro font-script reveal-scale">Mesa de Regalos</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-black/60 font-bold">Tu presencia es mi mayor regalo, pero si gustas tener un presente:</p>
@@ -537,7 +546,7 @@
             </div>
         </section>
 
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden corte-pico">
+       <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 bg-gif-section text-center relative overflow-hidden corte-pico">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full"> 
                 <h2 class="text-5xl md:text-6xl font-script mb-6 text-beige drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold text-white">Confirmar antes del 5 de Junio de 2026</p>
