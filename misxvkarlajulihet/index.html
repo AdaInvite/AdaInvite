@@ -122,11 +122,24 @@
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
 
-        .bg-gif-section {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--bg-gif);
-            background-size: cover; background-position: center;
-            color: white;
-        }
+       .bg-gif-section {
+    background-image: var(--bg-gif); /* Quitamos el gradiente oscuro */
+    background-size: cover; 
+    background-position: center;
+    color: white;
+    position: relative; /* Necesario para que el blur se posicione bien */
+}
+
+/* Esta nueva regla crea una capa invisible que aplica el blur al fondo */
+.bg-gif-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(8px); /* Controla qué tan borroso se ve el fondo */
+    -webkit-backdrop-filter: blur(8px); /* Soporte para Safari */
+    background-color: rgba(0, 0, 0, 0.15); /* Un tinte muy ligero para que el texto blanco siga siendo legible */
+    z-index: 1; /* Se mantiene detrás de tu contenido que tiene z-10 */
+}
 
         .parallax-section { background-position: center; background-size: cover; }
 
