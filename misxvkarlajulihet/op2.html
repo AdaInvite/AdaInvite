@@ -819,12 +819,60 @@
             loadQuestion();
         }
 
-        // --- RSVP GOOGLE SHEETS MOCK ---
-        function submitToGoogleSheets(e) {
-            e.preventDefault();
-            document.getElementById('rsvpSheetsForm').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-        }
+       // --- RSVP GOOGLE SHEETS & WHATSAPP ---
+async function submitToGoogleSheets(e) {
+    e.preventDefault();
+
+    // 1. Obtener los valores del formulario
+    const nombre = document.getElementById('rsvpName').value;
+    const adultos = document.getElementById('rsvpAdults').value;
+    const ninos = document.getElementById('rsvpKids').value;
+
+    // 2. PEGA AQUÍ TU URL DE APPS SCRIPT
+    // IMPORTANTE: Reemplaza esta URL por la que copiaste en el Paso 8
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwhMX9VgVxxMx7CjTl85vZ2rO9F_krtof0PdrMdGqDg7C7hyrI3GBsYS6nXuepQwQ0m/exec'; 
+
+    // Cambiar el texto del botón mientras carga (feedback visual)
+    const btn = e.target.querySelector('button[type="submit"]');
+    const textoOriginal = btn.innerText;
+    btn.innerText = 'CONFIRMANDO...';
+    btn.disabled = true;
+
+    try {
+        // 3. Preparar los datos para enviar a Google Sheets
+        const formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('adultos', adultos);
+        formData.append('ninos', ninos);
+
+        // Enviar datos
+        await fetch(scriptURL, { method: 'POST', body: formData });
+
+        // 4. Mostrar el mensaje de éxito en la invitación
+        document.getElementById('rsvpSheetsForm').classList.add('hidden');
+        document.getElementById('successMessage').classList.remove('hidden');
+
+        // 5. Preparar la redirección a WhatsApp
+        // Formato del número: Código de país (52) + número, sin signos + ni espacios
+        const telefono = "525561418160"; 
+        
+        // Crear el mensaje con saltos de línea (%0A)
+        const mensaje = `¡Hola! Confirmo mi asistencia a los XV de Karla Julihet.%0A%0A*Nombre:* ${nombre}%0A*Adultos:* ${adultos}%0A*Niños:* ${ninos}`;
+        
+        const whatsappURL = `https://wa.me/${telefono}?text=${mensaje}`;
+
+        // Redirigir a WhatsApp después de 2 segundos para que vean la pantalla de éxito
+        setTimeout(() => {
+            window.location.href = whatsappURL;
+        }, 2000);
+
+    } catch (error) {
+        console.error('Error al enviar:', error.message);
+        btn.innerText = textoOriginal;
+        btn.disabled = false;
+        alert('Hubo un problema de conexión. Por favor, intenta de nuevo.');
+    }
+}
     </script>
 </body>
 </html>
