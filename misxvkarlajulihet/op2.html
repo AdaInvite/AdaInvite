@@ -22,10 +22,8 @@
     
     <style>
         :root {
-            --beige-oscuro: #B59A72;
             --beige-principal: #C8A97E;
             --beige-claro: #E6D5B8;
-            --crema: #F5F5DC;
             --blanco-hueso: #FAF9F6;
             --texto-oscuro: #2C2A2A;
             
@@ -38,47 +36,42 @@
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: var(--font-body);
             background-color: var(--blanco-hueso);
-            overflow-x: hidden;
-            color: var(--texto-oscuro);
+            overflow-x: hidden; color: var(--texto-oscuro);
             scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4, .serif { font-family: var(--font-serif); font-weight: 400; }
         .font-script { font-family: var(--font-script); }
 
-        /* --- CORTES EN TRIÁNGULO --- */
+        /* --- SOMBRA PARA TÍTULOS BEIGE --- */
+        .text-shadow-beige {
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- CORTES INTERCALADOS (PICO Y VALLE) --- */
         .corte-pico {
             clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
             -webkit-clip-path: polygon(50% 0, 100% 6vw, 100% 100%, 0 100%, 0 6vw);
-            margin-top: -5.9vw;
-            position: relative;
-            z-index: 10;
+            margin-top: -5.9vw; position: relative; z-index: 10;
         }
 
         .corte-valle {
             clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
             -webkit-clip-path: polygon(0 0, 50% 6vw, 100% 0, 100% 100%, 0 100%);
-            margin-top: -5.9vw;
-            position: relative;
-            z-index: 10;
+            margin-top: -5.9vw; position: relative; z-index: 10;
         }
 
-        /* --- FONDOS ALTERNADOS --- */
+        /* --- FONDOS Y TEXTURAS --- */
         .bg-texture-main {
             background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
-            background-size: 400px; opacity: 0.15; position: absolute; inset: 0; pointer-events: none;
+            background-size: 400px; opacity: 0.15; position: absolute; inset: 0; pointer-events: none; z-index: 0;
         }
-        
         .bg-floral-section {
-            background-image: linear-gradient(rgba(44, 42, 42, 0.85), rgba(44, 42, 42, 0.85)), var(--bg-floral);
-            background-size: cover;
-            background-position: center;
+            background-image: linear-gradient(rgba(44, 42, 42, 0.8), rgba(44, 42, 42, 0.8)), var(--bg-floral);
+            background-size: cover; background-position: center;
         }
 
         /* --- SOBRE INICIAL --- */
@@ -119,9 +112,9 @@
         #section-intro.active { opacity: 1; visibility: visible; }
         .name-header { font-family: var(--font-script); font-size: clamp(4rem, 15vw, 9rem); text-shadow: 0px 5px 30px rgba(0, 0, 0, 0.8); line-height: 1; }
 
-        /* --- SECCIÓN PRINCIPAL --- */
         #section-main { display: none; }
 
+        /* --- ANIMACIONES --- */
         .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal { transform: translateY(40px); }
         .reveal-left { transform: translateX(-50px); }
@@ -130,7 +123,6 @@
         .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
-        .delay-300 { transition-delay: 300ms; }
 
         .timeline-line {
             position: absolute; left: 50%; transform: translateX(-50%);
@@ -138,11 +130,11 @@
         }
 
         .btn-calendar {
-            border: 1px solid var(--beige-oscuro); padding: 12px 24px; font-size: 10px;
+            border: 1px solid var(--texto-oscuro); padding: 12px 24px; font-size: 10px;
             letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s;
             display: inline-flex; align-items: center; gap: 10px; color: var(--texto-oscuro);
         }
-        .btn-calendar:hover { background: var(--beige-principal); color: white; border-color: var(--beige-principal); }
+        .btn-calendar:hover { background: var(--texto-oscuro); color: white; }
 
         @keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
 
@@ -169,11 +161,11 @@
         .tarjeta-nueva {
             flex: 0 0 280px; scroll-snap-align: center; position: relative;
             background: white; padding: 12px; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15); transform: rotate(-1deg); 
-            transition: all 0.4s ease; border: 1px solid rgba(200, 169, 126, 0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); transform: rotate(-1deg); 
+            transition: all 0.4s ease; border: 1px solid rgba(255,255,255,0.3);
         }
         .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
-        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
         .img-historia { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; }
         .info-flotante {
             position: absolute; bottom: 25px; left: 25px; right: 25px;
@@ -189,7 +181,6 @@
 
         /* --- FILTROS DE ICONOS --- */
         .filtro-oscuro { filter: invert(13%) sepia(8%) saturate(16%) hue-rotate(314deg) brightness(97%) contrast(85%); }
-        .filtro-blanco { filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%); }
     </style>
 </head>
 <body>
@@ -239,32 +230,20 @@
             </div>
             <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-8 relative">
                 <div class="bg-texture-main"></div>
-                <h1 class="text-6xl md:text-8xl mb-5 text-[#2C2A2A] font-script reveal-scale">Mis XV</h1>
+                <h1 class="text-6xl md:text-8xl mb-5 text-[var(--beige-principal)] text-shadow-beige font-script reveal-scale">Mis XV</h1>
                 <p class="text-[10px] uppercase tracking-[0.3em] text-[#2C2A2A] pb-5">Faltan solo...</p>
                 
                 <div id="countdown" class="flex gap-6 md:gap-14 justify-center reveal-scale delay-100">
-                    <div class="flex flex-col items-center">
-                        <span id="days" class="serif text-4xl md:text-7xl">00</span>
-                        <span class="text-label">Días</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="hours" class="serif text-4xl md:text-7xl">00</span>
-                        <span class="text-label">Horas</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="minutes" class="serif text-4xl md:text-7xl">00</span>
-                        <span class="text-label">Min</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="seconds" class="serif text-4xl md:text-7xl">00</span>
-                        <span class="text-label">Seg</span>
-                    </div>
+                    <div class="flex flex-col items-center"><span id="days" class="serif text-4xl md:text-7xl">00</span><span class="text-label">Días</span></div>
+                    <div class="flex flex-col items-center"><span id="hours" class="serif text-4xl md:text-7xl">00</span><span class="text-label">Horas</span></div>
+                    <div class="flex flex-col items-center"><span id="minutes" class="serif text-4xl md:text-7xl">00</span><span class="text-label">Min</span></div>
+                    <div class="flex flex-col items-center"><span id="seconds" class="serif text-4xl md:text-7xl">00</span><span class="text-label">Seg</span></div>
                 </div>
             </div>
         </header>
 
         <section class="pt-32 lg:pt-40 pb-32 px-6 text-center bg-[#E6D5B8] relative corte-pico">
-            <div class="bg-texture-main z-0"></div>
+            <div class="bg-texture-main"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <h2 class="text-6xl md:text-8xl mb-8 font-script text-[#2C2A2A] drop-shadow-sm">Karla Julihet</h2>
                 <p class="serif text-xl md:text-3xl italic text-[#2C2A2A] leading-relaxed font-light mb-16 px-4">
@@ -288,68 +267,34 @@
         <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section relative overflow-hidden corte-valle text-white">
             <div class="max-w-6xl mx-auto relative z-10 w-full">
                 <div class="text-center mb-8 reveal">
-                    <h2 class="text-6xl mb-4 font-script text-white reveal-scale">Mi Historia</h2>
+                    <h2 class="text-6xl mb-4 font-script text-[var(--beige-principal)] text-shadow-beige reveal-scale">Mi Historia</h2>
                     <p class="text-[10px] uppercase tracking-[0.5em] text-[var(--beige-claro)] font-bold">Un viaje inolvidable</p>
                 </div>
 
                 <div class="slider-historia">
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/KbCCLgN.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Recuerdos que hoy brillan más que nunca"</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/HzFCZiE.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"De juegos y travesuras a nuevos sueños"</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/LRvtKXU.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Cada recuerdo es parte de quien soy"</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/yrpy9xh.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"De pequeñas huellas a grandes pasos"</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/YwYOQeE.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Momentos que nunca quiero olvidar"</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-nueva">
-                        <img src="https://i.imgur.com/8pVMXBb.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"La magia de crecer"</p>
-                        </div>
-                    </div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/KbCCLgN.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Recuerdos que hoy brillan más que nunca"</p></div></div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/HzFCZiE.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"De juegos y travesuras a nuevos sueños"</p></div></div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/LRvtKXU.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Cada recuerdo es parte de quien soy"</p></div></div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/yrpy9xh.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"De pequeñas huellas a grandes pasos"</p></div></div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/YwYOQeE.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"Momentos que nunca quiero olvidar"</p></div></div>
+                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/8pVMXBb.jpeg" class="img-historia"><div class="info-flotante"><p class="text-[14px] text-[#2C2A2A] mt-1 leading-tight italic serif text-center">"La magia de crecer"</p></div></div>
                 </div>
-                <p class="text-center text-white/70 text-[10px] mt-2 uppercase tracking-[0.4em]">Arrastra para ver más →</p>
+                <p class="text-center text-white/80 text-[10px] mt-2 uppercase tracking-[0.4em]">Arrastra para ver más →</p>
             </div>
         </section>
 
-        <div class="w-full flex justify-center items-center relative corte-pico z-20">
-            <img src="https://i.imgur.com/NPNJ9nt.jpeg" class="w-full min-h-[60svh] md:min-h-[80svh] object-cover" alt="Separador">
-        </div>
-
-        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-[#FAF9F6] relative text-[#2C2A2A] corte-valle z-10">
-            <div class="bg-texture-main z-0"></div>
+        <section id="ubicaciones" class="pt-32 lg:pt-40 pb-32 px-6 bg-[#FAF9F6] relative text-[#2C2A2A] corte-pico">
+            <div class="bg-texture-main"></div>
             <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-16 relative z-10">
-                <div class="bg-white/80 p-4 md:p-8 border border-[#C8A97E]/30 shadow-md reveal flex flex-col h-full rounded-xl">
+                <div class="bg-white p-4 md:p-8 border border-[var(--beige-principal)]/30 shadow-md reveal flex flex-col h-full rounded-xl">
                     <div class="text-center mb-8">
                         <div class="mx-auto mb-4 flex items-center justify-center">
                             <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-sm filtro-oscuro opacity-90" alt="Ceremonia">
                         </div>
-                        <h3 class="text-4xl serif mb-2 text-[var(--beige-oscuro)]">Ceremonia</h3>
-                        <p class="text-[#2C2A2A] italic text-sm mt-2">Parroquia de Santiago Apóstol</p>
+                        <h3 class="text-5xl font-script mb-2 text-[var(--beige-principal)] text-shadow-beige">Ceremonia</h3>
+                        <p class="text-[#2C2A2A] italic text-sm mt-2 font-bold">Parroquia de Santiago Apóstol</p>
                         <p class="text-[#2C2A2A]/80 text-xs mt-1">De Las Americas 81, Segunda Secc Teotlalpan, Tetla, Tlax.</p>
-                        <p class="text-[var(--beige-oscuro)] font-bold text-xl mt-3 serif">4:00 p.m.</p>
+                        <p class="text-[#2C2A2A] font-bold text-xl mt-3 serif">4:00 p.m.</p>
                     </div>
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-[#C8A97E]/30 mb-6">
                         <iframe src="https://maps.app.goo.gl/oENwgCyjBLpFmdL47?g_st=ic" class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -357,15 +302,15 @@
                     <a href="https://maps.app.goo.gl/oENwgCyjBLpFmdL47?g_st=ic" target="_blank" class="w-full block text-center bg-transparent border border-[#2C2A2A] text-[#2C2A2A] font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-[#2C2A2A] hover:text-white shadow-sm transition-all duration-300 rounded-md">Abrir en App de Mapas</a>
                 </div>
 
-                <div class="bg-white/80 p-4 md:p-8 border border-[#C8A97E]/30 shadow-md reveal flex flex-col h-full rounded-xl">
+                <div class="bg-white p-4 md:p-8 border border-[var(--beige-principal)]/30 shadow-md reveal flex flex-col h-full rounded-xl">
                     <div class="text-center mb-8">
                         <div class="mx-auto mb-4 flex items-center justify-center">
                             <img src="https://i.imgur.com/AIApde9.png" class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-sm filtro-oscuro opacity-90" alt="Recepción">
                         </div>
-                        <h3 class="text-4xl serif mb-2 text-[var(--beige-oscuro)]">Recepción</h3>
-                        <p class="text-[#2C2A2A] italic text-sm mt-2">Salón Golden Park</p>
+                        <h3 class="text-5xl font-script mb-2 text-[var(--beige-principal)] text-shadow-beige">Recepción</h3>
+                        <p class="text-[#2C2A2A] italic text-sm mt-2 font-bold">Salón Golden Park</p>
                         <p class="text-[#2C2A2A]/80 text-xs mt-1">República de Brasil 186, Primera Secc Actipac, Tetla, Tlax.</p>
-                        <p class="text-[var(--beige-oscuro)] font-bold text-xl mt-3 serif">6:00 p.m.</p>
+                        <p class="text-[#2C2A2A] font-bold text-xl mt-3 serif">6:00 p.m.</p>
                     </div>
                     <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-[#C8A97E]/30 mb-6">
                         <iframe src="https://maps.app.goo.gl/QgwQEv6XEaasYubMA?g_st=ic" class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -377,23 +322,19 @@
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 delay-200">
                 <p class="text-[10px] uppercase tracking-[0.4em] mb-6 text-[#2C2A2A] font-bold">Reserva el momento en tu calendario</p>
                 <div class="flex justify-center">
-                    <button onclick="calendarLink('Mis XV Karla Julihet', 'Parroquia de Santiago Apóstol', '20260801T160000')" class="btn-calendar bg-transparent text-[#2C2A2A] border-[#2C2A2A] rounded-md px-10 py-4 hover:scale-105">
+                    <button onclick="calendarLink('Mis XV Karla Julihet', 'Parroquia de Santiago Apóstol', '20260801T160000')" class="btn-calendar bg-transparent border-[#2C2A2A] text-[#2C2A2A] rounded-md px-10 py-4 hover:scale-105">
                         Agregar al calendario
                     </button>
                 </div>
             </div>
         </section>
 
-        <div class="w-full flex justify-center items-center relative corte-pico z-20">
-            <img src="https://i.imgur.com/agsFCxX.jpeg" class="w-full min-h-[60svh] md:min-h-[80svh] object-cover" alt="Separador">
-        </div>
-
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] relative overflow-hidden text-[#2C2A2A] corte-valle z-10">
-            <div class="bg-texture-main opacity-20 z-0"></div>
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] relative overflow-hidden text-[#2C2A2A] corte-valle">
+            <div class="bg-texture-main"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10">
                 <div class="text-center mb-24">
                     <h2 class="text-6xl mb-4 font-script text-[#2C2A2A]">Itinerario</h2>
-                    <p class="text-[10px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold opacity-80">Los momentos que tendremos</p>
+                    <p class="text-[10px] uppercase tracking-[0.5em] text-[#2C2A2A]/70 font-bold">Los momentos que tendremos</p>
                 </div>
 
                 <div class="relative space-y-20">
@@ -404,11 +345,11 @@
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 md:w-20 object-contain filtro-oscuro opacity-90">
                         </div>
-                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">4:00 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Ceremonia</h3></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[#2C2A2A] font-bold">4:00 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Ceremonia</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">5:30 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Recepción</h3></div>
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[#2C2A2A] font-bold">5:30 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Recepción</h3></div>
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-16 md:w-20 object-contain opacity-80">
                         </div>
@@ -420,11 +361,11 @@
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://i.imgur.com/tRNwEAy.png" class="w-16 md:w-20 object-contain filtro-oscuro opacity-90">
                         </div>
-                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">6:10 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Entrada</h3></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[#2C2A2A] font-bold">6:10 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Entrada</h3></div>
                     </div>
                     
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">6:15 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Presentación</h3></div>
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[#2C2A2A] font-bold">6:15 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Presentación</h3></div>
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://i.imgur.com/ruhzeF1.png" class="w-16 md:w-20 object-contain filtro-oscuro opacity-90">
                         </div>
@@ -436,11 +377,11 @@
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://i.imgur.com/AIApde9.png" class="w-16 md:w-20 object-contain filtro-oscuro opacity-90">
                         </div>
-                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">6:30 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Cena</h3></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[#2C2A2A] font-bold">6:30 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Cena</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">8:00 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Vals</h3></div>
+                        <div class="w-5/12 text-right"><span class="serif text-xl italic text-[#2C2A2A] font-bold">8:00 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Vals</h3></div>
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://i.imgur.com/tRNwEAy.png" class="w-16 md:w-20 object-contain filtro-oscuro opacity-90">
                         </div>
@@ -452,34 +393,35 @@
                         <div class="bg-white p-3 rounded-full border border-[var(--beige-principal)] shadow-md reveal-scale z-10">
                             <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-16 md:w-20 object-contain opacity-90">
                         </div>
-                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[var(--beige-oscuro)] font-bold">9:45 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Baile</h3></div>
+                        <div class="w-5/12 text-left"><span class="serif text-xl italic text-[#2C2A2A] font-bold">9:45 p.m.</span><h3 class="text-xl md:hidden font-bold mt-1">Baile</h3></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-32 px-6 bg-floral-section text-center relative overflow-hidden corte-pico text-white">
+        <div class="w-full flex justify-center items-center relative corte-pico">
+            <img src="https://i.imgur.com/NPNJ9nt.jpeg" class="w-full min-h-[50svh] md:min-h-[70svh] object-cover object-center" alt="Separador">
+        </div>
+
+        <section class="py-32 px-6 bg-[#FAF9F6] text-center relative overflow-hidden corte-valle">
+            <div class="bg-texture-main"></div>
             <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
-                <h2 class="text-6xl mb-4 font-script">Clima del Día</h2>
-                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold text-[var(--beige-claro)]">Pronóstico por hora</p>
+                <h2 class="text-6xl mb-6 font-script text-[var(--beige-principal)] text-shadow-beige">Clima del Día</h2>
+                <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold text-[#2C2A2A]/70">Pronóstico por hora.</p>
                 
-                <div id="weather-container" class="w-full max-w-xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-lg border border-white/20">
-                    <p class="text-sm w-full animate-pulse italic text-white text-center">Cargando pronóstico...</p>
+                <div id="weather-container" class="w-full max-w-xl mx-auto">
+                    <p class="text-sm w-full animate-pulse italic text-[#2C2A2A] text-center">Cargando pronóstico...</p>
                 </div>
             </div>
         </section>
 
-        <div class="w-full flex justify-center items-center relative corte-valle z-20">
-            <img src="https://i.imgur.com/Pf0Snt8.jpeg" class="w-full min-h-[60svh] md:min-h-[80svh] object-cover" alt="Separador">
-        </div>
-
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#FAF9F6] text-center relative overflow-hidden corte-pico z-10">
-            <div class="bg-texture-main opacity-10 z-0"></div>
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] text-center relative overflow-hidden corte-pico">
+            <div class="bg-texture-main"></div>
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full">
-                <h1 class="text-6xl mb-4 font-script text-[var(--beige-oscuro)]">Trivia</h1>
+                <h1 class="text-6xl mb-4 font-script text-[#2C2A2A]">Trivia</h1>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold text-[#2C2A2A]/70">¿Qué tanto conoces a la quinceañera?</p>
                 
-                <div id="trivia-container" class="bg-white p-6 md:p-10 rounded-3xl shadow-lg border border-[#C8A97E]/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                <div id="trivia-container" class="bg-white/80 p-6 md:p-10 rounded-3xl shadow-lg border border-[var(--beige-principal)]/30 transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
                     <div id="trivia-question-container">
                         <p class="text-[10px] uppercase tracking-widest text-[#2C2A2A]/60 mb-4 font-bold">Pregunta <span id="trivia-current-num">1</span> de <span id="trivia-total-num">3</span></p>
                         <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-[#2C2A2A] mb-8 font-bold serif">Pregunta aquí</h3>
@@ -487,9 +429,9 @@
                     </div>
 
                     <div id="trivia-result" class="hidden text-[#2C2A2A]">
-                        <h3 class="font-script text-7xl mb-4 text-[var(--beige-oscuro)]">¡Terminaste!</h3>
-                        <p class="text-xl mb-2">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold mb-8 serif"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
+                        <h3 class="font-script text-7xl mb-4 text-[#2C2A2A]">¡Terminaste!</h3>
+                        <p class="text-xl mb-2 font-bold">Tu puntuación es:</p>
+                        <p class="text-5xl font-bold mb-8 serif text-[var(--beige-principal)]"><span id="trivia-score">0</span> / <span id="trivia-total-score">3</span></p>
                         <p id="trivia-feedback" class="text-xs uppercase tracking-widest opacity-90 mb-8 font-bold"></p>
                         <button onclick="resetTrivia()" class="bg-transparent text-[#2C2A2A] border border-[#2C2A2A] px-8 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-[#2C2A2A] hover:text-white transition-all duration-300 rounded-md">Jugar de nuevo</button>
                     </div>
@@ -497,13 +439,17 @@
             </div>
         </section>
 
-        <section class="py-32 px-6 bg-[#E6D5B8] relative text-center corte-valle">
-            <div class="bg-texture-main z-0"></div>
+        <div class="w-full flex justify-center items-center relative corte-valle">
+            <img src="https://i.imgur.com/agsFCxX.jpeg" class="w-full min-h-[50svh] md:min-h-[70svh] object-cover object-center" alt="Separador">
+        </div>
+
+        <section class="py-32 px-6 bg-[#FAF9F6] relative text-center corte-pico">
+            <div class="bg-texture-main"></div>
             <div class="max-w-3xl mx-auto reveal-scale relative z-10">
                 <div class="mx-auto mb-8 flex items-center justify-center">
                     <img src="https://i.imgur.com/ruhzeF1.png" class="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-sm filtro-oscuro opacity-90" alt="Código de Vestimenta">
                 </div>
-                <h2 class="text-6xl mb-4 font-script text-[#2C2A2A]">Código de Vestimenta</h2>
+                <h2 class="text-6xl mb-6 font-script text-[var(--beige-principal)] text-shadow-beige">Código de Vestimenta</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] text-white mb-8 font-bold bg-[#2C2A2A] inline-block px-8 py-3 rounded-sm shadow-sm">Vaquer@ Formal</p>
                 <p class="serif text-xl md:text-2xl italic text-[#2C2A2A] mb-4 leading-relaxed px-4">Por favor, reserva el dorado y beige exclusivamente para la quinceañera.</p>
                 <p class="text-sm uppercase tracking-widest text-[#2C2A2A] font-bold mt-2 border-b border-[#2C2A2A] inline-block pb-1">Traer ropa abrigadora</p>
@@ -521,19 +467,16 @@
             </div>
         </section>
 
-        <div class="w-full flex justify-center items-center relative corte-pico z-20">
-            <img src="https://i.imgur.com/9t8bEl3.jpeg" class="w-full min-h-[60svh] md:min-h-[80svh] object-cover" alt="Separador">
-        </div>
-
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-floral-section text-center relative overflow-hidden corte-valle text-white z-10">
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] text-center relative overflow-hidden corte-valle text-[#2C2A2A]">
+            <div class="bg-texture-main"></div>
             <div class="max-w-3xl mx-auto reveal-scale relative z-10">
-                <svg class="w-12 h-12 mx-auto mb-6 text-[var(--beige-claro)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 mx-auto mb-6 text-[#2C2A2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
                 </svg>
                 
-                <h2 class="text-6xl font-script mb-6 text-white">Álbum Compartido</h2>
-                <p class="text-sm md:text-base font-medium tracking-widest mb-10 leading-relaxed text-white/90">
+                <h2 class="text-6xl font-script mb-6 text-[#2C2A2A]">Álbum Compartido</h2>
+                <p class="text-sm md:text-base font-medium tracking-widest mb-10 leading-relaxed text-[#2C2A2A]/90">
                     Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
                 </p>
 
@@ -541,23 +484,27 @@
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tus-fotos-aqui.com" alt="Código QR" class="w-40 h-40 object-contain">
                 </div>
                 <br>
-                <a href="#" target="_blank" class="inline-block border border-white px-10 py-4 text-[10px] uppercase tracking-widest text-white font-bold hover:bg-white hover:text-[#2C2A2A] transition-all rounded-md">
+                <a href="#" target="_blank" class="inline-block border border-[#2C2A2A] px-10 py-4 text-[10px] uppercase tracking-widest text-[#2C2A2A] font-bold hover:bg-[#2C2A2A] hover:text-white transition-all rounded-md">
                     Subir fotos aquí
                 </a>
             </div>
         </section>
 
-        <section class="py-32 px-6 bg-[#FAF9F6] text-center relative overflow-hidden corte-pico">
-            <div class="bg-texture-main opacity-10 z-0"></div>
+        <div class="w-full flex justify-center items-center relative corte-pico">
+            <img src="https://i.imgur.com/Pf0Snt8.jpeg" class="w-full min-h-[50svh] md:min-h-[70svh] object-cover object-center" alt="Separador">
+        </div>
+
+        <section class="py-32 px-6 bg-[#FAF9F6] text-center relative overflow-hidden corte-valle">
+            <div class="bg-texture-main"></div>
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <h1 class="text-6xl mb-6 text-[var(--beige-oscuro)] font-script reveal-scale">Mesa de Regalos</h1>
+                <h1 class="text-6xl mb-6 text-[var(--beige-principal)] text-shadow-beige font-script reveal-scale">Mesa de Regalos</h1>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold">Tu presencia es mi mayor regalo.</p>
                 <div class="flex justify-center w-full">
                     <div class="bg-white p-8 md:p-12 border border-[#C8A97E]/30 group shadow-lg rounded-2xl flex flex-col items-center justify-center reveal-scale delay-200 w-full max-w-sm">
-                        <svg class="w-16 h-16 mb-4 text-[var(--beige-oscuro)] transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-16 h-16 mb-4 text-[#2C2A2A] transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
                         </svg>
-                        <h3 class="text-xl font-bold text-[#2C2A2A] mb-2 serif">Lluvia de Sobres</h3>
+                        <h3 class="text-2xl font-bold text-[#2C2A2A] mb-2 serif">Lluvia de Sobres</h3>
                         <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2C2A2A]/70 text-center leading-relaxed">
                             Tendré una pequeña urna en el salón para depositar tus buenos deseos.
                         </p>
@@ -566,13 +513,13 @@
             </div>
         </section>
 
-        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] text-center relative overflow-hidden corte-valle">
-            <div class="bg-texture-main z-0"></div>
+        <section class="pt-32 lg:pt-40 pb-32 px-6 bg-[#E6D5B8] text-center relative overflow-hidden corte-pico">
+            <div class="bg-texture-main"></div>
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
                 <h2 class="text-6xl font-script mb-6 text-[#2C2A2A]">Confirmar Asistencia</h2>
                 <p class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold text-[#2C2A2A]/80">Confirmar antes del 5 de Junio de 2026</p>
                 
-                <div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl border border-white shadow-xl transition-all duration-500 w-full mx-auto">
+                <div class="bg-white/90 backdrop-blur-sm p-8 md:p-12 rounded-2xl border border-[var(--beige-principal)]/30 shadow-xl transition-all duration-500 w-full mx-auto">
                    <form id="rsvpSheetsForm" class="space-y-6 text-left transition-all duration-500" onsubmit="submitToGoogleSheets(event)">
                         <div class="border-b border-[#2C2A2A]/20 pb-2">
                             <label class="text-[9px] uppercase tracking-widest opacity-80 text-[#2C2A2A] font-bold">Nombre Completo</label>
@@ -595,19 +542,24 @@
                     </form>
                     <div id="successMessage" class="hidden text-center mt-6">
                         <p class="text-3xl font-script text-[#2C2A2A]">¡Gracias por confirmar!</p>
-                        <p class="text-sm mt-2 text-[#2C2A2A]/70">Nos vemos en la fiesta.</p>
+                        <p class="text-sm mt-2 font-bold text-[#2C2A2A]/70">Nos vemos en la fiesta.</p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="w-full flex justify-center items-center relative corte-valle">
+            <img src="https://i.imgur.com/9t8bEl3.jpeg" class="w-full min-h-[50svh] md:min-h-[70svh] object-cover object-center" alt="Separador">
+        </div>
         
-        <footer class="pt-32 pb-24 text-center bg-floral-section relative z-10 corte-pico text-white">
-            <div class="max-w-4xl mx-auto reveal relative z-10 py-10">
-                <h3 class="text-6xl font-script mb-6">Gracias</h3>
-                <p class="text-lg md:text-xl italic leading-relaxed font-light mb-16 px-8 md:px-24 serif text-white/90">
+        <footer class="pt-32 pb-24 text-center bg-[#FAF9F6] relative z-10 corte-pico">
+            <div class="bg-texture-main"></div>
+            <div class="max-w-4xl mx-auto reveal relative z-10 py-10 text-[#2C2A2A]">
+                <h3 class="text-6xl font-script mb-6 text-[var(--beige-principal)] text-shadow-beige">Gracias</h3>
+                <p class="text-lg md:text-xl italic leading-relaxed font-light mb-16 px-8 md:px-24 serif text-[#2C2A2A]">
                     "Gracias por acompañarme en esta noche tan especial y ser parte de uno de los momentos más importantes de mi vida."
                 </p>
-                <p class="text-[10px] text-[var(--beige-claro)] uppercase tracking-[0.5em] mb-4 font-bold relative z-10">1 • Agosto • 2026</p>
+                <p class="text-[10px] text-[#2C2A2A] uppercase tracking-[0.5em] mb-4 font-bold relative z-10">1 • Agosto • 2026</p>
             </div>
         </footer>
     </main>
@@ -649,7 +601,7 @@
             isPlaying = !isPlaying;
         }
 
-        // CONTADOR (1 Agosto 2026)
+        // CONTADOR
         const targetDate = new Date("August 1, 2026 16:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
@@ -699,7 +651,7 @@
             observer.observe(slider);
         });
 
-        // --- API DEL CLIMA (Aproximación Tetla, Tlaxcala) ---
+        // --- API DEL CLIMA ---
         async function fetchWeather() {
             const lat = 19.43; const lon = -98.10; 
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
@@ -708,35 +660,74 @@
                 const data = await response.json();
                 renderWeather(data);
             } catch (error) {
-                document.getElementById('weather-container').innerHTML = '<p class="text-sm text-white drop-shadow-sm w-full">El clima no está disponible en este momento.</p>';
+                document.getElementById('weather-container').innerHTML = '<p class="text-sm text-[#2C2A2A] drop-shadow-sm w-full">El clima no está disponible en este momento.</p>';
             }
         }
         function getWeatherIcon(code) {
-            const baseClass = "w-10 h-10 mx-auto mb-4 text-white";
+            const baseClass = "w-6 h-6 md:w-8 md:h-8 mx-auto my-2 text-[#2C2A2A] transition-colors duration-500";
             if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>`;
             if ((code >= 1 && code <= 3) || (code >= 45 && code <= 48)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
             if ((code >= 51 && code <= 77) || (code >= 80 && code <= 82)) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 19l-2 3m6-3l-2 3"></path></svg>`;
+            if (code >= 95 && code <= 99) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
             return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+        }
+        function getConditionText(code) {
+            if (code === 0) return "Despejado";
+            if (code >= 1 && code <= 3) return "Parcialmente nublado";
+            if (code >= 45 && code <= 48) return "Niebla";
+            if (code >= 51 && code <= 77) return "Llovizna";
+            if (code >= 80 && code <= 82) return "Lluvia";
+            if (code >= 95 && code <= 99) return "Tormenta";
+            return "Nublado";
         }
         function renderWeather(data) {
             const container = document.getElementById('weather-container');
+            const now = new Date();
             const todayTemps = data.hourly.temperature_2m.slice(0, 24);
             const maxTemp = Math.round(Math.max(...todayTemps));
             const minTemp = Math.round(Math.min(...todayTemps));
-            let currentTemp = Math.round(data.hourly.temperature_2m[0]);
-            let currentCode = data.hourly.weathercode[0];
-            
+
+            let hourlyHTML = ''; let hoursShown = 0; let currentTemp = 0; let currentCode = 0;
+            for (let i = 0; i < data.hourly.time.length; i++) {
+                const forecastDate = new Date(data.hourly.time[i]);
+                if (forecastDate >= now && hoursShown < 6) {
+                    const temp = Math.round(data.hourly.temperature_2m[i]);
+                    const weatherCode = data.hourly.weathercode[i];
+                    if (hoursShown === 0) { currentTemp = temp; currentCode = weatherCode; }
+                    let hour = forecastDate.getHours();
+                    const ampm = hour >= 12 ? 'p.m.' : 'a.m.';
+                    hour = hour % 12; hour = hour ? hour : 12;
+                    const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
+                    
+                    hourlyHTML += `
+                        <div class="flex flex-col items-center justify-center flex-1 text-[#2C2A2A]">
+                            <span class="text-[10px] md:text-sm font-bold opacity-90">${hourStr}</span>
+                            ${getWeatherIcon(weatherCode)}
+                            <span class="text-sm md:text-lg font-bold font-body">${temp}°</span>
+                        </div>
+                    `;
+                    hoursShown++;
+                }
+            }
+
+            const conditionText = getConditionText(currentCode);
+            let mainIconSVG = getWeatherIcon(currentCode).replace('w-6 h-6 md:w-8 md:h-8 mx-auto my-2', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
+
             container.innerHTML = `
-                <div class="text-left text-white">
-                    <div class="flex justify-between items-start mb-6">
+                <div class="bg-white/70 backdrop-blur-md rounded-[30px] p-6 md:p-8 text-[#2C2A2A] text-left shadow-lg border border-[var(--beige-principal)]/30 mx-auto font-sans w-full">
+                    <div class="flex justify-between items-start mb-8">
                         <div>
                             <h3 class="text-xl md:text-2xl font-bold flex items-center gap-1">Tetla, Tlaxcala</h3>
                             <div class="text-[60px] md:text-[80px] font-light leading-none mt-1 font-body">${currentTemp}°</div>
                         </div>
                         <div class="text-right flex flex-col items-end pt-1">
-                            ${getWeatherIcon(currentCode).replace('w-10 h-10', 'w-12 h-12 ml-auto mb-2')}
-                            <p class="text-xs md:text-sm font-bold tracking-widest text-white/90">Máx.: ${maxTemp}° / Mín.: ${minTemp}°</p>
+                            ${mainIconSVG}
+                            <p class="text-sm md:text-base font-bold">${conditionText}</p>
+                            <p class="text-xs md:text-sm opacity-90 mt-1 tracking-widest font-body font-bold">Máx.: ${maxTemp}° / Mín.: ${minTemp}°</p>
                         </div>
+                    </div>
+                    <div class="flex justify-between items-center w-full pt-4 border-t border-[#2C2A2A]/20">
+                        ${hourlyHTML}
                     </div>
                 </div>
             `;
