@@ -509,4 +509,202 @@
                 durationTimeEl.textContent = "-" + formatTime(audio.duration);
             });
 
-            progressBar.addEventListener('input
+            progressBar.addEventListener('input', (e) => {
+                const seekTime = (e.target.value / 100) * audio.duration;
+                audio.currentTime = seekTime;
+            });
+
+            const targetDate = new Date("July 25, 2026 18:00:00").getTime();
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                if (distance < 0) return;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+                document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+                document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+            }
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            function initObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+            }
+
+            function calendarLink(title, loc, date) {
+                const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+                window.open(url, '_blank');
+            }
+
+            // ==========================================
+            // LÓGICA DE RSVP (ANALIZ)
+            // ==========================================
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWeMfHXBqWoIMea8rHUCvZZdvI4j_aoocZjc1fPDg-3mCyomb7o6WTR0M3XvimEpJ54g/exec";
+
+            document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('rsvpName').value.trim();
+                const numAdultos = document.getElementById('rsvpAdultos').value;
+                const textoAdultos = numAdultos + (numAdultos == 1 ? " Asistente" : " Asistentes");
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                
+                form.style.display = 'none';
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'rsvp', nombre: name, pax: numAdultos }),
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+                    });
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const folio = "XV-GRE-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                    const numeroWhatsApp = "529981962334";
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
+                    resultDiv.innerHTML = `
+                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-blanco border-4 border-esmeralda rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-4 bg-esmeralda"></div>
+                            
+                            <p class="text-[10px] uppercase tracking-[0.4em] text-negro font-bold mb-4 mt-2">Pase Oficial</p>
+                            <h4 class="font-script text-5xl text-esmeralda mb-6 leading-tight capitalize">${name}</h4>
+                            
+                            <div class="inline-block border-t-2 border-b-2 border-negro py-4 px-10 mb-6 w-full">
+                                <p class="text-[11px] uppercase tracking-[0.3em] text-negro font-bold mb-1">Pases Confirmados</p>
+                                <p class="font-numbers text-6xl text-esmeralda font-bold drop-shadow-sm">${numAdultos}</p>
+                            </div>
+                            
+                            <p class="text-[10px] uppercase tracking-[0.2em] text-gray-600 font-numbers mb-2 font-bold">Folio: ${folio}</p>
+                            <p class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-bold">Muestra esta tarjeta en recepción</p>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 w-full max-w-sm mt-8">
+                            <button id="btnDescargarImagenRSVP" class="bg-negro text-blanco font-bold py-4 px-8 uppercase tracking-widest text-[11px] hover:bg-esmeralda transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-blanco font-bold py-4 px-8 uppercase tracking-widest text-[11px] hover:bg-[#1DA851] transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
+                                Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
+                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+                        
+                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                            const enlace = document.createElement('a');
+                            enlace.download = 'Pase_XV_Grettel.png';
+                            enlace.href = canvas.toDataURL('image/png');
+                            enlace.click();
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        }).catch(err => {
+                            console.error("Error", err);
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        });
+                    });
+
+                } catch(error) {
+                    console.error("Error al guardar:", error);
+                    alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
+                    const numeroWhatsApp = "529981962334";
+                    const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
+                    window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+                }
+            });
+
+            // LÓGICA DE URL PARAMETERS Y BLOQUEO DE PASES
+            let maxPasesGlobal = Infinity;
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const familia = urlParams.get('n');
+                const pases = urlParams.get('pases');
+
+                if (familia && pases) {
+                    maxPasesGlobal = parseInt(pases);
+                    
+                    const seccionInicio = document.getElementById('seccion-pases-inicio');
+                    if (seccionInicio) seccionInicio.classList.remove('hidden');
+
+                    const nomInicio = document.getElementById('nombre-invitado-inicio');
+                    const pasInicio = document.getElementById('pases-invitado-inicio');
+                    if(nomInicio) nomInicio.innerText = familia;
+                    if(pasInicio) pasInicio.innerText = pases;
+
+                    const rsvpName = document.getElementById('rsvpName');
+                    const rsvpAdultos = document.getElementById('rsvpAdultos');
+
+                    if (rsvpName) {
+                        rsvpName.value = familia;
+                        rsvpName.setAttribute('readonly', true);
+                        rsvpName.classList.add('cursor-not-allowed', 'opacity-60');
+                    }
+                    
+                    if (rsvpAdultos) {
+                        rsvpAdultos.value = pases;
+                        
+                        rsvpAdultos.addEventListener('input', function() {
+                            let val = parseInt(this.value.replace(/[^0-9]/g, '')) || 0;
+                            
+                            if (val > maxPasesGlobal) {
+                                this.value = maxPasesGlobal; 
+                                
+                                const btn = document.getElementById('btnSubmitRSVP');
+                                const originalTxt = btn.innerText;
+                                btn.innerText = `Límite: ${maxPasesGlobal} pases`;
+                                btn.classList.add('bg-red-600', 'text-white', 'border-red-600');
+                                
+                                setTimeout(() => {
+                                    btn.innerText = originalTxt;
+                                    btn.classList.remove('bg-red-600', 'text-white', 'border-red-600');
+                                }, 2000);
+                            }
+                        });
+                    }
+                }
+            });
+        </script>
+        
+        <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        }, false);
+
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false; 
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
+        };
+        </script>
+    </div>
+</body>
+</html>
