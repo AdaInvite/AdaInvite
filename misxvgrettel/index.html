@@ -9,10 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="XV Grettel">
-    <meta name="theme-color" content="#045c41">
-    <meta property="og:title" content="Mis XV Grettel">
-    <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
-    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#00594C">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -20,25 +17,27 @@
             theme: {
                 extend: {
                     colors: {
-                        esmeralda: '#045c41',
-                        negro: '#000000',
-                        blanco: '#ffffff'
+                        esmeralda: '#00594C', 
+                        negro: '#1a1a1a',
+                        blanco: {
+                            perla: '#F8F9FA'
+                        }
                     }
                 }
             }
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italianno&family=Poiret+One:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&family=Poiret+One:wght@400&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --esmeralda: #045c41;
-            --blanco: #ffffff;
-            --negro: #000000;
+            --esmeralda: #00594C;
+            --blanco-perla: #F8F9FA;
+            --negro: #1a1a1a;
             --font-elegant: 'Poiret One', sans-serif;
             --font-script: 'Italianno', cursive;
             --font-numbers: 'Poiret One', sans-serif; 
@@ -61,7 +60,7 @@
             max-width: 500px; 
             height: 100%;
             min-height: 100svh;
-            background-color: var(--blanco); 
+            background-color: var(--blanco-perla); 
             position: relative;
             overflow-x: hidden;
             overflow-y: auto;
@@ -76,18 +75,28 @@
 
         .font-numbers {
             font-family: var(--font-numbers) !important;
-            font-weight: 600;
+            font-weight: 500;
         }
 
-        body, p, span, input, select { font-weight: 600; }
+        body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 600; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        .forma-ovalada {
-            background-color: var(--negro);
-            color: var(--blanco);
+        .bg-padres { 
+            background-color: var(--blanco-perla);
+            width: 100%;
+        }
+
+        .fondo-perla {
+            background-color: var(--blanco-perla);
+            width: 100%;
+        }
+
+       .forma-ovalada {
+            background-color: var(--esmeralda);
+            color: white;
             border-radius: 250px 250px 0 0;
-            box-shadow: 0 0 45px rgba(0, 0, 0, 0.45);  
+            box-shadow: 0 0 45px rgba(0, 0, 0, 0.15);  
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,12 +107,16 @@
             width: 95%; 
             max-width: 460px; 
             height: auto; 
-            min-height: 96svh;
-            padding: 10% 6%; 
+            min-height: 90svh;
+            padding: 15% 6% 10% 6%; 
             overflow: hidden; 
         }
 
-        .text-shadow-light { text-shadow: 0px 2px 10px rgba(4, 92, 65, 0.2); }
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 89, 76, 0.2); }
+
+        .filtro-esmeralda {
+            filter: brightness(0) saturate(100%) invert(20%) sepia(50%) saturate(1500%) hue-rotate(140deg) brightness(90%) contrast(90%);
+        }
         .filtro-blanco { filter: brightness(0) invert(1); }
 
         #envelope-wrapper {
@@ -115,7 +128,7 @@
         .envelope-bg {
             position: absolute; inset: 0;
             background-image: url("https://i.imgur.com/3fjVytj.jpeg");
-            background-color: var(--blanco); 
+            background-color: var(--blanco-perla); 
             background-blend-mode: multiply;    
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
@@ -127,7 +140,7 @@
 
         .flap { 
             width: 100%; height: 100%; 
-            background-image: linear-gradient(var(--blanco), var(--blanco)), url("https://i.imgur.com/3fjVytj.jpeg"); 
+            background-image: linear-gradient(var(--blanco-perla), var(--blanco-perla)), url("https://i.imgur.com/3fjVytj.jpeg"); 
             background-size: cover; background-blend-mode: multiply; 
         }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
@@ -143,17 +156,15 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: 6.5rem; line-height: 1; margin-top: -10px; }
-        @media (min-width: 380px) { .name-header { font-size: 7.5rem; } }
+        .name-header { font-family: var(--font-script); font-size: 6rem; line-height: 0.9; margin-top: 10px; }
+        @media (min-width: 380px) { .name-header { font-size: 6.5rem; } }
 
         #section-main { display: none; }
 
-        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal { transform: translateY(40px); }
-        .reveal-left { transform: translateX(-50px); }
-        .reveal-right { transform: translateX(50px); }
         .reveal-scale { transform: scale(0.85); }
-        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+        .reveal.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
 
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
@@ -164,12 +175,12 @@
         }
 
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
-        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 600; line-height: 1; transition: color 0.5s ease; }
-        #countdown .time-label { font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; font-family: var(--font-elegant); transition: color 0.5s ease; }
-
+        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 300; line-height: 1; transition: color 0.5s ease; }
+        #countdown .time-label { font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; font-family: var(--font-elegant); transition: color 0.5s ease; }
+        
         input[type=range] {
             -webkit-appearance: none;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 89, 76, 0.2);
             border-radius: 8px;
             height: 4px;
             outline: none;
@@ -207,36 +218,34 @@
                   <div class="text-base font-bold mb-4 animate-bounce text-esmeralda font-elegant">
                     Toca para abrir
                   </div>
-                  <img src="https://i.imgur.com/3a91lrV.png" class="w-[120px] filtro-blanco drop-shadow-md bg-esmeralda rounded-full p-2" style="animation: floating 5s infinite ease-in-out" alt="Sello">
+                  <img src="https://i.imgur.com/3a91lrV.png" class="w-[120px] filtro-esmeralda" style="animation: floating 5s infinite ease-in-out" alt="Sello">
                 </div>
             </div>
         </div>
 
         <main id="section-main">
             
-            <header class="relative min-h-[100svh] flex flex-col px-6 py-10 bg-blanco"> 
+            <header class="relative min-h-[100svh] flex flex-col px-6 py-10 bg-blanco-perla bg-cover bg-center" style="background-image: url('https://i.imgur.com/RFUz4sr.jpeg'); background-color: rgba(248, 249, 250, 0.85); background-blend-mode: overlay;"> 
                 
-                <div id="seccion-pases-inicio" class="w-full max-w-[280px] mx-auto mt-6 hidden reveal-scale active delay-200 relative z-20">
-                    <div class="bg-negro border border-esmeralda rounded-xl px-4 py-3 shadow-md text-center transition-all">
-                        <p class="text-xs uppercase text-blanco font-bold mb-1">Invitación especial para</p>
-                        <p id="nombre-invitado-inicio" class="text-2xl font-script text-esmeralda mb-1 capitalize"></p>
-                        <div class="flex items-center justify-center gap-2 mt-1 border-t border-esmeralda/50 pt-1.5 w-[70%] mx-auto">
-                            <span class="text-xs uppercase font-bold text-blanco">Pases:</span>
-                            <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-esmeralda"></span>
+                <div id="seccion-pases-inicio" class="w-full max-w-[280px] mx-auto mt-4 hidden reveal-scale active delay-200 relative z-20">
+                    <div class="bg-esmeralda/90 border border-esmeralda rounded-xl px-4 py-3 shadow-lg text-center transition-all">
+                        <p class="text-xs uppercase text-white font-bold mb-1">Invitación para</p>
+                        <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
+                        <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/20 pt-1.5 w-[80%] mx-auto">
+                            <span class="text-xs uppercase font-bold text-white">Pases:</span>
+                            <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-8">
+                <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-4">
                     <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
                         
                         <h2 class="font-script text-6xl md:text-7xl text-esmeralda mb-2 drop-shadow-sm">Mis 15</h2>
-                        <svg class="w-24 md:w-28 mb-4 relative z-10 drop-shadow-sm text-esmeralda" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
-                        </svg>
-                        <h1 class="name-header text-negro mb-8 relative z-10 drop-shadow-md">Grettel</h1>
+                        <img src="https://i.imgur.com/PKluSR0.png" alt="Corona" class="w-24 md:w-28 mb-2 relative z-10 drop-shadow-sm filtro-esmeralda">
+                        <h1 class="name-header text-esmeralda mb-2 relative z-10 drop-shadow-md">Grettel<br><span class="text-5xl">Jackeline</span></h1>
                         
-                        <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-6 px-2 relative z-10">
+                        <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-8 px-2 relative z-10">
                             <div class="flex-1 flex justify-center items-center border-t border-b border-esmeralda py-2">
                                 <span class="text-lg md:text-xl font-bold uppercase font-elegant text-negro">Jul</span>
                             </div>
@@ -257,115 +266,79 @@
                 </div>
             </header>
 
-            <section class="min-h-[80svh] flex flex-col justify-start pt-10 pb-16 px-6 text-center relative bg-blanco">
-                <div class="max-w-4xl mx-auto reveal relative z-10 text-negro w-full flex flex-col h-full flex-grow">
+            <section class="min-h-[100svh] flex flex-col justify-start pt-8 pb-12 px-4 text-center relative bg-padres">
+                <div class="max-w-4xl mx-auto reveal relative z-10 text-esmeralda w-full flex flex-col h-full flex-grow">
                     
-                    <div class="w-full max-w-[280px] mx-auto bg-blanco border-2 border-esmeralda rounded-2xl p-4 shadow-xl reveal-scale text-negro flex-shrink-0 mb-12">
-                        <div class="text-center mb-4">
-                            <h3 class="text-lg font-bold mb-0.5 font-elegant tracking-wide text-esmeralda">Firmeza</h3>
-                            <p class="text-[10px] font-bold text-negro font-elegant">La Niña de tus Ojos</p>
+                    <div class="w-full max-w-[280px] mx-auto bg-white/80 border border-esmeralda/20 rounded-2xl py-3 px-5 shadow-lg reveal-scale text-negro flex-shrink-0 mt-4 mb-10">
+                        <div class="text-left mb-3">
+                            <h3 class="text-base font-bold mb-0.5 font-elegant tracking-wide text-esmeralda">La Niña De Tus Ojos</h3>
+                            <p class="text-[10px] font-light text-negro/70 font-elegant">Firmeza</p>
                         </div>
 
-                        <div class="flex items-center gap-2 mb-4">
-                            <span id="current-time" class="text-[9px] font-numbers font-bold w-8 text-left text-negro">0:00</span>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span id="current-time" class="text-[9px] font-numbers font-bold w-8 text-left opacity-80 text-esmeralda">0:00</span>
                             <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
-                            <span id="duration-time" class="text-[9px] font-numbers font-bold w-8 text-right text-negro">-0:00</span>
+                            <span id="duration-time" class="text-[9px] font-numbers font-bold w-8 text-right opacity-80 text-esmeralda">-0:00</span>
                         </div>
 
                         <div class="flex items-center justify-center gap-6">
-                            <button onclick="toggleAudio()" class="w-12 h-12 bg-esmeralda text-blanco rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
+                            <button onclick="toggleAudio()" class="w-12 h-12 bg-esmeralda text-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
                                 <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                 <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                             </button>
                         </div>
                     </div>
                     
-                    <div class="flex-grow flex flex-col justify-center">
-                        <p class="text-lg md:text-xl text-negro italic leading-relaxed font-bold mb-10 px-4">
+                    <div class="flex-grow flex flex-col justify-center mt-4">
+                        <p class="text-lg md:text-lg text-negro italic leading-relaxed font-bold mb-10 px-4 md:px-10">
                             "Hoy comienza un nuevo día. Tendré muchas alegrías y recuerdos de mi infancia. Por eso quiero que estés presente para celebrar juntos mis XV años."
                         </p>
                         
-                        <div class="grid grid-cols-1 gap-8">
-                            <div>
-                                <h3 class="text-5xl font-script reveal-scal mb-4 text-esmeralda">Mis Padres</h3>
-                                <p class="text-base md:text-lg text-negro font-bold">Yessica García Luna</p>
-                                <p class="text-base md:text-lg text-negro font-bold">José Antonio López Méndez</p>
-                            </div>
+                        <div class="w-full mx-auto">
+                            <h3 class="text-5xl font-script reveal-scal mb-4 text-esmeralda">Mis Padres</h3>
+                            <p class="text-base md:text-lg text-negro font-bold mb-1">Yessica García Luna</p>
+                            <p class="text-base md:text-lg text-negro font-bold">José Antonio López Méndez</p>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <section class="min-h-[100svh] flex flex-col justify-center items-center py-16 px-6 bg-negro relative overflow-hidden">
-                <div class="w-full mx-auto reveal text-center">
-                    <h2 class="text-6xl mb-12 font-script text-esmeralda text-shadow-light">Ubicaciones</h2>
-
-                    <div class="mb-16 bg-blanco p-6 rounded-2xl shadow-lg border-2 border-esmeralda">
-                        <div class="mx-auto mb-4 flex items-center justify-center">
-                            <svg class="w-12 h-12 text-esmeralda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                        </div>
-                        <h3 class="text-4xl mb-2 font-script text-negro">Ceremonia Religiosa</h3>
-                        <p class="text-negro font-bold text-lg tracking-wide mb-1">Templo Manantial de Vida</p>
-                        <p class="text-esmeralda font-bold text-xl font-numbers mb-6">6:00 p.m.</p>
-                        
-                        <div class="w-full h-64 mb-6 rounded-xl overflow-hidden shadow-inner border border-gray-300">
-                            <iframe src="https://maps.google.com/maps?q=Templo+Manantial+de+Vida&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-                        <a href="https://maps.app.goo.gl/2mju2Lj6fh8Ehhf6A?g_st=ic" target="_blank" class="inline-block bg-esmeralda text-blanco font-bold px-8 py-3 text-sm hover:bg-negro transition-all shadow-md rounded-full">Abrir en GPS</a>
-                    </div>
-
-                    <div class="bg-blanco p-6 rounded-2xl shadow-lg border-2 border-esmeralda">
-                        <div class="mx-auto mb-4 flex items-center justify-center">
-                            <svg class="w-12 h-12 text-esmeralda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
-                        </div>
-                        <h3 class="text-4xl mb-2 font-script text-negro">Recepción</h3>
-                        <p class="text-negro font-bold text-lg tracking-wide mb-1">Salón de eventos Santa Clara</p>
-                        <p class="text-esmeralda font-bold text-xl font-numbers mb-6">7:30 p.m.</p>
-                        
-                        <div class="w-full h-64 mb-6 rounded-xl overflow-hidden shadow-inner border border-gray-300">
-                            <iframe src="https://maps.google.com/maps?q=Salón+de+eventos+Santa+Clara&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-                        <a href="https://maps.app.goo.gl/CAnGjnNhWPBCn8kE8?g_st=ic" target="_blank" class="inline-block bg-esmeralda text-blanco font-bold px-8 py-3 text-sm hover:bg-negro transition-all shadow-md rounded-full">Abrir en GPS</a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 bg-blanco relative overflow-hidden">
-                <div class="forma-ovalada w-full mx-auto reveal text-center border-4 border-esmeralda">
                     
-                    <h3 class="text-6xl md:text-6xl font-script text-esmeralda drop-shadow-sm mb-12">Faltan solo...</h3>
+                </div>
+            </section>
+
+            <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla relative overflow-hidden">
+                <div class="forma-ovalada w-full mx-auto reveal text-center">
+                    <h3 class="text-5xl md:text-6xl font-script text-white drop-shadow-sm mb-12">Faltan solo...</h3>
 
                     <div id="countdown" class="flex gap-4 md:gap-8 justify-center px-2 md:px-10 mb-16 w-full">
                         <div class="flex flex-col items-center">
-                            <div class="w-14 h-14 md:w-20 md:h-20 bg-blanco border border-esmeralda shadow-lg flex items-center justify-center mb-4 rounded-lg">
-                                <span id="days" class="time-num text-2xl md:text-3xl text-negro">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/10 border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-lg">
+                                <span id="days" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
-                            <span class="time-label text-blanco font-bold">Días</span>
+                            <span class="time-label text-white font-bold">Días</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-14 h-14 md:w-20 md:h-20 bg-blanco border border-esmeralda shadow-lg flex items-center justify-center mb-4 rounded-lg">
-                                <span id="hours" class="time-num text-2xl md:text-3xl text-negro">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/10 border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-lg">
+                                <span id="hours" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
-                            <span class="time-label text-blanco font-bold">Horas</span>
+                            <span class="time-label text-white font-bold">Horas</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-14 h-14 md:w-20 md:h-20 bg-blanco border border-esmeralda shadow-lg flex items-center justify-center mb-4 rounded-lg">
-                                <span id="minutes" class="time-num text-2xl md:text-3xl text-negro">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/10 border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-lg">
+                                <span id="minutes" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
-                            <span class="time-label text-blanco font-bold">Min</span>
+                            <span class="time-label text-white font-bold">Min</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-14 h-14 md:w-20 md:h-20 bg-blanco border border-esmeralda shadow-lg flex items-center justify-center mb-4 rounded-lg">
-                                <span id="seconds" class="time-num text-2xl md:text-3xl text-negro">00</span>
+                            <div class="w-14 h-14 md:w-20 md:h-20 bg-white/10 border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-lg">
+                                <span id="seconds" class="time-num text-2xl md:text-3xl text-white">00</span>
                             </div>
-                            <span class="time-label text-blanco font-bold">Seg</span>
+                            <span class="time-label text-white font-bold">Seg</span>
                         </div>
                     </div>
 
                     <div class="reveal-scale delay-200 mt-2 w-full">
-                        <p class="text-lg mb-6 text-blanco font-bold">Reserva el momento <br> en tu calendario</p>
+                        <p class="text-lg mb-6 text-white font-bold">Reserva el momento <br> en tu calendario</p>
                         <div class="flex justify-center w-full px-4">
-                            <button onclick="calendarLink('Mis XV Grettel', 'Templo Manantial de Vida / Salón Santa Clara', '20260725T180000')" class="w-full max-w-[280px] bg-esmeralda text-blanco px-6 py-4 text-base font-bold hover:bg-blanco hover:text-esmeralda border-2 border-esmeralda transition-all duration-300 shadow-md rounded-full">
+                            <button onclick="calendarLink('Mis XV Grettel', 'Templo Manantial de Vida', '20260725T180000')" class="w-full max-w-[280px] bg-white text-esmeralda px-6 py-4 text-base font-bold hover:bg-transparent hover:text-white border border-white transition-all duration-300 shadow-md">
                                 Agregar al calendario
                             </button>
                         </div>
@@ -373,64 +346,101 @@
                 </div>
             </section>
 
-            <section class="min-h-[70svh] flex flex-col justify-center items-center py-16 px-6 bg-blanco relative overflow-hidden">
-                <div class="w-full mx-auto reveal-scale text-center">
-                    <div class="mx-auto mb-8 flex items-center justify-center">
-                        <svg class="w-20 h-20 text-esmeralda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <section class="min-h-[100svh] flex flex-col justify-center items-center py-16 px-4 fondo-perla relative overflow-hidden">
+                <div class="max-w-md mx-auto reveal relative z-10 w-full text-center">
+                    <h2 class="text-6xl font-script text-esmeralda mb-10">Ubicaciones</h2>
+
+                    <div class="w-full bg-white shadow-xl rounded-2xl overflow-hidden mb-10 border border-esmeralda/20">
+                        <div class="bg-esmeralda text-white py-4 text-center">
+                            <h3 class="text-2xl font-script tracking-wider">Ceremonia Religiosa</h3>
+                        </div>
+                        <div class="p-6 text-center">
+                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-16 mx-auto mb-4 filtro-esmeralda opacity-80" alt="Ceremonia">
+                            <p class="font-bold text-xl text-negro mb-1">Templo Manantial de Vida</p>
+                            <p class="text-esmeralda font-numbers font-bold text-2xl mb-6">6:00 p.m.</p>
+                            <div class="w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                                <iframe src="https://maps.google.com/maps?q=Templo+Manantial+de+Vida&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                            <a href="https://maps.app.goo.gl/2mju2Lj6fh8Ehhf6A?g_st=ic" target="_blank" class="block text-center bg-negro text-white py-3 px-6 font-bold uppercase tracking-widest text-xs rounded-lg hover:bg-esmeralda transition-colors">Ver en Google Maps</a>
+                        </div>
                     </div>
-                    <h2 class="text-6xl mb-6 font-script text-negro text-shadow-light">Código de Vestimenta</h2>
-                    <p class="text-xl text-blanco bg-esmeralda mb-8 font-bold inline-block px-10 py-3 rounded-full shadow-md uppercase tracking-widest">Formal</p>
-                    
-                    <p class="text-lg font-bold text-negro mb-8 leading-relaxed px-6">Por favor, reserva estos colores exclusivamente para la quinceañera:</p>
+
+                    <div class="w-full bg-white shadow-xl rounded-2xl overflow-hidden border border-esmeralda/20">
+                        <div class="bg-esmeralda text-white py-4 text-center">
+                            <h3 class="text-2xl font-script tracking-wider">Recepción</h3>
+                        </div>
+                        <div class="p-6 text-center">
+                            <img src="https://i.imgur.com/AIApde9.png" class="w-16 mx-auto mb-4 filtro-esmeralda opacity-80" alt="Recepción">
+                            <p class="font-bold text-xl text-negro mb-1">Salón de eventos Santa Clara</p>
+                            <p class="text-esmeralda font-numbers font-bold text-2xl mb-6">7:30 p.m.</p>
+                            <div class="w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                                <iframe src="https://maps.google.com/maps?q=Salon+de+eventos+Santa+Clara&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                            <a href="https://maps.app.goo.gl/CAnGjnNhWPBCn8kE8?g_st=ic" target="_blank" class="block text-center bg-negro text-white py-3 px-6 font-bold uppercase tracking-widest text-xs rounded-lg hover:bg-esmeralda transition-colors">Ver en Google Maps</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="min-h-[70svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla relative overflow-hidden">
+                <div class="forma-ovalada w-full mx-auto reveal-scale text-center !min-h-[70svh]">
+                    <div class="mx-auto mb-8 flex items-center justify-center">
+                        <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 object-contain opacity-90 filtro-blanco" alt="Código de Vestimenta">
+                    </div>
+                    <h2 class="text-6xl mb-6 font-script text-white text-shadow-light">Código de<br> Vestimenta</h2>
+                    <p class="text-lg text-esmeralda mb-8 font-bold bg-white inline-block px-8 py-3 rounded-none shadow-sm uppercase tracking-widest">Formal</p>
+                    <p class="text-base font-light text-white mb-6 leading-relaxed px-6">Por favor, reserva estos colores exclusivamente para la quinceañera:</p>
                     
                     <div class="flex justify-center gap-6 mt-4">
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 rounded-full bg-[#045c41] border-2 border-negro shadow-md"></div>
-                            <span class="text-sm mt-3 text-negro font-bold">Esmeralda</span>
+                            <div class="w-12 h-12 rounded-full bg-esmeralda border-2 border-white shadow-md"></div>
+                            <span class="text-xs mt-2 text-white font-bold uppercase tracking-wider">Esmeralda</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 rounded-full bg-[#FFD700] border-2 border-negro shadow-md"></div>
-                            <span class="text-sm mt-3 text-negro font-bold">Dorado</span>
+                            <div class="w-12 h-12 rounded-full bg-[#FFD700] border-2 border-white shadow-md"></div>
+                            <span class="text-xs mt-2 text-white font-bold uppercase tracking-wider">Dorado</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 rounded-full bg-[#FFFFFF] border-2 border-gray-300 shadow-md"></div>
-                            <span class="text-sm mt-3 text-negro font-bold">Blanco</span>
+                            <div class="w-12 h-12 rounded-full bg-white border-2 border-gray-300 shadow-md"></div>
+                            <span class="text-xs mt-2 text-white font-bold uppercase tracking-wider">Blanco</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="min-h-[100svh] flex flex-col justify-center items-center py-16 px-6 bg-negro text-center relative overflow-hidden">
-                <div class="max-w-md w-full mx-auto reveal-scale text-center flex flex-col justify-center relative z-10"> 
-                    <h2 class="text-6xl font-script mb-4 text-esmeralda text-shadow-light w-full mt-4">Confirmar Asistencia</h2>
-                    <p class="text-lg mb-10 font-bold text-blanco w-full">Por favor, confirma tu asistencia llenando el formulario.</p>
+            <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 bg-blanco-perla text-center relative overflow-hidden">
+                <div class="max-w-md mx-auto reveal relative z-10 w-full flex flex-col justify-start"> 
+                    <h2 class="text-6xl font-script mb-4 text-esmeralda text-shadow-light">Pases y Confirmación</h2>
+                    <p class="text-base md:text-lg italic leading-relaxed px-4 text-negro mb-10">Por favor, confirma tu asistencia lo antes posible.</p>
                     
-                    <form id="rsvpForm" class="w-full space-y-6 text-left transition-all duration-500 mb-4 bg-blanco p-8 rounded-2xl shadow-xl border-2 border-esmeralda">
-                        <div class="space-y-6">
+                    <form id="rsvpForm" class="space-y-8 text-left bg-white p-8 rounded-3xl border border-gray-200 shadow-xl transition-all duration-500">
+                        <div class="grid md:grid-cols-1 gap-6">
                             <div class="border-b border-gray-300 pb-2">
-                                <label class="text-[10px] uppercase tracking-widest text-esmeralda font-bold">Nombre/Familia</label>
-                                <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-lg text-negro font-bold text-center md:text-left">
+                                <label class="text-xs uppercase text-esmeralda font-bold tracking-widest">Nombre/Familia</label>
+                                <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-lg text-negro font-bold">
                             </div>
+                            
                             <div class="border-b border-gray-300 pb-2">
-                                <label class="text-[10px] uppercase tracking-widest text-esmeralda font-bold">Pases a Confirmar</label>
-                                <input type="number" id="rsvpAdultos" min="1" required placeholder="Ej. 2" class="w-full bg-transparent py-2 outline-none text-lg text-negro font-bold text-center md:text-left">
+                                <label class="text-xs uppercase text-esmeralda font-bold tracking-widest">Pases a Confirmar</label>
+                                <input type="number" id="rsvpAdultos" required min="1" placeholder="¿Cuántos asistentes?" class="w-full bg-transparent py-2 outline-none text-lg text-negro font-bold">
                             </div>
                         </div>
-                        <button type="submit" id="btnSubmitRSVP" class="w-full bg-esmeralda text-blanco font-bold py-4 px-1 text-base hover:bg-negro border border-esmeralda transition-all shadow-md mt-6 duration-300 rounded-full">Generar Pase</button>
+                        <button type="submit" id="btnSubmitRSVP" class="w-full bg-esmeralda text-white font-bold py-4 uppercase tracking-[0.3em] text-xs hover:bg-esmeralda/90 transition-all hover:scale-105 active:scale-95 shadow-md mt-4 rounded-xl">Confirmar</button>
                     </form>
 
-                    <div id="loadingMessage" class="hidden mt-6 bg-blanco border-2 border-esmeralda p-10 rounded-2xl flex-col items-center justify-center transition-all duration-500">
+                    <div id="loadingMessage" class="hidden mt-8 bg-white border border-esmeralda/30 p-10 rounded-3xl flex-col items-center justify-center transition-all duration-500 shadow-xl">
                         <div class="w-12 h-12 border-4 border-esmeralda border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                        <p class="text-3xl font-script text-esmeralda mb-2">Confirmando...</p>
-                        <p class="text-[10px] uppercase tracking-widest text-negro font-bold">Preparando tu pase digital</p>
+                        <p class="text-4xl font-script text-esmeralda mb-2">Confirmando...</p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] text-negro font-bold">Generando tu pase</p>
                     </div>
                 </div>
             </section>
             
-            <footer class="min-h-[40svh] flex flex-col justify-center py-10 px-10 text-center relative z-10 bg-esmeralda border-t-8 border-negro">
+            <footer class="min-h-[50svh] flex flex-col justify-center py-6 px-10 text-center relative z-10 bg-esmeralda">
                 <div class="relative z-10">
-                    <p class="text-7xl md:text-8xl font-script mb-4 text-blanco drop-shadow-md">¡No faltes!</p>
-                    <p class="text-lg font-numbers font-bold text-negro tracking-widest bg-blanco inline-block px-6 py-2 rounded-full mt-4">25 • 07 • 2026</p>
+                    <p class="text-7xl md:text-8xl font-script mb-2 text-white drop-shadow-md">¡Te espero!</p>
+                    <p class="text-sm text-white/80 uppercase tracking-widest font-bold">25 de Julio de 2026</p>
                 </div>
             </footer>
         </main>
@@ -461,7 +471,7 @@
                     playIcon.classList.add('hidden');
                     pauseIcon.classList.remove('hidden');
                 }).catch(error => {
-                    console.log("Autoplay bloqueado.");
+                    console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
                     isPlaying = false;
                     playIcon.classList.remove('hidden');
                     pauseIcon.classList.add('hidden');
@@ -499,6 +509,7 @@
                 if (audio.duration) {
                     const progressPercent = (audio.currentTime / audio.duration) * 100;
                     progressBar.value = progressPercent;
+                    
                     currentTimeEl.textContent = formatTime(audio.currentTime);
                     const remaining = audio.duration - audio.currentTime;
                     durationTimeEl.textContent = "-" + formatTime(remaining);
@@ -541,107 +552,15 @@
                     });
                 }, { threshold: 0.1 });
                 
-                document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+                document.querySelectorAll('.reveal, .reveal-scale').forEach(el => observer.observe(el));
             }
 
             function calendarLink(title, loc, date) {
                 const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
                 window.open(url, '_blank');
             }
-
-            // ==========================================
-            // LÓGICA DE RSVP (ANALIZ)
-            // ==========================================
+            
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWeMfHXBqWoIMea8rHUCvZZdvI4j_aoocZjc1fPDg-3mCyomb7o6WTR0M3XvimEpJ54g/exec";
-
-            document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('rsvpName').value.trim();
-                const numAdultos = document.getElementById('rsvpAdultos').value;
-                const textoAdultos = numAdultos + (numAdultos == 1 ? " Asistente" : " Asistentes");
-                
-                const form = document.getElementById('rsvpForm');
-                const loader = document.getElementById('loadingMessage');
-                
-                form.style.display = 'none';
-                loader.classList.remove('hidden');
-                loader.classList.add('flex');
-
-                try {
-                    await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({ action: 'rsvp', nombre: name, pax: numAdultos }),
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-                    });
-
-                    loader.classList.add('hidden');
-                    loader.classList.remove('flex');
-
-                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
-                    const folio = "XV-GRE-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                    const numeroWhatsApp = "529981962334";
-                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
-                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
-
-                    const resultDiv = document.createElement('div');
-                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
-                    resultDiv.innerHTML = `
-                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-blanco border-4 border-esmeralda rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-4 bg-esmeralda"></div>
-                            
-                            <p class="text-[10px] uppercase tracking-[0.4em] text-negro font-bold mb-4 mt-2">Pase Oficial</p>
-                            <h4 class="font-script text-5xl text-esmeralda mb-6 leading-tight capitalize">${name}</h4>
-                            
-                            <div class="inline-block border-t-2 border-b-2 border-negro py-4 px-10 mb-6 w-full">
-                                <p class="text-[11px] uppercase tracking-[0.3em] text-negro font-bold mb-1">Pases Confirmados</p>
-                                <p class="font-numbers text-6xl text-esmeralda font-bold drop-shadow-sm">${numAdultos}</p>
-                            </div>
-                            
-                            <p class="text-[10px] uppercase tracking-[0.2em] text-gray-600 font-numbers mb-2 font-bold">Folio: ${folio}</p>
-                            <p class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-bold">Muestra esta tarjeta en recepción</p>
-                        </div>
-                        
-                        <div class="flex flex-col gap-3 w-full max-w-sm mt-8">
-                            <button id="btnDescargarImagenRSVP" class="bg-negro text-blanco font-bold py-4 px-8 uppercase tracking-widest text-[11px] hover:bg-esmeralda transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Descargar Pase
-                            </button>
-                            
-                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-blanco font-bold py-4 px-8 uppercase tracking-widest text-[11px] hover:bg-[#1DA851] transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
-                                Avisar por WhatsApp
-                            </a>
-                        </div>
-                    `;
-                    seccionRsvp.appendChild(resultDiv);
-
-                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
-                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
-                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
-                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
-                        
-                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
-                            const enlace = document.createElement('a');
-                            enlace.download = 'Pase_XV_Grettel.png';
-                            enlace.href = canvas.toDataURL('image/png');
-                            enlace.click();
-                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
-                        }).catch(err => {
-                            console.error("Error", err);
-                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
-                        });
-                    });
-
-                } catch(error) {
-                    console.error("Error al guardar:", error);
-                    alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
-                    const numeroWhatsApp = "529981962334";
-                    const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
-                    window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-                }
-            });
-
-            // LÓGICA DE URL PARAMETERS Y BLOQUEO DE PASES
             let maxPasesGlobal = Infinity;
 
             document.addEventListener("DOMContentLoaded", () => {
@@ -681,29 +600,123 @@
                                 const btn = document.getElementById('btnSubmitRSVP');
                                 const originalTxt = btn.innerText;
                                 btn.innerText = `Límite: ${maxPasesGlobal} pases`;
-                                btn.classList.add('bg-red-600', 'text-white', 'border-red-600');
+                                btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
                                 
                                 setTimeout(() => {
                                     btn.innerText = originalTxt;
-                                    btn.classList.remove('bg-red-600', 'text-white', 'border-red-600');
+                                    btn.classList.remove('bg-red-500', 'text-white', 'border-red-500');
                                 }, 2000);
                             }
                         });
                     }
                 }
             });
-        </script>
-        
-        <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        }, false);
 
+            document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('rsvpName').value.trim();
+                const numAdultos = document.getElementById('rsvpAdultos').value;
+                const textoAdultos = numAdultos + (numAdultos == 1 ? " Asistente" : " Asistentes");
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                
+                form.style.display = 'none';
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'rsvp', nombre: name, pax: numAdultos }),
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+                    });
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const folio = "XV-GRE-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                    const numeroWhatsApp = "529981962334";
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
+                    resultDiv.innerHTML = `
+                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-white border-2 border-esmeralda rounded-3xl p-8 shadow-lg text-center overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-3 bg-esmeralda"></div>
+                            <img src="https://i.imgur.com/PKluSR0.png" crossorigin="anonymous" class="w-16 mx-auto mb-4 opacity-90 filtro-esmeralda" alt="Corona">
+                            <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pase Oficial</p>
+                            <h4 class="font-script text-4xl md:text-5xl text-esmeralda mb-6 leading-tight capitalize">${name}</h4>
+                            
+                            <div class="inline-block border-t border-b border-esmeralda/40 py-4 px-10 mb-6 w-full">
+                                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Confirmados</p>
+                                <p class="font-numbers text-5xl md:text-6xl text-esmeralda font-bold drop-shadow-sm">${numAdultos}</p>
+                            </div>
+                            
+                            <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2">Folio: ${folio}</p>
+                            <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
+                            <button id="btnDescargarImagenRSVP" class="bg-esmeralda text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-esmeralda/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
+                                Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
+                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+                        
+                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                            const enlace = document.createElement('a');
+                            enlace.download = 'Pase_XV_Grettel.png';
+                            enlace.href = canvas.toDataURL('image/png');
+                            enlace.click();
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        }).catch(err => {
+                            console.error("Error", err);
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        });
+                    });
+
+                } catch(error) {
+                    console.error("Error al guardar:", error);
+                    alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
+                    const numeroWhatsApp = "529981962334";
+                    const mensaje = `¡Hola! Confirmo mi asistencia a los XV años de Grettel. Soy ${name} y seremos ${textoAdultos}.`;
+                    window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+                }
+            });
+
+        </script>
+        <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
         document.onkeydown = function(e) {
             if (e.keyCode == 123) return false; 
             if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
             if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
         };
+        (function() {
+            (function() {
+            var block = function() {
+                setInterval(function() {
+                (function() { return function(a) {} })().constructor("debugger")();
+                }, 50);
+            };
+            try { block(); } catch (err) {}
+            })();
+        })();
         </script>
     </div>
 </body>
