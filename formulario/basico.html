@@ -260,5 +260,82 @@
         </form>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Selecciona todos los inputs de tipo archivo
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+
+            fileInputs.forEach(input => {
+                // Crear un contenedor visual debajo de cada input para mostrar las fotos
+                let previewContainer = document.createElement('div');
+                previewContainer.className = 'flex flex-wrap gap-3 mt-2';
+                input.parentNode.insertBefore(previewContainer, input.nextSibling);
+
+                input.addEventListener('change', function(e) {
+                    renderPreviews(this, previewContainer);
+                });
+            });
+
+            // Función para leer y dibujar las miniaturas
+            function renderPreviews(input, container) {
+                container.innerHTML = ''; // Limpiar vistas anteriores
+                
+                if (input.files) {
+                    Array.from(input.files).forEach((file, index) => {
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                // Crear el div contenedor de la miniatura
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'relative inline-block mt-2';
+
+                                // Crear la imagen
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-24 h-24 object-cover rounded-lg border border-gray-200 shadow-sm';
+
+                                // Crear el botón de eliminar (Tachita roja)
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.innerHTML = '✖';
+                                btn.className = 'absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-md hover:bg-red-600 transition-colors z-10 cursor-pointer';
+                                
+                                // Lógica al hacer clic en la tachita
+                                btn.onclick = function(e) {
+                                    e.preventDefault(); // Evitar comportamientos extraños del form
+                                    removeFile(input, index, container);
+                                };
+
+                                wrapper.appendChild(img);
+                                wrapper.appendChild(btn);
+                                container.appendChild(wrapper);
+                            }
+                            
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            }
+
+            // Función para eliminar un archivo específico
+            function removeFile(input, indexToRemove, container) {
+                const dt = new DataTransfer();
+                const files = input.files;
+
+                for (let i = 0; i < files.length; i++) {
+                    if (i !== indexToRemove) {
+                        dt.items.add(files[i]);
+                    }
+                }
+
+                // Asignar la nueva lista de archivos al input original
+                input.files = dt.files; 
+                // Volver a renderizar las miniaturas actualizadas
+                renderPreviews(input, container); 
+            }
+        });
+    </script>
+
 </body>
 </html>
