@@ -507,13 +507,35 @@
             const textoOriginal = btn.innerText;
             btn.innerText = "Guardando...";
 
-            try {
+           try {
                 // Actualizar en Firebase
                 const docRef = doc(db, window.coleccionActual, window.clienteSeleccionado.id);
                 await updateDoc(docRef, {
                     estatus: "completado"
                 });
-window.guardarProgresoChecklist = async function() {
+
+               // Actualizar la tarjeta de la izquierda visualmente
+                window.clienteSeleccionado.estatus = 'completado';
+                const tarjetaActiva = document.querySelector('.order-card.selected .flex.justify-between span.font-bold');
+                
+                if(!tarjetaActiva.innerHTML.includes('Completado')) {
+                    tarjetaActiva.innerHTML += '<span class="ml-2 px-2 py-0.5 bg-green-100 text-green-600 text-[9px] rounded-full uppercase font-bold tracking-wider">Completado</span>';
+                }
+
+                // Cambiar estilo del botón
+                btn.innerText = "Pedido Completado"; 
+                btn.classList.replace('bg-green-500', 'bg-gray-400');
+                btn.disabled = true;
+
+            } catch (error) {
+                console.error("Error al actualizar estado:", error);
+                alert("Hubo un error al guardar en la base de datos.");
+                btn.innerText = textoOriginal;
+            }
+        };
+
+        // 👇 AQUÍ EMPIEZA LA FUNCIÓN DE AUTOGUARDADO (TOTALMENTE SEPARADA) 👇
+        window.guardarProgresoChecklist = async function() {
             // Si el pedido ya está terminado, no hacemos nada extra
             if (!window.clienteSeleccionado || window.clienteSeleccionado.estatus === 'completado') return;
 
@@ -536,25 +558,6 @@ window.guardarProgresoChecklist = async function() {
                 window.clienteSeleccionado.tareas_completadas = tareasMarcadas;
             } catch (error) {
                 console.error("Error al guardar progreso:", error);
-            }
-        };
-               // Actualizar la tarjeta de la izquierda visualmente
-                window.clienteSeleccionado.estatus = 'completado';
-                const tarjetaActiva = document.querySelector('.order-card.selected .flex.justify-between span.font-bold');
-                
-                if(!tarjetaActiva.innerHTML.includes('Completado')) {
-                    tarjetaActiva.innerHTML += '<span class="ml-2 px-2 py-0.5 bg-green-100 text-green-600 text-[9px] rounded-full uppercase font-bold tracking-wider">Completado</span>';
-                }
-
-                // Cambiar estilo del botón
-                btn.innerText = "Pedido Completado"; // <-- Sin emoji
-                btn.classList.replace('bg-green-500', 'bg-gray-400');
-                btn.disabled = true;
-
-            } catch (error) {
-                console.error("Error al actualizar estado:", error);
-                alert("Hubo un error al guardar en la base de datos.");
-                btn.innerText = textoOriginal;
             }
         };
         // --- BLOQUE 2: GENERADOR DE PÁGINAS DE ENTREGA ---
