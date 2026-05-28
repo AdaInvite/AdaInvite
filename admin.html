@@ -46,8 +46,10 @@
         }
     </style>
 </head>
+<!-- Ajuste responsivo: flex-col en móvil, flex-row en escritorio -->
 <body class="h-full flex flex-col md:flex-row overflow-auto md:overflow-hidden bg-gray-50">
 
+    <!-- PANTALLA DE LOGIN (BLOQUEO) -->
     <div id="login-screen" class="fixed inset-0 bg-[#FAF9FB] z-50 flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-sm w-full text-center">
             <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-12 mx-auto mb-6">
@@ -63,6 +65,7 @@
         </div>
     </div>
     
+    <!-- BARRA LATERAL (MENÚ DE PAQUETES) -->
     <aside class="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col shrink-0 hidden-until-login opacity-0 transition-opacity duration-500">
         <div class="p-6 border-b border-gray-200 text-center">
             <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-10 mx-auto mb-2">
@@ -81,15 +84,49 @@
         </div>
     </aside>
 
+    <!-- LISTA DE SOLICITUDES -->
     <div class="w-full md:w-80 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200 flex flex-col shrink-0 overflow-y-auto hidden-until-login opacity-0 transition-opacity duration-500 h-64 md:h-full">
         <div class="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <h2 class="font-bold text-lg text-[#3D3542]">Solicitudes Recientes</h2>
             <p id="total-solicitudes" class="text-xs text-gray-500">Esperando datos...</p>
         </div>
         <div id="lista-solicitudes" class="p-4 flex flex-col gap-3">
-            </div>
+            <!-- Aquí se inyectarán las tarjetas de los clientes -->
+        </div>
     </div>
+        <!-- SECCIÓN: CÓDIGOS DE ENTREGA -->
+        <div id="entregables-container" class="hidden mt-6 bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 class="text-lg font-bold text-[#3D3542] mb-4">Generar Páginas de Entrega</h3>
+            
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <button onclick="generarEntregaBasica()" class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors text-center shadow-sm">
+                    Entrega Normal
+                </button>
+                <button onclick="generarEntregaConPases()" class="px-4 py-2.5 bg-[#9B8AA5] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-colors text-center shadow-sm">
+                    Entrega + Generador Pases
+                </button>
+            </div>
 
+            <!-- Código de la página de entrega -->
+            <div id="codigo-entrega-wrapper" class="hidden relative mt-6">
+                <p id="titulo-codigo" class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Código de Entrega (entrega.html):</p>
+                <textarea id="codigo-entrega-text" rows="6" readonly class="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-xs text-gray-700 mb-2 focus:outline-none resize-y"></textarea>
+                <button onclick="copiarTexto('codigo-entrega-text', this)" class="px-4 py-2 bg-green-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-green-600 transition-colors">
+                    Copiar HTML de Entrega
+                </button>
+            </div>
+            
+            <!-- Código del generador de pases (solo aparece si es necesario) -->
+            <div id="codigo-generador-wrapper" class="hidden relative mt-6 border-t border-gray-100 pt-6">
+                <p class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Código del Generador de Pases (index.html):</p>
+                <textarea id="codigo-generador-text" rows="6" readonly class="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-xs text-gray-700 mb-2 focus:outline-none resize-y"></textarea>
+                <button onclick="copiarTexto('codigo-generador-text', this)" class="px-4 py-2 bg-green-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-green-600 transition-colors">
+                    Copiar HTML del Generador
+                </button>
+            </div>
+        </div>
+
+    <!-- ÁREA PRINCIPAL (GENERADOR DE PROMPT) -->
     <main id="main-content" class="w-full flex-1 bg-white flex flex-col min-h-screen md:min-h-0 overflow-hidden hidden-until-login opacity-0 transition-opacity duration-500">
         <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center bg-white sticky top-0 z-10 gap-4 md:gap-0">
             <div>
@@ -103,43 +140,15 @@
         
         <div class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-50">
             <div id="prompt-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm whitespace-pre-wrap font-mono text-xs md:text-sm text-gray-800 leading-relaxed selection:bg-purple-200 overflow-x-auto">
-                </div>
+                <!-- Aquí se inyectará el texto del prompt -->
+            </div>
             <div id="empty-state" class="h-full flex items-center justify-center text-gray-400 font-medium p-8 text-center text-sm md:text-base">
                 Selecciona un cliente del menú para ver su información.
             </div>
-
-            <div id="entregables-container" class="hidden mt-6 bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
-                <h3 class="text-lg font-bold text-[#3D3542] mb-4">Generar Páginas de Entrega</h3>
-                
-                <div class="flex flex-col sm:flex-row gap-3 mb-4">
-                    <button onclick="generarEntregaBasica()" class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors text-center shadow-sm">
-                        Entrega Normal
-                    </button>
-                    <button onclick="generarEntregaConPases()" class="px-4 py-2.5 bg-[#9B8AA5] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-colors text-center shadow-sm">
-                        Entrega + Generador Pases
-                    </button>
-                </div>
-
-                <div id="codigo-entrega-wrapper" class="hidden relative mt-6">
-                    <p id="titulo-codigo" class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Código de Entrega (entrega.html):</p>
-                    <textarea id="codigo-entrega-text" rows="6" readonly class="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-xs text-gray-700 mb-2 focus:outline-none resize-y"></textarea>
-                    <button onclick="copiarTexto('codigo-entrega-text', this)" class="px-4 py-2 bg-green-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-green-600 transition-colors">
-                        Copiar HTML de Entrega
-                    </button>
-                </div>
-                
-                <div id="codigo-generador-wrapper" class="hidden relative mt-6 border-t border-gray-100 pt-6">
-                    <p class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Código del Generador de Pases (index.html):</p>
-                    <textarea id="codigo-generador-text" rows="6" readonly class="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-xs text-gray-700 mb-2 focus:outline-none resize-y"></textarea>
-                    <button onclick="copiarTexto('codigo-generador-text', this)" class="px-4 py-2 bg-green-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-green-600 transition-colors">
-                        Copiar HTML del Generador
-                    </button>
-                </div>
-            </div>
-
         </div>
     </main>
 
+    <!-- FIREBASE & LOGICA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -205,7 +214,6 @@
             listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">Cargando datos...</p>';
             
             document.getElementById('prompt-container').classList.add('hidden');
-            document.getElementById('entregables-container').classList.add('hidden');
             document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('btn-copiar').classList.add('hidden');
             document.getElementById('vista-cliente-nombre').innerText = "Selecciona una solicitud";
@@ -391,11 +399,7 @@
             promptContainer.classList.remove('hidden');
             btnCopiar.classList.remove('hidden');
             
-            // Ocultamos temporalmente los textos de entrega hasta que de clic a generarlos
-            document.getElementById('codigo-entrega-wrapper').classList.add('hidden');
-            document.getElementById('codigo-generador-wrapper').classList.add('hidden');
-            document.getElementById('entregables-container').classList.remove('hidden');
-            
+            // Scroll automático en celulares hacia el prompt
             if(window.innerWidth < 768) {
                 document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
             }
@@ -415,8 +419,8 @@
                 }, 2000);
             });
         };
+                // --- BLOQUE 2: GENERADOR DE PÁGINAS DE ENTREGA ---
 
-        // --- BLOQUE 2: GENERADOR DE PÁGINAS DE ENTREGA ---
         window.copiarTexto = function(idElemento, btnElemento) {
             const texto = document.getElementById(idElemento).value;
             navigator.clipboard.writeText(texto).then(() => {
@@ -438,9 +442,11 @@
             }
             const data = window.clienteSeleccionado;
             
+            // Genera un nombre de carpeta sugerido basado en el festejado
             const nombreLimpio = (data.festejado_nombre || "evento").split(" ")[0].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const urlBase = `https://adainvite.com/${nombreLimpio}/`;
             
+            // Formatear fecha de caducidad (1 mes despues del evento como sugerencia)
             let caducidad = "Un mes despues de tu evento";
             if(data.evento_fecha) {
                 const fechaEv = new Date(data.evento_fecha);
@@ -448,10 +454,11 @@
                 caducidad = fechaEv.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
             }
 
+            // Formatear fecha del evento
             let fechaEventoFmt = data.evento_fecha || '';
             if(data.evento_fecha) {
                 const f = new Date(data.evento_fecha);
-                f.setDate(f.getDate() + 1); 
+                f.setDate(f.getDate() + 1); // Ajuste de zona horaria
                 fechaEventoFmt = f.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
             }
 
