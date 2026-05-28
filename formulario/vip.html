@@ -72,7 +72,7 @@
                 Hemos recibido toda tu información y fotografías correctamente en nuestro sistema. Estamos listos para comenzar a crear la magia de tu invitación VIP.
             </p>
             <p class="text-sm font-medium text-[#3D3542] mb-6">Por favor, avísanos por WhatsApp para confirmar la recepción:</p>
-            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20VIP." target="_blank" class="inline-block text-white font-semibold py-4 px-10 rounded-full transition-all hover:opacity-90 shadow-md text-lg" style="background-color: var(--whatsapp-green); text-decoration: none;">
+            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20VIP." target="_blank" class="inline-block text-white font-semibold py-4 px-10 rounded-full transition-all hover:opacity-90 shadow-md text-base" style="background-color: var(--whatsapp-green); text-decoration: none;">
                 Informar por WhatsApp
             </a>
         </div>
@@ -360,22 +360,20 @@
                         <input type="url" id="evento_musica" name="evento_musica" class="form-input" placeholder="Link de la canción" required>
                     </div>
                     
-                    <div class="md:col-span-2 section-group !mt-4 !mb-0 border-l-4" style="border-left-color: var(--primary-purple);">
-                        <label class="text-sm font-bold text-[#3D3542]">Control de Accesos VIP (Pases con Código QR)</label>
-                        <div class="space-y-3 mt-2">
-                            <label class="text-sm font-medium block">¿Deseas activar el sistema de pases con Código QR?</label>
-                            <select id="activar_qr" name="activar_qr" class="form-input" required>
-                                <option value="" disabled selected>Selecciona una opción</option>
-                                <option value="si">Sí, quiero generar pases QR</option>
-                                <option value="no">No, usaré pases tradicionales</option>
-                            </select>
-                            
-                            <label class="text-sm font-medium block mt-2">Si elegiste Sí, ¿cómo prefieres manejarlos?</label>
-                            <select id="entrega_pases" name="entrega_pases" class="form-input">
-                                <option value="" disabled selected>Selecciona una opción</option>
-                                <option value="enviar_con_invitacion">Enviarlos junto con la invitación</option>
-                                <option value="esperar_confirmacion">Generarlos al confirmar asistencia</option>
-                            </select>
+                    <div class="md:col-span-2 section-group !mt-4 !mb-0">
+                        <label class="text-sm font-bold text-[#3D3542]">Pases Individuales</label>
+                        <p class="text-xs opacity-80 mb-2">¿Cómo prefieres manejar la entrega de los pases para tus invitados?</p>
+                        <select id="entrega_pases" name="entrega_pases" class="form-input" required>
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="enviar_con_invitacion">Enviar cantidad de pases en la invitación</option>
+                            <option value="esperar_confirmacion">Esperar a que confirmen asistencia para asignar y enviar los pases</option>
+                        </select>
+                        
+                        <div class="flex items-start gap-2 mt-4 p-3 bg-white rounded-lg border border-gray-200">
+                            <input type="checkbox" id="add_on_qr" name="add_on_qr" class="w-4 h-4 mt-1 text-[#9B8AA5] rounded border-gray-300 cursor-pointer">
+                            <label for="add_on_qr" class="text-sm font-medium cursor-pointer">
+                                Me interesa añadir el <strong>Sistema de Accesos con Código QR</strong> como extra a mi invitación por $150. <span class="block text-xs font-normal opacity-70 mt-1">Ideal para llevar el control exacto de acceso el día de tu evento.</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -551,13 +549,14 @@
         const formHeader = document.getElementById('form-header');
         const successScreen = document.getElementById('success-screen');
 
-        formVIP.addEventListener('submit', async (e) => {
+       formVIP.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
             submitBtn.disabled = true;
             const originalBtnText = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Subiendo archivos... Por favor no cierres la ventana.';
-            submitBtn.style.opacity = '0.7';
+            
+            // Ocultamos el botón de enviar
+            submitBtn.classList.add('hidden');
 // Mostrar la barra de progreso
             const progressContainer = document.getElementById('progress-container');
             const progressBar = document.getElementById('progress-bar');
@@ -685,10 +684,15 @@
             } catch (error) {
                 console.error("Error al subir los datos: ", error);
                 alert("Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.");
+                
+                // Restauramos y volvemos a mostrar el botón
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
-                progressContainer.classList.add('hidden'); // <--- AGREGA ESTA LÍNEA AQUÍ
+                submitBtn.classList.remove('hidden');
+                
+                // Ocultamos la barra de progreso
+                progressContainer.classList.add('hidden');
             }
         });
     </script>
