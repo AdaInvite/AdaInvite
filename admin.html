@@ -158,8 +158,10 @@
 
     <!-- FIREBASE & LOGICA -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, getDocs, orderBy, query, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // IMPORTAMOS EL SISTEMA DE AUTENTICACIÓN
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwgiUaie7pWejMKkEA0w-hi8eqs8eheXM",
@@ -172,21 +174,33 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app); // INICIALIZAMOS LA AUTENTICACIÓN
 
         let datosActuales = [];
         window.clienteSeleccionado = null;
 
-        // --- SISTEMA DE CONTRASEÑA ---
-        window.verificarPassword = function(event) {
+      // --- SISTEMA DE CONTRASEÑA SEGURO (FIREBASE AUTH) ---
+        window.verificarPassword = async function(event) {
             event.preventDefault(); 
             
             const passInput = document.getElementById('admin-pass');
             const errorText = document.getElementById('login-error');
+            const btnSubmit = event.target.querySelector('button[type="submit"]');
             
-            // 👇 CONTRASEÑA
-            const miContrasenaSecreta = "AdaAdmin2026"; 
+            // Ponemos el botón en modo carga
+            const textoOriginal = btnSubmit.innerText;
+            btnSubmit.innerText = "Verificando...";
+            btnSubmit.disabled = true;
             
-            if (passInput.value === miContrasenaSecreta) {
+            // 👇 Pon aquí el correo que registraste en el Paso 1 (Esto sí puede ser público)
+            const miCorreoAdmin = "admin@adainvite.com"; 
+            const passwordIngresada = passInput.value;
+            
+            try {
+                // Le pedimos a Firebase que verifique la contraseña de forma segura en sus servidores
+                await signInWithEmailAndPassword(auth, miCorreoAdmin, passwordIngresada);
+                
+                // Si pasa a esta línea, la contraseña es CORRECTA
                 document.getElementById('login-screen').classList.add('hidden');
                 
                 const elementosPanel = document.querySelectorAll('.hidden-until-login');
@@ -198,7 +212,8 @@
                 const btnBasico = document.getElementById('btn-basico');
                 cargarDatos('solicitudes_basico', btnBasico);
                 
-            } else {
+            } catch (error) {
+                // Si hay error (contraseña INCORRECTA)
                 errorText.classList.remove('opacity-0');
                 passInput.value = '';
                 passInput.focus();
@@ -206,6 +221,10 @@
                 setTimeout(() => {
                     errorText.classList.add('opacity-0');
                 }, 3000);
+            } finally {
+                // Regresamos el botón a la normalidad
+                btnSubmit.innerText = textoOriginal;
+                btnSubmit.disabled = false;
             }
         };
 
