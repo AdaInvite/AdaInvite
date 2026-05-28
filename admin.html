@@ -115,7 +115,16 @@
                 Selecciona un cliente del menú para ver su información.
             </div>
         </div>
-   
+        
+   <div id="checklist-container" class="hidden mt-6 bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 class="text-lg font-bold text-[#3D3542] mb-4">Checklist de Producción</h3>
+            <div id="checklist-items" class="flex flex-col gap-3 mb-6">
+                </div>
+            <button id="btn-completar" onclick="marcarCompletado()" class="w-full sm:w-auto px-6 py-3 bg-green-500 text-white rounded-lg font-bold text-sm shadow-md hover:bg-green-600 transition-all">
+                Marcar Pedido como Completado
+            </button>
+        </div>
+        
         <div id="entregables-container" class="hidden mt-6 bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
             <h3 class="text-lg font-bold text-[#3D3542] mb-4">Generar Páginas de Entrega</h3>
             
@@ -150,7 +159,7 @@
     <!-- FIREBASE & LOGICA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, orderBy, query, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwgiUaie7pWejMKkEA0w-hi8eqs8eheXM",
@@ -202,6 +211,7 @@
 
         // Función para cargar los datos de la colección seleccionada
         window.cargarDatos = async function(coleccionNombre, btnElement) {
+            window.coleccionActual = coleccionNombre;
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-[#9B8AA5]', 'text-white');
                 btn.classList.add('text-gray-600', 'hover:bg-gray-100');
@@ -247,9 +257,12 @@
                         fechaCorta = dateObj.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
                     }
 
+                    // Busca esta parte de tu código:
+                    let estatusBadge = data.estatus === 'completado' ? '<span class="ml-2 text-xs text-green-500" title="Completado">✔️</span>' : '';
+
                     card.innerHTML = `
                         <div class="flex justify-between items-start mb-1">
-                            <span class="font-bold text-[#3D3542] text-sm truncate">${data.festejado_nombre || 'Sin nombre'}</span>
+                            <span class="font-bold text-[#3D3542] text-sm truncate">${data.festejado_nombre || 'Sin nombre'} ${estatusBadge}</span>
                             <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded">${fechaCorta}</span>
                         </div>
                         <div class="text-xs text-gray-500 truncate">${data.tipo_evento || ''}</div>
@@ -399,7 +412,55 @@
             promptContainer.classList.remove('hidden');
             btnCopiar.classList.remove('hidden');
             document.getElementById('entregables-container').classList.remove('hidden');
+// --- LÓGICA DEL CHECKLIST ---
+            const checklistItems = document.getElementById('checklist-items');
+            checklistItems.innerHTML = ''; // Limpiar tareas anteriores
+            
+            // Tareas fijas para todos los pedidos
+            let tareas = [
+                "Crear invitación web",
+                "Configurar hoja de cálculo con App Script para RSVP",
+                "Editar imagen de vista previa de WhatsApp",
+                "Editar icono de web app"
+            ];
 
+            // Tareas dinámicas
+            if(data.activar_qr || data.entrega_pases === 'enviar_con_invitacion' || data.add_on_qr === 'on') {
+                tareas.push("Crear HTML de generador de pases");
+            }
+            if(data.album_titulo) {
+                tareas.push("Crear HTML del álbum compartido");
+                tareas.push("Conectar proyecto con Firebase (Álbum)");
+                tareas.push("Crear imprimible con QR para mesas (Álbum)");
+            }
+            tareas.push("Crear HTML de página de entrega");
+
+            // Crear los checkboxes visuales
+            tareas.forEach((tarea, index) => {
+                checklistItems.innerHTML += `
+                    <label class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+                        <input type="checkbox" class="checklist-cb w-5 h-5 text-[#9B8AA5] rounded border-gray-300 focus:ring-[#9B8AA5]">
+                        <span class="text-sm font-medium text-gray-700">${tarea}</span>
+                    </label>
+                `;
+            });
+
+            // Mostrar el contenedor
+            document.getElementById('checklist-container').classList.remove('hidden');
+
+            // Ajustar el botón si el pedido ya estaba completado de antes
+            const btnCompletar = document.getElementById('btn-completar');
+            if(data.estatus === 'completado') {
+                btnCompletar.innerText = "Pedido Completado ✔️";
+                btnCompletar.classList.replace('bg-green-500', 'bg-gray-400');
+                btnCompletar.disabled = true;
+                // Marcar todos los checks
+                document.querySelectorAll('.checklist-cb').forEach(cb => cb.checked = true);
+            } else {
+                btnCompletar.innerText = "Marcar Pedido como Completado";
+                btnCompletar.classList.replace('bg-gray-400', 'bg-green-500');
+                btnCompletar.disabled = false;
+            }
             // Scroll automático en celulares hacia el prompt
             if(window.innerWidth < 768) {
                 document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
@@ -420,7 +481,45 @@
                 }, 2000);
             });
         };
-        
+        window.marcarCompletado = async function() {
+            // Verificar si marcaron todas las palomitas
+            const checkboxes = document.querySelectorAll('.checklist-cb');
+            const todosMarcados = Array.from(checkboxes).every(cb => cb.checked);
+            
+            if(!todosMarcados) {
+                alert("¡Espera! Debes marcar todas las tareas en el checklist para poder completarlo.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-completar');
+            const textoOriginal = btn.innerText;
+            btn.innerText = "Guardando...";
+
+            try {
+                // Actualizar en Firebase
+                const docRef = doc(db, window.coleccionActual, window.clienteSeleccionado.id);
+                await updateDoc(docRef, {
+                    estatus: "completado"
+                });
+
+                // Actualizar la tarjeta de la izquierda visualmente
+                window.clienteSeleccionado.estatus = 'completado';
+                const tarjetaActiva = document.querySelector('.order-card.selected .flex.justify-between');
+                if(!tarjetaActiva.innerHTML.includes('✔️')) {
+                    tarjetaActiva.innerHTML += '<span class="ml-2 text-xs text-green-500" title="Completado">✔️</span>';
+                }
+
+                // Cambiar estilo del botón
+                btn.innerText = "Pedido Completado ✔️";
+                btn.classList.replace('bg-green-500', 'bg-gray-400');
+                btn.disabled = true;
+
+            } catch (error) {
+                console.error("Error al actualizar estado:", error);
+                alert("Hubo un error al guardar en la base de datos.");
+                btn.innerText = textoOriginal;
+            }
+        };
         // --- BLOQUE 2: GENERADOR DE PÁGINAS DE ENTREGA ---
 
         window.copiarTexto = function(idElemento, btnElemento) {
