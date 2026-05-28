@@ -444,10 +444,19 @@
                     <textarea id="observaciones_finales" name="observaciones_finales" class="form-input mt-2" rows="4"></textarea>
                 </div>
             </div>
-
+<!-- BARRA DE PROGRESO (Oculta por defecto) -->
+<div id="progress-container" class="hidden mt-4 mb-4">
+    <div class="flex justify-between text-sm font-bold text-[#9B8AA5] mb-2">
+        <span>Subiendo archivos, por favor no cierres la ventana...</span>
+        <span id="progress-text">0%</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-3">
+        <div id="progress-bar" class="h-3 rounded-full transition-all duration-300" style="width: 0%; background-color: var(--primary-purple);"></div>
+    </div>
+</div>
             <div class="pt-8">
                 <button type="submit" id="btn-submit" class="w-full text-white font-semibold py-4 rounded-full transition-all hover:opacity-90 shadow-md text-lg" style="background-color: var(--primary-purple);">
-                    Enviar Datos VIP
+                    Enviar Datos
                 </button>
             </div>
 
@@ -549,22 +558,47 @@
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.innerHTML = 'Subiendo archivos... Por favor no cierres la ventana.';
             submitBtn.style.opacity = '0.7';
+// Mostrar la barra de progreso
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            progressContainer.classList.remove('hidden');
+            
+            // Contar cuántos archivos en total se van a subir
+            let totalArchivos = 0;
+            let archivosSubidos = 0;
+            const todosLosInputs = document.querySelectorAll('input[type="file"]');
+            
+            todosLosInputs.forEach(input => {
+                if (input.files && input.files.length > 0) {
+                    totalArchivos += input.files.length;
+                }
+            });
 
+            // Función para actualizar la barra visualmente
+            function actualizarProgreso() {
+                archivosSubidos++;
+                // Calculamos el porcentaje, dejando el último 5% para cuando se guardan los textos
+                let porcentaje = Math.floor((archivosSubidos / totalArchivos) * 95);
+                if (porcentaje > 95) porcentaje = 95;
+                progressBar.style.width = porcentaje + '%';
+                progressText.innerText = porcentaje + '%';
+            }
             try {
                 const clienteNombre = document.getElementById('contacto_nombre').value.replace(/\s+/g, '_');
                 const folderName = `VIP_${clienteNombre}_${Date.now()}`;
 
-                const uploadSingleFile = async (inputId, storagePath) => {
+               const uploadSingleFile = async (inputId, storagePath) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         const file = fileInput.files[0];
                         const fileRef = ref(storage, `${storagePath}/${inputId}_${file.name}`);
                         await uploadBytes(fileRef, file);
+                        actualizarProgreso(); // <--- AQUÍ SE ACTUALIZA LA BARRA
                         return await getDownloadURL(fileRef);
                     }
                     return null;
                 };
-
                 // Subir fotos individuales
                 const urlPortada = await uploadSingleFile('foto_portada', folderName);
                 const urlSep1 = await uploadSingleFile('foto_separador_1', folderName);
@@ -589,6 +623,7 @@
                             const file = fileInput.files[i];
                             const fileRef = ref(storage, `${folderName}/${subFolder}/foto_${i}_${file.name}`);
                             await uploadBytes(fileRef, file);
+                            actualizarProgreso(); // <--- AQUÍ SE ACTUALIZA LA BARRA
                             urls.push(await getDownloadURL(fileRef));
                         }
                     }
@@ -632,7 +667,9 @@
                 };
 
                 await addDoc(collection(db, "solicitudes_invitaciones"), documentoFinal);
-
+// Llenar al 100% cuando termine todo
+                progressBar.style.width = '100%';
+                progressText.innerText = '100%';
                 submitBtn.innerHTML = '¡Datos enviados con éxito!';
                 submitBtn.style.backgroundColor = '#4CAF50';
                 
@@ -641,6 +678,7 @@
                     formVIP.classList.add('hidden');
                     formHeader.classList.add('hidden');
                     successScreen.classList.remove('hidden');
+                    progressContainer.classList.add('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }, 1500);
 
