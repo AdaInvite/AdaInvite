@@ -226,6 +226,7 @@
             document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('btn-copiar').classList.add('hidden');
             document.getElementById('entregables-container').classList.add('hidden');
+            document.getElementById('checklist-container').classList.add('hidden');
             document.getElementById('vista-cliente-nombre').innerText = "Selecciona una solicitud";
             document.getElementById('vista-cliente-evento').innerText = "Para generar el prompt";
 
@@ -436,11 +437,17 @@
             }
             tareas.push("Crear HTML de página de entrega");
 
+            // Revisar cuáles tareas ya estaban guardadas en Firebase
+            const tareasGuardadas = data.tareas_completadas || [];
+
             // Crear los checkboxes visuales
             tareas.forEach((tarea, index) => {
+                // Si la tarea está en el arreglo de guardadas, o si el pedido ya está completado, la marcamos
+                const estaMarcada = tareasGuardadas.includes(tarea) || data.estatus === 'completado' ? 'checked' : '';
+                
                 checklistItems.innerHTML += `
                     <label class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
-                        <input type="checkbox" class="checklist-cb w-5 h-5 text-[#9B8AA5] rounded border-gray-300 focus:ring-[#9B8AA5]">
+                        <input type="checkbox" value="${tarea}" onchange="guardarProgresoChecklist()" class="checklist-cb w-5 h-5 text-[#9B8AA5] rounded border-gray-300 focus:ring-[#9B8AA5]" ${estaMarcada}>
                         <span class="text-sm font-medium text-gray-700">${tarea}</span>
                     </label>
                 `;
@@ -456,7 +463,11 @@
                 btnCompletar.classList.replace('bg-green-500', 'bg-gray-400');
                 btnCompletar.disabled = true;
                 // Marcar todos los checks
-                document.querySelectorAll('.checklist-cb').forEach(cb => cb.checked = true);
+                // Marcar todos los checks y bloquearlos
+                document.querySelectorAll('.checklist-cb').forEach(cb => {
+                    cb.checked = true;
+                    cb.disabled = true; 
+                });
             } else {
                 btnCompletar.innerText = "Marcar Pedido como Completado";
                 btnCompletar.classList.replace('bg-gray-400', 'bg-green-500');
@@ -502,7 +513,31 @@
                 await updateDoc(docRef, {
                     estatus: "completado"
                 });
+window.guardarProgresoChecklist = async function() {
+            // Si el pedido ya está terminado, no hacemos nada extra
+            if (!window.clienteSeleccionado || window.clienteSeleccionado.estatus === 'completado') return;
 
+            const checkboxes = document.querySelectorAll('.checklist-cb');
+            const tareasMarcadas = [];
+            
+            // Recolectar cuáles están palomeadas
+            checkboxes.forEach(cb => {
+                if(cb.checked) tareasMarcadas.push(cb.value);
+            });
+
+            try {
+                // Guardar silenciosamente en Firebase
+                const docRef = doc(db, window.coleccionActual, window.clienteSeleccionado.id);
+                await updateDoc(docRef, {
+                    tareas_completadas: tareasMarcadas
+                });
+                
+                // Guardar localmente para que no se borre al cambiar rápido de tarjeta
+                window.clienteSeleccionado.tareas_completadas = tareasMarcadas;
+            } catch (error) {
+                console.error("Error al guardar progreso:", error);
+            }
+        };
                // Actualizar la tarjeta de la izquierda visualmente
                 window.clienteSeleccionado.estatus = 'completado';
                 const tarjetaActiva = document.querySelector('.order-card.selected .flex.justify-between span.font-bold');
