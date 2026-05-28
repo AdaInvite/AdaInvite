@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | AdaInvite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-purple: #9B8AA5;
+            --surface-color: #FAF9FB;
+            --text-color: #3D3542;
+        }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--surface-color);
+            color: var(--text-color);
+        }
+        .tab-btn.active {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        .order-card:hover {
+            border-color: var(--primary-purple);
+        }
+        .order-card.selected {
+            border-color: var(--primary-purple);
+            background-color: #F8F6F9;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            transition: border-color 0.3s;
+            background-color: var(--white);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 1px var(--primary-purple);
+        }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden">
+
+    <!-- PANTALLA DE LOGIN (BLOQUEO) -->
+    <div id="login-screen" class="fixed inset-0 bg-[#FAF9FB] z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-sm w-full text-center">
+            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-12 mx-auto mb-6">
+            <h2 class="text-xl font-bold text-[#3D3542] mb-2">Acceso Restringido</h2>
+            <p class="text-sm text-gray-500 mb-6">Panel exclusivo de administración.</p>
+            
+            <form onsubmit="verificarPassword(event)">
+                <input type="password" id="admin-pass" class="form-input mb-2 text-center text-lg tracking-widest" placeholder="••••••••" required>
+                <p id="login-error" class="text-xs text-red-500 mb-4 h-4 opacity-0 transition-opacity">Contraseña incorrecta</p>
+                <button type="submit" class="w-full bg-[#9B8AA5] hover:opacity-90 transition-opacity text-white py-3 rounded-lg font-bold">
+                    Desbloquear Panel
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- BARRA LATERAL (MENÚ DE PAQUETES) -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col hidden-until-login opacity-0 transition-opacity duration-500">
+        <div class="p-6 border-b border-gray-200 text-center">
+            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-10 mx-auto mb-2">
+            <span class="text-xs font-bold tracking-widest text-[#9B8AA5] uppercase">Admin Panel</span>
+        </div>
+        <div class="p-4 flex flex-col gap-2">
+            <button onclick="cargarDatos('solicitudes_basico', this)" id="btn-basico" class="tab-btn active w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-colors bg-[#9B8AA5] text-white">
+                Paquete Básico
+            </button>
+            <button onclick="cargarDatos('solicitudes_premium', this)" class="tab-btn w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-colors text-gray-600 hover:bg-gray-100">
+                Paquete Premium
+            </button>
+            <button onclick="cargarDatos('solicitudes_vip', this)" class="tab-btn w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-colors text-gray-600 hover:bg-gray-100">
+                Paquete VIP
+            </button>
+        </div>
+    </aside>
+
+    <!-- LISTA DE SOLICITUDES -->
+    <div class="w-80 bg-gray-50 border-r border-gray-200 flex flex-col overflow-y-auto hidden-until-login opacity-0 transition-opacity duration-500">
+        <div class="p-4 border-b border-gray-200 bg-white sticky top-0">
+            <h2 class="font-bold text-lg">Solicitudes Recientes</h2>
+            <p id="total-solicitudes" class="text-xs text-gray-500">Esperando datos...</p>
+        </div>
+        <div id="lista-solicitudes" class="p-4 flex flex-col gap-3">
+            <!-- Aquí se inyectarán las tarjetas de los clientes -->
+        </div>
+    </div>
+
+    <!-- ÁREA PRINCIPAL (GENERADOR DE PROMPT) -->
+    <main class="flex-1 bg-white flex flex-col h-full overflow-hidden hidden-until-login opacity-0 transition-opacity duration-500">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0">
+            <div>
+                <h2 id="vista-cliente-nombre" class="text-2xl font-bold text-[#3D3542]">Selecciona una solicitud</h2>
+                <p id="vista-cliente-evento" class="text-sm text-[#9B8AA5]">Para generar el prompt</p>
+            </div>
+            <button id="btn-copiar" onclick="copiarPrompt()" class="hidden px-6 py-2.5 bg-[#9B8AA5] text-white rounded-lg font-bold text-sm shadow-md hover:opacity-90 transition-all flex items-center gap-2">
+                Copiar Prompt
+            </button>
+        </div>
+        
+        <div class="flex-1 p-6 overflow-y-auto bg-gray-50">
+            <div id="prompt-container" class="hidden bg-white p-6 rounded-xl border border-gray-200 shadow-sm whitespace-pre-wrap font-mono text-sm text-gray-800 leading-relaxed selection:bg-purple-200">
+                <!-- Aquí se inyectará el texto del prompt -->
+            </div>
+            <div id="empty-state" class="h-full flex items-center justify-center text-gray-400 font-medium">
+                Selecciona un cliente del menú para ver su información.
+            </div>
+        </div>
+    </main>
+
+    <!-- FIREBASE & LOGICA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwgiUaie7pWejMKkEA0w-hi8eqs8eheXM",
+            authDomain: "adainvite-app.firebaseapp.com",
+            projectId: "adainvite-app",
+            storageBucket: "adainvite-app.firebasestorage.app",
+            messagingSenderId: "636581204653",
+            appId: "1:636581204653:web:5e6c3732d94288880cec24"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let datosActuales = [];
+
+        // --- SISTEMA DE CONTRASEÑA ---
+        window.verificarPassword = function(event) {
+            event.preventDefault(); // Evita que el formulario recargue la página
+            
+            const passInput = document.getElementById('admin-pass');
+            const errorText = document.getElementById('login-error');
+            
+            // 👇 AQUÍ PUEDES CAMBIAR TU CONTRASEÑA
+            const miContrasenaSecreta = "AdaAdmin2026"; 
+            
+            if (passInput.value === miContrasenaSecreta) {
+                // Contraseña correcta: Ocultar login y mostrar panel
+                document.getElementById('login-screen').classList.add('hidden');
+                
+                const elementosPanel = document.querySelectorAll('.hidden-until-login');
+                elementosPanel.forEach(el => {
+                    el.classList.remove('opacity-0');
+                    el.classList.add('opacity-100');
+                });
+
+                // Cargar los datos del paquete básico automáticamente al entrar
+                const btnBasico = document.getElementById('btn-basico');
+                cargarDatos('solicitudes_basico', btnBasico);
+                
+            } else {
+                // Contraseña incorrecta
+                errorText.classList.remove('opacity-0');
+                passInput.value = '';
+                passInput.focus();
+                
+                // Ocultar mensaje de error después de 3 segundos
+                setTimeout(() => {
+                    errorText.classList.add('opacity-0');
+                }, 3000);
+            }
+        };
+
+        // Función para cargar los datos de la colección seleccionada
+        window.cargarDatos = async function(coleccionNombre, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-[#9B8AA5]', 'text-white');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            btnElement.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            btnElement.classList.add('active', 'bg-[#9B8AA5]', 'text-white');
+
+            const listaEl = document.getElementById('lista-solicitudes');
+            listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">Cargando datos...</p>';
+            
+            document.getElementById('prompt-container').classList.add('hidden');
+            document.getElementById('empty-state').classList.remove('hidden');
+            document.getElementById('btn-copiar').classList.add('hidden');
+            document.getElementById('vista-cliente-nombre').innerText = "Selecciona una solicitud";
+            document.getElementById('vista-cliente-evento').innerText = "Para generar el prompt";
+
+            try {
+                const q = query(collection(db, coleccionNombre), orderBy("fechaRegistro", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                datosActuales = [];
+                listaEl.innerHTML = '';
+
+                if(querySnapshot.empty) {
+                    listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">No hay solicitudes aún.</p>';
+                    document.getElementById('total-solicitudes').innerText = "0 solicitudes";
+                    return;
+                }
+
+                document.getElementById('total-solicitudes').innerText = `${querySnapshot.size} solicitudes`;
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    datosActuales.push({ id: doc.id, ...data });
+
+                    const card = document.createElement('div');
+                    card.className = 'order-card bg-white p-3 rounded-lg border border-gray-200 cursor-pointer transition-colors shadow-sm';
+                    
+                    let fechaCorta = "Reciente";
+                    if(data.fechaRegistro) {
+                        const dateObj = data.fechaRegistro.toDate();
+                        fechaCorta = dateObj.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+                    }
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-[#3D3542] text-sm truncate">${data.festejado_nombre || 'Sin nombre'}</span>
+                            <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded">${fechaCorta}</span>
+                        </div>
+                        <div class="text-xs text-gray-500 truncate">${data.tipo_evento || ''}</div>
+                    `;
+                    
+                    card.onclick = () => seleccionarCliente(data, card);
+                    listaEl.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Error al cargar datos:", error);
+                listaEl.innerHTML = '<p class="text-sm text-red-500 text-center mt-4">Error al cargar. Revisa tu conexión a Firebase.</p>';
+            }
+        };
+
+        // Función para generar el Prompt estructurado
+        window.seleccionarCliente = function(data, cardElement) {
+            document.querySelectorAll('.order-card').forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+
+            document.getElementById('empty-state').classList.add('hidden');
+            const promptContainer = document.getElementById('prompt-container');
+            const btnCopiar = document.getElementById('btn-copiar');
+            
+            document.getElementById('vista-cliente-nombre').innerText = data.contacto_nombre || "Cliente";
+            document.getElementById('vista-cliente-evento').innerText = `${data.tipo_evento} de ${data.festejado_nombre}`;
+
+            // --- CONSTRUCCIÓN DEL PROMPT ---
+            let promptText = `Adapta la invitación web ${data.tematica || data.modelo_base || 'estilo'} con lo siguiente:\n\n`;
+            
+            promptText += `Festejado/a: ${data.festejado_nombre}\n`;
+            promptText += `Tipo de evento: ${data.tipo_evento}\n`;
+            promptText += `Fecha del evento: ${data.evento_fecha}\n\n`;
+            
+            promptText += `Frase de bienvenida: "${data.festejado_frase}"\n\n`;
+            
+            promptText += `Padres: ${data.familia_papas}\n`;
+            promptText += `Padrinos: ${data.familia_padrinos}\n\n`;
+
+            if(data.ceremonia_lugar) {
+                promptText += `Templo: ${data.ceremonia_lugar}\n`;
+                promptText += `Dirección del templo: ${data.ceremonia_direccion}\n`;
+                promptText += `Ubicación templo: ${data.ceremonia_maps}\n`;
+                promptText += `Hora de ceremonia: ${data.ceremonia_hora}\n\n`;
+            }
+
+            promptText += `Salón: ${data.recepcion_lugar}\n`;
+            promptText += `Dirección del salón: ${data.recepcion_direccion}\n`;
+            promptText += `Ubicación salón: ${data.recepcion_maps}\n`;
+            promptText += `Hora de recepción: ${data.recepcion_hora}\n\n`;
+
+            if(data.imagenes && data.imagenes.historia1) {
+                for(let i=1; i<=6; i++) {
+                    if(data[`historia_frase_${i}`] && data.imagenes[`historia${i}`]) {
+                        promptText += `Historia - Tarjeta ${i}: "${data[`historia_frase_${i}`]}"\n`;
+                        promptText += `Foto: ${data.imagenes[`historia${i}`]}\n\n`;
+                    }
+                }
+            }
+
+            if(data.itinerario) {
+                promptText += `Itinerario:\n${data.itinerario}\n\n`;
+            }
+
+            if(data.vestimenta_estilo) {
+                promptText += `Código de vestimenta: ${data.vestimenta_estilo}\n`;
+                promptText += `Colores reservados: ${data.vestimenta_reservados}\n`;
+                if(data.imagenes && data.imagenes.vestimenta) {
+                    promptText += `Imagen Style Guide: ${data.imagenes.vestimenta}\n`;
+                }
+                promptText += `\n`;
+            }
+
+            if(data.regalos_amazon || data.regalos_liverpool || data.lluvia_sobres) {
+                promptText += `Mesa de regalos Amazon: ${data.regalos_amazon || 'No aplica'}\n`;
+                promptText += `Mesa de regalos Liverpool: ${data.regalos_liverpool || 'No aplica'}\n`;
+                promptText += `Lluvia de sobres: ${data.lluvia_sobres === 'on' ? 'Sí' : 'No'}\n\n`;
+            }
+
+            promptText += `Fecha límite RSVP: ${data.fecha_limite}\n`;
+            promptText += `Confirmaciones: Al número de WhatsApp ${data.evento_whatsapp}\n`;
+            
+            let tipoConfTexto = data.tipo_confirmacion;
+            if(tipoConfTexto === 'adultos_y_ninos') tipoConfTexto = 'Cantidad de adultos y niños';
+            if(tipoConfTexto === 'solo_adultos') tipoConfTexto = 'Solo adultos';
+            if(tipoConfTexto === 'sin_ninos') tipoConfTexto = 'No se admitirán niños';
+            promptText += `Tipo de confirmación: ${tipoConfTexto}\n`;
+
+            if(data.activar_qr) {
+                promptText += `Control de Accesos QR: ${data.activar_qr === 'si' ? 'SÍ ACTIVAR' : 'No'}\n`;
+                promptText += `Entrega de Pases: ${data.entrega_pases === 'enviar_con_invitacion' ? 'Con la invitación' : 'Al confirmar asistencia'}\n`;
+            } else if(data.entrega_pases) {
+                promptText += `Entrega de Pases Individuales: ${data.entrega_pases === 'enviar_con_invitacion' ? 'Con la invitación' : 'Al confirmar asistencia'}\n`;
+                promptText += `Pases QR Extra ($150): ${data.add_on_qr === 'on' ? 'SÍ lo solicitaron' : 'No'}\n`;
+            }
+            promptText += `\n`;
+
+            if(data.evento_musica) {
+                promptText += `Canción: ${data.evento_musica}\n`;
+            }
+            promptText += `Paleta de colores: ${data.colores}\n`;
+            promptText += `Modelo Base Solicitado: ${data.modelo_base || 'N/A'}\n\n`;
+
+            if(data.album_titulo) {
+                promptText += `Álbum compartido interactivo: SÍ (Título sugerido: ${data.album_titulo})\n\n`;
+            }
+
+            if(data.trivia_p1) {
+                promptText += `Sección - Trivia:\n`;
+                promptText += `Pregunta 1: ${data.trivia_p1} | Respuesta: ${data.trivia_r1}\n`;
+                promptText += `Pregunta 2: ${data.trivia_p2} | Respuesta: ${data.trivia_r2}\n`;
+                promptText += `Pregunta 3: ${data.trivia_p3} | Respuesta: ${data.trivia_r3}\n\n`;
+            }
+
+            promptText += `--- FOTOGRAFÍAS PARA LA INVITACIÓN ---\n`;
+            if(data.imagenes) {
+                promptText += `Foto de Hero (Portada):\n${data.imagenes.portada}\n\n`;
+                
+                promptText += `Fotos para incluir como separadores entre secciones:\n`;
+                if(data.imagenes.separador1) promptText += `${data.imagenes.separador1}\n`;
+                if(data.imagenes.separador2) promptText += `${data.imagenes.separador2}\n`;
+                if(data.imagenes.separador3) promptText += `${data.imagenes.separador3}\n`;
+                if(data.imagenes.separador4) promptText += `${data.imagenes.separador4}\n`;
+                if(data.imagenes.separador5) promptText += `${data.imagenes.separador5}\n`;
+                promptText += `\n`;
+
+                if(data.imagenes.galeria && data.imagenes.galeria.length > 0) {
+                    promptText += `Fotos para la Galería:\n`;
+                    data.imagenes.galeria.forEach(url => { promptText += `${url}\n`; });
+                    promptText += `\n`;
+                }
+                
+                if(data.imagenes.corteHonor && data.imagenes.corteHonor.length > 0) {
+                    promptText += `Corte de Honor - Nombres: ${data.corte_nombres}\n`;
+                    promptText += `Fotos Corte de Honor:\n`;
+                    data.imagenes.corteHonor.forEach(url => { promptText += `${url}\n`; });
+                    promptText += `\n`;
+                }
+            }
+
+            if(data.observaciones_finales) {
+                promptText += `Observaciones del cliente:\n${data.observaciones_finales}\n`;
+            }
+
+            promptContainer.innerText = promptText;
+            promptContainer.classList.remove('hidden');
+            btnCopiar.classList.remove('hidden');
+        };
+
+        window.copiarPrompt = function() {
+            const texto = document.getElementById('prompt-container').innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                const btn = document.getElementById('btn-copiar');
+                const textoOriginal = btn.innerHTML;
+                btn.innerHTML = '¡Copiado!';
+                btn.classList.replace('bg-[#9B8AA5]', 'bg-green-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = textoOriginal;
+                    btn.classList.replace('bg-green-500', 'bg-[#9B8AA5]');
+                }, 2000);
+            });
+        };
+    </script>
+</body>
+</html>
