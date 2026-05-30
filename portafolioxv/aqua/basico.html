@@ -355,22 +355,39 @@
             </div>
         </section>
 
-        <section class="min-h-[60svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
+            <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
                 <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold text-white">Por favor, confirmar antes del <br> XX de Mes de 202X</p>
                 
                 <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto flex flex-col items-center">
-                    <svg class="w-16 h-16 mb-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-12 h-12 mb-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
-                    <p class="text-lg text-white mb-8 font-light">Haz clic en el botón para enviarnos un mensaje y confirmar tu asistencia directamente.</p>
-                    <a href="https://wa.me/520000000000?text=¡Hola!%20Confirmo%20mi%20asistencia%20a%20los%20XV%20años." target="_blank" class="w-full md:w-auto inline-block bg-[#25D366] text-white font-bold py-4 px-10 uppercase tracking-[0.3em] text-[12px] hover:bg-[#1DA851] transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center border border-transparent">
-                        Confirmar por WhatsApp
-                    </a>
+                    <p class="text-lg text-white mb-8 font-light">Llena los datos para enviarnos un mensaje y confirmar tu asistencia directamente.</p>
+                    
+                    <form id="rsvpFormWhatsApp" class="space-y-6 text-left bg-transparent transition-all duration-500 w-full">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
+                            <input type="text" id="waName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                        </div>
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Número de Adultos</label>
+                            <input type="number" id="waAdults" required placeholder="Ej. 2" min="0" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                        </div>
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Número de Niños</label>
+                            <input type="number" id="waKids" required placeholder="Ej. 1" min="0" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                        </div>
+                        
+                        <button type="submit" class="w-full inline-block bg-[#25D366] text-white font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-[#1DA851] transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6 border border-transparent">
+                            Confirmar por WhatsApp
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>
+
 
         <footer class="min-h-[60svh] flex flex-col justify-center py-20 px-6 text-center seccion-blanca relative z-10">
             <p class="text-7xl font-script mb-4 text-azul-principal text-shadow-light relative z-10">¡No faltes!</p>
@@ -455,6 +472,33 @@
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
             window.open(url, '_blank');
         }
+        document.getElementById('rsvpFormWhatsApp').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const name = document.getElementById('waName').value.trim();
+            const numAdultos = parseInt(document.getElementById('waAdults').value) || 0;
+            const numNinos = parseInt(document.getElementById('waKids').value) || 0;
+            
+            const numeroWhatsApp = "520000000000"; 
+            
+            // Lógica para singular/plural de adultos
+            let textoAdultos = numAdultos === 1 ? "1 adulto" : `${numAdultos} adultos`;
+            
+            // Lógica para singular/plural de niños (o si no hay)
+            let textoNinos = "";
+            if (numNinos === 1) {
+                textoNinos = " y 1 niño";
+            } else if (numNinos > 1) {
+                textoNinos = ` y ${numNinos} niños`;
+            }
+            
+            const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${textoAdultos}${textoNinos}.`;
+            
+            const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+            
+            window.open(waLink, '_blank');
+        });
+
     </script>
 
     <script>
