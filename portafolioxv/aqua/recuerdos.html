@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
     <meta name="theme-color" content="#8496B0">
-    <meta property="og:title" content="XV Suelen Camila - Recuerdos">
+    <meta property="og:title" content="Mis XV - Recuerdos">
     <meta property="og:description" content="Sube tus fotos y videos favoritos de la fiesta.">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -55,10 +55,10 @@
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
         .font-numbers { font-family: var(--font-numbers) !important; }
 
-        /* Fondo a pantalla completa que reemplaza a .seccion-azul */
+        /* Fondo a pantalla completa */
         .fondo-completo {
             position: fixed;
-            top: -20px; left: -20px; right: -20px; bottom: -20px; /* Expande los bordes para ocultar el difuminado blanco del filtro */
+            top: -20px; left: -20px; right: -20px; bottom: -20px;
             z-index: -1; 
             background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.imgur.com/7c26hP1.gif');
             background-size: cover;
@@ -97,10 +97,10 @@
 
     <div class="max-w-4xl w-full min-h-[100svh] flex flex-col items-center py-16 px-6 relative z-10" id="mainContainer">
         
-        <img src="https://i.imgur.com/xu9ym4s.png" class="w-20 md:w-28 mb-6 drop-shadow-sm filtro-blanco" alt="Corona">
+        <img src="https://i.imgur.com/Hv9gZUu.png" class="w-20 md:w-28 mb-6 drop-shadow-sm filtro-blanco" alt="Corona">
         
         <h1 class="text-6xl md:text-8xl font-script text-white mb-2 text-center drop-shadow-md">Recuerdos</h1>
-        <p class="text-[11px] tracking-[0.4em] uppercase text-white font-bold mb-8 text-center">Mis XV Festejada</p>
+        <p class="text-[11px] tracking-[0.4em] uppercase text-white font-bold mb-8 text-center">Mis XV Nombre Festejada</p>
 
         <p class="text-sm md:text-base italic text-white/90 leading-relaxed mb-10 font-medium px-4 text-center max-w-md">
             Comparte tus fotos y videos favoritos de esta noche inolvidable con nosotros.
@@ -180,15 +180,14 @@
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-        // NOTA: Recuerda que estas credenciales siguen apuntando al proyecto de Mayte,
-        // deberás cambiarlas por las del proyecto de Suelen Camila si creas uno nuevo en Firebase.
+        // NOTA: Recuerda cambiar estas credenciales por las del proyecto de la festejada.
         const firebaseConfig = {
-            apiKey: "AIzaSyDwclGmOvKPqKFe_ytUO3x76RLsdUCkCX0",
-            authDomain: "xv-suelen-camila.firebaseapp.com",
-            projectId: "xv-suelen-camila",
-            storageBucket: "xv-suelen-camila.firebasestorage.app",
-            messagingSenderId: "888867145166",
-            appId: "1:888867145166:web:967e50ac39bdb29730179f"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.firebasestorage.app",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -227,8 +226,9 @@
                         video.src = URL.createObjectURL(file);
                     });
 
+                    // Límite de 30 segundos
                     if (duration > 30.5) {
-                        alert(`El video "${file.name}" es muy largo. El límite para el limite es de 30 segundos.`);
+                        alert(`El video "${file.name}" es muy largo. El límite para el muro es de 30 segundos.`);
                         continue;
                     }
                 }
@@ -273,7 +273,7 @@
                 const total = archivos.length;
                 
                 await new Promise((resolve, reject) => {
-                    const storageRef = ref(storage, 'xv_suelen/' + Date.now() + "_" + file.name);
+                    const storageRef = ref(storage, 'xv_festejada/' + Date.now() + "_" + file.name);
                     const uploadTask = uploadBytesResumable(storageRef, file);
 
                     uploadTask.on('state_changed', 
@@ -284,7 +284,7 @@
                         (error) => { reject(error); },
                         async () => {
                             const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            await addDoc(collection(db, "muro_suelen"), {
+                            await addDoc(collection(db, "muro_festejada"), {
                                 nombre, momento, url_multimedia: url, likes: 0,
                                 tipo: file.type.includes("video") ? "video" : "imagen",
                                 fecha: new Date()
@@ -316,7 +316,7 @@
 
         // Dibujar Muro
         let isFirstLoad = true;
-        const q = query(collection(db, "muro_suelen"), orderBy("fecha", "desc"));
+        const q = query(collection(db, "muro_festejada"), orderBy("fecha", "desc"));
         
         onSnapshot(q, (snapshot) => {
             if (snapshot.empty && muro.innerHTML.trim() === "") {
@@ -380,7 +380,7 @@
         });
 
         window.darLike = async function(id) {
-            const docRef = doc(db, "muro_suelen", id);
+            const docRef = doc(db, "muro_festejada", id);
             await updateDoc(docRef, { likes: increment(1) });
         };
 
