@@ -799,19 +799,22 @@
                 btn.disabled = true;
 
                 try {
-                    fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}`, { mode: 'no-cors' });
-                    
-                    const phone = "525539985044"; 
-                    const message = `¡Hola! Confirmo mi asistencia a los XV de Diana.%0A*Nombre:* ${name}%0A*Asistencia:* ${pax} persona(s)`;
-                    const waUrl = `https://wa.me/${phone}?text=${message}`;
-                    
-                    window.location.href = waUrl;
-                    
-                } catch (error) {
-                    alert("Hubo un problema de conexión. Intenta de nuevo.");
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                }
+    // 1. Agregamos 'await' para asegurar que el dato se envíe antes de continuar
+    await fetch(`${SCRIPT_URL}?action=rsvp&name=${encodeURIComponent(name)}&pax=${encodeURIComponent(pax)}`, { mode: 'no-cors' });
+    
+    // 2. Una vez enviado, preparamos el mensaje
+    const phone = "525539985044"; 
+    const message = `¡Hola! Confirmo mi asistencia a los XV de Diana.%0A*Nombre:* ${name}%0A*Asistencia:* ${pax} persona(s)`;
+    const waUrl = `https://wa.me/${phone}?text=${message}`;
+    
+    // 3. Finalmente redirigimos a WhatsApp
+    window.location.href = waUrl;
+    
+} catch (error) {
+    alert("Hubo un problema de conexión. Intenta de nuevo.");
+    btn.innerText = originalText;
+    btn.disabled = false;
+}
             });
         </script>
         <script>
