@@ -402,11 +402,11 @@
                 <div class="bg-white/40 backdrop-blur-sm p-8 rounded-3xl border border-white/60 shadow-sm">
                     <p class="font-sans text-base leading-relaxed text-beigeText font-medium">
                         Te sugerimos vestir <strong class="font-bold text-2xl block mt-2 mb-2 uppercase tracking-widest">Casual</strong>
-                        para disfrutar cómodamente del evento.<br>
+                        para disfrutar cómodamente del evento y con estos colores:<br>
                     </p>
                     <div class="flex justify-center gap-6 mt-6">
-                        <div class="w-12 h-12 rounded-full bg-beigeText/50 shadow-md border-2 border-white"></div>
-                        <div class="w-12 h-12 rounded-full bg-beigeText/30 shadow-md border-2 border-white"></div>
+                        <div class="w-12 h-12 rounded-full bg-beigeText/40 shadow-md border-2 border-white"></div>
+                        <div class="w-12 h-12 rounded-full bg-beigeText/10 shadow-md border-2 border-white"></div>
                     </div>
                 </div>
             </section>
@@ -464,7 +464,7 @@
 
                 <div id="loadingMessage" class="hidden mt-10 flex-col items-center justify-center transition-all duration-500">
                     <div class="w-10 h-10 border-4 border-beigeText border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                    <p class="text-5xl font-script text-beigeText mb-1 drop-shadow-sm font-bold">Generando...</p>
+                    <p class="text-5xl font-script text-beigeText mb-1 drop-shadow-sm font-bold" id="loadingText">Procesando...</p>
                 </div>
             </section>
 
@@ -473,7 +473,8 @@
             <!-- 11. RECUPERAR PASE -->
             <section class="min-h-[60svh] flex flex-col justify-center px-8 bg-transparent fade-in-section text-center relative z-20">
                 <h3 class="font-script text-6xl md:text-7xl mb-8 text-beigeText drop-shadow-sm">Recuperar Pase</h3>
-                
+                <p class="font-sans text-xs mb-8 text-beigeText font-medium px-4">Si ya confirmaste, busca tu nombre para descargar tu acceso.</p>
+
                 <form id="searchPassForm" class="flex flex-col gap-6 max-w-[320px] mx-auto w-full">
                     <input type="text" id="searchName" required placeholder="Ingresa tu nombre exacto" class="w-full bg-white/80 border border-white rounded-full py-4 px-6 outline-none text-lg font-sans text-beigeText placeholder-beigeText/40 text-center shadow-md font-medium">
                     <button type="submit" class="bg-beigeText border-2 border-beigeText text-white font-sans text-sm tracking-widest uppercase py-4 rounded-full hover:bg-beigeText hover:text-white transition-colors font-bold shadow-sm">
@@ -577,6 +578,19 @@
                     searchName.classList.add('opacity-80'); 
                 }
             }
+
+            // Ocultar formulario de confirmación si existe variable local
+            if (localStorage.getItem('rsvpConfirmadoJM')) {
+                const form = document.getElementById('rsvpForm');
+                if(form) {
+                    form.innerHTML = `
+                        <div class="bg-white/90 border border-white/60 shadow-md p-8 rounded-3xl text-center">
+                            <p class="text-beigeText font-bold text-lg mb-2">¡Asistencia Confirmada!</p>
+                            <p class="text-beigeText/80 text-sm tracking-wide font-medium">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase.</p>
+                        </div>
+                    `;
+                }
+            }
         });
 
         // --- CALENDARIO ---
@@ -616,86 +630,15 @@
             
             document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
         }
-
-        // ==========================================
-        // RECUPERAR PASE
-        // ==========================================
-        document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('searchName').value.trim();
-            const resultDiv = document.getElementById('searchResultMessage');
-            const btnSubmit = e.target.querySelector('button[type="submit"]');
-            
-            btnSubmit.innerText = "Buscando...";
-            btnSubmit.disabled = true;
-            resultDiv.classList.add('hidden');
-
-            try {
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                const res = { status: 'aprobado', pases: window.maxPasesGlobal || 2 }; 
-
-                resultDiv.classList.remove('hidden');
-
-                if (res.status === 'aprobado') {
-                    const folio = "REV-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                    resultDiv.innerHTML = `
-                        <div class="flex flex-col items-center w-full">
-                            <div id="tarjetaPaseRecuperado" class="relative w-full max-w-[300px] bg-white border border-white/60 rounded-[2rem] p-10 shadow-2xl text-center overflow-hidden">
-                                <div class="absolute -top-10 -left-10 w-40 h-40 bg-softPink rounded-full opacity-60 blur-2xl"></div>
-                                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-softBlue rounded-full opacity-60 blur-2xl"></div>
-                                
-                                <p class="text-[10px] uppercase text-beigeText font-sans tracking-widest mt-2 relative z-10 font-bold">Pase Oficial</p>
-                                <h4 class="font-script text-6xl text-beigeText mb-8 leading-tight capitalize relative z-10 drop-shadow-sm">${name}</h4>
-                                
-                                <div class="inline-block border-t border-b border-beigeText/20 py-5 px-10 mb-8 w-full relative z-10">
-                                    <p class="text-[10px] uppercase text-beigeText tracking-widest mb-2 font-bold">Pases Asignados</p>
-                                    <p class="font-sans font-bold text-6xl text-beigeText">${res.pases}</p>
-                                </div>
-                                
-                                <p class="text-[10px] uppercase text-beigeText tracking-widest mb-1 relative z-10 font-bold">Folio: ${folio}</p>
-                            </div>
-                            
-                            <button id="btnDescargarPase" class="mt-6 bg-beigeText text-white font-sans text-sm tracking-widest uppercase py-4 px-10 rounded-full shadow-lg active:scale-95 transition-transform font-bold w-full max-w-[300px]">
-                                Descargar Pase
-                            </button>
-                        </div>
-                    `;
-
-                    document.getElementById('btnDescargarPase').addEventListener('click', () => {
-                        const tarjeta = document.getElementById('tarjetaPaseRecuperado');
-                        const originalText = "Descargar Pase";
-                        document.getElementById('btnDescargarPase').innerText = "Generando imagen...";
-                        
-                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
-                            const enlace = document.createElement('a');
-                            enlace.download = 'Pase_Revelacion_JM.png';
-                            enlace.href = canvas.toDataURL('image/png');
-                            enlace.click();
-                            document.getElementById('btnDescargarPase').innerText = originalText;
-                        });
-                    });
-
-                } else {
-                    resultDiv.innerHTML = `
-                        <div class="bg-white/90 border border-white/60 shadow-md p-8 rounded-3xl text-center">
-                            <p class="text-beigeText font-bold text-lg mb-2">Reserva no encontrada.</p>
-                            <p class="text-beigeText/80 text-sm tracking-wide font-medium">Asegúrate de escribir tu nombre tal cual confirmaste.</p>
-                        </div>
-                    `;
-                }
-            } finally {
-                btnSubmit.innerText = "Buscar mi Pase";
-                btnSubmit.disabled = false;
-            }
-        });
     </script>
 
     <!-- ========================================== -->
     <!-- SISTEMA DE FIREBASE (VOTACIÓN Y RSVP)      -->
     <!-- ========================================== -->
     <script type="module">
+        // Importar todo lo necesario de Firestore, incluyendo query, where y getDocs para buscar en la base de datos
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, increment, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
         const firebaseConfig = {
           apiKey: "AIzaSyDfTybyKayRd7tsezq1NWlKrw_fRP4Wv9g",
@@ -792,111 +735,236 @@
         // ==========================================
         // CONEXIÓN Y GENERACIÓN DE PASE (RSVP) CON FIREBASE
         // ==========================================
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('rsvpName').value.trim();
-            const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
-            const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
-            const totalPases = numAdultos + numNinos;
-            
-            // Validar límite de pases si existe en la URL
-            if (typeof window.maxPasesGlobal !== 'undefined' && totalPases > window.maxPasesGlobal) {
-                alert(`Solo tienes asignados ${window.maxPasesGlobal} pases en total.`);
-                return;
-            }
-            
-            const form = document.getElementById('rsvpForm');
-            const loader = document.getElementById('loadingMessage');
-            
-            form.style.display = 'none';
-            loader.classList.remove('hidden');
-            loader.classList.add('flex');
-
-            try {
-                const folio = "REV-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-
-                // --- GUARDAR EN FIREBASE ---
-                if (db) {
-                    await addDoc(collection(db, "confirmaciones"), {
-                        nombre: name,
-                        adultos: numAdultos,
-                        ninos: numNinos,
-                        totalPases: totalPases,
-                        folio: folio,
-                        fecha: serverTimestamp() // Guarda la fecha y hora exacta
-                    });
+        const rsvpFormElement = document.getElementById('rsvpForm');
+        if (rsvpFormElement) {
+            rsvpFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('rsvpName').value.trim();
+                const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
+                const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+                const totalPases = numAdultos + numNinos;
+                
+                // 1. Validar límite de pases si existe en la URL
+                if (typeof window.maxPasesGlobal !== 'undefined' && totalPases > window.maxPasesGlobal) {
+                    alert(`Solo tienes asignados ${window.maxPasesGlobal} pases en total. Por favor ajusta el número de asistentes.`);
+                    return;
                 }
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                const textLoader = document.getElementById('loadingText');
+                
+                form.style.display = 'none';
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
 
-                // Simular un pequeño tiempo de carga visual para la experiencia
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                try {
+                    // 2. VALIDAR DUPLICADOS EN FIREBASE
+                    if (db) {
+                        textLoader.innerText = "Verificando...";
+                        const confirmacionesRef = collection(db, "confirmaciones");
+                        // Buscar si ya existe una confirmación con este nombre en minúsculas (para evitar errores por mayúsculas)
+                        const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
+                        const querySnapshot = await getDocs(q);
 
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
+                        if (!querySnapshot.empty) {
+                            // Ya existe alguien con ese nombre
+                            alert("Ya existe una confirmación registrada con este nombre. Ve a la sección 'Recuperar Pase' más abajo para descargar tu tarjeta.");
+                            
+                            // Guardamos localmente para que se le oculte el formulario si recarga
+                            localStorage.setItem('rsvpConfirmadoJM', 'true');
+                            
+                            form.innerHTML = `
+                                <div class="bg-white/90 border border-white/60 shadow-md p-8 rounded-3xl text-center">
+                                    <p class="text-beigeText font-bold text-lg mb-2">¡Asistencia Confirmada!</p>
+                                    <p class="text-beigeText/80 text-sm tracking-wide font-medium">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase.</p>
+                                </div>
+                            `;
+                            form.style.display = 'block';
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                            return;
+                        }
+                    }
 
-                // Generar la interfaz del Pase Digital
-                const seccionRsvp = document.getElementById('rsvpForm').parentElement;
-                const numeroWhatsApp = "528331474947";
-                const mensajeWa = `¡Hola! Confirmo mi asistencia a la Revelación de Género. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños. Mi folio es ${folio}.`;
-                const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+                    // 3. SI NO EXISTE, PROCEDEMOS A GUARDAR
+                    textLoader.innerText = "Generando pase...";
+                    const folio = "REV-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
-                const resultDiv = document.createElement('div');
-                resultDiv.className = "mt-8 flex flex-col items-center w-full relative z-10 fade-in-section is-visible"; 
-                resultDiv.innerHTML = `
-                    <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-[300px] bg-white border border-white/60 rounded-[2rem] p-10 shadow-2xl text-center overflow-hidden">
-                        <div class="absolute -top-10 -left-10 w-40 h-40 bg-softPink rounded-full opacity-60 blur-2xl"></div>
-                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-softBlue rounded-full opacity-60 blur-2xl"></div>
-                        
-                        <p class="text-[10px] uppercase text-beigeText font-sans tracking-widest mt-2 relative z-10 font-bold">Pase Oficial</p>
-                        <h4 class="font-script text-6xl text-beigeText mb-8 leading-tight capitalize relative z-10 drop-shadow-sm">${name}</h4>
-                        
-                        <div class="inline-block border-t border-b border-beigeText/20 py-5 px-10 mb-8 w-full relative z-10">
-                            <p class="text-[10px] uppercase text-beigeText tracking-widest mb-2 font-bold">Asistentes Confirmados</p>
-                            <p class="font-sans font-bold text-6xl text-beigeText">${totalPases}</p>
+                    if (db) {
+                        await addDoc(collection(db, "confirmaciones"), {
+                            nombre: name,
+                            nombre_lower: name.toLowerCase(), // Esto permite buscarlo sin importar mayúsculas
+                            adultos: numAdultos,
+                            ninos: numNinos,
+                            totalPases: totalPases,
+                            folio: folio,
+                            fecha: serverTimestamp() 
+                        });
+                    }
+
+                    // Guardar en el dispositivo
+                    localStorage.setItem('rsvpConfirmadoJM', 'true');
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+
+                    // Generar la interfaz del Pase Digital
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const numeroWhatsApp = "528331474947";
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a la Revelación de Género. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños. Mi folio es ${folio}.`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-8 flex flex-col items-center w-full relative z-10 fade-in-section is-visible"; 
+                    resultDiv.innerHTML = `
+                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-[300px] bg-white border border-white/60 rounded-[2rem] p-10 shadow-2xl text-center overflow-hidden">
+                            <div class="absolute -top-10 -left-10 w-40 h-40 bg-softPink rounded-full opacity-60 blur-2xl"></div>
+                            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-softBlue rounded-full opacity-60 blur-2xl"></div>
+                            
+                            <p class="text-[10px] uppercase text-beigeText font-sans tracking-widest mt-2 relative z-10 font-bold">Pase Oficial</p>
+                            <h4 class="font-script text-6xl text-beigeText mb-8 leading-tight capitalize relative z-10 drop-shadow-sm">${name}</h4>
+                            
+                            <div class="inline-block border-t border-b border-beigeText/20 py-5 px-10 mb-8 w-full relative z-10">
+                                <p class="text-[10px] uppercase text-beigeText tracking-widest mb-2 font-bold">Asistentes Confirmados</p>
+                                <p class="font-sans font-bold text-6xl text-beigeText">${totalPases}</p>
+                            </div>
+                            
+                            <p class="text-[10px] uppercase text-beigeText tracking-widest mb-1 relative z-10 font-bold">Folio: ${folio}</p>
+                            <p class="text-[8px] uppercase text-beigeText tracking-widest relative z-10 font-bold">Muestra esta tarjeta al llegar</p>
                         </div>
                         
-                        <p class="text-[10px] uppercase text-beigeText tracking-widest mb-1 relative z-10 font-bold">Folio: ${folio}</p>
-                        <p class="text-[8px] uppercase text-beigeText tracking-widest relative z-10 font-bold">Muestra esta tarjeta al llegar</p>
-                    </div>
-                    
-                    <div class="flex flex-col gap-4 w-full max-w-[300px] mt-8">
-                        <button id="btnDescargarImagenRSVP" class="bg-beigeText text-white font-sans text-xs tracking-widest uppercase py-4 rounded-full shadow-lg w-full active:scale-95 transition-transform flex items-center justify-center gap-3 font-bold">
-                            <i data-lucide="download" class="w-4 h-4"></i> Descargar Pase
-                        </button>
+                        <div class="flex flex-col gap-4 w-full max-w-[300px] mt-8">
+                            <button id="btnDescargarImagenRSVP" class="bg-beigeText text-white font-sans text-xs tracking-widest uppercase py-4 rounded-full shadow-lg w-full active:scale-95 transition-transform flex items-center justify-center gap-3 font-bold">
+                                <i data-lucide="download" class="w-4 h-4"></i> Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-sans text-xs tracking-widest uppercase py-4 rounded-full shadow-lg flex items-center justify-center gap-3 w-full active:scale-95 transition-transform font-bold">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i> Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+                    lucide.createIcons();
+
+                    // Lógica de descarga de imagen
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        if (typeof html2canvas === 'undefined') return;
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
+                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
                         
-                        <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-sans text-xs tracking-widest uppercase py-4 rounded-full shadow-lg flex items-center justify-center gap-3 w-full active:scale-95 transition-transform font-bold">
-                            <i data-lucide="message-circle" class="w-4 h-4"></i> Avisar por WhatsApp
-                        </a>
-                    </div>
-                `;
-                seccionRsvp.appendChild(resultDiv);
-                lucide.createIcons();
-
-                // Lógica de descarga de imagen
-                document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
-                    if (typeof html2canvas === 'undefined') return;
-                    const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
-                    const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
-                    document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
-                    
-                    html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
-                        const enlace = document.createElement('a');
-                        enlace.download = 'Pase_Revelacion_JM.png';
-                        enlace.href = canvas.toDataURL('image/png');
-                        enlace.click();
-                        document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
-                    }).catch(err => {
-                        console.error("Error al generar imagen", err);
-                        document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                            const enlace = document.createElement('a');
+                            enlace.download = 'Pase_Revelacion_JM.png';
+                            enlace.href = canvas.toDataURL('image/png');
+                            enlace.click();
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        }).catch(err => {
+                            console.error("Error al generar imagen", err);
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        });
                     });
-                });
 
-            } catch(error) {
-                console.error("Error guardando en Firebase:", error);
-                alert("Hubo un problema al guardar. Serás redirigido a WhatsApp para confirmar.");
-                window.location.href = `https://wa.me/528331474947?text=Hola! Confirmo asistencia.`;
-            }
-        });
+                } catch(error) {
+                    console.error("Error guardando en Firebase:", error);
+                    alert("Hubo un problema de conexión. Serás redirigido a WhatsApp para confirmar.");
+                    window.location.href = `https://wa.me/528331474947?text=Hola! Confirmo asistencia.`;
+                }
+            });
+        }
+
+        // ==========================================
+        // RECUPERAR PASE CON FIREBASE (Búsqueda real)
+        // ==========================================
+        const searchPassFormElement = document.getElementById('searchPassForm');
+        if (searchPassFormElement) {
+            searchPassFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const searchName = document.getElementById('searchName').value.trim();
+                const resultDiv = document.getElementById('searchResultMessage');
+                const btnSubmit = e.target.querySelector('button[type="submit"]');
+                
+                btnSubmit.innerText = "Buscando en la base de datos...";
+                btnSubmit.disabled = true;
+                resultDiv.classList.add('hidden');
+
+                try {
+                    if(!db) throw new Error("Firebase no inicializado");
+
+                    const confirmacionesRef = collection(db, "confirmaciones");
+                    // Buscamos ignorando si escribieron con mayúsculas o minúsculas usando el campo nombre_lower
+                    const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+
+                    resultDiv.classList.remove('hidden');
+
+                    if (!querySnapshot.empty) {
+                        // ¡Lo encontró! Traemos los datos de Firebase
+                        const docData = querySnapshot.docs[0].data();
+                        
+                        resultDiv.innerHTML = `
+                            <div class="flex flex-col items-center w-full">
+                                <div id="tarjetaPaseRecuperado" class="relative w-full max-w-[300px] bg-white border border-white/60 rounded-[2rem] p-10 shadow-2xl text-center overflow-hidden">
+                                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-softPink rounded-full opacity-60 blur-2xl"></div>
+                                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-softBlue rounded-full opacity-60 blur-2xl"></div>
+                                    
+                                    <p class="text-[10px] uppercase text-beigeText font-sans tracking-widest mt-2 relative z-10 font-bold">Pase Oficial</p>
+                                    <h4 class="font-script text-6xl text-beigeText mb-8 leading-tight capitalize relative z-10 drop-shadow-sm">${docData.nombre}</h4>
+                                    
+                                    <div class="inline-block border-t border-b border-beigeText/20 py-5 px-10 mb-8 w-full relative z-10">
+                                        <p class="text-[10px] uppercase text-beigeText tracking-widest mb-2 font-bold">Pases Confirmados</p>
+                                        <p class="font-sans font-bold text-6xl text-beigeText">${docData.totalPases}</p>
+                                    </div>
+                                    
+                                    <p class="text-[10px] uppercase text-beigeText tracking-widest mb-1 relative z-10 font-bold">Folio: ${docData.folio}</p>
+                                </div>
+                                
+                                <button id="btnDescargarPase" class="mt-6 bg-beigeText text-white font-sans text-sm tracking-widest uppercase py-4 px-10 rounded-full shadow-lg active:scale-95 transition-transform font-bold w-full max-w-[300px]">
+                                    Descargar Pase
+                                </button>
+                            </div>
+                        `;
+
+                        document.getElementById('btnDescargarPase').addEventListener('click', () => {
+                            const tarjeta = document.getElementById('tarjetaPaseRecuperado');
+                            const originalText = "Descargar Pase";
+                            document.getElementById('btnDescargarPase').innerText = "Generando imagen...";
+                            
+                            html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                                const enlace = document.createElement('a');
+                                enlace.download = 'Pase_Revelacion_JM.png';
+                                enlace.href = canvas.toDataURL('image/png');
+                                enlace.click();
+                                document.getElementById('btnDescargarPase').innerText = originalText;
+                            });
+                        });
+
+                    } else {
+                        // No lo encontró
+                        resultDiv.innerHTML = `
+                            <div class="bg-white/90 border border-white/60 shadow-md p-8 rounded-3xl text-center">
+                                <p class="text-beigeText font-bold text-lg mb-2">Reserva no encontrada.</p>
+                                <p class="text-beigeText/80 text-sm tracking-wide font-medium">Asegúrate de escribir el nombre exactamente como se registró (no importa mayúsculas/minúsculas, pero sí letras extra o espacios).</p>
+                            </div>
+                        `;
+                    }
+                } catch(error) {
+                    console.error("Error buscando pase:", error);
+                    resultDiv.innerHTML = `
+                            <div class="bg-white/90 border border-white/60 shadow-md p-8 rounded-3xl text-center">
+                                <p class="text-red-400 font-bold text-lg mb-2">Error de conexión</p>
+                                <p class="text-beigeText/80 text-sm tracking-wide font-medium">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
+                            </div>
+                        `;
+                    resultDiv.classList.remove('hidden');
+                } finally {
+                    btnSubmit.innerText = "Buscar mi Pase";
+                    btnSubmit.disabled = false;
+                }
+            });
+        }
     </script>
 </body>
 </html>
