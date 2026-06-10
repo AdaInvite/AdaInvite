@@ -56,6 +56,28 @@
             animation: blink 1s infinite;
             color: #25D366;
             margin-left: 2px;
+            font-weight: bold;
+        }
+        
+        /* Custom scrollbar para el chat del simulador */
+        .chat-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.15);
+            border-radius: 10px;
+        }
+
+        /* Ocultar barra de scroll en el wrapper principal */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -84,7 +106,7 @@
             <!-- DETALLES DEL EVENTO -->
             <div class="bg-white rounded-3xl p-6 md:p-8 card-shadow border border-purple-100/40">
                 <p class="text-[11px] font-bold tracking-widest text-primary uppercase mb-5 border-b border-purple-50 pb-2 flex items-center gap-2">
-                    Datos de tu Servicio
+                    <i data-lucide="info" class="w-4 h-4 text-primary"></i> Datos de tu Servicio
                 </p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div class="space-y-1">
@@ -136,7 +158,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN: CÓMO PEGAR EN WHATSAPP (SIMULADOR EN VIVO) -->
+            <!-- SECCIÓN: CÓMO PEGAR EN WHATSAPP (SIMULADOR EN VIVO REALISTA) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-[2.5rem] p-6 md:p-10 card-shadow border border-gray-100">
                 
                 <div class="lg:col-span-6 space-y-6">
@@ -151,25 +173,25 @@
                     </p>
                     <div class="bg-primaryLight/50 p-4 rounded-2xl border border-primary/10">
                         <p class="text-xs text-textMain/90 leading-relaxed font-medium">
-                            <strong>¿Por qué?</strong> Esto permite que los servidores de WhatsApp lean el enlace y muestren la hermosa portada personalizada, captando la atención de tus invitados al instante.
+                            <strong>¿Por qué?</strong> Esto permite que los servidores de WhatsApp lean el enlace y muestren la hermosa portada personalizada en el borrador. Una vez que aparezca la miniatura en pantalla, ¡puedes darle a enviar!
                         </p>
                     </div>
                     
                     <button onclick="reiniciarSimulador()" class="text-xs text-primary font-bold hover:text-primaryDark flex items-center gap-1.5 group transition-colors">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500"></i> Ver demostración en vivo otra vez
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500"></i> Ver demostración interactiva otra vez
                     </button>
                 </div>
 
-                <!-- Simulador Móvil de WhatsApp en Directo -->
+                <!-- Simulador Móvil de WhatsApp Realista -->
                 <div class="lg:col-span-6 flex justify-center">
-                    <div class="w-full max-w-[320px] bg-[#ECE5DD] rounded-[2rem] border-[8px] border-gray-800 shadow-2xl overflow-hidden relative font-sans aspect-[9/16] flex flex-col justify-between">
+                    <div class="w-full max-w-[325px] bg-[#ECE5DD] rounded-[2rem] border-[8px] border-gray-800 shadow-2xl overflow-hidden relative font-sans aspect-[9/16] flex flex-col justify-between">
                         
                         <!-- Cabecera de WhatsApp -->
-                        <div class="bg-[#075E54] text-white p-3 flex items-center justify-between text-xs shadow-md">
+                        <div class="bg-[#075E54] text-white p-3 flex items-center justify-between text-xs shadow-md z-10">
                             <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center font-bold">F</div>
+                                <div class="w-7 h-7 bg-primaryLight text-primary font-bold rounded-full flex items-center justify-center text-xs">JP</div>
                                 <div>
-                                    <p class="font-bold">Familia Pérez</p>
+                                    <p class="font-bold text-[11px]">Juan Pérez</p>
                                     <p class="text-[9px] text-white/70">En línea</p>
                                 </div>
                             </div>
@@ -180,48 +202,70 @@
                         </div>
 
                         <!-- Zona de Chat / Mensajes -->
-                        <div class="flex-1 p-3 space-y-4 overflow-y-auto flex flex-col justify-end" id="chat-content">
-                            
-                            <!-- Mensaje de Texto del Remitente -->
-                            <div id="bubble-text" class="bg-white text-textMain text-xs p-2.5 rounded-lg rounded-tl-none self-start max-w-[85%] shadow-sm leading-relaxed">
-                                Hola tíos! Les compartimos con mucha emoción nuestra invitación para la revelación de género.
+                        <div class="flex-1 p-3 space-y-4 overflow-y-auto flex flex-col chat-scrollbar scroll-smooth" id="chat-content">
+                            <!-- Mensaje Recibido de Juan (Contexto) -->
+                            <div class="bg-white text-textMain text-[11px] p-2.5 rounded-lg rounded-tl-none self-start max-w-[80%] shadow-sm leading-relaxed">
+                                ¡Hola! Sí claro, pásame los datos para confirmar.
+                                <span class="block text-[8px] text-gray-400 text-right mt-1">10:14 AM</span>
                             </div>
 
-                            <!-- Burbuja Simuladora del Link -->
-                            <div id="bubble-link" class="bg-[#DCF8C6] text-textMain text-xs p-3 rounded-lg rounded-tr-none self-end max-w-[85%] shadow-sm space-y-1.5 transition-all duration-300 transform scale-95 opacity-0">
-                                <p class="text-blue-600 underline break-all" id="typed-link">https://adainvite.com/revelacionmyj?n=Familia+Perez</p>
-                                
-                                <!-- Estado de Carga (Simulando esperar 3s) -->
-                                <div id="preview-loader" class="flex items-center gap-2 bg-black/5 p-2 rounded-lg border border-black/5">
-                                    <div class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Cargando vista previa...</span>
-                                </div>
-
-                                <!-- Vista Previa Cargada (Aparece a los 3s) -->
-                                <div id="preview-loaded" class="bg-white/80 rounded-lg overflow-hidden border border-black/5 shadow-inner hidden">
-                                    <img src="https://i.imgur.com/4DckK0B.png" alt="Portada de la Invitación" class="w-full h-24 object-cover object-center">
+                            <!-- Burbuja Final Enviada por Nosotros (Se renderizará aquí al presionar enviar) -->
+                            <div id="sent-message-bubble" class="bg-[#DCF8C6] text-textMain text-[11px] p-2.5 rounded-lg rounded-tr-none self-end max-w-[85%] shadow-sm space-y-2 hidden transition-all duration-300 transform translate-y-4 opacity-0">
+                                <div id="bubble-rendered-preview" class="bg-white/90 rounded-lg overflow-hidden border border-black/5 shadow-sm">
+                                    <img src="https://i.imgur.com/4DckK0B.png" alt="Invitación Portada" class="w-full h-24 object-cover object-center">
                                     <div class="p-2 text-left">
-                                        <p class="font-bold text-[11px] text-textMain truncate">Revelación de Género | Mirna & Jesús</p>
+                                        <p class="font-bold text-[10px] text-textMain truncate">Revelación de Género | Mirna & Jesús</p>
                                         <p class="text-[9px] text-gray-500 line-clamp-2">Acompáñanos a descubrir esta gran sorpresa. Haz clic para ver los detalles y confirmar tus pases.</p>
                                         <p class="text-[8px] text-gray-400 uppercase tracking-widest mt-1">adainvite.com</p>
                                     </div>
                                 </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Barra de Entrada de WhatsApp -->
-                        <div class="bg-[#F0F0F0] p-2 flex items-center gap-2 border-t border-gray-200">
-                            <div class="flex-1 bg-white rounded-full py-1.5 px-3 flex items-center justify-between shadow-sm">
-                                <span class="text-gray-400 text-[11px]" id="input-placeholder">Escribe un mensaje</span>
-                                <div class="flex gap-2 text-gray-400">
-                                    <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
-                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                <p class="whitespace-pre-wrap" id="bubble-rendered-text"></p>
+                                <div class="flex items-center justify-end gap-1 -mt-1">
+                                    <span class="text-[8px] text-gray-500">10:15 AM</span>
+                                    <!-- SVG corregido de las palomitas azules -->
+                                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg>
                                 </div>
                             </div>
-                            <div class="w-8 h-8 rounded-full bg-[#128C7E] flex items-center justify-center text-white shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-transform" id="btn-send-sim">
-                                <i data-lucide="send" class="w-3.5 h-3.5 ml-0.5"></i>
+                        </div>
+
+                        <!-- Panel de Borrador y Entrada (Aquí simularemos la carga real del link) -->
+                        <div class="relative w-full bg-[#FAF9FB] border-t border-gray-200 p-2 flex flex-col gap-1.5 z-20">
+                            
+                            <!-- Cajón de Vista Previa en Borrador (Simula la espera antes de enviar) -->
+                            <div id="input-preview-drawer" class="bg-white border border-gray-200/80 rounded-xl p-2 flex items-start gap-2.5 transition-all duration-300 transform scale-95 opacity-0 pointer-events-none shadow-sm mx-1 hidden">
+                                <div class="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0 flex items-center justify-center">
+                                    <!-- Cargando estado -->
+                                    <div id="drawer-image-loader" class="absolute inset-0 flex items-center justify-center bg-gray-50/90 z-10">
+                                        <div class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                    </div>
+                                    <img id="drawer-preview-img" src="https://i.imgur.com/4DckK0B.png" alt="Previsualización" class="w-full h-full object-cover hidden">
+                                </div>
+                                <div class="flex-1 min-w-0 pr-6 relative">
+                                    <button class="absolute right-0 top-0 text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <p id="drawer-title" class="font-bold text-[10px] text-gray-400 truncate">Obteniendo datos del enlace...</p>
+                                    <p id="drawer-desc" class="text-[9px] text-gray-400 line-clamp-2 mt-0.5">Espere un momento...</p>
+                                    <p class="text-[8px] text-gray-400 uppercase tracking-wider mt-1">adainvite.com</p>
+                                </div>
                             </div>
+
+                            <!-- Input y botón enviar -->
+                            <div class="flex items-center gap-2 w-full">
+                                <div class="flex-1 bg-white rounded-2xl py-2 px-3 border border-gray-200 flex items-start shadow-sm max-h-24 overflow-y-auto no-scrollbar">
+                                    <div class="w-full relative">
+                                        <!-- Caja con el texto tipeándose -->
+                                        <div id="input-draft-text" class="text-textMain text-[11px] leading-normal font-normal whitespace-pre-wrap break-all min-h-[16px] empty:before:content-[attr(placeholder)] empty:before:text-gray-400 pr-4" placeholder="Escribe un mensaje"></div>
+                                    </div>
+                                    <div class="flex gap-2 text-gray-400 pt-0.5 ml-1 flex-shrink-0">
+                                        <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                </div>
+                                <div class="w-9 h-9 rounded-full bg-[#075E54] flex items-center justify-center text-white shadow-md cursor-pointer hover:bg-[#128C7E] active:scale-90 transition-all flex-shrink-0" id="btn-send-sim">
+                                    <i data-lucide="send" class="w-3.5 h-3.5 ml-0.5" id="icon-send"></i>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -336,7 +380,6 @@
                         </a>
                     </div>
                 </div>
-
             </div>
 
             <!-- FOOTER COMPONENTE CORREGIDO -->
@@ -373,63 +416,152 @@
             }
         }
 
-        // CONTROL DE SIMULACIÓN DE WHATSAPP
-        let simTimeout1, simTimeout2, simTimeout3;
-        
+        // CONTROL DE SIMULACIÓN DE WHATSAPP REALISTA
+        let simInterval;
+        let simTimeouts = [];
+
+        // Mensaje y Enlace Exactos Solicitados
+        const urlParaSimular = "https://adainvite.com/revelacionmyj/?n=Juan&pases=2";
+        const mensajeCompleto = `¡Hola! Se acerca nuestro gran día y nos haría muchísima ilusión que nos acompañaras.
+
+Te comparto el enlace con todos los detalles de nuestra Revelación de Género. Por favor ayúdanos a confirmar tu asistencia en el botón que viene ahí mismo: ${urlParaSimular}`;
+
         function iniciarSimulacion() {
-            const placeholder = document.getElementById('input-placeholder');
-            const bubbleLink = document.getElementById('bubble-link');
-            const loader = document.getElementById('preview-loader');
-            const loaded = document.getElementById('preview-loaded');
-            
-            // Estado inicial limpio
-            placeholder.innerText = "";
-            placeholder.className = "text-textMain text-[11px] cursor-blink";
-            bubbleLink.style.opacity = "0";
-            bubbleLink.style.transform = "scale(0.95)";
-            loader.classList.remove('hidden');
-            loaded.classList.add('hidden');
+            // Limpiar timeouts y estados anteriores
+            clearAllSimulations();
 
-            // 1. Simulación escribiendo (1.5 segundos)
-            let textoUrl = "https://adainvite.com/revelacionmyj?n=Familia+Perez";
-            let index = 0;
+            const inputDraft = document.getElementById('input-draft-text');
+            const previewDrawer = document.getElementById('input-preview-drawer');
+            const drawerImgLoader = document.getElementById('drawer-image-loader');
+            const drawerPreviewImg = document.getElementById('drawer-preview-img');
+            const drawerTitle = document.getElementById('drawer-title');
+            const drawerDesc = document.getElementById('drawer-desc');
+            const btnSend = document.getElementById('btn-send-sim');
+            const iconSend = document.getElementById('icon-send');
             
-            function escribir() {
-                if(index < textoUrl.length) {
-                    placeholder.innerText += textoUrl.charAt(index);
-                    index++;
-                    simTimeout1 = setTimeout(escribir, 30);
+            // Burbuja de mensaje final
+            const sentBubble = document.getElementById('sent-message-bubble');
+            const bubbleRenderedText = document.getElementById('bubble-rendered-text');
+
+            // 1. Resetear UI a estado inicial (Vacío en el borrador)
+            inputDraft.innerText = "";
+            inputDraft.className = "text-textMain text-[11px] leading-normal font-normal whitespace-pre-wrap break-all min-h-[16px] cursor-blink";
+            
+            previewDrawer.classList.add('hidden', 'scale-95', 'opacity-0');
+            drawerImgLoader.classList.remove('hidden');
+            drawerPreviewImg.classList.add('hidden');
+            drawerTitle.innerText = "Obteniendo datos del enlace...";
+            drawerTitle.className = "font-bold text-[10px] text-gray-400 truncate";
+            drawerDesc.innerText = "Espere un momento...";
+            
+            btnSend.classList.remove('bg-green-500', 'scale-95');
+            btnSend.classList.add('bg-[#075E54]');
+            iconSend.setAttribute('data-lucide', 'send');
+            lucide.createIcons();
+
+            sentBubble.classList.add('hidden', 'opacity-0', 'translate-y-4');
+            sentBubble.style.display = 'none';
+
+            // 2. Efecto de Escritura Realista (Poco a poco en el input)
+            let charIndex = 0;
+            
+            function escribirCaracter() {
+                if (charIndex < mensajeCompleto.length) {
+                    inputDraft.innerText = mensajeCompleto.substring(0, charIndex + 1);
+                    charIndex++;
+                    // Variamos el retraso ligeramente para simular tipeo humano
+                    const delay = mensajeCompleto.charAt(charIndex - 1) === '\n' ? 250 : (Math.random() * 15 + 10);
+                    
+                    let t = setTimeout(escribirCaracter, delay);
+                    simTimeouts.push(t);
                 } else {
-                    // Terminó de escribir, "Enviar" el enlace automáticamente
-                    simTimeout2 = setTimeout(() => {
-                        placeholder.innerText = "Escribe un mensaje";
-                        placeholder.className = "text-gray-400 text-[11px]";
-                        
-                        // Aparece la burbuja del link en estado cargando
-                        bubbleLink.style.opacity = "1";
-                        bubbleLink.style.transform = "scale(1)";
+                    // Terminó de escribir. Quitamos cursor de parpadeo temporal
+                    inputDraft.classList.remove('cursor-blink');
+                    
+                    // 3. Simular la pausa clave: El link está pegado en el borrador y WhatsApp empieza a cargar los metadatos (3 segundos)
+                    let t1 = setTimeout(() => {
+                        // Aparece drawer de vista previa encima del input
+                        previewDrawer.classList.remove('hidden');
+                        setTimeout(() => {
+                            previewDrawer.classList.remove('opacity-0', 'scale-95');
+                        }, 50);
 
-                        // 2. Simular espera de 3.5 segundos para cargar carátula
-                        simTimeout3 = setTimeout(() => {
-                            loader.classList.add('hidden');
-                            loaded.classList.remove('hidden');
-                        }, 3500);
+                        // 4. Esperar de 3 a 4 segundos a que carge la carátula dentro del borrador
+                        let t2 = setTimeout(() => {
+                            // Cambia a estado cargado dentro del borrador
+                            drawerImgLoader.classList.add('hidden');
+                            drawerPreviewImg.classList.remove('hidden');
+                            drawerTitle.innerText = "Revelación de Género | Mirna & Jesús";
+                            drawerTitle.className = "font-bold text-[10px] text-textMain truncate";
+                            drawerDesc.innerText = "Acompáñanos a descubrir esta gran sorpresa. Haz clic para ver los detalles...";
+                            
+                            // El botón de enviar brilla indicando listo
+                            btnSend.classList.remove('bg-[#075E54]');
+                            btnSend.classList.add('bg-green-500');
 
-                    }, 800);
+                            // 5. Presionar el botón de enviar después de ver la carátula cargada
+                            let t3 = setTimeout(() => {
+                                // Feedback visual de click
+                                btnSend.classList.add('scale-90');
+                                
+                                setTimeout(() => {
+                                    btnSend.classList.remove('scale-90');
+                                    
+                                    // Desvanecer borrador e input
+                                    previewDrawer.classList.add('scale-95', 'opacity-0');
+                                    setTimeout(() => { previewDrawer.classList.add('hidden'); }, 300);
+                                    
+                                    inputDraft.innerText = "";
+                                    inputDraft.setAttribute('placeholder', 'Escribe un mensaje');
+                                    
+                                    // 6. Aparece la burbuja verde final con todo cargado
+                                    bubbleRenderedText.innerText = mensajeCompleto;
+                                    
+                                    sentBubble.style.display = 'block';
+                                    sentBubble.classList.remove('hidden');
+                                    
+                                    setTimeout(() => {
+                                        sentBubble.classList.remove('opacity-0', 'translate-y-4');
+                                        
+                                        // Scroll automático hacia abajo para mostrar todo el mensaje nuevo
+                                        const chatContainer = document.getElementById('chat-content');
+                                        chatContainer.scrollTo({
+                                            top: chatContainer.scrollHeight,
+                                            behavior: 'smooth'
+                                        });
+                                    }, 100);
+
+                                    // Volver a poner el botón de enviar original
+                                    btnSend.classList.remove('bg-green-500');
+                                    btnSend.classList.add('bg-[#075E54]');
+                                }, 200);
+
+                            }, 2000); // Se envía 2 segundos después de que cargó la miniatura
+                            simTimeouts.push(t3);
+
+                        }, 3500); // 3.5 segundos tarda en generarse la carátula
+                        simTimeouts.push(t2);
+
+                    }, 500);
+                    simTimeouts.push(t1);
                 }
             }
 
-            escribir();
+            // Iniciar escritura
+            let tStart = setTimeout(escribirCaracter, 1000);
+            simTimeouts.push(tStart);
+        }
+
+        function clearAllSimulations() {
+            simTimeouts.forEach(t => clearTimeout(t));
+            simTimeouts = [];
         }
 
         function reiniciarSimulador() {
-            clearTimeout(simTimeout1);
-            clearTimeout(simTimeout2);
-            clearTimeout(simTimeout3);
             iniciarSimulacion();
         }
 
-        // Ejecutar simulación inicial al cargar la página
+        // Iniciar demostración al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
             iniciarSimulacion();
         });
