@@ -1,138 +1,443 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es" class="h-full">
- <head> 
-  <meta charset="UTF-8">
+<head> 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Entrega de Invitación | AdaInvite</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <meta name="theme-color" content="#9B8AA5">
     
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Agregamos Lucide para los íconos de la guía -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
   
-  <style>
-    body { box-sizing: border-box; }
-    :root { --primary-purple: #9B8AA5; --surface-color: #FAF9FB; --text-color: #3D3542; --white: #FFFFFF; }
-    body, p, span, li, a, div, button, input, textarea { font-family: 'Montserrat', sans-serif !important; }
-    h1, h2, h3.dancing, h4.dancing, h5.dancing, h5 { font-weight: 400 !important; font-family: 'Dancing Script', cursive !important; }
-    h2 { font-size: 3rem; }
-    @media (min-width: 640px) { h2 { font-size: 4rem; } }
-    .info-label { color: var(--primary-purple); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-    .info-value { color: var(--text-color); font-weight: 500; font-size: 1rem; }
-  </style>
- </head>
- <body class="h-full font-sans" style="background-color: var(--surface-color); color: var(--text-color);">
-  <div id="app-wrapper" class="w-full h-full overflow-x-hidden overflow-y-auto">
-   <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-3 px-4 flex justify-between">
-     <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-10">
-   </nav>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9B8AA5',
+                        primaryDark: '#7E6D88',
+                        primaryLight: '#F3EFF5',
+                        textMain: '#3D3542',
+                        surfaceBg: '#FAF9FB',
+                        whatsapp: '#25D366'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        dancing: ['Dancing Script', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
 
-   <section class="pt-24 pb-8 px-4 max-w-5xl mx-auto space-y-10">
-      
-      <!-- DETALLES DEL EVENTO -->
-      <div class="text-center">
-       <h2 class="text-4xl font-serif mb-2" style="color: var(--primary-purple);"> Detalles de Entrega</h2>
-       <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-left">
-           <div><span class="info-label">Cliente</span><br><span class="info-value">Yesenia Lopez</span></div>
-           <div><span class="info-label">Contacto</span><br><span class="info-value">8331474947</span></div>
-           <div><span class="info-label">Evento</span><br><span class="info-value">Revelación de Género <br><small>28 de junio de 2026</small></span></div>
-           <div><span class="info-label">Paquete</span><br><span class="info-value">Premium</span></div>
-       </div>
-      </div>
+    <style>
+        body {
+            background-color: #FAF9FB;
+            color: #3D3542;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Transiciones suaves */
+        .tab-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Sombra premium para tarjetas */
+        .card-shadow {
+            box-shadow: 0 10px 30px -5px rgba(155, 138, 165, 0.08), 0 4px 12px -2px rgba(155, 138, 165, 0.03);
+        }
+        /* Simulación del cursor de WhatsApp */
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .cursor-blink::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #25D366;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body class="h-full font-sans antialiased selection:bg-primary/20 selection:text-textMain">
 
-      <!-- INVITACIÓN Y PANEL -->
-      <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
+    <div id="app-wrapper" class="w-full h-full overflow-x-hidden overflow-y-auto">
         
-        <!-- Enlace al Panel unificado -->
-        <h3 class="dancing text-4xl sm:text-5xl mb-4 mt-2" style="color: var(--primary-purple);">Tu Panel de Control</h3>
-        <p class="text-sm text-gray-500 mb-8 max-w-md mx-auto">Aquí podrás generar los enlaces únicos para tus invitados y ver en tiempo real quién ha confirmado su asistencia.</p>
-        
-        <div class="flex justify-center mb-10">
-            <a href="https://adainvite.com/revelacionmyj/panel" target="_blank" class="px-8 py-4 rounded-xl text-white font-bold shadow-md transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-wider text-sm w-full sm:w-auto" style="background-color: var(--primary-purple);">
-              Abrir mi Panel
+        <!-- Barra de navegación fija elegante -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 py-3.5 px-6 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-8 md:h-9 object-contain">
             </a>
-        </div>
+            <span class="text-[10px] tracking-widest uppercase font-bold text-primary bg-primaryLight px-3 py-1.5 rounded-full">
+                Área de Clientes
+            </span>
+        </nav>
 
-        <!-- GUÍA: Instalar como App -->
-        <div class="bg-purple-50/50 rounded-2xl p-6 text-left border border-purple-100 max-w-xl mx-auto shadow-sm">
-            <h5 class="font-bold text-gray-800 text-3xl flex items-center gap-2 mb-3">
-               Instala tu panel como una App
-            </h5>
-            <p class="text-sm text-gray-600 mb-5">Ten acceso rápido a tus confirmaciones añadiendo el panel directamente a la pantalla de inicio de tu celular.</p>
+        <!-- Contenido Principal -->
+        <main class="pt-28 pb-16 px-4 max-w-5xl mx-auto space-y-10">
             
-            <div class="space-y-4">
-                <div class="flex items-start gap-3">
-                   
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        <strong>En iPhone (Safari):</strong> Abre el enlace de tu panel, toca el ícono de "Compartir" <i data-lucide="share" class="w-3 h-3 inline mx-1"></i> en la barra inferior y selecciona <strong>"Agregar a inicio" <i data-lucide="plus-square" class="w-3 h-3 inline mx-1"></i></strong>.
-                    </p>
-                </div>
-                <div class="flex items-start gap-3">
-            
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        <strong>En Android (Chrome):</strong> Abre el enlace de tu panel, toca los 3 puntitos <i data-lucide="more-vertical" class="w-3 h-3 inline mx-1"></i> arriba a la derecha y elige <strong>"Agregar a la pantalla principal"</strong>.
-                    </p>
+            <!-- Encabezado / Hero -->
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <h1 class="font-dancing text-5xl md:text-6xl text-primary drop-shadow-sm">¡Tu invitación está lista!</h1>
+                <p class="text-xs md:text-sm text-gray-500 tracking-wide font-medium">Hemos preparado todo con el mayor cariño. Descubre abajo cómo administrar tus accesos y compartir de forma impecable.</p>
+            </div>
+
+            <!-- DETALLES DEL EVENTO -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 card-shadow border border-purple-100/40">
+                <p class="text-[11px] font-bold tracking-widest text-primary uppercase mb-5 border-b border-purple-50 pb-2 flex items-center gap-2">
+                    Datos de tu Servicio
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Cliente</span>
+                        <span class="text-sm font-semibold text-textMain block">Yesenia López</span>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Contacto</span>
+                        <span class="text-sm font-semibold text-textMain block">833 147 4947</span>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Evento</span>
+                        <span class="text-sm font-semibold text-textMain block">
+                            Revelación de Género <br>
+                            <small class="text-xs text-primary font-bold">28 de Junio, 2026</small>
+                        </span>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Paquete</span>
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg">
+                            Premium
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-      </div>
+            <!-- PANEL DE CONTROL CTA -->
+            <div class="bg-gradient-to-tr from-white to-purple-50/20 rounded-[2.5rem] p-8 md:p-12 card-shadow border border-purple-100 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 max-w-lg mx-auto">
+                    <div class="w-16 h-16 bg-primaryLight rounded-2xl flex items-center justify-center mx-auto mb-5 text-primary">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                    </div>
+                    <h2 class="font-dancing text-4xl md:text-5xl text-primary mb-3">Tu Panel de Control</h2>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed mb-8 font-medium">
+                        Desde tu panel podrás gestionar la lista de invitados, definir el número de pases de cada persona y monitorear confirmaciones en tiempo real.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <a href="https://adainvite.com/revelacionmyj/panel" target="_blank" class="px-8 py-4 bg-primary hover:bg-primaryDark text-white font-bold rounded-2xl shadow-lg shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-3 uppercase tracking-wider text-xs w-full sm:w-auto">
+                            <i data-lucide="external-link" class="w-4 h-4"></i> Abrir mi Panel
+                        </a>
+                        <a href="https://adainvite.com/revelacionmyj" target="_blank" class="px-8 py-4 bg-white border-2 border-primary/20 hover:border-primary text-primary font-bold rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 uppercase tracking-wider text-xs w-full sm:w-auto">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Ver mi Invitación
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-      <!-- RECOMENDACIONES Y REDES SOCIALES -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          
-          <!-- Recomendaciones -->
-          <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-              <h5 class="dancing text-3xl mb-4" style="color: var(--primary-purple);">Recomendaciones</h5>
-              <ul class="text-sm text-gray-600 space-y-3">
-                  <li class="flex items-start gap-2">
-                      <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 flex-shrink-0"></i>
-                      <span>Envía tus invitaciones con <strong>1 a 2 meses</strong> de anticipación para que tus invitados agenden la fecha.</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                      <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 flex-shrink-0"></i>
-                      <span>Utiliza siempre el <strong>Generador de Enlaces</strong> dentro de tu panel para mandar la invitación con los pases correctos.</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                      <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 flex-shrink-0"></i>
-                      <span>Si necesitas un cambio en la información, contáctanos con al menos 48 horas de anticipación.</span>
-                  </li>
-              </ul>
-          </div>
+            <!-- SECCIÓN: CÓMO PEGAR EN WHATSAPP (SIMULADOR EN VIVO) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-[2.5rem] p-6 md:p-10 card-shadow border border-gray-100">
+                
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="inline-flex items-center gap-2 bg-pink-50 text-pink-700 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                        <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> ¡Consejo de Oro para el Envío!
+                    </div>
+                    <h3 class="font-serif text-3xl md:text-4xl text-textMain leading-tight font-semibold">
+                        El secreto de un envío espectacular
+                    </h3>
+                    <p class="text-sm text-gray-600 leading-relaxed font-medium">
+                        Cuando vayas a compartir tu invitación personalizada por WhatsApp, recuerda <span class="text-primary font-bold">esperar de 3 a 4 segundos</span> después de pegar el link antes de presionar enviar. 
+                    </p>
+                    <div class="bg-primaryLight/50 p-4 rounded-2xl border border-primary/10">
+                        <p class="text-xs text-textMain/90 leading-relaxed font-medium">
+                            <strong>¿Por qué?</strong> Esto permite que los servidores de WhatsApp lean el enlace y muestren la hermosa portada personalizada, captando la atención de tus invitados al instante.
+                        </p>
+                    </div>
+                    
+                    <button onclick="reiniciarSimulador()" class="text-xs text-primary font-bold hover:text-primaryDark flex items-center gap-1.5 group transition-colors">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500"></i> Ver demostración en vivo otra vez
+                    </button>
+                </div>
 
-          <!-- Redes y Reseña -->
-          <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center text-center">
-              <h5 class="dancing text-4xl mb-2" style="color: var(--primary-purple);">¡Gracias por elegirnos!</h5>
-              <p class="text-sm text-gray-600 mb-6">Si te encantó el resultado, apóyanos siguiéndonos en redes sociales o dejándonos un comentario sobre tu experiencia. ¡Nos ayuda muchísimo!</p>
-              
-              <div class="flex justify-center gap-4">
-                  <!-- Redes actualizadas a SVG para evitar bloqueos del navegador -->
-                  <a href="https://www.facebook.com/share/1Gt5BxRvWn/?mibextid=wwXIfr" target="_blank" class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm">
-                      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                  </a>
-                  <a href="https://www.instagram.com/adainvite?igsh=MWlqazNzYmczdDdwNA==" target="_blank" class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-gray-600 hover:text-pink-600 hover:border-pink-200 hover:bg-pink-50 transition-all shadow-sm">
-                      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
-                  </a>
-              </div>
-          </div>
-      </div>
+                <!-- Simulador Móvil de WhatsApp en Directo -->
+                <div class="lg:col-span-6 flex justify-center">
+                    <div class="w-full max-w-[320px] bg-[#ECE5DD] rounded-[2rem] border-[8px] border-gray-800 shadow-2xl overflow-hidden relative font-sans aspect-[9/16] flex flex-col justify-between">
+                        
+                        <!-- Cabecera de WhatsApp -->
+                        <div class="bg-[#075E54] text-white p-3 flex items-center justify-between text-xs shadow-md">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center font-bold">F</div>
+                                <div>
+                                    <p class="font-bold">Familia Pérez</p>
+                                    <p class="text-[9px] text-white/70">En línea</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 text-white/80">
+                                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                                <i data-lucide="video" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
 
-      <!-- FOOTER PERSONALIZADO -->
-     <footer class="flex flex-col items-center mt-12 pb-4">
-  <p class="text-gray-400 text-sm font-medium tracking-wide">Con amor para tu gran día,</p>
-  
-  <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-8 mt-2">
+                        <!-- Zona de Chat / Mensajes -->
+                        <div class="flex-1 p-3 space-y-4 overflow-y-auto flex flex-col justify-end" id="chat-content">
+                            
+                            <!-- Mensaje de Texto del Remitente -->
+                            <div id="bubble-text" class="bg-white text-textMain text-xs p-2.5 rounded-lg rounded-tl-none self-start max-w-[85%] shadow-sm leading-relaxed">
+                                Hola tíos! Les compartimos con mucha emoción nuestra invitación para la revelación de género.
+                            </div>
 
-   </nav>
+                            <!-- Burbuja Simuladora del Link -->
+                            <div id="bubble-link" class="bg-[#DCF8C6] text-textMain text-xs p-3 rounded-lg rounded-tr-none self-end max-w-[85%] shadow-sm space-y-1.5 transition-all duration-300 transform scale-95 opacity-0">
+                                <p class="text-blue-600 underline break-all" id="typed-link">https://adainvite.com/revelacionmyj?n=Familia+Perez</p>
+                                
+                                <!-- Estado de Carga (Simulando esperar 3s) -->
+                                <div id="preview-loader" class="flex items-center gap-2 bg-black/5 p-2 rounded-lg border border-black/5">
+                                    <div class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Cargando vista previa...</span>
+                                </div>
 
-   </section>
-  </div>
+                                <!-- Vista Previa Cargada (Aparece a los 3s) -->
+                                <div id="preview-loaded" class="bg-white/80 rounded-lg overflow-hidden border border-black/5 shadow-inner hidden">
+                                    <img src="https://i.imgur.com/4DckK0B.png" alt="Portada de la Invitación" class="w-full h-24 object-cover object-center">
+                                    <div class="p-2 text-left">
+                                        <p class="font-bold text-[11px] text-textMain truncate">Revelación de Género | Mirna & Jesús</p>
+                                        <p class="text-[9px] text-gray-500 line-clamp-2">Acompáñanos a descubrir esta gran sorpresa. Haz clic para ver los detalles y confirmar tus pases.</p>
+                                        <p class="text-[8px] text-gray-400 uppercase tracking-widest mt-1">adainvite.com</p>
+                                    </div>
+                                </div>
+                            </div>
 
-  <script>
-    // Inicializar íconos de Lucide (usado para guías y UI)
-    lucide.createIcons();
-  </script>
- </body>
+                        </div>
+
+                        <!-- Barra de Entrada de WhatsApp -->
+                        <div class="bg-[#F0F0F0] p-2 flex items-center gap-2 border-t border-gray-200">
+                            <div class="flex-1 bg-white rounded-full py-1.5 px-3 flex items-center justify-between shadow-sm">
+                                <span class="text-gray-400 text-[11px]" id="input-placeholder">Escribe un mensaje</span>
+                                <div class="flex gap-2 text-gray-400">
+                                    <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                </div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-[#128C7E] flex items-center justify-center text-white shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-transform" id="btn-send-sim">
+                                <i data-lucide="send" class="w-3.5 h-3.5 ml-0.5"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- GUÍA DE INSTALACIÓN (TABS SMARTPHONE) -->
+            <div class="bg-white rounded-[2.5rem] p-6 md:p-10 card-shadow border border-gray-100">
+                <div class="text-center max-w-lg mx-auto mb-8">
+                    <h4 class="font-dancing text-4xl text-primary mb-2">Instala tu Panel como una App</h4>
+                    <p class="text-xs text-gray-500 font-medium">Lleva el control de tus pases e invitados directo en la pantalla de inicio de tu celular, sin descargas molestas.</p>
+                </div>
+
+                <!-- Botones Selectores de OS -->
+                <div class="flex bg-primaryLight p-1 rounded-2xl max-w-sm mx-auto mb-8 font-semibold">
+                    <button onclick="switchTab('ios')" id="tab-ios-btn" class="flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition bg-white text-primary shadow-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.1 16.67C20.08 16.74 19.67 18.11 18.71 19.5M15.97 4.17C16.63 3.37 17.07 2.28 16.95 1C15.85 1.04 14.51 1.73 13.73 2.64C13.07 3.41 12.49 4.52 12.64 5.78C13.87 5.87 15.12 5.17 15.97 4.17Z"/></svg>
+                        Apple iOS
+                    </button>
+                    <button onclick="switchTab('android')" id="tab-android-btn" class="flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition text-gray-500">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16.63 2.19C16.14 2.19 15.75 2.58 15.75 3.07V4.11C14.58 3.5 13.31 3.19 12 3.19C10.69 3.19 9.42 3.5 8.25 4.11V3.07C8.25 2.58 7.86 2.19 7.37 2.19C6.88 2.19 6.49 2.58 6.49 3.07V4.93C4.08 6.27 2.5 8.87 2.5 11.81V13.5H21.5V11.81C21.5 8.87 19.92 6.27 17.51 4.93V3.07C17.51 2.58 17.12 2.19 16.63 2.19M6.5 9.5C7.05 9.5 7.5 9.95 7.5 10.5C7.5 11.05 7.05 11.5 6.5 11.5C5.95 11.5 5.5 11.05 5.5 10.5C5.5 9.95 5.95 9.5 6.5 9.5M17.5 9.5C18.05 9.5 18.5 9.95 18.5 10.5C18.5 11.05 18.05 11.5 17.5 11.5C16.95 11.5 16.5 11.05 16.5 10.5C16.5 9.95 16.95 9.5 17.5 9.5M2.5 15.5V19.5C2.5 20.88 3.62 22 5 22H19C20.38 22 21.5 20.88 21.5 19.5V15.5H2.5Z"/></svg>
+                        Android / Chrome
+                    </button>
+                </div>
+
+                <!-- Contenedores de Instrucciones -->
+                <div class="max-w-xl mx-auto">
+                    <!-- iOS Card -->
+                    <div id="inst-ios" class="space-y-4 tab-transition">
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">1</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Abre el enlace del panel en tu navegador <strong>Safari</strong> de iPhone.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">2</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Presiona el botón de <strong>Compartir</strong> en el menú inferior.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">3</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Selecciona la opción <strong>"Agregar a inicio"</strong> o <strong>"A la pantalla de inicio"</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Android Card -->
+                    <div id="inst-android" class="space-y-4 tab-transition hidden">
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">1</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Abre tu panel desde el navegador <strong>Google Chrome</strong> en tu móvil.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">2</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Toca el icono de los <strong>tres puntos verticales</strong> en la esquina superior derecha.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs mt-0.5">3</span>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+                                Selecciona la opción <strong>"Instalar aplicación"</strong> o bien <strong>"Agregar a la pantalla principal"</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECOMENDACIONES Y REDES SOCIALES -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Recomendaciones Reestructuradas -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-dancing text-4xl text-primary mb-4">Recomendaciones de Éxito</h4>
+                        <ul class="space-y-4 text-xs md:text-sm text-gray-600 font-medium">
+                            <li class="flex items-start gap-3 bg-primaryLight/30 p-3.5 rounded-2xl border border-primary/5">
+                                <i data-lucide="clock" class="w-5 h-5 text-primary flex-shrink-0 mt-0.5"></i>
+                                <span><strong>Espera unos segundos en WhatsApp:</strong> Deja pasar de 3 a 4 segundos tras pegar tu link antes de presionar enviar para que la carátula aparezca automáticamente.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="calendar" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Envía tus invitaciones con <strong>1 a 2 meses</strong> de anticipación para garantizar que tus invitados aparten la fecha con tiempo.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="link" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Utiliza siempre el <strong>Generador de Enlaces</strong> de tu panel de control para que cada persona reciba su asignación correcta de pases.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Si requieres algún cambio, escríbenos con un margen mínimo de <strong>48 horas</strong> de anticipación.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Redes y Mensaje de Agradecimiento -->
+                <div class="bg-gradient-to-br from-white to-purple-50/10 p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center text-center">
+                    <h4 class="font-dancing text-4xl text-primary mb-2">¡Muchísimas Gracias!</h4>
+                    <p class="text-xs md:text-sm text-gray-500 mb-6 font-medium leading-relaxed">
+                        Nos hace inmensamente felices ser parte de sus grandes momentos. Si te encantó tu invitación, apóyanos compartiendo tu recomendación en redes sociales. ¡Significa muchísimo para nosotros!
+                    </p>
+                    
+                    <div class="flex justify-center gap-4">
+                        <a href="https://www.facebook.com/share/1Gt5BxRvWn/?mibextid=wwXIfr" target="_blank" class="p-3 bg-white rounded-2xl border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-center w-12 h-12">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="https://www.instagram.com/adainvite?igsh=MWlqazNzYmczdDdwNA==" target="_blank" class="p-3 bg-white rounded-2xl border border-gray-200 text-gray-500 hover:text-pink-600 hover:border-pink-200 hover:bg-pink-50 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-center w-12 h-12">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER COMPONENTE CORREGIDO -->
+            <footer class="flex flex-col items-center mt-16 pt-8 border-t border-gray-100 pb-4">
+                <p class="text-gray-400 text-xs font-semibold tracking-widest uppercase">Con amor para tu gran día,</p>
+                <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-8 mt-3 opacity-90">
+                <p class="text-[10px] text-gray-400 mt-4 font-medium">&copy; 2026 AdaInvite. Todos los derechos reservados.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // CONTROL DE TABS EN GUÍA DE INSTALACIÓN
+        function switchTab(os) {
+            const btnIos = document.getElementById('tab-ios-btn');
+            const btnAndroid = document.getElementById('tab-android-btn');
+            const instIos = document.getElementById('inst-ios');
+            const instAndroid = document.getElementById('inst-android');
+
+            if (os === 'ios') {
+                btnIos.className = 'flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition bg-white text-primary shadow-sm';
+                btnAndroid.className = 'flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition text-gray-500';
+                instIos.classList.remove('hidden');
+                instAndroid.classList.add('hidden');
+            } else {
+                btnAndroid.className = 'flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition bg-white text-primary shadow-sm';
+                btnIos.className = 'flex-1 py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 tab-transition text-gray-500';
+                instAndroid.classList.remove('hidden');
+                instIos.classList.add('hidden');
+            }
+        }
+
+        // CONTROL DE SIMULACIÓN DE WHATSAPP
+        let simTimeout1, simTimeout2, simTimeout3;
+        
+        function iniciarSimulacion() {
+            const placeholder = document.getElementById('input-placeholder');
+            const bubbleLink = document.getElementById('bubble-link');
+            const loader = document.getElementById('preview-loader');
+            const loaded = document.getElementById('preview-loaded');
+            
+            // Estado inicial limpio
+            placeholder.innerText = "";
+            placeholder.className = "text-textMain text-[11px] cursor-blink";
+            bubbleLink.style.opacity = "0";
+            bubbleLink.style.transform = "scale(0.95)";
+            loader.classList.remove('hidden');
+            loaded.classList.add('hidden');
+
+            // 1. Simulación escribiendo (1.5 segundos)
+            let textoUrl = "https://adainvite.com/revelacionmyj?n=Familia+Perez";
+            let index = 0;
+            
+            function escribir() {
+                if(index < textoUrl.length) {
+                    placeholder.innerText += textoUrl.charAt(index);
+                    index++;
+                    simTimeout1 = setTimeout(escribir, 30);
+                } else {
+                    // Terminó de escribir, "Enviar" el enlace automáticamente
+                    simTimeout2 = setTimeout(() => {
+                        placeholder.innerText = "Escribe un mensaje";
+                        placeholder.className = "text-gray-400 text-[11px]";
+                        
+                        // Aparece la burbuja del link en estado cargando
+                        bubbleLink.style.opacity = "1";
+                        bubbleLink.style.transform = "scale(1)";
+
+                        // 2. Simular espera de 3.5 segundos para cargar carátula
+                        simTimeout3 = setTimeout(() => {
+                            loader.classList.add('hidden');
+                            loaded.classList.remove('hidden');
+                        }, 3500);
+
+                    }, 800);
+                }
+            }
+
+            escribir();
+        }
+
+        function reiniciarSimulador() {
+            clearTimeout(simTimeout1);
+            clearTimeout(simTimeout2);
+            clearTimeout(simTimeout3);
+            iniciarSimulacion();
+        }
+
+        // Ejecutar simulación inicial al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            iniciarSimulacion();
+        });
+    </script>
+</body>
 </html>
