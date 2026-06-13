@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro de Recuerdos - XV Mayte</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Mis XV Mayte - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la fiesta.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lujo: {
+                            oscuro: '#0a0a0a',
+                            gris: '#1f1f1f',
+                            plata: '#e0e0e0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Cinzel Decorative', serif;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100svh;
+            font-family: var(--font-elegant); 
+            background-color: #000000; 
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        .font-script { font-family: var(--font-script) !important; }
+        .font-body { font-family: var(--font-elegant) !important; }
+
+        /* Fondo elegante y oscuro */
+        .fondo-completo {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1; 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url('https://i.imgur.com/vH1N57d.jpeg');
+            background-size: cover; 
+            background-position: center center;
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        select option { background-color: #1a1a1a; color: #ffffff; }
+        select { text-align-last: center; } 
+        
+        .input-deluxe {
+            background-color: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff;
+            border-radius: 0px; font-size: 13px; font-weight: 400; letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        .input-deluxe:focus { 
+            border-color: #ffffff; outline: none; 
+            background-color: rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .input-deluxe::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
+        
+        #previewContainer::-webkit-scrollbar { width: 4px; }
+        #previewContainer::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); }
+
+        .tarjeta-recuerdo {
+            transition: transform 0.4s ease, border-color 0.4s ease;
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .tarjeta-recuerdo:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center">
+
+    <!-- Capa de fondo -->
+    <div class="fondo-completo"></div>
+
+    <div class="max-w-4xl w-full min-h-[100svh] flex flex-col items-center py-16 px-6 relative z-10" id="mainContainer">
+        
+        <img src="https://i.imgur.com/Hv9gZUu.png" class="w-20 md:w-24 mb-6 drop-shadow-lg opacity-90" style="filter: brightness(0) invert(1);" alt="Corona">
+        
+        <h1 class="text-5xl md:text-6xl font-script text-white mb-4 text-center tracking-widest drop-shadow-md">Recuerdos</h1>
+        <p class="font-body text-[9px] tracking-[0.4em] uppercase text-white/70 mb-10 text-center font-bold">Mis XV Mayte</p>
+
+        <p class="text-xs md:text-sm font-light leading-relaxed mb-10 px-4 text-center max-w-md text-white/80 tracking-wide">
+            Captura la elegancia de esta noche.<br> Sube tus fotos y videos favoritos de la celebración.
+        </p>
+
+        <button id="openModalBtn" class="bg-white text-black font-bold py-4 px-10 uppercase tracking-[0.2em] text-[10px] hover:bg-transparent hover:text-white transition-all active:scale-95 border border-white">
+            Subir recuerdos 
+        </button>
+
+        <div class="w-full pt-16 mt-6 border-t border-white/20 flex flex-col items-center">
+            <p class="text-[9px] text-white/60 uppercase tracking-[0.3em] mb-4 font-bold">Vista de Galería</p>
+            <div class="glass-card rounded-full p-1 flex inline-flex mb-8">
+                <button id="btn1Col" class="px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-black bg-white rounded-full transition-all">1 Columna</button>
+                <button id="btn2Col" class="px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-white hover:bg-white/10 rounded-full transition-all">2 Columnas</button>
+            </div>
+            
+            <div id="muro" class="columns-1 md:columns-2 gap-6 w-full px-2">
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Modal para subir archivos -->
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md hidden">
+        <div class="relative glass-card border-white/20 w-full max-w-md p-10 flex flex-col items-center max-h-[90vh] overflow-y-auto rounded-xl">
+            
+            <button id="closeModalBtnIcon" class="absolute top-5 right-5 text-white/50 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <h2 class="text-3xl font-script text-white mb-8 mt-2 text-center tracking-widest">Sube tus<br>momentos</h2>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-6 text-left">
+                <div>
+                    <label class="text-white/80 text-[9px] font-bold tracking-[0.2em] uppercase mb-2 block">Tu nombre / Familia *</label>
+                    <input type="text" id="nombreInput" placeholder="EJ: FAMILIA MARTÍNEZ" class="input-deluxe px-4 py-3 w-full text-center uppercase tracking-widest">
+                </div>
+                
+                <div>
+                    <label class="text-white/80 text-[9px] font-bold tracking-[0.2em] uppercase mb-2 block">Momento del evento *</label>
+                    <select id="folderSelect" class="input-deluxe px-4 py-3 w-full cursor-pointer appearance-none text-center uppercase tracking-widest text-[10px]">
+                        <option value="" disabled selected>ELIGE UNA OPCIÓN...</option>
+                        <option value="Ceremonia">CEREMONIA RELIGIOSA</option>
+                        <option value="Recepción">LLEGADA A RECEPCIÓN</option>
+                        <option value="Vals">EL VALS</option>
+                        <option value="Cena">LA CENA</option>
+                        <option value="Baile">LA FIESTA</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="text-white/80 text-[9px] font-bold tracking-[0.2em] uppercase mb-2 block">Seleccionar archivos *</label>
+                    <div id="dropZone" class="relative border border-dashed border-white/40 bg-white/5 p-8 text-center transition-colors hover:bg-white/10 cursor-pointer rounded-lg">
+                        <input type="file" id="archivoInput" accept="video/mp4, video/mov, image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <svg class="w-6 h-6 mx-auto text-white/80 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-white/90 text-[10px] uppercase tracking-widest font-light">Elegir archivos</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-white/20 bg-black/50 shadow-inner rounded-lg p-2">
+                        <p class="text-[8px] text-white/70 text-center py-2 uppercase tracking-widest border-b border-white/10 mb-2">Archivos listos:</p>
+                        <div id="previewContainer"></div>
+                        <button id="removePreviewBtn" class="w-full mt-2 py-3 text-[9px] text-white uppercase tracking-widest bg-white/10 hover:bg-white/20 transition-colors rounded-b-md">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-transparent border border-white/30 text-white/80 py-4 text-[9px] tracking-widest uppercase hover:bg-white/10 transition-colors">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-white text-black font-bold py-4 text-[9px] tracking-widest uppercase hover:bg-gray-200 transition-all">Subir al Álbum</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest mt-6 text-black bg-white p-4 hidden text-center w-full font-bold"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // NOTA: Recuerda cambiar estas credenciales por las de tu proyecto en Firebase.
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.firebasestorage.app",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+        const removePreviewBtn = document.getElementById('removePreviewBtn');
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // Limpiar selección
+        removePreviewBtn.addEventListener('click', () => {
+            archivoInput.value = "";
+            previewContainer.innerHTML = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            previewContainer.innerHTML = "";
+            const validFiles = new DataTransfer(); 
+
+            for (const file of files) {
+                if (file.type.includes("video")) {
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    const duration = await new Promise((resolve) => {
+                        video.onloadedmetadata = () => {
+                            window.URL.revokeObjectURL(video.src);
+                            resolve(video.duration);
+                        };
+                        video.src = URL.createObjectURL(file);
+                    });
+
+                    // Límite de 30 segundos
+                    if (duration > 30.5) {
+                        alert(`El video "${file.name}" es muy largo. El límite para el muro es de 30 segundos.`);
+                        continue;
+                    }
+                }
+                
+                validFiles.items.add(file);
+
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-black/50 border border-white/20 overflow-hidden";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = validFiles.files;
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                previsualizacion.classList.add('hidden');
+                dropZone.classList.remove('hidden');
+            }
+        });
+
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) return alert("Completa todos los campos para continuar.");
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_mayte/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_xv_mayte"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "Recuerdos guardados con éxito";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-black bg-white rounded-full transition-all";
+            btn2Col.className = "px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-white hover:bg-white/10 rounded-full transition-all";
+            muro.className = "columns-1 md:columns-2 gap-6 w-full px-2";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-white hover:bg-white/10 rounded-full transition-all";
+            btn1Col.className = "px-8 py-2.5 text-[9px] font-bold uppercase tracking-wider text-black bg-white rounded-full transition-all";
+            muro.className = "columns-2 md:columns-3 gap-4 w-full px-1";
+        });
+
+        // Dibujar Muro
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_xv_mayte"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="text-white/50 text-xs font-light uppercase tracking-widest col-span-full py-16 text-center break-inside-avoid">Sé el primero en subir un recuerdo</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto cursor-pointer grayscale-[20%] hover:grayscale-0 transition-all"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto grayscale-[20%] hover:grayscale-0 transition-all">`;
+                    
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "glass-card tarjeta-recuerdo p-2 group";
+                    
+                    divTarjeta.innerHTML = `
+                        <span class="absolute top-4 right-4 bg-black/80 backdrop-blur-sm text-white text-[8px] font-bold px-3 py-1.5 uppercase z-10 tracking-[0.2em] border border-white/20">${datos.momento}</span>
+                        ${media}
+                        <div class="flex items-center justify-between mt-4 px-2 mb-2">
+                            <h4 class="text-white font-medium uppercase text-[9px] tracking-widest truncate flex-1">${datos.nombre}</h4>
+                            <div class="flex items-center gap-3">
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    <span id="contador-likes-${id}" class="font-light text-xs text-white">${datos.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        window.darLike = async function(id) {
+            const docRef = doc(db, "muro_xv_mayte", id);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
