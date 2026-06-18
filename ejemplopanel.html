@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN 3: LISTA DE ASISTENCIA (Estilo Tarjetas App) -->
+            <!-- SECCIÓN 3: LISTA DE ASISTENCIA -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-5">
                     <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Asistencia</h3>
@@ -126,11 +126,7 @@
                 </div>
 
                 <div id="listaAsistencia" class="space-y-3">
-                    <!-- Esqueleto de Carga -->
-                    <div class="py-10 text-center text-gray-400">
-                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-primary"></i>
-                        <p class="text-xs uppercase tracking-widest font-bold">Cargando datos...</p>
-                    </div>
+                    <!-- Los datos se inyectarán aquí -->
                 </div>
             </div>
             
@@ -138,9 +134,10 @@
     </div>
 
     <script>
+        // Inicializar iconos
         lucide.createIcons();
 
-        // --- LÓGICA DEL GENERADOR DE PASES ---
+        // --- 1. LÓGICA DEL GENERADOR DE PASES ---
         const URL_BASE_INVITACION = "https://adainvite.com/portafolioxv/deluxe/vippases";
         let textoCompleto = "";
 
@@ -154,8 +151,7 @@
             }
             
             const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}&pases=${pases}`;
-            textoCompleto = `${linkFinal}
-¡Hola! Se acerca mi gran día y me haría muchísima ilusión que nos acompañaras.\n\nTe comparto el enlace con todos los detalles de mis XV años. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
+            textoCompleto = `${linkFinal}\n¡Hola! Se acerca mi gran día y me haría muchísima ilusión que nos acompañaras.\n\nTe comparto el enlace con todos los detalles de mis XV años. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
             
             document.getElementById('linkGenerado').innerText = textoCompleto;
             document.getElementById('resultadoContainer').classList.remove('hidden');
@@ -190,63 +186,21 @@
             }
             document.body.removeChild(textArea);
         }
-    </script>
 
-    <!-- --- LÓGICA DE FIREBASE PARA TARJETAS EN TIEMPO REAL --- -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-          apiKey: "AIzaSyDfTybyKayRd7tsezq1NWlKrw_fRP4Wv9g",
-          authDomain: "revelacion-myj.firebaseapp.com",
-          projectId: "revelacion-myj",
-          storageBucket: "revelacion-myj.firebasestorage.app",
-          messagingSenderId: "1042213699799",
-          appId: "1:1042213699799:web:e5f04df07131d44ff0b092"
-        };
+        // --- 2. LÓGICA DE DATOS ESTÁTICOS PARA MUESTRA A CLIENTES ---
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let listaInvitadosGlobal = [
+            { id: '1', nombre: 'Familia Mendoza', folio: 'FAM-001', adultos: 2, ninos: 2, totalPersona: 4, fecha: new Date(Date.now() - 86400000 * 2) },
+            { id: '2', nombre: 'Tía Carmen y Tío José', folio: 'FAM-002', adultos: 2, ninos: 0, totalPersona: 2, fecha: new Date(Date.now() - 86400000 * 1) },
+            { id: '3', nombre: 'Carlos Ruiz', folio: 'INV-003', adultos: 1, ninos: 0, totalPersona: 1, fecha: new Date() },
+            { id: '4', nombre: 'Familia Hernández López', folio: 'FAM-004', adultos: 3, ninos: 1, totalPersona: 4, fecha: new Date(Date.now() - 3600000 * 5) }
+        ];
 
-        // --- 1. ESCUCHAR CONFIRMACIONES EN VIVO ---
-        const confirmacionesRef = collection(db, "confirmaciones");
-        const q = query(confirmacionesRef, orderBy("fecha", "desc"));
-
-        let listaInvitadosGlobal = []; // Para poder usar el buscador y exportar
-
-        onSnapshot(q, (snapshot) => {
-            listaInvitadosGlobal = [];
-            
-            if(snapshot.empty) {
-                renderizarLista([]);
-                return;
-            }
-
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                listaInvitadosGlobal.push({
-                    id: docSnap.id,
-                    nombre: data.nombre,
-                    folio: data.folio || '-',
-                    adultos: parseInt(data.adultos) || 0,
-                    ninos: parseInt(data.ninos) || 0,
-                    totalPersona: parseInt(data.totalPases) || (parseInt(data.adultos) || 0) + (parseInt(data.ninos) || 0),
-                    fecha: data.fecha ? data.fecha.toDate() : null
-                });
-            });
-
+        function iniciarPanel() {
             renderizarLista(listaInvitadosGlobal);
-        }, (error) => {
-            console.error("Error cargando asistencias:", error);
-            document.getElementById('listaAsistencia').innerHTML = `
-                <div class="py-8 text-center text-red-400">
-                    <p class="text-sm font-bold">Error al conectar con la base de datos.</p>
-                </div>
-            `;
-        });
+        }
 
-        // --- FUNCIONES DE LA TABLA Y BUSCADOR ---
+        // --- 3. FUNCIONES DE LA TABLA Y BUSCADOR ---
         const inputBuscador = document.getElementById('buscador');
         inputBuscador.addEventListener('input', (e) => {
             const termino = e.target.value.toLowerCase();
@@ -254,7 +208,7 @@
                 inv.nombre.toLowerCase().includes(termino) || 
                 inv.folio.toLowerCase().includes(termino)
             );
-            renderizarLista(filtrados, false); // false = no actualiza los contadores totales si solo busco
+            renderizarLista(filtrados, false);
         });
 
         function renderizarLista(lista, actualizarStats = true) {
@@ -277,7 +231,6 @@
             }
 
             lista.forEach(inv => {
-                // Sumamos estadísticas solo si mostramos todo (no filtrado)
                 if(actualizarStats) {
                     totalFamilias++;
                     totalAdultos += inv.adultos;
@@ -295,7 +248,6 @@
                     <div class="p-4 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-2 relative overflow-hidden group">
                         <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
                         
-                        <!-- Acciones: Eliminar -->
                         <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button onclick="eliminarRegistro('${inv.id}', '${inv.nombre}')" class="bg-red-100 text-red-500 p-1.5 rounded-lg shadow-sm" title="Eliminar registro">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -335,16 +287,16 @@
             document.getElementById('contador-tarjetas').innerText = fam + " listados";
         }
 
-        // --- 3. EXPORTAR A CSV ---
-        window.descargarCSV = () => {
+        // --- 4. EXPORTAR A CSV ---
+        function descargarCSV() {
             if(listaInvitadosGlobal.length === 0) return alert("No hay datos para exportar.");
             
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // \uFEFF es para que Excel lea los acentos
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
             csvContent += "Folio,Nombre,Adultos,Ninos,Total Asistentes,Fecha\n";
             
             listaInvitadosGlobal.forEach(inv => {
                 let fecha = inv.fecha ? inv.fecha.toLocaleString('es-MX') : "";
-                let nombreLimpio = inv.nombre.replace(/,/g, " "); // Evitar comas en el nombre
+                let nombreLimpio = inv.nombre.replace(/,/g, " "); 
                 csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${fecha}\n`;
             });
 
@@ -355,21 +307,20 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        };
+        }
 
-        // --- 4. ELIMINAR REGISTRO ---
-        window.eliminarRegistro = async (id, nombre) => {
+        // --- 5. ELIMINAR REGISTRO ---
+        function eliminarRegistro(id, nombre) {
             const confirmacion = confirm(`¿Estás seguro de que deseas eliminar la asistencia de: ${nombre}? \nEsta acción no se puede deshacer.`);
             if (confirmacion) {
-                try {
-                    await deleteDoc(doc(db, "confirmaciones", id));
-                    // No necesitas hacer nada más, Firebase actualizará la pantalla solo
-                } catch (error) {
-                    console.error("Error eliminando documento: ", error);
-                    alert("Ocurrió un error al eliminar.");
-                }
+                listaInvitadosGlobal = listaInvitadosGlobal.filter(inv => inv.id !== id);
+                document.getElementById('buscador').value = '';
+                renderizarLista(listaInvitadosGlobal);
             }
-        };
+        }
+
+        // Arrancar el panel al cargar
+        window.onload = iniciarPanel;
 
     </script>
 </body>
