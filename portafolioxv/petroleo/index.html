@@ -99,7 +99,7 @@
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(26, 75, 92, 0.5); }
 
-        /* Filtro ajustado para generar el Azul Petróleo desde negro */
+        /* Filtro original conservado para iconos */
         .filtro-azul {
             filter: brightness(0) saturate(100%) invert(18%) sepia(45%) saturate(718%) hue-rotate(153deg) brightness(94%) contrast(92%);
         }
@@ -107,7 +107,7 @@
             filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
         }
 
-        /* SOBRE INICIAL */
+        /* SOBRE INICIAL - Ajustado para que se vea la textura */
         #envelope-wrapper {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
@@ -115,7 +115,8 @@
         }
         .envelope-bg {
             position: absolute; inset: 0;
-            background-image: url("https://i.imgur.com/arqV06S.jpeg");
+            background-image: linear-gradient(rgba(26, 75, 92, 0.75), rgba(26, 75, 92, 0.75)), url("https://i.imgur.com/arqV06S.jpeg");
+            background-blend-mode: multiply;
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
@@ -123,7 +124,12 @@
         .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); }
         .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); }
         
-        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/arqV06S.jpeg"); background-size: cover; }
+        .flap { 
+            width: 100%; height: 100%; 
+            background-image: linear-gradient(rgba(26, 75, 92, 0.75), rgba(26, 75, 92, 0.75)), url("https://i.imgur.com/arqV06S.jpeg"); 
+            background-blend-mode: multiply;
+            background-size: cover; 
+        }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
         .seal-wrapper {
@@ -152,6 +158,10 @@
         .timeline-line {
             position: absolute; left: 50%; transform: translateX(-50%);
             width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--azul-principal), transparent);
+        }
+        
+        .seccion-azul .timeline-line {
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5), transparent);
         }
 
         .btn-calendar {
@@ -184,14 +194,15 @@
         <img id="audio-icon" src="https://i.imgur.com/Ei73G9F.png" class="w-full h-full filtro-azul object-cover" alt="Música">
     </div>
 
+    <!-- SOBRE MODIFICADO (Sin .filtro-azul para conservar la textura del papel) -->
     <div id="envelope-wrapper">
-        <div class="envelope-bg filtro-azul"></div>
+        <div class="envelope-bg"></div>
         <div id="envelope-container" class="w-full h-full relative z-10">
             <div class="flap-wrapper flap-left-wrapper">
-                <div class="flap flap-left filtro-azul"></div>
+                <div class="flap flap-left"></div>
             </div>
             <div class="flap-wrapper flap-right-wrapper">
-                <div class="flap flap-right filtro-azul"></div>
+                <div class="flap flap-right"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
@@ -278,8 +289,6 @@
             </div>
         </section>
 
-      
-        
         
         <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-8 px-6 seccion-azul relative">
             <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-20 relative z-10 w-full px-4">
@@ -332,7 +341,7 @@
             </div>
         </section>
 
-  <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
+        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
             <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
                 <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
             </div>
@@ -372,53 +381,54 @@
             </div>
         </section>
         
-        
-        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-6 seccion-blanca relative overflow-hidden">
+        <!-- ITINERARIO: Cambiado a seccion-azul (Fondo GIF) -->
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-6 seccion-azul relative overflow-hidden">
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
                 <div class="text-center mb-2">
-                    <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Itinerario</h1>
-                    <p class="text-[11px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold">Los momentos que tendremos</p>
+                    <h1 class="text-5xl mb-6 text-white font-script reveal-scale drop-shadow-md">Itinerario</h1>
+                    <p class="text-[11px] uppercase tracking-[0.5em] text-white/80 font-bold">Los momentos que tendremos</p>
                 </div>
 
                 <div class="relative space-y-12 mt-12">
                     <div class="timeline-line"></div>
                     
                     <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Ceremonia Religiosa</h3><p class="text-gray-500 italic text-sm">Nombre de la Iglesia</p></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 bg-white">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-white font-bold">Ceremonia Religiosa</h3><p class="text-gray-200 italic text-sm">Nombre de la Iglesia</p></div>
+                        <div class="bg-transparent p-3 rounded-full border border-white/40 shadow-md reveal-scale delay-200 bg-white">
                             <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">7:30 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Ceremonia</h3></div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-white font-numbers font-bold">7:30 P.M.</span><h3 class="text-xl md:hidden text-white font-bold">Ceremonia</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">9:00 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Recepción</h3></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 bg-white">
+                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-white font-numbers font-bold">9:00 P.M.</span><h3 class="text-xl md:hidden text-white font-bold">Recepción</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-white/40 shadow-md reveal-scale delay-200 bg-white">
                             <img src="https://i.imgur.com/yvzojba.png" class="w-24 md:w-28 object-contain opacity-80 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Recepción</h3><p class="text-gray-500 italic text-sm">Llegada al salón</p></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-white font-bold">Recepción</h3><p class="text-gray-200 italic text-sm">Llegada al salón</p></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Vals</h3><p class="text-gray-500 italic text-sm">Presentación Oficial</p></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 bg-white">
+                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-white font-bold">Vals</h3><p class="text-gray-200 italic text-sm">Presentación Oficial</p></div>
+                        <div class="bg-transparent p-3 rounded-full border border-white/40 shadow-md reveal-scale delay-200 bg-white">
                             <img src="https://i.imgur.com/tRNwEAy.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">9:30 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Vals</h3></div>
+                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-white font-numbers font-bold">9:30 P.M.</span><h3 class="text-xl md:hidden text-white font-bold">Vals</h3></div>
                     </div>
 
                     <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">10:00 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Cena</h3></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 bg-white">
+                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-white font-numbers font-bold">10:00 P.M.</span><h3 class="text-xl md:hidden text-white font-bold">Cena</h3></div>
+                        <div class="bg-transparent p-3 rounded-full border border-white/40 shadow-md reveal-scale delay-200 bg-white">
                             <img src="https://i.imgur.com/AIApde9.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
                         </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Cena</h3><p class="text-gray-500 italic text-sm">Banquete Especial</p></div>
+                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-white font-bold">Cena</h3><p class="text-gray-200 italic text-sm">Banquete Especial</p></div>
                     </div>
                     
                 </div>
             </div>
         </section>
 
+        <!-- VESTIMENTA: Cambiado a seccion-blanca (Alternada) -->
         <section class="min-h-[60svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative text-center">
             <div class="max-w-3xl mx-auto reveal-scale">
                 <div class="mx-auto mb-8 flex items-center justify-center">
@@ -441,52 +451,53 @@
             </div>
         </section>
         
-    
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+        <!-- CONFIRMAR ASISTENCIA: Cambiado a seccion-azul (Fondo GIF alternado) -->
+        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl font-script mb-6 text-azul-principal text-shadow-light">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-[#2C2A2A] font-bold">Por favor, confirmar antes del <br> 10 de octubre de 2026</p>
+                <h2 class="text-5xl font-script mb-6 text-white drop-shadow-md">Confirmar Asistencia</h2>
+                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 text-white/80 font-bold">Por favor, confirmar antes del <br> 10 de octubre de 2026</p>
                 
-                <div class="bg-white border border-gray-200 shadow-xl p-8 md:p-12 rounded-3xl transition-all duration-500 w-full mx-auto">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl p-8 md:p-12 rounded-3xl transition-all duration-500 w-full mx-auto">
                     
                     <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-[#2C2A2A] font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center md:text-left placeholder-gray-400">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-white font-bold">Nombre Completo</label>
+                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-[#2C2A2A] font-bold">Número de Adultos</label>
-                            <input type="number" id="rsvpAdults" required placeholder="Ej. 2" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center md:text-left placeholder-gray-400">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-white font-bold">Número de Adultos</label>
+                            <input type="number" id="rsvpAdults" required placeholder="Ej. 2" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-[#2C2A2A] font-bold">Número de Niños</label>
-                            <input type="number" id="rsvpKids" required placeholder="Ej. 1" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center md:text-left placeholder-gray-400">
+                        <div class="border-b border-white/50 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-white font-bold">Número de Niños</label>
+                            <input type="number" id="rsvpKids" required placeholder="Ej. 1" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
                         </div>
                         
-                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-azul-principal text-white font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-azul-principal/90 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
+                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
                             Confirmar
                         </button>
                     </form>
 
-                    <div id="loadingMessage" class="hidden mt-10 bg-white/95 backdrop-blur-md border border-azul-principal/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
-                        <div class="w-16 h-16 border-4 border-azul-principal border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                        <p class="text-4xl font-script text-azul-principal mb-2">Confirmando...</p>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-[#2C2A2A] opacity-90 font-bold">Preparando los detalles</p>
+                    <div id="loadingMessage" class="hidden mt-10 bg-black/30 backdrop-blur-md border border-white/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
+                        <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                        <p class="text-4xl font-script text-white mb-2">Confirmando...</p>
+                        <p class="text-[11px] uppercase tracking-[0.3em] text-white/80 opacity-90 font-bold">Preparando los detalles</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <section class="min-h-[80svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
+        <!-- RECUPERAR PASE: Cambiado a seccion-blanca (Alternado) -->
+        <section class="min-h-[80svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl font-script mb-6 drop-shadow-md">Recuperar Pase</h2>
+                <h2 class="text-5xl font-script mb-6 text-azul-principal text-shadow-light">Recuperar Pase</h2>
                 
-                <form id="searchPassForm" class="space-y-12 text-left bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/20 shadow-2xl transition-all duration-500">
-                    <div class="border-b border-white/50 pb-2">
-                        <label class="text-base uppercase text-white font-bold">Nombre/Familia</label>
-                        <input type="text" id="searchName" required placeholder="Nombre" class="w-full bg-transparent py-2 outline-none text-base text-white placeholder-white/40 font-bold">
+                <form id="searchPassForm" class="space-y-12 text-left bg-white border border-gray-200 p-8 md:p-12 rounded-3xl shadow-xl transition-all duration-500">
+                    <div class="border-b border-gray-300 pb-2">
+                        <label class="text-base uppercase text-[#2C2A2A] font-bold">Nombre/Familia</label>
+                        <input type="text" id="searchName" required placeholder="Nombre" class="w-full bg-transparent py-2 outline-none text-base text-[#2C2A2A] placeholder-gray-400 font-bold">
                     </div>
-                    <button type="submit" class="w-full bg-white text-azul-principal font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Buscar mi Pase</button>
+                    <button type="submit" class="w-full bg-azul-principal text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-azul-principal/90 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Buscar mi Pase</button>
                 </form>
 
                 <div id="searchResultMessage" class="hidden mt-10 transition-all duration-500">
@@ -497,9 +508,10 @@
             </div>
         </section>
 
-        <footer class="min-h-[60svh] flex flex-col justify-center py-20 px-6 text-center seccion-blanca relative z-10">
-            <p class="text-7xl font-script mb-4 text-azul-principal text-shadow-light relative z-10">¡No faltes!</p>
-            <p class="text-[11px] text-[#2C2A2A] uppercase tracking-[0.5em] font-bold font-numbers relative z-10">15 • Octubre • 2026</p>
+        <!-- FOOTER: Cambiado a seccion-azul (Fondo GIF alternado) -->
+        <footer class="min-h-[60svh] flex flex-col justify-center py-20 px-6 text-center seccion-azul relative z-10">
+            <p class="text-7xl font-script mb-4 text-white drop-shadow-md relative z-10">¡No faltes!</p>
+            <p class="text-[11px] text-white/80 uppercase tracking-[0.5em] font-bold font-numbers relative z-10">15 • Octubre • 2026</p>
         </footer>
     </main>
 
@@ -676,7 +688,7 @@ document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             </div>
             
             <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
-                <button id="btnDescargarImagenRSVP" class="bg-azul-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                <button id="btnDescargarImagenRSVP" class="bg-white text-azul-principal font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-gray-100 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
                     Descargar Pase
                 </button>
                 
