@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel - Boda Ale y Ramón</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <meta name="theme-color" content="#9B8AA5">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9B8AA5',
+                        surface: '#FAF9FB',
+                        text: '#3D3542',
+                        babyPink: '#E57388',
+                        babyBlue: '#4A8BCA',
+                    },
+                    fontFamily: {
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        dancing: ['"Dancing Script"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { box-sizing: border-box; background-color: #FAF9FB; color: #3D3542; }
+        :root { --primary-purple: #9B8AA5; --surface-color: #FAF9FB; --text-color: #3D3542; --white: #FFFFFF; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(155, 138, 165, 0.2); }
+        .info-label { color: var(--primary-purple); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-full font-sans antialiased">
+    
+    <div id="app-wrapper" class="w-full h-full overflow-x-hidden overflow-y-auto">
+        <!-- HEADER MÓVIL -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-3 px-4 flex justify-between items-center">
+            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-10">
+            <div class="flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span class="text-[10px] font-bold text-primary uppercase tracking-widest">En vivo</span>
+            </div>
+        </nav>
+
+        <section class="pt-20 pb-12 px-4 max-w-lg mx-auto space-y-8">
+            
+            <div class="text-center">
+                <h2 class="font-dancing text-5xl mb-2 text-primary">Panel de Control</h2>
+                <p class="text-xs uppercase tracking-widest font-bold text-gray-500">Ale & Ramón</p>
+            </div>
+
+            <!-- SECCIÓN 1: GENERADOR DE ENLACE -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <h3 class="info-label mb-4 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4"></i> 1. Enviar Invitación</h3>
+                <p class="text-xs text-gray-500 mb-4 leading-relaxed">Genera el enlace para enviarle la invitación a un invitado y que pueda registrar su asistencia.</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <input type="text" id="inputFamilia" placeholder="Nombre (Ej. Familia Perez)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all">
+                    </div>
+                    <!-- Se eliminó el campo de pases porque ahora se solicitan en la invitación -->
+                    <button onclick="generarLink()" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-colors flex justify-center items-center gap-2">
+                        Generar Enlace
+                    </button>
+                </div>
+
+                <!-- Resultado Generador -->
+                <div id="resultadoContainer" class="hidden mt-4 pt-4 border-t border-gray-100">
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-3 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-32 overflow-y-auto" id="linkGenerado"></div>
+                    <button onclick="copiarLink()" id="btnCopiar" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors">
+                        <i data-lucide="copy" class="w-4 h-4"></i>Copia y pega en WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: ESTADÍSTICAS -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-3 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Pases Aprobados</p>
+                    <p class="text-4xl font-bold text-primary" id="stat-aprobados">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-1 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Familias Pendientes</p>
+                    <p class="text-2xl font-bold text-orange-400" id="stat-pendientes">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-2 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Lugares Solicitados (En espera)</p>
+                    <p class="text-2xl font-bold text-gray-800" id="stat-solicitados">-</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: LISTA DE ASISTENCIA -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> 2. Solicitudes de Pases</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 listados</span>
+                    </div>
+                </div>
+
+                <!-- Buscador -->
+                <div class="mb-4 relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="buscador" placeholder="Buscar por nombre..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm transition-all text-gray-700">
+                </div>
+
+                <div id="listaAsistencia" class="space-y-3">
+                    <!-- Esqueleto de Carga -->
+                    <div class="py-10 text-center text-gray-400">
+                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-primary"></i>
+                        <p class="text-xs uppercase tracking-widest font-bold">Cargando datos...</p>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+    </div>
+
+    <!-- MODAL DE AVISO WHATSAPP (Aprobación) -->
+    <div id="modalWhatsapp" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center px-4 backdrop-blur-sm transition-all">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative border border-gray-100">
+            <button onclick="cerrarModalWp()" class="absolute top-4 right-4 text-gray-400 hover:text-primary transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-3xl text-primary mb-2 font-dancing">¡Pase Aprobado!</h3>
+            <p class="text-xs text-gray-500 mb-4 font-medium leading-relaxed">Copia este mensaje y envíalo a tu invitado para avisarle que ya puede descargar su pase:</p>
+            
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-4 text-xs text-gray-600 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto" id="textoMensajeAviso"></div>
+            
+            <button onclick="copiarAvisoWp()" id="btnCopiarAviso" class="w-full bg-primary text-white font-bold py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 transition-colors flex justify-center gap-2 items-center">
+                <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- 1. LÓGICA DEL GENERADOR DE ENLACES ---
+        const URL_BASE_INVITACION = "https://adainvite.com/ayrnuestraboda/";
+        let textoInvitacion = "";
+
+        function generarLink() {
+            const familia = document.getElementById('inputFamilia').value.trim();
+            
+            if(!familia) {
+                alert("Por favor, llena el nombre del invitado.");
+                return;
+            }
+            
+            const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}`;
+            textoInvitacion = `${linkFinal} \n\n ¡Hola! Se acerca nuestro gran día y nos haría muchísima ilusión que nos acompañaras.\n\nTe comparto la invitación de nuestra boda. Por favor entra al siguiente enlace y ayúdanos a confirmar tu asistencia llenando el formulario.`;
+            
+            document.getElementById('linkGenerado').innerText = textoInvitacion;
+            document.getElementById('resultadoContainer').classList.remove('hidden');
+            
+            const btn = document.getElementById('btnCopiar');
+            btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
+            btn.classList.replace('border-green-500', 'border-primary');
+            btn.classList.replace('text-green-600', 'text-primary');
+            lucide.createIcons();
+        }
+
+        function copiarLink() {
+            const textArea = document.createElement("textarea");
+            textArea.value = textoInvitacion;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('btnCopiar');
+                btn.classList.replace('border-primary', 'border-green-500');
+                btn.classList.replace('text-primary', 'text-green-600');
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado`;
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    btn.classList.replace('border-green-500', 'border-primary');
+                    btn.classList.replace('text-green-600', 'text-primary');
+                    btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
+                    lucide.createIcons();
+                }, 3000);
+            } catch (err) {
+                alert('No se pudo copiar el texto.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // --- LÓGICA DEL MODAL DE WHATSAPP (APROBACIONES) ---
+        let textoAvisoActual = "";
+
+        window.abrirModalAviso = (nombre, pases) => {
+            const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(nombre)}`;
+            textoAvisoActual = `¡Hola ${nombre}! 👋\n\nTu pase para nuestra boda ha sido validado para *${pases} personas*.\n\nYa puedes entrar a nuestra invitación oficial, ir hasta abajo a la sección "Consultar Pase" y descargar la imagen con tu código para la recepción.\n\nEntra aquí:\n${linkFinal}`;
+            
+            document.getElementById('textoMensajeAviso').innerText = textoAvisoActual;
+            document.getElementById('modalWhatsapp').classList.remove('hidden');
+            
+            const btn = document.getElementById('btnCopiarAviso');
+            btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje`;
+            btn.classList.replace('bg-green-500', 'bg-primary');
+            lucide.createIcons();
+        }
+
+        window.cerrarModalWp = () => {
+            document.getElementById('modalWhatsapp').classList.add('hidden');
+        }
+
+        window.copiarAvisoWp = () => {
+            const textArea = document.createElement("textarea");
+            textArea.value = textoAvisoActual;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('btnCopiarAviso');
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado con éxito`;
+                btn.classList.replace('bg-primary', 'bg-green-500');
+                lucide.createIcons();
+                setTimeout(cerrarModalWp, 2000);
+            } catch(e) {
+                alert("Error al copiar.");
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+
+    <!-- --- 2. LÓGICA DE FIREBASE --- -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // CREDENCIALES NUEVAS PARA LA BODA A&R
+        const firebaseConfig = {
+          apiKey: "AIzaSyDx6aIzPkxE3BKLwLegToNKb7hyEaddGA8",
+          authDomain: "boda-a-y-r.firebaseapp.com",
+          projectId: "boda-a-y-r",
+          storageBucket: "boda-a-y-r.firebasestorage.app",
+          messagingSenderId: "74608605808",
+          appId: "1:74608605808:web:dd4bdb1a9d2bedb2c8d2b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Nueva colección adaptada a este flujo
+        const COL_NAME = "confirmaciones_boda";
+
+        const q = query(collection(db, COL_NAME), orderBy("fecha", "desc"));
+        let listaGlobal = []; 
+
+        onSnapshot(q, (snapshot) => {
+            listaGlobal = [];
+            
+            if(snapshot.empty) {
+                renderizarLista([]);
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                listaGlobal.push({
+                    id: docSnap.id,
+                    nombre: data.nombre,
+                    adultos: parseInt(data.adultos) || 0,
+                    ninos: parseInt(data.ninos) || 0,
+                    totalSolicitado: parseInt(data.totalSolicitado) || 0,
+                    pasesAsignados: parseInt(data.pasesAsignados) || 0,
+                    estado: data.estado || 'pendiente',
+                    fecha: data.fecha ? data.fecha.toDate() : new Date()
+                });
+            });
+
+            renderizarLista(listaGlobal);
+        }, (error) => {
+            console.error("Error cargando asistencias:", error);
+            document.getElementById('listaAsistencia').innerHTML = `
+                <div class="py-8 text-center text-red-400">
+                    <p class="text-sm font-bold">Error al conectar con la base de datos.</p>
+                </div>
+            `;
+        });
+
+        // Buscador
+        const inputBuscador = document.getElementById('buscador');
+        inputBuscador.addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const filtrados = listaGlobal.filter(inv => inv.nombre.toLowerCase().includes(termino));
+            renderizarLista(filtrados, false); 
+        });
+
+        function renderizarLista(lista, actualizarStats = true) {
+            let totalAprobados = 0;
+            let totalFamiliasPendientes = 0;
+            let totalLugaresPendientes = 0;
+            let htmlTarjetas = '';
+
+            if(lista.length === 0) {
+                document.getElementById('listaAsistencia').innerHTML = `
+                    <div class="py-10 text-center text-gray-400">
+                        <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-xs uppercase tracking-widest font-bold">Sin registros</p>
+                    </div>
+                `;
+                if(actualizarStats) actualizarEstadisticas(0, 0, 0, 0);
+                lucide.createIcons();
+                return;
+            }
+
+            lista.forEach(inv => {
+                const esPendiente = inv.estado === 'pendiente';
+
+                if(actualizarStats) {
+                    if(esPendiente) {
+                        totalFamiliasPendientes++;
+                        totalLugaresPendientes += inv.totalSolicitado;
+                    } else {
+                        totalAprobados += inv.pasesAsignados;
+                    }
+                }
+
+                let fechaFormateada = "Sin fecha";
+                if(inv.fecha) {
+                    const opciones = { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit'};
+                    fechaFormateada = inv.fecha.toLocaleDateString('es-MX', opciones);
+                }
+
+                const colorBarra = esPendiente ? 'bg-orange-400' : 'bg-primary';
+                const badgeTexto = esPendiente ? 'Pendiente' : 'Aprobado';
+                const badgeClase = esPendiente ? 'text-orange-500 bg-orange-100' : 'text-primary bg-primary/10';
+
+                htmlTarjetas += `
+                    <div class="p-4 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-2 relative overflow-hidden group">
+                        <!-- Barra de estado -->
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${colorBarra}"></div>
+                        
+                        <!-- Acciones: Eliminar -->
+                        <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <button onclick="eliminarRegistro('${inv.id}', '${inv.nombre}')" class="bg-red-100 text-red-500 p-1.5 rounded-lg shadow-sm" title="Eliminar registro">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex justify-between items-start pl-2 pr-10">
+                            <div>
+                                <span class="${badgeClase} text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest inline-block mb-1 shadow-sm">${badgeTexto}</span>
+                                <p class="font-bold text-gray-800 text-sm capitalize leading-tight mt-1 pr-4">${inv.nombre}</p>
+                            </div>
+                            <div class="${esPendiente ? 'bg-gray-300' : 'bg-primary'} text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0" title="${esPendiente ? 'Lugares solicitados' : 'Pases Asignados'}">
+                                ${esPendiente ? inv.totalSolicitado : inv.pasesAsignados}
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-end mt-1 pt-2 pl-2 pr-2">
+                            <div class="text-[10px] uppercase font-bold text-gray-500">
+                                <span class="text-gray-400 mr-1">Pidieron:</span> <span>${inv.adultos} Ad.</span> <span class="text-gray-300 mx-1">|</span> <span>${inv.ninos} Ni.</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3 h-3"></i> ${fechaFormateada}
+                            </div>
+                        </div>
+
+                        <!-- ZONA DE ACCIONES SEGÚN ESTADO -->
+                        ${esPendiente ? `
+                            <div class="mt-2 pt-3 border-t border-orange-100 pl-2 pr-2 flex items-end gap-3">
+                                <div class="flex flex-col w-24">
+                                    <label class="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">Asignar Pases:</label>
+                                    <input type="number" id="asignar-${inv.id}" value="${inv.totalSolicitado}" min="0" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-center font-bold text-primary focus:border-primary transition-all shadow-sm">
+                                </div>
+                                <button onclick="aprobarPase('${inv.id}', '${inv.nombre}')" class="flex-1 bg-primary text-white text-[10px] font-bold uppercase tracking-widest py-2.5 rounded-lg hover:bg-opacity-90 transition-all shadow-sm flex justify-center items-center gap-1">
+                                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> Aprobar
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="mt-2 pt-3 border-t border-gray-200 pl-2 pr-2">
+                                <button onclick="abrirModalAviso('${inv.nombre}', ${inv.pasesAsignados})" class="w-full flex justify-center items-center gap-2 bg-white border border-primary text-primary text-[10px] font-bold uppercase tracking-widest py-2.5 rounded-lg hover:bg-gray-50 transition-all shadow-sm">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i> Enviar Pase por WhatsApp
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+
+            document.getElementById('listaAsistencia').innerHTML = htmlTarjetas;
+            if(actualizarStats) actualizarEstadisticas(lista.length, totalAprobados, totalFamiliasPendientes, totalLugaresPendientes);
+            lucide.createIcons();
+        }
+
+        function actualizarEstadisticas(totalListados, aprobados, familiasPend, lugaresPend) {
+            document.getElementById('stat-aprobados').innerText = aprobados;
+            document.getElementById('stat-pendientes').innerText = familiasPend;
+            document.getElementById('stat-solicitados').innerText = lugaresPend;
+            document.getElementById('contador-tarjetas').innerText = totalListados + " listados";
+        }
+
+        // --- ACCIÓN: APROBAR PASE ---
+        window.aprobarPase = async (id, nombre) => {
+            const inputPases = document.getElementById(`asignar-${id}`);
+            const pasesAsignar = parseInt(inputPases.value);
+
+            if(isNaN(pasesAsignar) || pasesAsignar < 0) return alert("Por favor ingresa un número válido.");
+
+            try {
+                await updateDoc(doc(db, COL_NAME, id), {
+                    estado: 'aprobado',
+                    pasesAsignados: pasesAsignar
+                });
+                
+                // Abre el modal para avisarle por WhatsApp automáticamente
+                setTimeout(() => abrirModalAviso(nombre, pasesAsignar), 400);
+
+            } catch(error) {
+                console.error("Error al aprobar:", error);
+                alert("Hubo un error al aprobar.");
+            }
+        };
+
+        // --- ACCIÓN: ELIMINAR ---
+        window.eliminarRegistro = async (id, nombre) => {
+            const confirmacion = confirm(`¿Seguro que deseas eliminar la solicitud de ${nombre}? \nEsta acción no se puede deshacer.`);
+            if (confirmacion) {
+                try {
+                    await deleteDoc(doc(db, COL_NAME, id));
+                } catch (error) {
+                    console.error("Error eliminando: ", error);
+                    alert("Ocurrió un error al eliminar.");
+                }
+            }
+        };
+
+    </script>
+</body>
+</html>
