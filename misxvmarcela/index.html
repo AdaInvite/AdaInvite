@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV Marcela Alexandra</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
-      <link rel="apple-touch-icon" href="https://i.imgur.com/BLo32xt.png">
-        
+    
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="XV Marcela Alexandra">
     <meta property="og:description" content="Acuérdate de tu Creador en los días de tu juventud... Acompáñame a celebrar mis XV años.">
@@ -819,6 +818,33 @@
                 });
             }
         }
+
+        // ==========================================
+        // VALIDACIÓN EN TIEMPO REAL DE LOS PASES
+        // ==========================================
+        const inputAdults = document.getElementById('rsvpAdults');
+        const inputKids = document.getElementById('rsvpKids');
+
+        function validarPasesEnTiempoReal(e) {
+            if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal)) {
+                const adultos = parseInt(inputAdults.value) || 0;
+                const ninos = parseInt(inputKids.value) || 0;
+                
+                if (adultos + ninos > window.maxPasesGlobal) {
+                    alert(`¡Atención! Solo tienes asignados ${window.maxPasesGlobal} pases en total.`);
+                    
+                    // Ajusta automáticamente el valor para no exceder el límite
+                    if (e.target.id === 'rsvpAdults') {
+                        inputAdults.value = Math.max(0, window.maxPasesGlobal - ninos);
+                    } else if (e.target.id === 'rsvpKids') {
+                        inputKids.value = Math.max(0, window.maxPasesGlobal - adultos);
+                    }
+                }
+            }
+        }
+
+        if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
+        if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
 
         // ==========================================
         // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
