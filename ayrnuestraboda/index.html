@@ -773,14 +773,6 @@
             const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
             const totalPases = numAdultos + numNinos;
 
-            // PREPARAMOS WHATSAPP DESDE ANTES
-            const numeroWhatsApp = "524651031308";
-            const mensaje = encodeURIComponent(`¡Hola! Acabo de registrar mi confirmación de asistencia para la boda.\n\n*Nombre/Familia:* ${name}\n*Adultos:* ${numAdultos}\n*Niños:* ${numNinos}\n*Total de pases:* ${totalPases}`);
-            const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensaje}`;
-            
-            // TRUCO: Abrimos la pestaña INMEDIATAMENTE para evitar el bloqueador de pop-ups
-            const ventanaWhatsApp = window.open('about:blank', '_blank');
-
             try {
                 // Confirmamos que no exista nuevamente por seguridad
                 const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", name.toLowerCase()));
@@ -807,15 +799,7 @@
                     });
                 }
 
-                // AHORA SÍ: Redirigimos la pestaña que ya teníamos abierta
-                if (ventanaWhatsApp) {
-                    ventanaWhatsApp.location.href = urlWhatsApp;
-                } else {
-                    // Plan de respaldo en caso extremo de que falle la ventana
-                    window.location.href = urlWhatsApp; 
-                }
-
-                // Mostrar mensaje de éxito en la UI
+                // Mostrar mensaje de éxito en la UI (se verá brevemente antes de salir, o si regresan a la página)
                 document.getElementById('formSectionContainer').innerHTML = `
                     <div class="text-center py-6">
                         <svg class="w-16 h-16 text-verde-principal mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -824,12 +808,16 @@
                     </div>
                 `;
 
+                // REDIRECCIÓN EN LA MISMA PESTAÑA
+                const numeroWhatsApp = "524651031308";
+                const mensaje = encodeURIComponent(`¡Hola! Acabo de registrar mi confirmación de asistencia para la boda.\n\n*Nombre/Familia:* ${name}\n*Adultos:* ${numAdultos}\n*Niños:* ${numNinos}\n*Total de pases:* ${totalPases}`);
+                const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensaje}`;
+                
+                // Usamos location.href para cargar WhatsApp en la ventana actual
+                window.location.href = urlWhatsApp;
+
             } catch (error) {
                 console.error("Error al guardar RSVP:", error);
-                
-                // Si falla Firebase, cerramos la pestaña en blanco para no confundir al usuario
-                if (ventanaWhatsApp) ventanaWhatsApp.close(); 
-                
                 alert("Hubo un error al enviar tu solicitud. Intenta de nuevo.");
                 btn.innerHTML = originalText;
                 btn.disabled = false;
