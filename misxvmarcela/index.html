@@ -9,27 +9,27 @@
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="XV Marcela Alexandra">
     <meta property="og:description" content="Acuérdate de tu Creador en los días de tu juventud... Acompáñame a celebrar mis XV años.">
-    <meta property="og:type" content="website">
     <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Verenice_Pat_1783220635890%2Ffoto_portada_1000718550.jpg?alt=media&token=bcd40ef6-669c-413b-8a6d-7f17fd993373">
+    <meta property="og:type" content="website">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-    theme: {
-        extend: {
-            fontSize: {
-                'xxs': '0.65rem', // o el tamaño en px que prefieras
-            },
-            colors: {
-                terracota: '#1A1A1A',
-                blanco: {
-                    perla: '#000000'
-                },
-                beige: '#D8C3A5'
+            theme: {
+                extend: {
+                    fontSize: {
+                        'xxs': '0.65rem',
+                    },
+                    colors: {
+                        terracota: '#1A1A1A',
+                        blanco: {
+                            perla: '#000000'
+                        },
+                        beige: '#D8C3A5'
+                    }
+                }
             }
         }
-    }
-}
     </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -589,7 +589,8 @@
     </main>
 
     <script>
-        let maxPasesGlobal = undefined;
+        // === AJUSTE: Hacer la variable global para que el otro script pueda leerla
+        window.maxPasesGlobal = undefined;
 
         document.addEventListener("DOMContentLoaded", () => {
             const params = new URLSearchParams(window.location.search);
@@ -597,7 +598,8 @@
             const pasesUrl = params.get('pases');    
 
             if (nombreUrl && pasesUrl) {
-                maxPasesGlobal = parseInt(pasesUrl, 10);
+                // === AJUSTE: Asignar a la variable global
+                window.maxPasesGlobal = parseInt(pasesUrl, 10);
 
                 const seccionInicio = document.getElementById('seccion-pases-inicio');
                 const nombreInvitado = document.getElementById('nombre-invitado-inicio');
@@ -822,9 +824,10 @@
                 const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
                 const totalPases = numAdultos + numNinos;
                 
-                if (typeof window.maxPasesGlobal !== 'undefined' && totalPases > window.maxPasesGlobal) {
-                    alert(`Solo tienes asignados ${window.maxPasesGlobal} pases en total. Ajusta la cantidad por favor.`);
-                    return;
+                // === AJUSTE: Validación de pases con alerta de bloqueo
+                if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal) && totalPases > window.maxPasesGlobal) {
+                    alert(`¡Atención! Solo tienes asignados ${window.maxPasesGlobal} pases en total. Por favor, ajusta la cantidad de adultos y niños antes de continuar.`);
+                    return; // Bloquea el envío del formulario
                 }
                 
                 const form = document.getElementById('rsvpForm');
@@ -931,12 +934,18 @@
                         });
                     });
 
-                    setTimeout(() => { window.open(waLink, '_blank'); }, 1500);
+                    // === AJUSTE: Eliminado el setTimeout de la redirección forzosa.
+                    // Ahora el usuario debe dar click manualmente al botón de avisar por WhatsApp.
 
                 } catch(error) {
+                    // === AJUSTE: Prevención de pantalla trabada si falla el guardado
                     console.error("Error al guardar:", error);
-                    alert("Ocurrió un error guardando el pase. Aún serás redirigido para avisar por WhatsApp.");
-                    window.location.href = `https://wa.me/529851266393?text=Hola! Confirmo mi asistencia a los XV de Marcela.`;
+                    alert("Ocurrió un error guardando el pase. Por favor, intenta de nuevo o comunícate con el anfitrión.");
+                    
+                    // Restauramos la vista para que el usuario pueda volver a intentar
+                    form.style.display = 'block';
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
                 }
             });
         }
