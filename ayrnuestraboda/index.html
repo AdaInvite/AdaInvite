@@ -758,7 +758,7 @@
             checkRegistrationStatus();
         }
 
-        // 1. SOLICITUD DE ASISTENCIA (RSVP)
+       // 1. SOLICITUD DE ASISTENCIA (RSVP)
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -799,6 +799,14 @@
                     });
                 }
 
+                // NUEVO: Redirección inmediata a WhatsApp
+                const numeroWhatsApp = "524651031308";
+                const mensaje = encodeURIComponent(`¡Hola! Acabo de registrar mi confirmación de asistencia para la boda.\n\n*Nombre/Familia:* ${name}\n*Adultos:* ${numAdultos}\n*Niños:* ${numNinos}\n*Total de pases:* ${totalPases}`);
+                const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensaje}`;
+                
+                // Abre WhatsApp en una nueva pestaña para que no pierdan la pantalla de éxito
+                window.open(urlWhatsApp, '_blank');
+
                 // Mostrar mensaje de éxito en la UI
                 document.getElementById('formSectionContainer').innerHTML = `
                     <div class="text-center py-6">
@@ -815,7 +823,6 @@
                 btn.disabled = false;
             }
         });
-
         // 2. BÚSQUEDA Y DESCARGA DE PASE
         document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
             e.preventDefault();
