@@ -11,7 +11,6 @@
     <meta property="og:description" content="Acuérdate de tu Creador en los días de tu juventud... Acompáñame a celebrar mis XV años.">
     <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Verenice_Pat_1783220635890%2Ffoto_portada_1000718550.jpg?alt=media&token=bcd40ef6-669c-413b-8a6d-7f17fd993373">
     <meta property="og:type" content="website">
-    <link rel="apple-touch-icon" href="https://i.imgur.com/BLo32xt.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -535,6 +534,16 @@
                 <p class="text-sm uppercase mb-10 font-bold w-full leading-relaxed px-4 text-beige tracking-widest">Por favor, confirma antes del<br>10 de Septiembre de 2026</p>
                 
                 <form id="rsvpForm" class="w-[90%] max-w-[320px] mx-auto space-y-6 text-left transition-all duration-500 mb-6">
+                    
+                    <!-- ALERTA PERSONALIZADA INLINE -->
+                    <div id="customAlert" class="hidden mb-2 bg-black/80 border border-beige/60 rounded-xl p-3 text-center transition-all duration-300 shadow-xl">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-beige" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p id="customAlertTitle" class="text-beige font-bold text-xs uppercase tracking-widest">Aviso</p>
+                        </div>
+                        <p id="customAlertText" class="text-white text-sm">Mensaje aquí</p>
+                    </div>
+
                     <div class="border-b border-beige/50 pb-2">
                         <label class="text-sm uppercase text-beige font-bold tracking-widest">Nombre Completo</label>
                         <input type="text" id="rsvpName" required placeholder="Tu Nombre / Familia" class="w-full bg-transparent py-2 outline-none text-xl text-white font-bold text-center md:text-left placeholder-white/40">
@@ -589,7 +598,7 @@
 
     </main>
 
-    <!-- SCRIPT DE INTERFAZ Y ANIMACIONES (Sin LocalStorage) -->
+    <!-- SCRIPT DE INTERFAZ Y ANIMACIONES -->
     <script>
         window.maxPasesGlobal = undefined;
 
@@ -765,7 +774,62 @@
         }
 
         // ==========================================
-        // VALIDACIÓN DE LA URL AL CARGAR LA PÁGINA (Con Firebase directamente)
+        // SISTEMA DE ALERTAS PERSONALIZADAS
+        // ==========================================
+        function mostrarAlerta(titulo, mensaje) {
+            const customAlert = document.getElementById('customAlert');
+            const customAlertTitle = document.getElementById('customAlertTitle');
+            const customAlertText = document.getElementById('customAlertText');
+            
+            if(customAlert && customAlertTitle && customAlertText) {
+                customAlertTitle.innerText = titulo;
+                customAlertText.innerText = mensaje;
+                customAlert.classList.remove('hidden');
+                
+                // Efecto visual de rebote rápido al mostrar
+                customAlert.classList.add('scale-105');
+                setTimeout(() => customAlert.classList.remove('scale-105'), 200);
+                
+                clearTimeout(window.alertTimeout);
+                window.alertTimeout = setTimeout(() => {
+                    customAlert.classList.add('hidden');
+                }, 4500); // Se oculta sola a los 4.5 segundos
+            }
+        }
+
+        // ==========================================
+        // VALIDACIÓN EN TIEMPO REAL (AL ESCRIBIR)
+        // ==========================================
+        const inputAdults = document.getElementById('rsvpAdults');
+        const inputKids = document.getElementById('rsvpKids');
+
+        function validarPasesEnTiempoReal(e) {
+            if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal)) {
+                const adultos = parseInt(inputAdults.value) || 0;
+                const ninos = parseInt(inputKids.value) || 0;
+                
+                if (adultos + ninos > window.maxPasesGlobal) {
+                    mostrarAlerta("Límite de Pases", `Cuentas con un máximo de ${window.maxPasesGlobal} pases asignados en total.`);
+                    
+                    // Ajusta automáticamente el valor para no exceder el límite
+                    if (e.target.id === 'rsvpAdults') {
+                        inputAdults.value = Math.max(0, window.maxPasesGlobal - ninos);
+                    } else if (e.target.id === 'rsvpKids') {
+                        inputKids.value = Math.max(0, window.maxPasesGlobal - adultos);
+                    }
+                } else {
+                    const customAlert = document.getElementById('customAlert');
+                    if(customAlert) customAlert.classList.add('hidden');
+                }
+            }
+        }
+
+        if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
+        if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
+
+
+        // ==========================================
+        // LECTURA DE URL AL CARGAR LA PÁGINA
         // ==========================================
         const params = new URLSearchParams(window.location.search);
         const nombreUrl = params.get('n');      
@@ -798,7 +862,6 @@
                 searchName.classList.add('cursor-not-allowed', 'opacity-80'); 
             }
 
-            // Validar directamente con Firebase si ya existe un registro con este nombre
             if (db) {
                 const confirmacionesRef = collection(db, "confirmaciones_marcela");
                 const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
@@ -820,32 +883,6 @@
             }
         }
 
-        // ==========================================
-        // VALIDACIÓN EN TIEMPO REAL DE LOS PASES
-        // ==========================================
-        const inputAdults = document.getElementById('rsvpAdults');
-        const inputKids = document.getElementById('rsvpKids');
-
-        function validarPasesEnTiempoReal(e) {
-            if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal)) {
-                const adultos = parseInt(inputAdults.value) || 0;
-                const ninos = parseInt(inputKids.value) || 0;
-                
-                if (adultos + ninos > window.maxPasesGlobal) {
-                    alert(`¡Atención! Solo tienes asignados ${window.maxPasesGlobal} pases en total.`);
-                    
-                    // Ajusta automáticamente el valor para no exceder el límite
-                    if (e.target.id === 'rsvpAdults') {
-                        inputAdults.value = Math.max(0, window.maxPasesGlobal - ninos);
-                    } else if (e.target.id === 'rsvpKids') {
-                        inputKids.value = Math.max(0, window.maxPasesGlobal - adultos);
-                    }
-                }
-            }
-        }
-
-        if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
-        if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
 
         // ==========================================
         // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
@@ -860,8 +897,9 @@
                 const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
                 const totalPases = numAdultos + numNinos;
                 
+                // Ultima protección por si logran burlar el tiempo real
                 if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal) && totalPases > window.maxPasesGlobal) {
-                    alert(`¡Atención! Solo tienes asignados ${window.maxPasesGlobal} pases en total. Por favor, ajusta la cantidad de adultos y niños antes de continuar.`);
+                    mostrarAlerta("Límite de Pases", `Solo tienes asignados ${window.maxPasesGlobal} pases. Ajusta la cantidad antes de enviar.`);
                     return; 
                 }
                 
@@ -876,14 +914,12 @@
                 try {
                     if (db) {
                         textLoader.innerText = "Verificando...";
-                        // Segunda validación de Firebase, justo antes de enviar (por si entró sin link especial)
+                        
                         const confirmacionesRef = collection(db, "confirmaciones_marcela");
                         const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
                         const querySnapshot = await getDocs(q);
 
                         if (!querySnapshot.empty) {
-                            alert("Ya existe una confirmación con este nombre en el sistema. Ve a 'Recuperar Pase' abajo para ver tu tarjeta oficial.");
-                            
                             form.innerHTML = `
                                 <div class="glass-card p-8 rounded-3xl text-center mt-6 border-beige/40">
                                     <p class="text-beige font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
@@ -969,7 +1005,8 @@
 
                 } catch(error) {
                     console.error("Error al guardar:", error);
-                    alert("Ocurrió un error guardando el pase. Por favor, intenta de nuevo o comunícate con el anfitrión.");
+                    // Usamos la nueva alerta elegante en caso de error
+                    mostrarAlerta("Error de Conexión", "No pudimos guardar tu pase. Revisa tu internet e intenta de nuevo.");
                     form.style.display = 'block';
                     loader.classList.add('hidden');
                     loader.classList.remove('flex');
