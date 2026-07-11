@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV Marcela Alexandra</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
-      <link rel="apple-touch-icon" href="https://i.imgur.com/BLo32xt.png">
-        
+    
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="XV Marcela Alexandra">
     <meta property="og:description" content="Acuérdate de tu Creador en los días de tu juventud... Acompáñame a celebrar mis XV años.">
@@ -501,7 +500,7 @@
                       <p class="text-beige block mt-1 text-lg italic text-center leading-relaxed">EL MEJOR REGALO ES QUE ME ACOMPAÑES EN ESTE DÍA TAN ESPECIAL PERO SI QUIERES OBSEQUIARME ALGO, PUEDE SER LO QUE NAZCA DE TU CORAZON.
                     </p>
                      <svg class="w-12 h-12 text-beige shrink-0 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
                     <h3 class="text-base font-bold text-white mb-2 uppercase tracking-widest">Otra opción es lluvia de Sobres</h3>
                  
@@ -589,57 +588,9 @@
 
     </main>
 
+    <!-- SCRIPT DE INTERFAZ Y ANIMACIONES (Sin LocalStorage) -->
     <script>
-        // === AJUSTE: Hacer la variable global para que el otro script pueda leerla
         window.maxPasesGlobal = undefined;
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const params = new URLSearchParams(window.location.search);
-            const nombreUrl = params.get('n');      
-            const pasesUrl = params.get('pases');    
-
-            if (nombreUrl && pasesUrl) {
-                // === AJUSTE: Asignar a la variable global
-                window.maxPasesGlobal = parseInt(pasesUrl, 10);
-
-                const seccionInicio = document.getElementById('seccion-pases-inicio');
-                const nombreInvitado = document.getElementById('nombre-invitado-inicio');
-                const pasesInvitado = document.getElementById('pases-invitado-inicio');
-
-                if (seccionInicio && nombreInvitado && pasesInvitado) {
-                    seccionInicio.classList.remove('hidden');
-                    nombreInvitado.textContent = nombreUrl;   
-                    pasesInvitado.textContent = pasesUrl;    
-                }
-
-                const formName = document.getElementById('rsvpName');
-                if (formName) {
-                    formName.value = nombreUrl;
-                    formName.readOnly = true; 
-                    formName.classList.add('cursor-not-allowed', 'opacity-80'); 
-                }
-
-                const searchName = document.getElementById('searchName');
-                if (searchName) {
-                    searchName.value = nombreUrl;
-                    searchName.readOnly = true; 
-                    searchName.classList.add('cursor-not-allowed', 'opacity-80'); 
-                }
-            }
-
-            // Ocultar formulario si ya confirmó localmente
-            if (localStorage.getItem('rsvpConfirmadoMarcela')) {
-                const form = document.getElementById('rsvpForm');
-                if(form) {
-                    form.innerHTML = `
-                        <div class="glass-card p-8 rounded-3xl text-center border-beige/40">
-                            <p class="text-beige font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
-                            <p class="text-white/80 text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase oficial.</p>
-                        </div>
-                    `;
-                }
-            }
-        });
 
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
@@ -788,7 +739,7 @@
         });
     </script>
 
-    <!-- LÓGICA FIREBASE PARA RSVP Y BUSCADOR -->
+    <!-- LÓGICA FIREBASE Y VALIDACIONES -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -813,6 +764,62 @@
         }
 
         // ==========================================
+        // VALIDACIÓN DE LA URL AL CARGAR LA PÁGINA (Con Firebase directamente)
+        // ==========================================
+        const params = new URLSearchParams(window.location.search);
+        const nombreUrl = params.get('n');      
+        const pasesUrl = params.get('pases');    
+
+        if (nombreUrl && pasesUrl) {
+            window.maxPasesGlobal = parseInt(pasesUrl, 10);
+
+            const seccionInicio = document.getElementById('seccion-pases-inicio');
+            const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+            const pasesInvitado = document.getElementById('pases-invitado-inicio');
+
+            if (seccionInicio && nombreInvitado && pasesInvitado) {
+                seccionInicio.classList.remove('hidden');
+                nombreInvitado.textContent = nombreUrl;   
+                pasesInvitado.textContent = pasesUrl;    
+            }
+
+            const formName = document.getElementById('rsvpName');
+            if (formName) {
+                formName.value = nombreUrl;
+                formName.readOnly = true; 
+                formName.classList.add('cursor-not-allowed', 'opacity-80'); 
+            }
+
+            const searchName = document.getElementById('searchName');
+            if (searchName) {
+                searchName.value = nombreUrl;
+                searchName.readOnly = true; 
+                searchName.classList.add('cursor-not-allowed', 'opacity-80'); 
+            }
+
+            // Validar directamente con Firebase si ya existe un registro con este nombre
+            if (db) {
+                const confirmacionesRef = collection(db, "confirmaciones_marcela");
+                const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+                getDocs(q).then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        const form = document.getElementById('rsvpForm');
+                        if(form) {
+                            form.innerHTML = `
+                                <div class="glass-card p-8 rounded-3xl text-center border-beige/40">
+                                    <p class="text-beige font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
+                                    <p class="text-white/80 text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Error verificando registro previo en Firebase:", err);
+                });
+            }
+        }
+
+        // ==========================================
         // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
         // ==========================================
         const rsvpFormElement = document.getElementById('rsvpForm');
@@ -825,10 +832,9 @@
                 const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
                 const totalPases = numAdultos + numNinos;
                 
-                // === AJUSTE: Validación de pases con alerta de bloqueo
                 if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal) && totalPases > window.maxPasesGlobal) {
                     alert(`¡Atención! Solo tienes asignados ${window.maxPasesGlobal} pases en total. Por favor, ajusta la cantidad de adultos y niños antes de continuar.`);
-                    return; // Bloquea el envío del formulario
+                    return; 
                 }
                 
                 const form = document.getElementById('rsvpForm');
@@ -842,18 +848,18 @@
                 try {
                     if (db) {
                         textLoader.innerText = "Verificando...";
+                        // Segunda validación de Firebase, justo antes de enviar (por si entró sin link especial)
                         const confirmacionesRef = collection(db, "confirmaciones_marcela");
                         const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
                         const querySnapshot = await getDocs(q);
 
                         if (!querySnapshot.empty) {
-                            alert("Ya existe una confirmación con este nombre. Ve a 'Recuperar Pase' abajo para ver tu tarjeta oficial.");
-                            localStorage.setItem('rsvpConfirmadoMarcela', 'true');
+                            alert("Ya existe una confirmación con este nombre en el sistema. Ve a 'Recuperar Pase' abajo para ver tu tarjeta oficial.");
                             
                             form.innerHTML = `
                                 <div class="glass-card p-8 rounded-3xl text-center mt-6 border-beige/40">
                                     <p class="text-beige font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
-                                    <p class="text-white/80 text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                    <p class="text-white/80 text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
                                 </div>
                             `;
                             form.style.display = 'block';
@@ -877,8 +883,6 @@
                             fecha: serverTimestamp() 
                         });
                     }
-
-                    localStorage.setItem('rsvpConfirmadoMarcela', 'true');
 
                     loader.classList.add('hidden');
                     loader.classList.remove('flex');
@@ -935,15 +939,9 @@
                         });
                     });
 
-                    // === AJUSTE: Eliminado el setTimeout de la redirección forzosa.
-                    // Ahora el usuario debe dar click manualmente al botón de avisar por WhatsApp.
-
                 } catch(error) {
-                    // === AJUSTE: Prevención de pantalla trabada si falla el guardado
                     console.error("Error al guardar:", error);
                     alert("Ocurrió un error guardando el pase. Por favor, intenta de nuevo o comunícate con el anfitrión.");
-                    
-                    // Restauramos la vista para que el usuario pueda volver a intentar
                     form.style.display = 'block';
                     loader.classList.add('hidden');
                     loader.classList.remove('flex');
