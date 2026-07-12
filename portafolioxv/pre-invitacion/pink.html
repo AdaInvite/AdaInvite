@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pre Invitación - XV Nahomi Alexa</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
@@ -37,6 +37,7 @@
             --font-numbers: 'Cinzel', serif; 
         }
 
+        /* Ocultamos el scroll para forzar una sola pantalla perfecta */
         body, html {
             margin: 0;
             padding: 0;
@@ -44,10 +45,8 @@
             height: 100%;
             font-family: var(--font-elegant);
             background-color: #000;
-            overflow-x: hidden; 
-            overflow-y: auto;
+            overflow: hidden; 
             color: var(--blanco-perla);
-            scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4, .serif, label, button, span, p { 
@@ -87,14 +86,13 @@
         #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
         #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 
-        .name-header { font-family: var(--font-script); font-size: clamp(3.8rem, 16vw, 7.5rem); line-height: 1.1; }
-
-        #section-main { display: none; min-height: 100vh; position: relative; }
+        #section-main { display: none; height: 100svh; position: relative; }
 
         /* --- ANIMACIONES DE ENTRADA --- */
-        .reveal-scale { opacity: 0; transform: scale(0.85); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal-scale.active { opacity: 1; transform: scale(1); }
-        .delay-100 { transition-delay: 100ms; }
+        .delay-100 { transition-delay: 150ms; }
+        .delay-200 { transition-delay: 300ms; }
 
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -105,7 +103,7 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Sombra leve para los textos rosa */
-        .sombra-leve { text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5); }
+        .sombra-leve { text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.6); }
     </style>
 </head>
 <body>
@@ -114,8 +112,8 @@
     <audio id="bg-music" loop>
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/ArianaGrande-intro(end%20of%20the%20world).mp3" type="audio/mpeg">
     </audio>
-    <div id="audio-btn" class="fixed bottom-[30px] right-[20px] w-[40px] h-[40px] bg-transparent flex items-center justify-center z-[50] cursor-pointer transition-all duration-300" onclick="toggleAudio()">
-        <img id="audio-icon" src="https://i.imgur.com/GbsF6Vh.png" class="w-2/3 h-2/3 object-cover" alt="Música">
+    <div id="audio-btn" class="fixed bottom-[20px] right-[20px] w-[35px] h-[35px] bg-transparent flex items-center justify-center z-[50] cursor-pointer transition-all duration-300 hidden" onclick="toggleAudio()">
+        <img id="audio-icon" src="https://i.imgur.com/GbsF6Vh.png" class="w-full h-full object-cover" alt="Música">
     </div>
 
     <!-- SOBRE DE INICIO -->
@@ -129,76 +127,72 @@
                 <div class="flap flap-right"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-xl mb-4 animate-bounce text-white font-light">Toca para abrir</div>
+                <div class="text-lg mb-3 animate-bounce text-white font-light">Toca para abrir</div>
                 <img src="https://i.imgur.com/yLDqFJ7.png" 
-                     class="w-[140px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+                     class="w-[120px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
         </div>
     </div>
 
-    <!-- TARJETA ÚNICA SIN FONDO BLANCO -->
+    <!-- TARJETA ÚNICA -->
     <main id="section-main">
         <!-- FONDO GIF FIJO CON BLUR -->
-        <div class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat blur-[6px] scale-110" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('https://i.imgur.com/MmXulZL.gif');"></div>
+        <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat blur-[5px] scale-105" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.65)), url('https://i.imgur.com/MmXulZL.gif');"></div>
         
-        <div class="relative z-10 min-h-[100svh] flex flex-col p-4 md:p-8 box-border justify-center items-center">
+        <!-- CONTENEDOR PRINCIPAL: Usa justify-evenly para distribuir el espacio vertical automáticamente -->
+        <div class="relative z-10 h-full w-full max-w-2xl mx-auto flex flex-col justify-evenly items-center px-4 py-6 md:py-10 text-center">
             
-            <div class="w-full max-w-3xl mx-auto flex flex-col justify-center items-center text-center py-6">
-                
-                <div class="reveal-scale active flex flex-col items-center justify-center w-full">
-                    
-                    <!-- Texto curvo -->
-                    <svg width="250" height="90" viewBox="0 0 250 90" class="absolute top-0 md:top-4 overflow-visible">
-                        <path id="curve-text" d="M 10,80 Q 125,10 240,80" fill="transparent" />
-                        <text width="250" text-anchor="middle">
-                            <textPath href="#curve-text" startOffset="50%" class="fill-white font-bold text-sm tracking-[0.25em] uppercase" style="font-family: var(--font-elegant);">Save the date</textPath>
-                        </text>
-                    </svg>
+            <!-- BLOQUE 1: Corona y Save the Date -->
+            <div class="reveal-scale active flex flex-col items-center relative pt-4">
+                <svg width="200" height="70" viewBox="0 0 250 90" class="absolute -top-4 md:-top-2 overflow-visible">
+                    <path id="curve-text" d="M 20,80 Q 125,20 230,80" fill="transparent" />
+                    <text width="250" text-anchor="middle">
+                        <textPath href="#curve-text" startOffset="50%" class="fill-white font-bold text-sm tracking-[0.3em] uppercase">Save the date</textPath>
+                    </text>
+                </svg>
+                <img src="https://i.imgur.com/yOsSYnN.png" alt="Corona" class="w-32 mt-4 relative z-10">
+            </div>
 
-                    <!-- Corona -->
-                    <img src="https://i.imgur.com/yOsSYnN.png" alt="Corona" class="w-32 mb-4 md:mb-6 mt-14 md:mt-10 relative z-10">
-                    
-                    <!-- Nombre -->
-                    <h1 class="name-header text-rosa-pastel mb-6 relative z-10 sombra-leve">Nahomi Alexa</h1>
-                    
-                    <!-- Frase de XV -->
-                    <div class="px-4 md:px-12 mb-2 relative z-10">
-                        <p class="text-sm md:text-lg text-white italic leading-relaxed font-light text-center">
-                            "Hoy celebro la vida, los sueños que comienzan a florecer y la ilusión de una nueva etapa. Mis quince años representan un momento inolvidable."
-                        </p>
-                    </div>
+            <!-- BLOQUE 2: Nombre -->
+            <div class="reveal-scale active w-full">
+                <h1 class="text-4xl font-script text-rosa-pastel sombra-leve">Nahomi</h1>
+            </div>
 
-                    <!-- Padres -->
-                    <div class="mb-2 relative z-10 text-white">
-                        <p class="text-xs md:text-sm uppercase tracking-[0.3em] font-bold text-rosa-pastel mb-4 sombra-leve">Con la bendición de mis padres</p>
-                        <p class="text-base md:text-xl mb-1">Sra. Jaqueline Martínez Martínez</p>
-                        <p class="text-base md:text-xl">Sr. Carlos González Lucero</p>
-                    </div>
+            <!-- BLOQUE 3: Frase y Padres -->
+            <div class="reveal-scale active delay-100 flex flex-col items-center gap-4 w-full px-2 md:px-8">
+                <p class="text-sm md:text-lg text-white/95 italic leading-relaxed font-light max-w-sm">
+                    "Hoy celebro la vida, los sueños que comienzan a florecer y la ilusión de una nueva etapa. Mis quince años representan un momento inolvidable."
+                </p>
 
-                    <!-- Línea divisoria -->
-                    <div class="w-24 h-[1px] bg-white/40 mb-2 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.3)]"></div>
-
-                    <!-- Fecha -->
-                    <div class="flex items-center gap-6 md:gap-12 justify-center mb-2">
-                        <div class="flex flex-col items-center text-center text-white">
-                            <span class="text-xs md:text-xl tracking-[0.4em] uppercase">Sábado</span>
-                            <span class="text-6xl md:text-8xl leading-none font-numbers text-rosa-pastel sombra-leve">13</span>
-                        </div>
-                        <div class="w-px h-16 md:h-24 bg-white/40 shadow-[0_0_5px_rgba(255,255,255,0.5)]"></div>
-                        <div class="text-left text-white">
-                            <span class="text-2xl md:text-4xl tracking-widest block font-bold">JUN</span>
-                            <span class="text-sm md:text-2xl tracking-[0.6em] font-numbers text-rosa-pastel sombra-leve">2026</span>
-                        </div>
-                    </div>
-
-                    <!-- Ciudad y Detalles -->
-                    <div class="mt-4 reveal-scale active delay-100">
-                        <h3 class="text-2xl md:text-3xl font-numbers font-bold text-white uppercase tracking-widest mb-4">Aguascalientes</h3>
-                        <p class="text-sm md:text-base text-white/90 italic px-6 max-w-md mx-auto">Reserva la fecha. Pronto recibirás la invitación formal con todos los detalles.</p>
-                    </div>
-
+                <div class="text-white">
+                    <p class="text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-rosa-pastel mb-2 sombra-leve">Con la bendición de mis padres</p>
+                    <p class="text-base md:text-xl leading-tight mb-1">Sra. Jaqueline Martínez Martínez</p>
+                    <p class="text-base md:text-xl leading-tight">Sr. Carlos González Lucero</p>
                 </div>
             </div>
+
+            <!-- Divisor -->
+            <div class="reveal-scale active delay-100 w-20 h-[1px] bg-white/30 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)]"></div>
+
+            <!-- BLOQUE 4: Fecha -->
+            <div class="reveal-scale active delay-200 flex items-center justify-center gap-5 md:gap-10">
+                <div class="flex flex-col items-center text-center text-white">
+                    <span class="text-xs md:text-base tracking-[0.4em] uppercase mb-1">Sábado</span>
+                    <span class="text-6xl md:text-7xl leading-none font-numbers text-rosa-pastel sombra-leve">13</span>
+                </div>
+                <div class="w-px h-16 md:h-20 bg-white/40 shadow-[0_0_5px_rgba(255,255,255,0.3)]"></div>
+                <div class="flex flex-col text-left text-white justify-center">
+                    <span class="text-3xl md:text-4xl tracking-widest block font-bold leading-none mb-1">JUN</span>
+                    <span class="text-xs md:text-base tracking-[0.5em] font-numbers text-rosa-pastel sombra-leve">2026</span>
+                </div>
+            </div>
+
+            <!-- BLOQUE 5: Ciudad y Footer -->
+            <div class="reveal-scale active delay-200 flex flex-col items-center">
+                <h3 class="text-xl md:text-3xl font-numbers font-bold text-white uppercase tracking-[0.2em] mb-2">Aguascalientes</h3>
+                <p class="text-sm md:text-base text-white/80 italic max-w-xs md:max-w-md px-2">Reserva la fecha. Pronto recibirás la invitación formal con todos los detalles.</p>
+            </div>
+
         </div>
     </main>
 
@@ -214,7 +208,7 @@
             setTimeout(() => {
                 document.querySelectorAll('.reveal-scale').forEach(el => el.classList.add('active'));
                 document.getElementById('audio-btn').classList.remove('hidden'); 
-            }, 1000);
+            }, 800);
 
             // Ocultar sobre del DOM
             setTimeout(() => {
