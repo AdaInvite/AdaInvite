@@ -33,16 +33,20 @@
         }
     </script>
     
+    <!-- Librería para descargar el pase -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <!-- Cambio de fuente cursiva a Birthstone -->
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --verde-aqua: #7CB342;
             --blanco-perla: #F0EFEA;
             --font-elegant: 'Lora', serif;
-            --font-script: 'Great Vibes', cursive;
+            --font-script: 'Birthstone', cursive; /* Fuente actualizada */
             --font-numbers: 'Cinzel', serif; 
         }
 
@@ -81,27 +85,31 @@
             z-index: 1;
             color: var(--blanco-perla);
             width: 100%;
-            background-color: rgba(124, 179, 66, 0.95);
+            /* Se redujo un poco la opacidad (0.85) para que el video oscuro sea más visible */
+            background-color: rgba(124, 179, 66, 0.85);
             box-shadow: 0 15px 35px rgba(124, 179, 66, 0.15);
         }
 
-        /* GIF sin filtro oscuro */
+        /* GIF/Video con filtro oscuro */
         .seccion-aqua::before {
             content: "";
             position: absolute;
             inset: -20px; 
             z-index: -1;
+            background-color: #000;
             background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FDiscovered.MP4?alt=media&token=297cb3be-c37a-4d92-9139-f943b6b0bf47');
             background-size: cover;
             background-position: center;
-            opacity: 0.6;
+            opacity: 0.8;
+            /* AQUÍ ESTÁ EL FILTRO OSCURO: 0.3 lo hace muy oscuro. Puedes ajustarlo entre 0.0 (negro) y 1.0 (normal) */
+            filter: brightness(0.7); 
         }
 
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(124, 179, 66, 0.4); }
 
         .filtro-aqua {
-            filter: brightness(0) saturate(100%) invert(62%) sepia(59%) saturate(415%) hue-rotate(44deg) brightness(97%) contrast(89%);
+            filter: brightness(20%) saturate(100%) invert(62%) sepia(59%) saturate(415%) hue-rotate(44deg) brightness(97%) contrast(89%);
         }
 
         .filtro-blanco {
@@ -116,7 +124,7 @@
         }
         .envelope-bg {
             position: absolute; inset: 0;
-            background-image: url("https://i.imgur.com/h89qIfc.jpeg");
+            background-image: url("https://i.imgur.com/WuovIvp.jpeg");
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
@@ -124,7 +132,7 @@
         .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); }
         .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); }
         
-        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/h89qIfc.jpeg"); background-size: cover; }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/WuovIvp.jpeg"); background-size: cover; }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
         .seal-wrapper {
@@ -164,7 +172,7 @@
             50% { transform: translateY(-10px) rotate(1deg); }
         }
 
-        /* Sliders */
+        /* Reproductor Sliders */
         input[type=range] {
             -webkit-appearance: none; background: rgba(124, 179, 66, 0.3); border-radius: 8px; height: 4px; outline: none;
         }
@@ -172,21 +180,20 @@
             -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--verde-aqua); cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 30px; padding: 40px 20px; scrollbar-width: none; }
+        /* Estilos Tarjetas Polaroid */
+        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 30px; padding: 20px; scrollbar-width: none; }
         .slider-historia::-webkit-scrollbar { display: none; }
-        .tarjeta-nueva {
+        .tarjeta-polaroid {
             flex: 0 0 280px; scroll-snap-align: center; position: relative;
-            background: var(--blanco-perla); padding: 12px; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); transform: rotate(-1deg); 
-            transition: all 0.4s ease; border: 1px solid rgba(124, 179, 66, 0.3);
+            background: #FFFFFF; padding: 15px 15px 25px 15px; border-radius: 4px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); transform: rotate(-2deg); 
+            transition: all 0.4s ease; border: 1px solid #e0e0e0;
         }
-        .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
-        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .img-historia { width: 100%; height: 380px; object-fit: cover; border-radius: 12px; }
-        .info-flotante {
-            position: absolute; bottom: 25px; left: 25px; right: 25px;
-            background: rgba(240, 239, 234, 0.95); backdrop-filter: blur(8px);
-            padding: 15px; border-radius: 12px; border: 1px solid rgba(124, 179, 66, 0.4); text-align: left;
+        .tarjeta-polaroid:nth-child(even) { transform: rotate(2deg); }
+        .tarjeta-polaroid:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
+        .img-historia { width: 100%; height: 300px; object-fit: cover; border-radius: 2px; }
+        .texto-polaroid {
+            margin-top: 15px; text-align: center; font-family: var(--font-elegant); font-weight: bold; color: #2C2A2A; font-size: 1.1rem;
         }
     </style>
 </head>
@@ -208,7 +215,7 @@
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="text-xl mb-4 animate-bounce text-white drop-shadow-sm font-bold">Toca para abrir</div>
-                <img src="https://i.imgur.com/yLDqFJ7.png" 
+                <img src="https://i.imgur.com/K7M307Z.png" 
                      class="w-[140px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
         </div>
@@ -220,7 +227,7 @@
         <header class="relative min-h-[100svh] flex flex-col px-12 py-10 box-border"> 
             <div class="absolute inset-0 bg-cover bg-center z-0 opacity-100" style="background-image: url('https://i.imgur.com/yKnAa8O.jpeg'); background-position: top center;"></div>
            
-            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla/90 backdrop-blur-sm border border-verde-aqua/30 rounded-t-[150px] md:rounded-t-[150px] pt-20 pb-8 px-6 mt-20">
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla/90 backdrop-blur-sm border-4 border-verde-aqua/80 rounded-t-[150px] md:rounded-t-[150px] pt-20 pb-8 px-6">
                 
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
                     <svg width="250" height="90" viewBox="0 0 250 90" class="absolute -top-16 md:-top-20 overflow-visible">
@@ -230,7 +237,7 @@
                         </text>
                     </svg>
                     <img src="https://i.imgur.com/Hv9gZUu.png" alt="Corona" class="w-28 md:w-28 mb-4 relative z-10 drop-shadow-sm">
-                    <h1 class="font-script text-6xl md:text-7xl text-verde-aqua mb-2 relative z-10 leading-tight">Arleth <br>Natalia</h1>
+                    <h1 class="font-script text-7xl md:text-8xl text-verde-aqua mb-2 relative z-10 leading-tight">Arleth <br>Natalia</h1>
                     
                     <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-4 mb-4 px-2 relative z-10">
                         <div class="flex-1 flex justify-center items-center border-t border-b border-[#2C2A2A]/30 py-2">
@@ -247,7 +254,7 @@
                 <div id="seccion-pases-inicio" class="w-full max-w-[240px] mx-auto mb-8 hidden reveal-scale active delay-200 relative z-10">
                     <div class="bg-verde-aqua/90 border border-verde-aqua/20 rounded-xl px-4 py-3 shadow-lg text-center transition-all">
                         <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
-                        <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
+                        <p id="nombre-invitado-inicio" class="text-3xl font-script text-white mb-1 capitalize"></p>
                         <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/30 pt-1.5 w-[70%] mx-auto">
                             <span class="text-xs uppercase font-bold text-white">Pases:</span>
                             <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
@@ -266,16 +273,15 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Ffoto_separador_1_33721.jpg?alt=media&token=31493cfc-5f97-4afd-a6c1-a4d418f0a095" class="separador-img w-full h-full object-cover" alt="Separador 1">
         </div>
 
-        <!-- SECCIÓN 1: PADRES Y REPRODUCTOR VIP -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 text-center relative seccion-blanca overflow-hidden">
+        <!-- SECCIÓN 1: PADRES (Fondo Blanco) -->
+        <section class="min-h-[100svh] flex flex-col justify-center py-6 px-6 text-center relative seccion-blanca overflow-hidden">
             <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
                 <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
             </div>
             
-            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-10">
-                
+            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A]">
                 <!-- Reproductor VIP -->
-                <div class="w-full max-w-[280px] mx-auto py-1 bg-white/80 backdrop-blur-md rounded-2xl p-4 md:p-5 shadow-lg mb-10 reveal-scale border border-verde-aqua/20">
+                <div class="w-full max-w-[280px] mx-auto py-1 bg-white/80 backdrop-blur-md rounded-2xl p-2 shadow-lg mb-5 reveal-scale border border-verde-aqua/20">
                     <div class="text-left mb-4">
                         <h3 class="text-lg font-bold mb-0.5 font-elegant text-verde-aqua">Snowman</h3>
                         <p class="text-[10px] font-bold text-gray-500 font-elegant">Sia</p>
@@ -291,7 +297,7 @@
                         <button class="text-verde-aqua hover:text-verde-aqua/70 transition-colors opacity-80 focus:outline-none">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                         </button>
-                        <button onclick="toggleAudio()" class="w-12 h-12 bg-verde-aqua text-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
+                        <button onclick="toggleAudio()" class="w-8 h-8 bg-verde-aqua text-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
                             <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </button>
@@ -305,16 +311,16 @@
                     "Hoy dejo atrás una etapa para empezar a brillar en una nueva, y quiero celebrarlo rodeada de quienes forman parte de mi historia."
                 </p>
                 
-                <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+                <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="text-4xl md:text-3xl text-verde-aqua mb-3 font-script">Mis Padres</h3>
+                        <h3 class="text-5xl md:text-6xl text-verde-aqua mb-3 font-script">Mis Padres</h3>
                         <p class="text-base md:text-lg text-black font-light">Sandra Santoyo</p>
                         <p class="text-base md:text-lg text-black font-light">Gerardo Rosas</p>
                     </div>
                     <div>
-                        <h3 class="text-4xl md:text-3xl text-verde-aqua mb-6 font-script">Mis Padrinos</h3>
+                        <h3 class="text-5xl md:text-6xl text-verde-aqua mb-3 font-script">Mis Padrinos</h3>
                         <p class="text-base md:text-lg text-black font-light">Juan Carlos Rosas</p>
-                        <p class="text-base md:text-lg text-black font-light">Brenda Velázquez</p>
+                        <p class="text-base md:text-lg text-black mb-20 font-light">Brenda Velázquez</p>
                     </div>
                 </div>
             </div>
@@ -329,60 +335,42 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Ffoto_separador_2_33721.jpg?alt=media&token=5661d817-2477-40f8-a3d3-77ee93485ea5" class="separador-img w-full h-full object-cover" alt="Separador 2">
         </div>
 
-        <!-- SECCIÓN 3: HISTORIA -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
-                <img src="https://i.imgur.com/J8woORs.png" class="w-full h-auto" alt="decoración">
-            </div>
-
+        <!-- SECCIÓN 3: HISTORIA (Fondo Aqua / Video) -->
+        <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-aqua relative overflow-hidden">
             <div class="max-w-6xl mx-auto relative z-10 w-full py-10">
-                <div class="text-center mb-2 reveal">
-                    <h2 class="text-5xl mb-6 font-script text-verde-aqua drop-shadow-sm reveal-scale">Mi Historia</h2>
-                    <p class="text-[11px] uppercase tracking-[0.5em] font-bold opacity-90 text-[#2C2A2A]">Un viaje inolvidable</p>
+                <div class="text-center mb-6 reveal">
+                    <h2 class="text-6xl font-script text-white drop-shadow-md reveal-scale mb-2">Mi Historia</h2>
+                    <p class="text-[11px] uppercase tracking-[0.5em] font-bold opacity-90 text-white">Un viaje inolvidable</p>
                 </div>
 
                 <div class="slider-historia">
-                    <div class="tarjeta-nueva">
+                    <!-- Tarjetas tipo Polaroid -->
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_1_33702.jpg?alt=media&token=5635de82-0ac3-4223-8105-676bb4ab9d1a" class="img-historia" alt="Nació una bella princesa">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Nació una bella princesa</h4>
-                        </div>
+                        <p class="texto-polaroid">Nació una bella princesa</p>
                     </div>
-                    <div class="tarjeta-nueva">
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_2_d3f0c850-2c9c-4dcf-8951-e8e5466865e9-1_all_6517.jpg?alt=media&token=8f6371a0-3af9-4dfb-9ec8-a9824c364c0d" class="img-historia" alt="Juegos y travesuras">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Juegos y travesuras</h4>
-                        </div>
+                        <p class="texto-polaroid">Juegos y travesuras</p>
                     </div>
-                    <div class="tarjeta-nueva">
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_3_d3f0c850-2c9c-4dcf-8951-e8e5466865e9-1_all_6027.jpg?alt=media&token=dc2acc59-49d0-4cd4-8e4a-75464557c190" class="img-historia" alt="Recuerdos cumpleaños">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Recuerdos cumpleaños</h4>
-                        </div>
+                        <p class="texto-polaroid">Recuerdos cumpleaños</p>
                     </div>
-                    <div class="tarjeta-nueva">
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_4_d3f0c850-2c9c-4dcf-8951-e8e5466865e9-1_all_5774.jpg?alt=media&token=9ed037d9-0807-44f8-a5b7-4904bfc72e5b" class="img-historia" alt="En el kinder">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">En el kinder</h4>
-                        </div>
+                        <p class="texto-polaroid">En el kinder</p>
                     </div>
-                    <div class="tarjeta-nueva">
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_5_d3f0c850-2c9c-4dcf-8951-e8e5466865e9-1_all_5556.jpg?alt=media&token=bf607ecc-c34d-47ab-bcfe-e0c36d7153d0" class="img-historia" alt="Con familia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Con familia</h4>
-                        </div>
+                        <p class="texto-polaroid">Con familia</p>
                     </div>
-                    <div class="tarjeta-nueva">
+                    <div class="tarjeta-polaroid">
                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Fhistoria_foto_6_19194.jpg?alt=media&token=7da3b383-2831-474c-831a-05459e0e0071" class="img-historia" alt="Secundaria">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Secundaria</h4>
-                        </div>
+                        <p class="texto-polaroid">Secundaria</p>
                     </div>
                 </div>
-                <p class="text-center text-[#2C2A2A]/70 text-[10px] mt-4 uppercase tracking-[0.4em] font-bold">Arrastra para ver más →</p>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none rotate-180">
-                <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
+                <p class="text-center text-white/80 text-[10px] mt-6 uppercase tracking-[0.4em] font-bold">Arrastra para ver más →</p>
             </div>
         </section>
 
@@ -391,93 +379,81 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Ffoto_separador_3_33721.jpg?alt=media&token=d2673981-db24-4073-9acb-db03a2a99a40" class="separador-img w-full h-full object-cover" alt="Separador 3">
         </div>
 
-        <!-- SECCIÓN 4: COUNTDOWN (AQUA) -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-aqua overflow-hidden">
+        <!-- SECCIÓN 4: COUNTDOWN (Fondo Blanco) -->
+        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
+                <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
+            </div>
+
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full py-10">
-                <h3 class="text-6xl font-script text-white drop-shadow-md mb-16">Faltan solo...</h3>
+                <h3 class="text-7xl md:text-8xl font-script text-verde-aqua drop-shadow-sm mb-16">Faltan solo...</h3>
                 
                 <div id="countdown" class="flex gap-4 md:gap-10 justify-center px-4 mb-16">
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="days" class="time-num text-3xl md:text-4xl text-white">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border border-verde-aqua/30 shadow-md flex items-center justify-center mb-4 rounded-xl">
+                            <span id="days" class="time-num text-3xl md:text-4xl text-verde-aqua">00</span>
                         </div>
-                        <span class="time-label text-white font-bold">Días</span>
+                        <span class="time-label text-[#2C2A2A] font-bold">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="hours" class="time-num text-3xl md:text-4xl text-white">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border border-verde-aqua/30 shadow-md flex items-center justify-center mb-4 rounded-xl">
+                            <span id="hours" class="time-num text-3xl md:text-4xl text-verde-aqua">00</span>
                         </div>
-                        <span class="time-label text-white font-bold">Horas</span>
+                        <span class="time-label text-[#2C2A2A] font-bold">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="minutes" class="time-num text-3xl md:text-4xl text-white">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border border-verde-aqua/30 shadow-md flex items-center justify-center mb-4 rounded-xl">
+                            <span id="minutes" class="time-num text-3xl md:text-4xl text-verde-aqua">00</span>
                         </div>
-                        <span class="time-label text-white font-bold">Min</span>
+                        <span class="time-label text-[#2C2A2A] font-bold">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="seconds" class="time-num text-3xl md:text-4xl text-white">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white border border-verde-aqua/30 shadow-md flex items-center justify-center mb-4 rounded-xl">
+                            <span id="seconds" class="time-num text-3xl md:text-4xl text-verde-aqua">00</span>
                         </div>
-                        <span class="time-label text-white font-bold">Seg</span>
+                        <span class="time-label text-[#2C2A2A] font-bold">Seg</span>
                     </div>
                 </div>
 
                 <div class="reveal-scale delay-200 mt-8">
-                    <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-white font-bold">Reserva el momento en tu calendario</p>
+                    <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-[#2C2A2A] font-bold">Reserva el momento en tu calendario</p>
                     <div class="flex justify-center">
-                        <button onclick="calendarLink('XV Arleth Natalia', 'Templo Capilla Emporio', '20260815T190000')" class="bg-white text-verde-aqua border border-white px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-white transition-all duration-300 shadow-md rounded-md">
+                        <button onclick="calendarLink('XV Arleth Natalia', 'Templo Capilla Emporio', '20260815T190000')" class="bg-verde-aqua text-white border border-verde-aqua px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-transparent hover:text-verde-aqua transition-all duration-300 shadow-md rounded-md">
                             Agregar al calendario
                         </button>
                     </div>
                 </div>
             </div>
+
+            <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none rotate-180">
+                <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
+            </div>
         </section>
 
-        <!-- SECCIÓN 6: UBICACIONES -->
-        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-aqua relative">
-            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-20 relative z-10 w-full px-4">
-                
-                <div class="reveal flex flex-col h-full rounded-2xl overflow-hidden shadow-2xl border border-white/30 bg-transparent">
-                    <div class="relative flex-grow flex flex-col items-center justify-center p-8 md:p-12 min-h-[450px]">
-                        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://i.imgur.com/sFsDlDP.jpeg');"></div>
-                        <div class="absolute inset-0 bg-black/50"></div>
-                        
-                        <div class="relative z-10 text-center w-full">
-                            <div class="mx-auto mb-4 flex items-center justify-center">
-                                <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 filtro-blanco" alt="Ceremonia">
+        <!-- SECCIÓN 5: UBICACIONES (Fondo Aqua / Video) -->
+        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-20 seccion-aqua relative">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 relative z-10 w-full px-4">
+                <div class="relative z-10 text-center w-full">
+                    <div class="reveal flex flex-col h-full rounded-2xl overflow-hidden shadow-2xl border border-white/30 bg-transparent">
+                        <div class="relative flex-grow flex flex-col items-center justify-center p-8 min-h-[450px]">
+                            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://i.imgur.com/7ugEJvK.jpeg');"></div>
+                            <div class="absolute inset-0 bg-black/50"></div>
+                            
+                            <div class="relative z-10 text-center w-full">
+                                <div class="mx-auto mb-4 flex items-center justify-center">
+                                    <img src="https://i.imgur.com/AIApde9.png" class="w-24 filtro-blanco" alt="Recepción">
+                                </div>
+                                <h1 class="text-6xl text-white mb-4 font-script drop-shadow-md reveal-scale">Ceremonia <br>y <br>Recepción</h1>
+                                <p class="text-white font-medium text-lg drop-shadow-md tracking-wide px-4">Salón de eventos Emporio</p>
+                                <p class="text-white/80 font-medium text-sm mt-2 drop-shadow-md tracking-wide px-4">Puerto yavaros #50</p>
+                                <p class="text-white text-lg mt-4 font-numbers font-bold drop-shadow-md">7:00 P.M.</p>
                             </div>
-                            <h1 class="text-5xl md:text-5xl text-white mb-4 font-script drop-shadow-md reveal-scale">Ceremonia</h1>
-                            <p class="text-white font-medium text-lg drop-shadow-md tracking-wide px-4">Templo Capilla Emporio</p>
-                            <p class="text-white/80 font-medium text-sm mt-2 drop-shadow-md tracking-wide px-4">Puerto yavaros #50</p>
-                            <p class="text-white text-lg mt-4 font-numbers font-bold drop-shadow-md">7:00 P.M.</p>
+                        </div>
+                        <div class="p-6 bg-white/10 backdrop-blur-sm border-t border-white/20">
+                            <a href="https://maps.app.goo.gl/pyXdhkhVz98LG3458" target="_blank" class="w-full block text-center bg-white border border-white text-verde-aqua font-bold px-8 py-4 text-[13px] tracking-widest uppercase hover:bg-transparent hover:text-white shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-lg">Abrir en App de Mapas</a>
                         </div>
                     </div>
-                    <div class="p-6 bg-white/10 backdrop-blur-sm border-t border-white/20">
-                        <a href="https://maps.app.goo.gl/pyXdhkhVz98LG3458" target="_blank" class="w-full block text-center bg-white border border-white text-verde-aqua font-bold px-8 py-4 text-[13px] tracking-widest uppercase hover:bg-transparent hover:text-white shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-lg">Abrir en App de Mapas</a>
-                    </div>
                 </div>
-
-                <div class="reveal flex flex-col h-full rounded-2xl overflow-hidden shadow-2xl border border-white/30 bg-transparent">
-                    <div class="relative flex-grow flex flex-col items-center justify-center p-8 md:p-12 min-h-[450px]">
-                        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://i.imgur.com/0J5e2mj.jpeg');"></div>
-                        <div class="absolute inset-0 bg-black/50"></div>
-                        
-                        <div class="relative z-10 text-center w-full">
-                            <div class="mx-auto mb-4 flex items-center justify-center">
-                                <img src="https://i.imgur.com/AIApde9.png" class="w-24 filtro-blanco" alt="Recepción">
-                            </div>
-                            <h1 class="text-5xl md:text-5xl text-white mb-4 font-script drop-shadow-md reveal-scale">Recepción</h1>
-                            <p class="text-white font-medium text-lg drop-shadow-md tracking-wide px-4">Salón de eventos Emporio</p>
-                            <p class="text-white/80 font-medium text-sm mt-2 drop-shadow-md tracking-wide px-4">Puerto yavaros #50</p>
-                            <p class="text-white text-lg mt-4 font-numbers font-bold drop-shadow-md">8:00 P.M.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 bg-white/10 backdrop-blur-sm border-t border-white/20">
-                        <a href="https://maps.app.goo.gl/pyXdhkhVz98LG3458" target="_blank" class="w-full block text-center bg-white border border-white text-verde-aqua font-bold px-8 py-4 text-[13px] tracking-widest uppercase hover:bg-transparent hover:text-white shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-lg">Abrir en App de Mapas</a>
-                    </div>
-                </div>
-
             </div>
         </section>
 
@@ -486,18 +462,18 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Ffoto_separador_4_33721.jpg?alt=media&token=3d268c96-d117-4f2b-87d9-445fa46fcf16" class="separador-img w-full h-full object-cover" alt="Separador 4">
         </div>
 
-        <!-- SECCIÓN 5: ITINERARIO -->
+        <!-- SECCIÓN 6: ITINERARIO (Fondo Blanco) -->
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
                 <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
             </div>
 
             <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <div class="text-center mb-16">
-                    <h1 class="text-5xl mb-2 text-verde-aqua font-script reveal-scale text-shadow-light">Itinerario</h1>
+                <div class="text-center mb-8">
+                    <h1 class="text-7xl mb-2 text-verde-aqua font-script reveal-scale text-shadow-light">Itinerario</h1>
                     <p class="text-[11px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold">Los momentos que tendremos</p>
                 </div>
-                <div class="relative space-y-8 mt-4">
+                <div class="relative space-y-4">
                     <div class="timeline-line"></div>
                     
                     <div class="flex items-center justify-between relative z-10 reveal-left">
@@ -556,14 +532,12 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 8: CÓDIGO DE VESTIMENTA -->
+        <!-- SECCIÓN 7: CÓDIGO DE VESTIMENTA (Fondo Aqua / Video) -->
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-aqua relative text-center">
             <div class="max-w-3xl mx-auto reveal-scale w-full">
-                <h2 class="text-5xl mb-8 font-script text-white drop-shadow-md">Código de Vestimenta</h2>
+                <h2 class="text-6xl mb-8 font-script text-white drop-shadow-md">Código de Vestimenta</h2>
                 <p class="text-[11px] uppercase tracking-[0.5em] text-verde-aqua mb-8 font-bold bg-white inline-block px-8 py-3 rounded-full shadow-sm">Formal</p>
-                 <div class="px-8 mt-4 mb-8">
-                    <img src="https://i.imgur.com/YadURNx.png" class="w-full max-w-base mx-auto rounded-2xl shadow-2xl border-4 border-white/20" alt="Ejemplos Dress Code">
-                </div>
+              
                 <p class="text-lg md:text-xl italic text-white mt-6 mb-8 font-bold">Tonos reservados exclusivamente para la quinceañera:</p>
                 
                 <div class="flex justify-center gap-6 md:gap-12 mt-4 mb-10">
@@ -588,7 +562,7 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Sandra_Luz_Hern%C3%A1ndez_Santoyo__1784132461319%2Ffoto_separador_5_33721.jpg?alt=media&token=06dcd555-6f24-4f36-a4a0-59ed25bc2f23" class="separador-img w-full h-full object-cover" alt="Separador 5">
         </div>
 
-        <!-- SECCIÓN 9: ÁLBUM COMPARTIDO -->
+        <!-- SECCIÓN 8: ÁLBUM COMPARTIDO (Fondo Blanco) -->
         <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
                 <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
@@ -600,27 +574,31 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
                 </svg>
                 
-                <h1 class="text-5xl mb-4 font-script text-verde-aqua text-shadow-light reveal-scale">Álbum Compartido</h1>
+                <h1 class="text-6xl mb-4 font-script text-verde-aqua text-shadow-light reveal-scale">Álbum Compartido</h1>
                 
                 <p class="text-base md:text-lg px-4 text-[#2C2A2A] mb-8 font-light">
                     Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Escanea el código para subir tus fotos y videos!
                 </p>
 
-                <div class="mx-auto bg-white p-4 rounded-2xl shadow-lg inline-block mb-8 border border-gray-200">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://adainvite.com/" alt="Código QR" class="w-40 object-contain">
+                <div class="mx-auto bg-white p-4 rounded-2xl shadow-lg inline-block border border-gray-200">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://adainvite.com/xvarlethnatalia/recuerdos" alt="Código QR" class="w-40 object-contain">
                 </div>
+                
+                <br>
+                <a href="https://adainvite.com/xvarlethnatalia/recuerdos" target="_blank" class="inline-block bg-verde-aqua text-white font-bold px-10 py-4 mt-8 rounded-lg text-[11px] uppercase tracking-[0.2em] hover:bg-white hover:text-verde-aqua border border-verde-aqua transition-all shadow-md active:scale-95">
+                    Ver galería
+                </a>
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none rotate-180">
-                <img src="https://i.imgur.com/J8woORs.png" class="w-full h-auto" alt="decoración">
+                <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
             </div>
         </section>
 
-        <!-- SECCIÓN 10: MESA DE REGALOS (Lluvia de sobres) -->
+        <!-- SECCIÓN 9: MESA DE REGALOS (Fondo Aqua / Video) -->
         <section class="min-h-[60svh] flex flex-col justify-center py-20 px-6 seccion-aqua text-center relative overflow-hidden">
-            
             <div class="max-w-5xl mx-auto reveal relative z-10 w-full">
-                <h1 class="text-5xl mb-4 font-script text-white drop-shadow-md reveal-scale">Mesa de <br>Regalos</h1>
+                <h1 class="text-6xl md:text-7xl mb-4 font-script text-white drop-shadow-md reveal-scale">Mesa de <br>Regalos</h1>
                 <p class="text-[11px] uppercase mb-10 text-white font-bold tracking-[0.3em] opacity-90 leading-relaxed">Tu presencia es mi mayor regalo,<br>pero si deseas tener un detalle:</p>
                 
                 <div class="bg-white/10 backdrop-blur-md p-8 md:p-10 border border-white/30 shadow-xl rounded-3xl inline-flex flex-col items-center justify-center gap-6 reveal-scale delay-300 w-full max-w-xl mx-auto">
@@ -634,40 +612,67 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 11: RSVP PREMIUM -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
+        <!-- SECCIÓN 10: SISTEMA DE PASES Y RSVP (Fondo Blanco) -->
+        <section class="min-h-[100svh] flex flex-col justify-center py-24 px-6 seccion-blanca text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 opacity-80 pointer-events-none">
                 <img src="https://i.imgur.com/UZn1fMc.png" class="w-full h-auto" alt="decoración">
             </div>
 
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl font-script mb-6 text-verde-aqua text-shadow-light">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-[#2C2A2A] font-bold">Por favor, confirmar antes del <br> 1 de Agosto de 2026</p>
-                <p class="text-sm italic text-gray-500 mb-8 px-4">Tus pases digitales individuales te serán entregados por WhatsApp una vez confirmes tu asistencia.</p>
+            <div class="reveal relative z-10 w-full max-w-md mx-auto bg-white p-10 rounded-3xl shadow-xl border border-gray-100 mb-16" id="rsvpContainer">
+                <h3 class="text-6xl mb-4 font-script text-verde-aqua text-shadow-light mb-4 border-b border-verde-aqua/30 inline-block pb-2">Confirmar Asistencia</h3>
                 
-                <div class="bg-white border border-gray-200 shadow-2xl p-8 md:p-12 rounded-3xl transition-all duration-500 w-full mx-auto relative z-20">
+                <!-- Formulario Inicial RSVP -->
+                <div id="formSectionContainer">
+                    <p class="text-xs uppercase tracking-widest text-gray-500 mb-8 leading-relaxed">Por favor indícanos cuántos lugares necesitas.</p>
                     
-                    <form id="rsvpForm" class="space-y-8 text-left bg-transparent transition-all duration-500">
-                        <div class="border-b border-gray-300 pb-2">
-                            <label class="text-sm uppercase text-[#2C2A2A] font-bold">Nombre Completo / Familia</label>
-                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold text-center md:text-left">
+                    <form id="rsvpForm" class="space-y-6 text-left mt-8">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-[#2C2A2A] mb-2 pl-1 font-bold">Nombre y/o Familia</label>
+                            <input type="text" id="rsvpName" required class="w-full bg-blanco-perla border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 focus:outline-none focus:border-verde-aqua focus:ring-1 focus:ring-verde-aqua transition-all shadow-sm" placeholder="Ej. Familia López">
                         </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="border-b border-gray-300 pb-2">
-                                <label class="text-xs uppercase text-[#2C2A2A] font-bold">Adultos</label>
-                                <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="0" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold text-center">
+                        <div class="grid grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-[#2C2A2A] mb-2 pl-1 font-bold">Adultos</label>
+                                <input type="number" id="rsvpAdults" required min="0" class="w-full bg-blanco-perla border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 text-center focus:outline-none focus:border-verde-aqua focus:ring-1 focus:ring-verde-aqua transition-all shadow-sm" placeholder="0">
                             </div>
-                            <div class="border-b border-gray-300 pb-2">
-                                <label class="text-xs uppercase text-[#2C2A2A] font-bold">Niños</label>
-                                <input type="number" id="rsvpKids" required placeholder="Ej. 0" min="0" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-bold text-center">
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest text-[#2C2A2A] mb-2 pl-1 font-bold">Niños</label>
+                                <input type="number" id="rsvpKids" required min="0" class="w-full bg-blanco-perla border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 text-center focus:outline-none focus:border-verde-aqua focus:ring-1 focus:ring-verde-aqua transition-all shadow-sm" placeholder="0">
                             </div>
                         </div>
                         
-                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-flex items-center justify-center gap-3 bg-[#25D366] text-white font-bold py-5 px-8 uppercase tracking-[0.2em] md:tracking-[0.5em] text-[12px] hover:bg-[#1DA851] transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
-                            Confirmar por WhatsApp
+                        <button type="submit" class="w-full bg-verde-aqua text-white font-bold py-5 mt-10 rounded-xl uppercase tracking-[0.2em] text-xs hover:bg-opacity-80 hover:-translate-y-1 active:scale-95 transition-all shadow-md flex items-center justify-center gap-3">
+                            Confirmar
                         </button>
                     </form>
+                </div>
+
+                <!-- Mensaje de que ya está registrado (Oculto inicialmente) -->
+                <div id="alreadyRegisteredMessage" class="hidden text-center py-6">
+                    <svg class="w-16 h-16 text-verde-aqua mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-[#2C2A2A] font-bold text-xl mb-3">¡Ya confirmaste tu asistencia!</p>
+                    <p class="text-gray-500 text-sm leading-relaxed">Tu solicitud ya se encuentra registrada en nuestro sistema.<br><br>Por favor, dirígete a la sección de abajo para <strong>Consultar y Descargar tu Pase</strong>.</p>
+                </div>
+
+            </div>
+            
+            <div class="w-20 h-px bg-gray-300 mx-auto mb-16 relative z-10"></div>
+
+            <!-- SECCIÓN CONSULTAR PASE -->
+            <div class="reveal-scale relative z-10 w-full max-w-md mx-auto bg-white p-10 rounded-3xl shadow-xl border border-gray-100"> 
+                <h2 class="text-6xl mb-4 font-script text-verde-aqua text-shadow-light border-b border-verde-aqua/30 inline-block pb-2 drop-shadow-sm">Consultar Pase</h2>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-6 px-4">Si ya enviaste tu solicitud y fue validada, descarga tu pase aquí.</p>
+
+                <form id="searchPassForm" class="space-y-8 text-left mt-8">
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-[#2C2A2A] mb-2 pl-1 font-bold">Nombre / Familia</label>
+                        <input type="text" id="searchName" required placeholder="Tu Nombre" class="w-full bg-blanco-perla border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 focus:outline-none focus:border-verde-aqua focus:ring-1 focus:ring-verde-aqua transition-all shadow-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-verde-aqua text-white font-bold py-5 uppercase tracking-[0.3em] text-xs hover:bg-opacity-80 transition-all hover:-translate-y-1 active:scale-95 shadow-md mt-8 rounded-xl">Buscar mi Pase</button>
+                </form>
+
+                <div id="searchResultMessage" class="hidden mt-10 transition-all duration-500">
+                    <!-- Resultados se pintan aquí -->
                 </div>
             </div>
 
@@ -681,14 +686,10 @@
             <div class="absolute inset-0 bg-black/40 z-0"></div>
             <p class="text-7xl md:text-8xl font-script mb-6 text-white drop-shadow-md relative z-10">¡No faltes!</p>
             <p class="text-xs md:text-sm text-white uppercase tracking-[0.5em] mb-10 font-bold font-numbers relative z-10">15 • Agosto • 2026</p>
-            
-            <div class="relative z-10 w-full max-w-sm mx-auto mt-10">
-                <img src="https://i.imgur.com/NtRRNkY.png" alt="AdaInvite Logo" class="h-8 mx-auto opacity-70 mb-2 filter invert">
-                <p class="text-[9px] uppercase text-white/50 tracking-widest font-bold">Diseñado con ❤️ por AdaInvite</p>
-            </div>
         </footer>
     </main>
 
+    <!-- SCRIPTS GLOBALES UI -->
     <script>
         // MANEJO DEL SOBRE E INICIO
         function openEnvelope() {
@@ -719,15 +720,26 @@
                     nombreInvitado.textContent = nombreUrl;   
                     pasesInvitado.textContent = pasesUrl;    
                 }
+            }
 
+            if (nombreUrl) {
                 const formName = document.getElementById('rsvpName');
                 if (formName) {
                     formName.value = nombreUrl;
+                    formName.readOnly = true; 
+                    formName.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed'); 
+                }
+                
+                const searchName = document.getElementById('searchName');
+                if (searchName) {
+                    searchName.value = nombreUrl;
+                    searchName.readOnly = true; 
+                    searchName.classList.add('cursor-not-allowed', 'opacity-60', 'bg-gray-100'); 
                 }
             }
         });
 
-        // AUDIO
+        // AUDIO Y REPRODUCTOR
         const audio = document.getElementById("bg-music");
         let isPlaying = false;
         
@@ -761,7 +773,6 @@
             isPlaying = !isPlaying;
         }
 
-        // CONTROLADORES DE TIEMPO DEL REPRODUCTOR
         const progressBar = document.getElementById("progress-bar");
         const currentTimeEl = document.getElementById("current-time");
         const durationTimeEl = document.getElementById("duration-time");
@@ -866,21 +877,217 @@
             }, { threshold: 0.5 });
             observer.observe(slider);
         });
+    </script>
 
-        // FORMULARIO RSVP VÍA WHATSAPP (Sin límites)
-        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
+    <!-- LOGICA FIREBASE PARA PASES Y RSVP -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // Manteniendo tu configuración de Firebase provista en el archivo Boda
+        const firebaseConfig = {
+  apiKey: "AIzaSyCG8HkSvZXdeHsQGpkxibSQLJEJ_gMwz_Y",
+  authDomain: "xv-arleth-6f8ca.firebaseapp.com",
+  projectId: "xv-arleth-6f8ca",
+  storageBucket: "xv-arleth-6f8ca.firebasestorage.app",
+  messagingSenderId: "623284045484",
+  appId: "1:623284045484:web:6b10982bf0b3d4d2678109"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const COL_NAME = "confirmaciones_xvarleth"; // Nueva colección para XV
+
+        const params = new URLSearchParams(window.location.search);
+        const urlName = params.get('n');
+
+        // Verificar si ya está registrado
+        if (urlName) {
+            const checkRegistrationStatus = async () => {
+                try {
+                    const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", urlName.trim().toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (!querySnapshot.empty) {
+                        document.getElementById('formSectionContainer').classList.add('hidden');
+                        document.getElementById('alreadyRegisteredMessage').classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.log("Error al verificar estado de registro: ", error);
+                }
+            };
+            checkRegistrationStatus();
+        }
+
+        // 1. SOLICITUD DE ASISTENCIA (RSVP)
+        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerText = "Enviando Solicitud...";
+            btn.disabled = true;
+
             const name = document.getElementById('rsvpName').value.trim();
             const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
             const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+            const totalPases = numAdultos + numNinos;
 
-            const numeroWhatsApp = "523318357113"; 
-            const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Arleth Natalia. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
-            
-            const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
-            window.open(waLink, '_blank');
+            try {
+                const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", name.toLowerCase()));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const docId = querySnapshot.docs[0].id;
+                    await updateDoc(doc(db, COL_NAME, docId), {
+                        adultos: numAdultos,
+                        ninos: numNinos,
+                        totalSolicitado: totalPases,
+                        fechaActualizacion: serverTimestamp()
+                    });
+                } else {
+                    await addDoc(collection(db, COL_NAME), {
+                        nombre: name,
+                        nombreBusqueda: name.toLowerCase(),
+                        adultos: numAdultos,
+                        ninos: numNinos,
+                        totalSolicitado: totalPases,
+                        estado: 'pendiente', 
+                        pasesAsignados: 0,
+                        fecha: serverTimestamp()
+                    });
+                }
+
+                // Mostrar mensaje de éxito en la UI
+                document.getElementById('formSectionContainer').innerHTML = `
+                    <div class="text-center py-6">
+                        <svg class="w-16 h-16 text-verde-aqua mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-[#2C2A2A] font-bold text-lg mb-3">¡Solicitud Enviada!</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">Hemos recibido tu solicitud de asistencia por <span class="font-bold text-verde-aqua">${totalPases} lugares</span>.<br><br>En cuanto validemos tu pase, podrás descargarlo en la sección de abajo.</p>
+                    </div>
+                `;
+
+                // Redirigir a WhatsApp (con el número de XV Arleth)
+                const numeroWhatsApp = "523318357113";
+                const mensaje = encodeURIComponent(`¡Hola! Acabo de registrar mi confirmación de asistencia para los XV años.\n\n*Nombre:* ${name}\n*Adultos:* ${numAdultos}\n*Niños:* ${numNinos}\n*Total de pases solicitados:* ${totalPases}`);
+                const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensaje}`;
+                
+                window.location.href = urlWhatsApp;
+
+            } catch (error) {
+                console.error("Error al guardar RSVP:", error);
+                alert("Hubo un error al enviar tu solicitud. Intenta de nuevo.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
+        
+        // 2. BÚSQUEDA Y DESCARGA DE PASE
+        document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('searchName').value.trim();
+            const resultDiv = document.getElementById('searchResultMessage');
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            
+            btnSubmit.innerText = "Buscando...";
+            btnSubmit.disabled = true;
+            resultDiv.classList.add('hidden');
 
+            try {
+                const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", name.toLowerCase()));
+                const querySnapshot = await getDocs(q);
+
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+                if (!querySnapshot.empty) {
+                    const docData = querySnapshot.docs[0].data();
+                    const docId = querySnapshot.docs[0].id;
+                    
+                    if (docData.estado === 'aprobado') {
+                        // PASE APROBADO: Generar Tarjeta XV
+                        const folio = "XV-AR-" + docId.substring(0, 4).toUpperCase();
+                        
+                        resultDiv.innerHTML = `
+                            <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
+                                <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border border-gray-200 p-8 shadow-md text-center overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-3 bg-verde-aqua"></div>
+                                    
+                                    <img src="https://i.imgur.com/Hv9gZUu.png" class="w-20 mx-auto mb-3 object-contain drop-shadow-sm" alt="Corona">
+                                    
+                                    <h3 class="font-script text-5xl text-verde-aqua mb-2">XV Arleth Natalia</h3>
+                                    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-6">Pase Oficial</p>
+                                    
+                                    <h4 class="font-elegant text-2xl text-[#2C2A2A] font-bold mb-6 leading-tight capitalize">${docData.nombre}</h4>
+                                    
+                                    <div class="inline-block border-t border-b border-verde-aqua/30 py-4 px-10 mb-6 w-full bg-blanco-perla/30">
+                                        <p class="text-[10px] uppercase tracking-[0.3em] text-[#2C2A2A] font-bold mb-1">Cantidad:</p>
+                                        <p class="font-numbers text-5xl md:text-6xl text-verde-aqua font-bold drop-shadow-sm">${docData.pasesAsignados}</p>
+                                    </div>
+                                    
+                                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-elegant mb-2">Folio: ${folio}</p>
+                                    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                                </div>
+                                <button id="btnDescargarPase" class="mt-6 bg-verde-aqua text-white font-bold py-4 px-8 uppercase tracking-[0.2em] text-xs hover:bg-opacity-80 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                                    Descargar Pase
+                                </button>
+                            </div>
+                        `;
+
+                        // Lógica para descargar la imagen
+                        const btnDescargarPase = document.getElementById('btnDescargarPase');
+                        btnDescargarPase.addEventListener('click', () => {
+                            const tarjeta = document.getElementById('tarjetaPaseDigital');
+                            const originalText = btnDescargarPase.innerHTML;
+                            btnDescargarPase.innerText = "Generando imagen...";
+                            
+                            window.html2canvas(tarjeta, {
+                                backgroundColor: "#ffffff", 
+                                scale: 3, 
+                                useCORS: true  
+                            }).then(canvas => {
+                                const enlace = document.createElement('a');
+                                enlace.download = 'Pase_XV_Arleth_Natalia.png';
+                                enlace.href = canvas.toDataURL('image/png');
+                                enlace.click();
+                                btnDescargarPase.innerHTML = originalText;
+                            }).catch(error => {
+                                console.error("Error al generar la imagen: ", error);
+                                btnDescargarPase.innerHTML = "Error al descargar";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                            });
+                        });
+
+                    } else {
+                        // PASE PENDIENTE
+                        resultDiv.innerHTML = `
+                            <div class="bg-blanco-perla border border-gray-200 shadow-sm p-8 rounded-2xl text-center">
+                                <p class="text-[#2C2A2A] font-bold mb-2 text-lg">¡Tenemos tu registro!</p>
+                                <p class="text-gray-500 text-sm">Sin embargo, tu pase aún no se ha validado. Por favor, vuelve a consultar más tarde.</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // NO ENCONTRADO
+                    resultDiv.innerHTML = `
+                        <div class="bg-blanco-perla border border-gray-200 shadow-sm p-8 rounded-2xl text-center">
+                            <p class="text-[#2C2A2A] font-bold mb-2 text-lg">Solicitud no encontrada.</p>
+                            <p class="text-gray-500 text-sm">Asegúrate de escribir tu nombre exactamente igual a como aparece en tu formulario de confirmación.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Error al buscar:", error);
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = `
+                    <div class="text-center p-6 text-red-500">Ocurrió un error al consultar. Inténtalo de nuevo.</div>
+                `;
+            } finally {
+                btnSubmit.innerText = "Buscar mi Pase";
+                btnSubmit.disabled = false;
+            }
+        });
     </script>
 
     <script>
