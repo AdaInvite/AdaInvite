@@ -224,7 +224,7 @@
     <main id="section-main">
         
         <!-- HEADER -->
-        <header class="relative min-h-[100svh] flex flex-col px-12 py-10 box-border"> 
+        <header class="relative min-h-[100svh] flex flex-col px-10 py-10 box-border"> 
             <div class="absolute inset-0 bg-cover bg-center z-0 opacity-100" style="background-image: url('https://i.imgur.com/yKnAa8O.jpeg'); background-position: top center;"></div>
            
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla/90 backdrop-blur-sm border-4 border-verde-aqua/80 rounded-t-[150px] md:rounded-t-[150px] pt-20 pb-8 px-6">
@@ -236,8 +236,8 @@
                             <textPath href="#curve-text" startOffset="50%" class="fill-verde-aqua font-bold" style="font-family: var(--font-elegant); font-size: 22px; letter-spacing: 0.25em; text-transform: uppercase;">Mis XV</textPath>
                         </text>
                     </svg>
-                    <img src="https://i.imgur.com/Hv9gZUu.png" alt="Corona" class="w-28 md:w-28 mb-4 relative z-10 drop-shadow-sm">
-                    <h1 class="font-script text-7xl md:text-8xl text-verde-aqua mb-2 relative z-10 leading-tight">Arleth <br>Natalia</h1>
+                    <img src="https://i.imgur.com/Hv9gZUu.png" alt="Corona" class="w-32 mb-4 relative z-10 drop-shadow-sm">
+                    <h1 class="font-script text-7xl md:text-8xl text-verde-aqua relative z-10">Arleth <br>Natalia</h1>
                     
                     <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-4 mb-4 px-2 relative z-10">
                         <div class="flex-1 flex justify-center items-center border-t border-b border-[#2C2A2A]/30 py-2">
@@ -1005,7 +1005,7 @@
                     const docData = querySnapshot.docs[0].data();
                     const docId = querySnapshot.docs[0].id;
                     
-                    if (docData.estado === 'aprobado') {
+                                        if (docData.estado === 'aprobado') {
                         // PASE APROBADO: Generar Tarjeta XV
                         const folio = "XV-AR-" + docId.substring(0, 4).toUpperCase();
                         
@@ -1014,9 +1014,10 @@
                                 <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border border-gray-200 p-8 shadow-md text-center overflow-hidden">
                                     <div class="absolute top-0 left-0 w-full h-3 bg-verde-aqua"></div>
                                     
-                                    <img src="https://i.imgur.com/Hv9gZUu.png" class="w-20 mx-auto mb-3 object-contain drop-shadow-sm" alt="Corona">
+                                    <!-- Se agregó crossorigin="anonymous" aquí -->
+                                    <img src="https://i.imgur.com/Hv9gZUu.png" crossorigin="anonymous" class="w-20 mx-auto mb-3 object-contain drop-shadow-sm" alt="Corona">
                                     
-                                    <h3 class="font-script text-5xl text-verde-aqua mb-2">XV Arleth Natalia</h3>
+                                    <h3 class="font-script text-5xl text-verde-aqua mb-4">XV Arleth Natalia</h3>
                                     <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-6">Pase Oficial</p>
                                     
                                     <h4 class="font-elegant text-2xl text-[#2C2A2A] font-bold mb-6 leading-tight capitalize">${docData.nombre}</h4>
@@ -1035,29 +1036,62 @@
                             </div>
                         `;
 
-                        // Lógica para descargar la imagen
-                        const btnDescargarPase = document.getElementById('btnDescargarPase');
-                        btnDescargarPase.addEventListener('click', () => {
-                            const tarjeta = document.getElementById('tarjetaPaseDigital');
-                            const originalText = btnDescargarPase.innerHTML;
-                            btnDescargarPase.innerText = "Generando imagen...";
-                            
-                            window.html2canvas(tarjeta, {
-                                backgroundColor: "#ffffff", 
-                                scale: 3, 
-                                useCORS: true  
-                            }).then(canvas => {
-                                const enlace = document.createElement('a');
-                                enlace.download = 'Pase_XV_Arleth_Natalia.png';
-                                enlace.href = canvas.toDataURL('image/png');
-                                enlace.click();
-                                btnDescargarPase.innerHTML = originalText;
-                            }).catch(error => {
-                                console.error("Error al generar la imagen: ", error);
-                                btnDescargarPase.innerHTML = "Error al descargar";
-                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
-                            });
-                        });
+                        // Nueva lógica con intercambio visual de tarjetas
+const btnDescargarPase = document.getElementById('btnDescargarPase');
+btnDescargarPase.addEventListener('click', () => {
+    const tarjeta = document.getElementById('tarjetaPaseDigital');
+    const originalText = btnDescargarPase.innerHTML;
+    btnDescargarPase.innerText = "Generando imagen...";
+    
+    window.html2canvas(tarjeta, {
+        backgroundColor: "#ffffff", 
+        scale: 3, 
+        useCORS: true  
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        
+        // 1. Intento de descarga automática estándar
+        const enlace = document.createElement('a');
+        enlace.download = 'Pase_XV_Arleth_Natalia.png';
+        enlace.href = imgData;
+        enlace.click();
+        
+        // 2. Insertar la imagen de respaldo y ocultar la tarjeta vieja
+        const resultadoContenedor = document.getElementById('contenedorPaseCompleto');
+        if (resultadoContenedor) {
+            let imgExistente = document.getElementById('imagenPaseGenerada');
+            if (!imgExistente) {
+                // Crear la imagen visible
+                const imgElement = document.createElement('img');
+                imgElement.id = 'imagenPaseGenerada';
+                imgElement.src = imgData;
+                imgElement.className = 'w-full max-w-sm rounded-xl shadow-lg border border-gray-200';
+                
+                // Insertar la imagen al inicio del contenedor
+                resultadoContenedor.insertBefore(imgElement, btnDescargarPase);
+                
+                // Texto instructivo dinámico abajo del botón
+                const infoText = document.createElement('p');
+                infoText.id = 'textoInstruccionesMóvil';
+                infoText.className = 'text-[11px] text-gray-500 mt-4 font-elegant text-center px-4 leading-relaxed';
+                infoText.innerText = 'Si la descarga no inició automáticamente, mantén presionada la tarjeta de arriba para guardarla en tu galería.';
+                resultadoContenedor.appendChild(infoText);
+            }
+        }
+        
+        // 3. EL INTERCAMBIO: Ocultamos la tarjeta HTML original
+        tarjeta.classList.add('hidden');
+        
+        // Restauramos el texto del botón por si quieren reintentar
+        btnDescargarPase.innerHTML = originalText;
+    }).catch(error => {
+        console.error("Error al generar la imagen: ", error);
+        btnDescargarPase.innerHTML = "Error al descargar";
+        setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+    });
+});
+                    
+
 
                     } else {
                         // PASE PENDIENTE
