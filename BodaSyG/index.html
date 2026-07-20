@@ -97,9 +97,10 @@
             max-width: 480px; 
             height: 96svh; 
             padding: 5% 6%; 
-            overflow: hidden; 
+            overflow-y: auto; overflow-x: hidden; scrollbar-width: none; 
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
+        .forma-ovalada::-webkit-scrollbar { display: none; }
 
         .glass-card-navy {
             background-color: rgba(10, 25, 49, 0.7); 
@@ -620,8 +621,8 @@ text-center pt-8">
         <!-- SECCIÓN RSVP -->
         <section class="min-h-[100svh] flex flex-col justify-center items-center py-16 px-2 relative overflow-hidden bg-oval-container pb-10">
             <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center border-gold/40"> 
-                <h2 class="text-5xl md:text-6xl font-script mb-4 px-4 text-gold w-full text-shadow-none">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase mb-10 font-bold w-full leading-relaxed px-4 text-white tracking-widest">Por favor, confirma antes del<br>01 de Septiembre de 2026</p>
+                <h2 id="rsvpTitleText" class="text-5xl md:text-6xl font-script mb-4 px-4 text-gold w-full text-shadow-none">Confirmar Asistencia</h2>
+                <p id="rsvpSubtitleText" class="text-[11px] uppercase mb-10 font-bold w-full leading-relaxed px-4 text-white tracking-widest">Por favor, confirma antes del<br>01 de Septiembre de 2026</p>
                 
                 <form id="rsvpForm" class="w-[90%] max-w-[320px] mx-auto space-y-6 text-left transition-all duration-500 mb-6">
                     
@@ -969,6 +970,8 @@ text-center pt-8">
                     if (!querySnapshot.empty) {
                         const form = document.getElementById('rsvpForm');
                         if(form) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
                             form.innerHTML = `
                                 <div class="glass-card-navy p-8 rounded-xl text-center border-gold/40">
                                     <p class="text-gold font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
@@ -1019,6 +1022,8 @@ text-center pt-8">
                         const querySnapshot = await getDocs(q);
 
                         if (!querySnapshot.empty) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
                             form.innerHTML = `
                                 <div class="glass-card-navy p-8 rounded-xl text-center mt-6 border-gold/40">
                                     <p class="text-gold font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
@@ -1049,6 +1054,8 @@ text-center pt-8">
 
                     loader.classList.add('hidden');
                     loader.classList.remove('flex');
+                    document.getElementById('rsvpTitleText').classList.add('hidden');
+                    document.getElementById('rsvpSubtitleText').classList.add('hidden');
 
                     const seccionRsvp = document.getElementById('rsvpForm').parentElement;
                     const numeroWhatsApp = "524432853892"; 
@@ -1087,20 +1094,65 @@ text-center pt-8">
                     `;
                     seccionRsvp.appendChild(resultDiv);
 
+                    // ====================================================
+                    // LÓGICA DE DESCARGA SEGURA (ANTI-CORTES MÓVIL)
+                    // ====================================================
                     document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
                         const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
-                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
-                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+                        const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
+                        const originalText = btnDescargar.innerHTML;
+                        btnDescargar.innerText = "Generando...";
                         
-                        html2canvas(tarjeta, { backgroundColor: "#0A1931", scale: 3, useCORS: true }).then(canvas => {
-                            const enlace = document.createElement('a');
-                            enlace.download = 'Pase_Boda_Gabriel_Sonia.png';
-                            enlace.href = canvas.toDataURL('image/png');
-                            enlace.click();
-                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        // CLONACIÓN PARA EVITAR RECORTES Y COLAPSOS EN MÓVILES
+                        const clone = tarjeta.cloneNode(true);
+                        clone.style.width = "400px";
+                        clone.style.height = "auto";
+                        clone.style.position = "fixed";
+                        clone.style.top = "-9999px";
+                        clone.style.left = "-9999px";
+                        clone.style.zIndex = "-9999";
+                        document.body.appendChild(clone);
+                        
+                        window.html2canvas(clone, { 
+                            backgroundColor: "#0A1931", 
+                            scale: 3, 
+                            useCORS: true, 
+                            scrollX: 0, 
+                            scrollY: 0 
+                        }).then(canvas => {
+                            document.body.removeChild(clone);
+                            
+                            const base64 = canvas.toDataURL('image/png');
+                            
+                            // Método de descarga seguro mediante Blob
+                            canvas.toBlob(blob => {
+                                const url = window.URL.createObjectURL(blob);
+                                const enlace = document.createElement('a');
+                                enlace.style.display = 'none';
+                                enlace.href = url;
+                                enlace.download = 'Pase_Boda_Gabriel_Sonia.png';
+                                document.body.appendChild(enlace);
+                                enlace.click();
+                                document.body.removeChild(enlace);
+                                setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                            }, 'image/png');
+
+                            // Reemplazo a Imagen Física por si el navegador bloqueó la descarga
+                            tarjeta.style.padding = "0";
+                            tarjeta.style.border = "none";
+                            tarjeta.style.background = "transparent";
+                            tarjeta.innerHTML = `
+                                <img src="${base64}" alt="Pase" class="w-full shadow-2xl rounded-2xl" />
+                                <p class="text-[9px] uppercase text-gold font-bold mt-4 tracking-widest text-center px-2">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                            `;
+
+                            btnDescargar.innerHTML = "¡Descarga iniciada!";
+                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+
                         }).catch(err => {
+                            if(document.body.contains(clone)) document.body.removeChild(clone);
                             console.error("Error", err);
-                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                            btnDescargar.innerHTML = originalText;
                         });
                     });
 
@@ -1166,19 +1218,63 @@ text-center pt-8">
                             </div>
                         `;
 
+                        // ====================================================
+                        // LÓGICA DE DESCARGA SEGURA (ANTI-CORTES MÓVIL)
+                        // ====================================================
                         const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
                         btnDescargarPase.addEventListener('click', () => {
                             const tarjeta = document.getElementById('tarjetaPaseDigital');
                             const originalText = btnDescargarPase.innerHTML;
                             btnDescargarPase.innerText = "Generando imagen...";
                             
-                            html2canvas(tarjeta, { backgroundColor: "#0A1931", scale: 3, useCORS: true }).then(canvas => {
-                                const enlace = document.createElement('a');
-                                enlace.download = 'Pase_Boda_Gabriel_Sonia.png';
-                                enlace.href = canvas.toDataURL('image/png');
-                                enlace.click();
-                                btnDescargarPase.innerHTML = originalText;
+                            // CLONACIÓN PARA EVITAR RECORTES Y COLAPSOS EN MÓVILES
+                            const clone = tarjeta.cloneNode(true);
+                            clone.style.width = "400px";
+                            clone.style.height = "auto";
+                            clone.style.position = "fixed";
+                            clone.style.top = "-9999px";
+                            clone.style.left = "-9999px";
+                            clone.style.zIndex = "-9999";
+                            document.body.appendChild(clone);
+                            
+                            window.html2canvas(clone, { 
+                                backgroundColor: "#0A1931", 
+                                scale: 3, 
+                                useCORS: true, 
+                                scrollX: 0, 
+                                scrollY: 0 
+                            }).then(canvas => {
+                                document.body.removeChild(clone);
+
+                                const base64 = canvas.toDataURL('image/png');
+                                
+                                // Método de descarga seguro mediante Blob
+                                canvas.toBlob(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const enlace = document.createElement('a');
+                                    enlace.style.display = 'none';
+                                    enlace.href = url;
+                                    enlace.download = 'Pase_Boda_Gabriel_Sonia.png';
+                                    document.body.appendChild(enlace);
+                                    enlace.click();
+                                    document.body.removeChild(enlace);
+                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                                }, 'image/png');
+
+                                // Reemplazo a Imagen Física por si el navegador bloqueó la descarga automática
+                                tarjeta.style.padding = "0";
+                                tarjeta.style.border = "none";
+                                tarjeta.style.background = "transparent";
+                                tarjeta.innerHTML = `
+                                    <img src="${base64}" alt="Pase" class="w-full shadow-2xl rounded-2xl" />
+                                    <p class="text-[9px] uppercase text-gold font-bold mt-4 tracking-widest text-center px-2">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                                `;
+
+                                btnDescargarPase.innerHTML = "¡Descarga iniciada!";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
+
                             }).catch(error => {
+                                if(document.body.contains(clone)) document.body.removeChild(clone);
                                 console.error("Error al generar la imagen: ", error);
                                 btnDescargarPase.innerHTML = "Error al descargar";
                                 setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
