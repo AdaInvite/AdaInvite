@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boda Gabriel y Sonia - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#0A1931">
+    <meta property="og:title" content="Boda Gabriel y Sonia - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la boda.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0A1931',
+                        gold: '#D4AF37',
+                        blanco: {
+                            perla: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Librería para convertir HEIC a JPG -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+    <style>
+        :root {
+            --navy: #0A1931; 
+            --gold: #D4AF37;
+            --blanco-perla: #FFFFFF;
+            --font-elegant: 'Montserrat', sans-serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-numbers: 'Montserrat', sans-serif; 
+        }
+
+        /* Diseño Móvil Centrado */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--navy); 
+            font-family: var(--font-elegant);
+            color: var(--blanco-perla);
+            display: flex; justify-content: center; 
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 500px; 
+            height: 100%; min-height: 100svh;
+            background-color: var(--navy); 
+            position: relative;
+            overflow-x: hidden; overflow-y: auto;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, p, select, button, label, input { font-family: var(--font-elegant); font-weight: 400; }
+        .font-bold { font-weight: 600; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+        .font-numbers { font-family: var(--font-numbers) !important; font-weight: 500; }
+
+        .bg-oval-container { 
+            background-image: url('https://i.imgur.com/OOHAO2W.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            width: 100%;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .forma-ovalada {
+            background-color: rgba(10, 25, 49, 0.95);
+            color: var(--blanco-perla);
+            border-radius: 250px 250px 0 0;
+            box-shadow: 0 -10px 45px rgba(0, 0, 0, 0.5);  
+            width: 95%;
+            max-width: 480px; 
+            min-height: 88svh; 
+            padding: 25% 6% 10% 6%; 
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: none;
+        }
+
+        .glass-card-navy {
+            background-color: rgba(10, 25, 49, 0.75); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);  
+        }
+
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.6); }
+
+        select option { background-color: var(--navy); color: var(--blanco-perla); font-family: var(--font-elegant); font-weight: 500;}
+        select { text-align-last: center; } 
+        
+        .input-boda {
+            background-color: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--blanco-perla);
+            border-radius: 4px; 
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .input-boda:focus { border-color: var(--gold); outline: none; background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15); }
+        .input-boda::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 300; }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
+        
+        /* Pantalla de carga para procesamiento HEIC/Video */
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(10, 25, 49, 0.85); backdrop-filter: blur(4px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 0.5rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <div class="bg-oval-container pt-16 relative z-10" id="mainContainerWrapper">
+            
+            <div class="forma-ovalada relative z-10" id="mainContainer">
+                <h1 class="text-6xl font-script text-gold mb-2 text-center text-shadow-light leading-none">Recuerdos</h1>
+                <p class="text-[12px] md:text-[13px] tracking-[0.3em] uppercase text-white font-bold mb-2 text-center drop-shadow-sm opacity-90">Gabriel y Sonia</p>
+
+                <p class="text-sm md:text-base text-white/90 leading-relaxed mb-2 text-center max-w-sm font-light text-shadow-light">
+                    Hay momentos inolvidables que se atesoran para siempre. Comparte los tuyos aquí.
+                </p>
+
+                <button id="openModalBtn" class="bg-gold text-navy font-bold py-4 px-10 rounded-none uppercase tracking-[0.2em] text-[11px] shadow-lg border border-gold hover:bg-transparent hover:text-gold transition-all active:scale-95 duration-300">
+                    Subir mis fotos 
+                </button>
+
+                <div class="w-full pt-2 mt-6 flex flex-col items-center border-t border-gold/30">
+                    <p class="text-[10px] text-white/80 uppercase tracking-widest mb-4 font-bold drop-shadow-sm">Vista de Galería</p>
+                    <div class="glass-card-navy rounded p-1 flex inline-flex shadow-sm mb-10">
+                        <button id="btn1Col" class="px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-navy bg-gold rounded transition-all">1 Columna</button>
+                        <button id="btn2Col" class="px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded transition-all">2 Columnas</button>
+                    </div>
+                    
+                    <div id="muro" class="columns-1 md:columns-2 gap-6 w-full px-2 pb-10">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- MODAL DE SUBIDA -->
+        <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden absolute h-full w-full">
+            <div class="relative glass-card-navy border border-gold/40 w-full max-w-md p-8 shadow-2xl flex flex-col items-center max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar rounded-2xl">
+                
+                <button id="closeModalBtnIcon" class="absolute top-4 right-4 text-white/60 hover:text-gold transition-colors z-20 bg-white/10 rounded-full p-1 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <h2 class="text-6xl font-script text-gold mb-8 mt-4 text-center relative z-10 text-shadow-light">Tus Momentos</h2>
+
+                <div id="uploadForm" class="w-full flex flex-col gap-6 text-left relative z-10 px-2">
+                    <div>
+                        <label class="text-gold text-[10px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-90">Familia / Nombre</label>
+                        <input type="text" id="nombreInput" placeholder="Ej: Familia López" class="input-boda py-3 px-4 w-full text-center uppercase tracking-wider font-light">
+                    </div>
+                    
+                    <div>
+                        <label class="text-gold text-[10px] font-bold tracking-[0.2em] uppercase mb-1.5 block opacity-90">Momento de la boda</label>
+                        <select id="folderSelect" class="input-boda py-3 px-4 w-full cursor-pointer appearance-none text-center uppercase tracking-widest text-[11px] font-light">
+                            <option value="" disabled selected class="italic">Elige una opción...</option>
+                            <option value="Ceremonia">Ceremonia Religiosa</option>
+                            <option value="Con los Novios">Con los Novios</option>
+                            <option value="Recepción">La Recepción</option>
+                            <option value="El Baile">El Baile</option>
+                            <option value="Momento Especial">Momento Especial</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <label class="text-gold text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block opacity-90">Seleccionar archivos</label>
+                        <div id="dropZone" class="relative border border-dashed border-gold/60 bg-white/5 rounded-lg p-8 text-center transition-colors hover:bg-white/10 cursor-pointer shadow-sm overflow-hidden">
+                            
+                            <!-- OVERLAY DE PROCESAMIENTO (HEIC + Video) -->
+                            <div id="processingOverlay" class="hidden">
+                                <svg class="animate-spin h-8 w-8 text-gold mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p class="text-gold text-[9px] font-bold uppercase tracking-widest text-center px-2">Procesando archivos...<br>No cierres esta ventana</p>
+                            </div>
+
+                            <!-- INPUT OPTIMIZADO PARA MÓVILES -->
+                            <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            <svg class="w-8 h-8 mx-auto text-gold mb-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <p class="text-white/90 text-[11px] font-bold uppercase tracking-widest">Toca aquí para elegir</p>
+                            <p class="text-white/50 text-[9px] font-light uppercase tracking-widest mt-2">(Videos máximo 30s)</p>
+                        </div>
+
+                        <div id="previsualizacion" class="w-full relative hidden mt-4 border border-gold/30 rounded-lg bg-navy shadow-sm overflow-hidden">
+                            <p class="text-[9px] text-gold text-center py-3 uppercase font-bold border-b border-gold/20 tracking-[0.2em] bg-white/5">Archivos seleccionados:</p>
+                            <div id="previewContainer" class="bg-black/20"></div>
+                            <button id="removePreviewBtn" class="w-full py-3 text-[10px] text-red-400 bg-red-950/30 uppercase font-bold hover:bg-red-900/50 transition-colors tracking-widest border-t border-red-900/30">Limpiar selección</button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mt-4">
+                        <button id="btnCancelar" class="flex-1 bg-transparent border border-gold/40 text-gold font-bold rounded py-3.5 text-[10px] tracking-[0.2em] uppercase hover:bg-white/5 transition-colors shadow-sm">Cancelar</button>
+                        <button id="btnSubir" class="flex-[1.5] bg-gold text-navy border border-gold font-bold rounded py-3.5 text-[10px] tracking-[0.2em] uppercase shadow-md hover:-translate-y-1 transition-transform">Subir Álbum</button>
+                    </div>
+                </div>
+                
+                <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-6 text-navy bg-gold p-4 rounded border border-gold hidden text-center w-full relative z-10 shadow-md"></p>
+            </div>
+        </div>
+
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+            import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+            import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+            // CREDENCIALES BODA GABRIEL Y SONIA
+            const firebaseConfig = {
+              apiKey: "AIzaSyBrS1wpS9UTa2Q_0ZxuIXaP9zAksDrvzUk",
+              authDomain: "boda-syg-63b8f.firebaseapp.com",
+              projectId: "boda-syg-63b8f",
+              storageBucket: "boda-syg-63b8f.firebasestorage.app",
+              messagingSenderId: "822800475985",
+              appId: "1:822800475985:web:2197a427133bca10db9570"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const storage = getStorage(app);
+
+            const modal = document.getElementById('uploadModal');
+            const openBtn = document.getElementById('openModalBtn');
+            const archivoInput = document.getElementById('archivoInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const previsualizacion = document.getElementById('previsualizacion');
+            const dropZone = document.getElementById('dropZone');
+            const estadoCarga = document.getElementById('estadoCarga');
+            const btnSubir = document.getElementById("btnSubir");
+            const processingOverlay = document.getElementById('processingOverlay');
+
+            // Función auxiliar para medir duración de video
+            function getVideoDuration(file) {
+                return new Promise((resolve) => {
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    video.onloadedmetadata = () => {
+                        window.URL.revokeObjectURL(video.src);
+                        resolve(video.duration);
+                    };
+                    video.src = URL.createObjectURL(file);
+                });
+            }
+
+            openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+            document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+            document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+            // LÓGICA UNIVERSAL: DataTransfer + HEIC Conversion + 30s Video Limit
+            archivoInput.addEventListener('change', async (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length === 0) return;
+
+                processingOverlay.classList.remove('hidden');
+                previewContainer.innerHTML = "";
+                
+                const archivosProcesados = new DataTransfer();
+
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
+                    const fileName = file.name.toLowerCase();
+
+                    // 1. REGLA DE VIDEO (Máx 30s)
+                    if (file.type.includes("video")) {
+                        const duration = await getVideoDuration(file);
+                        if (duration > 30) {
+                            alert(`El video "${file.name}" dura más de 30 segundos y no será subido.`);
+                            continue; 
+                        }
+                    }
+
+                    // 2. PAUSA ANTI-CONGELAMIENTO (150ms)
+                    await new Promise(resolve => setTimeout(resolve, 150));
+
+                    // 3. DETECCIÓN Y CONVERSIÓN DE HEIC / HEIF
+                    if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                        try {
+                            const conversionPromise = heic2any({
+                                blob: file,
+                                toType: "image/jpeg",
+                                quality: 0.5 
+                            });
+
+                            const timeoutPromise = new Promise((_, reject) => 
+                                setTimeout(() => reject(new Error("Tiempo agotado")), 15000)
+                            );
+
+                            const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                            const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                            
+                            file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), {
+                                type: "image/jpeg"
+                            });
+                        } catch (err) {
+                            console.warn(`Error al convertir ${file.name}:`, err);
+                            continue; // Si falla, lo ignoramos
+                        }
+                    }
+
+                    // 4. AGREGAR A LA LISTA LIMPIA
+                    archivosProcesados.items.add(file);
+                    
+                    // 5. CREAR MINIATURA PARA UI
+                    const url = URL.createObjectURL(file);
+                    const thumb = document.createElement('div');
+                    thumb.className = "relative h-20 bg-navy/50 rounded overflow-hidden shadow-sm border border-gold/30";
+                    
+                    if (file.type.includes("image")) {
+                        thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                    } else {
+                        thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                    }
+                    previewContainer.appendChild(thumb);
+                }
+
+                // ACTUALIZAR EL INPUT ORIGINAL
+                archivoInput.files = archivosProcesados.files;
+                
+                processingOverlay.classList.add('hidden');
+
+                if (archivoInput.files.length > 0) {
+                    dropZone.classList.add('hidden');
+                    previsualizacion.classList.remove('hidden');
+                } else {
+                    archivoInput.value = ""; 
+                    dropZone.classList.remove('hidden');
+                    previsualizacion.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('removePreviewBtn').addEventListener('click', () => {
+                archivoInput.value = "";
+                previsualizacion.classList.add('hidden');
+                dropZone.classList.remove('hidden');
+            });
+
+            btnSubir.addEventListener("click", async () => {
+                const archivos = Array.from(archivoInput.files);
+                const nombre = document.getElementById("nombreInput").value;
+                const momento = document.getElementById("folderSelect").value;
+
+                if (archivos.length === 0 || !nombre || !momento) return alert("Por favor, completa todos los campos para continuar.");
+
+                btnSubir.disabled = true;
+                estadoCarga.classList.remove('hidden');
+
+                for (let i = 0; i < archivos.length; i++) {
+                    const file = archivos[i];
+                    const total = archivos.length;
+                    
+                    await new Promise((resolve, reject) => {
+                        // CARPETA BODA GABRIEL Y SONIA
+                        const storageRef = ref(storage, 'boda_gabrielysonia/' + Date.now() + "_" + file.name);
+                        const uploadTask = uploadBytesResumable(storageRef, file);
+
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                            },
+                            (error) => { reject(error); },
+                            async () => {
+                                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                                // COLECCIÓN BODA GABRIEL Y SONIA
+                                await addDoc(collection(db, "muro_gabrielysonia"), {
+                                    nombre, momento, url_multimedia: url, likes: 0,
+                                    tipo: file.type.includes("video") ? "video" : "imagen",
+                                    fecha: new Date()
+                                });
+                                resolve();
+                            }
+                        );
+                    });
+                }
+
+                estadoCarga.innerText = "¡Recuerdos guardados con éxito!";
+                setTimeout(() => location.reload(), 1500);
+            });
+
+            // Alternar vistas
+            const btn1Col = document.getElementById('btn1Col');
+            const btn2Col = document.getElementById('btn2Col');
+            const muro = document.getElementById('muro');
+
+            btn1Col.addEventListener('click', () => {
+                btn1Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-navy bg-gold rounded transition-all";
+                btn2Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded transition-all";
+                muro.className = "columns-1 gap-6 w-full px-2";
+            });
+            btn2Col.addEventListener('click', () => {
+                btn2Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-navy bg-gold rounded transition-all";
+                btn1Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded transition-all";
+                muro.className = "columns-2 gap-4 w-full px-1";
+            });
+
+            // Dibujar Muro
+            let isFirstLoad = true;
+            // LECTURA DE COLECCIÓN GABRIEL Y SONIA
+            const q = query(collection(db, "muro_gabrielysonia"), orderBy("fecha", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                if (snapshot.empty && muro.innerHTML.trim() === "") {
+                    muro.innerHTML = `<div id="emptyMessage" class="text-white/70 font-light text-base col-span-full py-12 text-center break-inside-avoid">Aún no hay recuerdos. ¡Sé el primero en subir un momento!</div>`;
+                    return;
+                }
+
+                const emptyMessage = document.getElementById('emptyMessage');
+                if (emptyMessage) emptyMessage.remove();
+
+                snapshot.docChanges().forEach((change) => {
+                    const datos = change.doc.data();
+                    const id = change.doc.id;
+
+                    if (change.type === "added") {
+                        const media = datos.tipo === "video" 
+                            ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-black/20 cursor-pointer object-cover"></video>` 
+                            : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover">`;
+                        
+                        const divTarjeta = document.createElement('div');
+                        divTarjeta.id = `tarjeta-${id}`;
+                        divTarjeta.className = "break-inside-avoid mb-6 bg-[#0A1931]/80 backdrop-blur-sm border border-gold/40 rounded shadow-xl flex flex-col group hover:-translate-y-1 transition-transform duration-300 overflow-hidden";
+                        
+                        divTarjeta.innerHTML = `
+                            <div class="relative">
+                                <span class="absolute top-2 right-2 bg-gold text-navy text-[8px] font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-widest z-10 opacity-95">${datos.momento}</span>
+                                ${media}
+                            </div>
+                            <div class="flex items-center justify-between p-4 border-t border-gold/20">
+                                <h4 class="text-white font-bold uppercase text-[10px] tracking-[0.2em] truncate flex-1">${datos.nombre}</h4>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 text-gold/60 hover:text-gold transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-sm font-numbers num-likes text-gold">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        if (isFirstLoad) {
+                            muro.appendChild(divTarjeta);
+                        } else {
+                            muro.insertBefore(divTarjeta, muro.firstChild);
+                        }
+                    }
+
+                    if (change.type === "modified") {
+                        const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                        if (contadorLikes) {
+                            contadorLikes.innerText = datos.likes;
+                        }
+                    }
+
+                    if (change.type === "removed") {
+                        const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                        if (tarjetaRemover) {
+                            tarjetaRemover.remove();
+                        }
+                    }
+                });
+
+                isFirstLoad = false;
+            });
+
+            window.darLike = async function(id) {
+                // ACTUALIZACIÓN LIKES BODA
+                const docRef = doc(db, "muro_gabrielysonia", id);
+                await updateDoc(docRef, { likes: increment(1) });
+            };
+
+            window.activarVideo = function(id) {
+                const videoElement = document.getElementById(`vid-${id}`);
+                if (videoElement) {
+                    videoElement.muted = false;
+                    videoElement.controls = true;
+                    videoElement.classList.remove('cursor-pointer');
+                }
+            };
+        </script>
+    </div> <!-- FIN DEL CONTENEDOR MÓVIL -->
+</body>
+</html>
