@@ -852,50 +852,93 @@
                         
                         resultDiv.innerHTML = `
                             <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
-<div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-verde-principal p-8 shadow-lg text-center overflow-hidden">
-    <div class="absolute top-0 left-0 w-full h-3 bg-verde-principal"></div>
-    
-    <!-- Imagen de anillos -->
-    <img src="https://i.imgur.com/awaZ9vd.png" class="w-16 h-16 mx-auto mb-3 object-cover rounded-full shadow-sm" alt="Anillos">
-    
-<!-- Título de la Boda -->
-   <h3 class="font-script text-3xl text-verde-oscuro mb-4">Boda Ale y Ramón</h3>
-    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-4">Pase Oficial</p>
-<!-- Nombre del invitado -->
-    <h4 class="font-script text-4xl md:text-5xl text-verde-oscuro mb-6 leading-tight capitalize">${docData.nombre}</h4>
-    <!-- Pases asignados -->
-    <div class="inline-block border-t border-b border-verde-oscuro/20 py-4 px-10 mb-6 w-full">
-        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Cantidad:</p>
-        <p class="font-serif text-5xl md:text-6xl text-verde-principal font-bold drop-shadow-sm">${docData.pasesAsignados}</p>
-    </div>
-    <!-- Folio y pie de tarjeta -->
-    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-serif mb-2">Folio: ${folio}</p>
-    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
-</div>
+                                <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-verde-principal p-8 shadow-lg text-center overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-3 bg-verde-principal"></div>
+                                    
+                                    <!-- Imagen de anillos -->
+                                    <img src="https://i.imgur.com/awaZ9vd.png" class="w-16 h-16 mx-auto mb-3 object-cover rounded-full shadow-sm" alt="Anillos">
+                                    
+                                    <!-- Título de la Boda -->
+                                    <h3 class="font-script text-3xl text-verde-oscuro mb-4">Boda Ale y Ramón</h3>
+                                    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-4">Pase Oficial</p>
+                                    
+                                    <!-- Nombre del invitado -->
+                                    <h4 class="font-script text-4xl md:text-5xl text-verde-oscuro mb-6 leading-tight capitalize">${docData.nombre}</h4>
+                                    
+                                    <!-- Pases asignados -->
+                                    <div class="inline-block border-t border-b border-verde-oscuro/20 py-4 px-10 mb-6 w-full">
+                                        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Cantidad:</p>
+                                        <p class="font-serif text-5xl md:text-6xl text-verde-principal font-bold drop-shadow-sm">${docData.pasesAsignados}</p>
+                                    </div>
+                                    
+                                    <!-- Folio y pie de tarjeta -->
+                                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-serif mb-2">Folio: ${folio}</p>
+                                    <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                                </div>
                                 <button id="btnDescargarPase" class="mt-6 bg-verde-principal text-white font-bold py-4 px-8 uppercase tracking-[0.2em] text-xs hover:bg-verde-oscuro transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
                                     Descargar Pase
                                 </button>
                             </div>
                         `;
 
-                        // Lógica para descargar la imagen
+                        // ----------------------------------------------------
+                        // LÓGICA CORREGIDA DE DESCARGA (Anti-colapso móvil)
+                        // ----------------------------------------------------
                         const btnDescargarPase = document.getElementById('btnDescargarPase');
                         btnDescargarPase.addEventListener('click', () => {
                             const tarjeta = document.getElementById('tarjetaPaseDigital');
                             const originalText = btnDescargarPase.innerHTML;
                             btnDescargarPase.innerText = "Generando imagen...";
                             
-                            window.html2canvas(tarjeta, {
+                            // CLONACIÓN PARA EVITAR RECORTES Y COLAPSOS EN MÓVILES
+                            const clone = tarjeta.cloneNode(true);
+                            clone.style.width = "400px"; // Ancho fijo para alta definición
+                            clone.style.height = "auto";
+                            clone.style.position = "fixed";
+                            clone.style.top = "-9999px"; // Escondemos de la pantalla
+                            clone.style.left = "-9999px";
+                            clone.style.zIndex = "-9999";
+                            document.body.appendChild(clone);
+                            
+                            window.html2canvas(clone, {
                                 backgroundColor: "#ffffff", 
                                 scale: 3, 
-                                useCORS: true  
+                                useCORS: true,
+                                scrollX: 0, 
+                                scrollY: 0
                             }).then(canvas => {
-                                const enlace = document.createElement('a');
-                                enlace.download = 'Pase_Boda_Ale_Y_Ramon.png';
-                                enlace.href = canvas.toDataURL('image/png');
-                                enlace.click();
-                                btnDescargarPase.innerHTML = originalText;
+                                document.body.removeChild(clone); // Limpiar el clon
+
+                                const base64 = canvas.toDataURL('image/png');
+                                
+                                // Método de descarga seguro mediante Blob
+                                canvas.toBlob(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const enlace = document.createElement('a');
+                                    enlace.style.display = 'none';
+                                    enlace.href = url;
+                                    enlace.download = 'Pase_Boda_Ale_Y_Ramon.png';
+                                    document.body.appendChild(enlace);
+                                    enlace.click();
+                                    document.body.removeChild(enlace);
+                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                                }, 'image/png');
+
+                                // Reemplazo a Imagen Física por si el navegador bloquea la descarga automática
+                                tarjeta.style.padding = "0";
+                                tarjeta.style.border = "none";
+                                tarjeta.style.background = "transparent";
+                                tarjeta.style.boxShadow = "none";
+                                tarjeta.innerHTML = `
+                                    <img src="${base64}" alt="Pase" class="w-full shadow-lg rounded-xl" />
+                                    <p class="text-[10px] uppercase text-cafe-texto font-bold mt-4 tracking-widest text-center px-2">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                                `;
+
+                                btnDescargarPase.innerHTML = "¡Descarga iniciada!";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
+
                             }).catch(error => {
+                                if(document.body.contains(clone)) document.body.removeChild(clone);
                                 console.error("Error al generar la imagen: ", error);
                                 btnDescargarPase.innerHTML = "Error al descargar";
                                 setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
