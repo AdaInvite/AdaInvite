@@ -786,48 +786,71 @@
         if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
         if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
 
-        // ==========================================
-        // LECTURA DE URL Y REVISIÓN DE REGISTRO
-        // ==========================================
-        const params = new URLSearchParams(window.location.search);
-        const urlName = params.get('n');
-        const urlPases = params.get('pases');
+      // ==========================================
+// LECTURA DE URL Y REVISIÓN DE REGISTRO
+// ==========================================
+const params = new URLSearchParams(window.location.search);
+const urlName = params.get('n');
+const urlPases = params.get('pases');
 
-        if (urlName && urlPases) {
-            window.maxPasesGlobal = parseInt(urlPases, 10);
+if (urlName && urlPases) {
+    window.maxPasesGlobal = parseInt(urlPases, 10);
+}
+
+if (urlName) {
+    const formName = document.getElementById('rsvpName');
+    const searchName = document.getElementById('searchName');
+    
+    // Elementos del header para mostrar el pase VIP dinámico
+    const seccionPasesInicio = document.getElementById('seccion-pases-inicio');
+    const nombreInvitadoInicio = document.getElementById('nombre-invitado-inicio');
+    const pasesInvitadoInicio = document.getElementById('pases-invitado-inicio');
+
+    if (formName) {
+        formName.value = urlName;
+        formName.readOnly = true;
+        formName.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+    }
+    if (searchName) {
+        searchName.value = urlName;
+        searchName.readOnly = true;
+        searchName.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+    }
+
+    // NUEVO: Asignar los valores al header y mostrar la sección ocultando el "hidden"
+    if (seccionPasesInicio && nombreInvitadoInicio && pasesInvitadoInicio) {
+        nombreInvitadoInicio.textContent = urlName;
+        pasesInvitadoInicio.textContent = urlPases || "1";
+        
+        // Revelar la cajita en el header
+        seccionPasesInicio.classList.remove('hidden');
+    }
+
+    const checkRegistrationStatus = async () => {
+        if(!db) return;
+        try {
+            const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", urlName.trim().toLowerCase()));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                const form = document.getElementById('formSectionContainer');
+                const docData = querySnapshot.docs[0].data();
+                if (form) {
+                    document.getElementById('rsvpTitleText').classList.add('hidden');
+                    form.innerHTML = `
+                        <div class="text-center py-6">
+                            <svg class="w-16 h-16 text-verde-aqua mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-[#2C2A2A] font-bold text-xl mb-3">¡Ya confirmaste tu asistencia!</p>
+                            <p class="text-gray-500 text-sm leading-relaxed">${docData.mesa && docData.mesa.trim() !== '' ? 'Tu pase oficial y número de mesa ya están listos.' : 'Tu confirmación está registrada, pero aún estamos asignando las mesas.'}<br><br>Ve a la sección de abajo para recuperar y consultar tu pase.</p>
+                        </div>
+                    `;
+                }
+            }
+        } catch (error) {
+            console.log("Error al verificar:", error);
         }
-
-        if (urlName) {
-            const formName = document.getElementById('rsvpName');
-            const searchName = document.getElementById('searchName');
-            if (formName) { formName.value = urlName; formName.readOnly = true; formName.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed'); }
-            if (searchName) { searchName.value = urlName; searchName.readOnly = true; searchName.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed'); }
-
-            const checkRegistrationStatus = async () => {
-                if(!db) return;
-                try {
-                    const q = query(collection(db, COL_NAME), where("nombreBusqueda", "==", urlName.trim().toLowerCase()));
-                    const querySnapshot = await getDocs(q);
-                    
-                    if (!querySnapshot.empty) {
-                        const form = document.getElementById('formSectionContainer');
-                        const docData = querySnapshot.docs[0].data();
-                        
-                        if (form) {
-                            document.getElementById('rsvpTitleText').classList.add('hidden');
-                            form.innerHTML = `
-                                <div class="text-center py-6">
-                                    <svg class="w-16 h-16 text-verde-aqua mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <p class="text-[#2C2A2A] font-bold text-xl mb-3">¡Ya confirmaste tu asistencia!</p>
-                                    <p class="text-gray-500 text-sm leading-relaxed">${docData.mesa && docData.mesa.trim() !== '' ? 'Tu pase oficial y número de mesa ya están listos.' : 'Tu confirmación está registrada, pero aún estamos asignando las mesas.'}<br><br>Ve a la sección de abajo para recuperar y consultar tu pase.</p>
-                                </div>
-                            `;
-                        }
-                    }
-                } catch (error) { console.log("Error al verificar:", error); }
-            };
-            checkRegistrationStatus();
-        }
+    };
+    checkRegistrationStatus();
+}
 
         // ==========================================
         // 1. SOLICITUD DE ASISTENCIA (SIN DESCARGAR PASE)
