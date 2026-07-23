@@ -456,8 +456,7 @@
             document.getElementById('contador-tarjetas').innerText = fam + " confirmados";
         }
 
-        // --- 3. EXPORTAR A CSV ---
-        // Asignamos la función a window para que el HTML la encuentre, pero usamos async para el modal
+        // --- 3. EXPORTAR A CSV (CORREGIDO PARA MÓVILES) ---
         window.descargarCSV = async () => {
             if(listaInvitadosGlobal.length === 0) {
                 await showModal({ 
@@ -468,7 +467,8 @@
                 return;
             }
             
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            // Agregamos \uFEFF para que Excel reconozca correctamente los acentos (UTF-8 con BOM)
+            let csvContent = "\uFEFF"; 
             csvContent += "Folio,Nombre,Adultos,Ninos,Total Asistentes,Fecha\n";
             
             listaInvitadosGlobal.forEach(inv => {
@@ -477,13 +477,23 @@
                 csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${fecha}\n`;
             });
 
-            const encodedUri = encodeURI(csvContent);
+            // FIX: Usar Blob y createObjectURL en lugar de encodeURI
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", "Asistencia_Boda_SyG.csv");
+            
+            // Importante: Agregar al body antes de hacer click para navegadores móviles
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            // Liberar memoria
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
         };
 
         // --- 4. FUNCIONES DE EDICIÓN Y ELIMINACIÓN ---
