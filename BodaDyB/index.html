@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nuestra Boda | Dulce & Brayan</title>
+ <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+     <link rel="apple-touch-icon" href="https://i.imgur.com/H88XGll.jpeg">
+        
+    <meta name="theme-color" content="#FDFBF7">
+    <meta property="og:title" content="Nuestra Boda • Dulce y Brayan">
+    <meta property="og:description" content="Por encima de todo, vístanse de amor, que es el vínculo perfecto. Acompáñanos...">
+    <meta property="og:image" content="https://i.imgur.com/jo72hIb.jpeg">
+    <meta property="og:type" content="website">
+
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#FDFBF7',
+                            bg: '#F4EBD9',
+                            gold: '#AE7B3A',
+                            golddark: '#9A7B54',
+                            text: '#5C4A3D',
+                            textlight: '#8B6F4E'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Forum"', 'serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                        sans: ['"Forum"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #E5E0D8; /* Fondo exterior para escritorio */
+            color: #5C4A3D;
+        }
+        
+        .invite-container {
+            background: linear-gradient(180deg, #FDFBF7 0%, #F4EBD9 50%, #FDFBF7 100%);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- Estilos del Sobre --- */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+
+        .textura-sobre {
+            background-color: #FFFFFF;
+            background-image: url("https://i.imgur.com/Ll0MJyn.jpeg");
+        }
+
+        .envelope-bg {
+            position: absolute; inset: 0;
+            transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.15)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.15)); }
+        
+        .flap { width: 100%; height: 100%; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        #section-main { display: none; }
+
+        /* --- Estilos Generales --- */
+        .arch-image {
+            border-radius: 150px 150px 0 0;
+            border: 2px solid #B89B72;
+            padding: 4px;
+            background-color: transparent;
+        }
+        
+        .arch-image img {
+            border-radius: 146px 146px 0 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hide Scrollbar for carousels */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Separator Images with soft edges (DIFUMINADO) */
+        .separator-img-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .separator-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Máscara para hacer transparente arriba y abajo */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+        }
+
+        /* Animación del Icono de Audio */
+        .animate-pulse-custom {
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(184, 155, 114, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(184, 155, 114, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(184, 155, 114, 0); }
+        }
+
+        /* Filtro Sepia para Mapas Interactivos */
+        .map-sepia {
+            filter: sepia(80%) grayscale(100%) contrast(90%) hue-rotate(345deg);
+            transition: filter 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased text-brand-text font-sans">
+
+    <!-- AUDIO BG -->
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FDieWithASmile.mp3?alt=media&token=ff208e04-5c5a-428b-937e-ce00fefe469e" type="audio/mpeg">
+    </audio>
+
+    <!-- BOTON DE AUDIO -->
+    <div id="audio-btn" class="fixed bottom-6 right-6 w-10 h-10 bg-transparent flex items-center justify-center z-[999] cursor-pointer hidden" onclick="toggleAudio()">
+         <img id="audio-icon" src="https://i.imgur.com/awaZ9vd.png" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <!-- SOBRE BLANCO -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg textura-sobre"></div>
+        <div id="envelope-container" class="w-full max-w-md mx-auto h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left textura-sobre border-r border-black/5"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right textura-sobre border-l border-black/5"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="font-sans text-xs tracking-[0.3em] uppercase mb-4 animate-bounce text-brand-text drop-shadow-sm font-bold bg-transparent">Toca para abrir</div>
+                <img src="https://i.imgur.com/gTqQvCX.png" class="w-56 drop-shadow-xl rounded-full" style="animation: floating 4s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Mobile-Sized Container -->
+    <main id="section-main" class="max-w-md mx-auto invite-container min-h-screen relative overflow-hidden pb-10">
+        <!-- MARCO PRINCIPAL OVALADO (Capa Intermedia) -->
+        <div class="absolute top-[18px] left-[18px] right-[18px] bottom-[18px] border-[1.5px] border-brand-gold/60 z-10 pointer-events-none" style="border-radius: 200px 200px 0 0;">
+            <!-- Decoración Flor Hero (Esquina superior izquierda) -->
+            <img src="https://i.imgur.com/Q5mc3Cf.png" class="absolute -top-[24px] -left-[28px] opacity-80 w-64" alt="Flor Marco">
+ <img src="https://i.imgur.com/Q5mc3Cf.png" class="absolute -top-[24px] -right-[28px] transform -scale-x-100 opacity-80 w-64" alt="Flor Marco">
+            
+            <!-- Decoración Final Marco (Esquina inferior derecha) -->
+          <img src="https://i.imgur.com/Q5mc3Cf.png" class="absolute -bottom-12 -right-[40px] w-56 opacity-80 rotate-180" alt="Adorno Marco Inferior">
+      <img src="https://i.imgur.com/Q5mc3Cf.png" class="absolute -bottom-12 -left-[40px] opacity-80 w-56 scale-y-[-1]" alt="Adorno Marco Inferior Izquierdo">
+
+        </div>
+        <!-- Hero Section -->
+        <section class="px-4 pt-40 pb-6 text-center relative reveal">
+            <h2 class="font-serif text-3xl text-brand-text tracking-widdest">NUESTRA</h2>
+            <h1 class="text-7xl text-brand-gold font-script mb-12">Boda</h1>
+            
+            <!-- Arch Image -->
+            <div class="mx-auto w-64 h-80 arch-image shadow-xl relative z-10 mb-20">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Ffoto_portada_1000234225.jpg?alt=media&token=802e9a0b-cbf6-4fa2-a9d4-6248592dee44" alt="Dulce y Brayan">
+            </div>
+
+            <div class="flex justify-center items-center space-x-4 mb-20">
+                <div class="h-px bg-brand-gold w-12 opacity-50"></div>
+                <div class="font-serif text-4xl text-brand-text">
+                    <div class="mb-1">DULCE</div>
+                    <div class="text-4xl text-brand-gold font-script">&</div>
+                    <div class="">BRAYAN</div>
+                </div>
+                <div class="h-px bg-brand-gold w-12 opacity-50"></div>
+            </div>
+            
+            <!-- Bible Verse -->
+            <div class="px-4 text-center mb-12 mt-8">
+                <p class="font-serif italic text-xl text-brand-textlight leading-relaxed">
+                    "Por encima de todo, vístanse de amor, que es el vínculo perfecto".
+                </p>
+                <p class="font-sans text-xs uppercase tracking-widest mt-3 text-brand-golddark font-medium">Colosenses 3:14</p>
+            </div>
+        </section>
+
+        <!-- Separator Image 1 -->
+        <section class="py-4 reveal">
+            <div class="separator-img-container h-[100svh]">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Ffoto_separador_1_1000234153.jpg?alt=media&token=c6f99e75-17ac-4498-bca4-6a6ffeb55266" alt="Separador 1">
+            </div>
+        </section>
+
+        <!-- Date & Countdown Section -->
+        <section class="px-6 py-6 text-center reveal relative">
+
+            <!-- Imagen de la izquierda -->
+            <img src="https://i.imgur.com/7RQMHts.png" class="absolute left-5 top-160 w-16 opacity-80 transform -scale-x-100" alt="Decoración lateral">
+
+            <!-- Imagen de la derecha -->
+            <img src="https://i.imgur.com/7RQMHts.png" class="absolute right-5 top-[30rem] opacity-80 w-16" alt="Decoración lateral">
+
+            <h3 class="font-script text-5xl text-brand-gold mb-10">Acompáñanos</h3>
+            <p class="font-sans text-xs tracking-[0.2em] uppercase text-brand-textlight mb-8">En este día tan especial</p>
+            
+            <div class="font-serif text-brand-text">
+                <p class="text-xl uppercase tracking-widest mb-2">Sábado</p>
+                <p class="text-7xl font-light leading-none mb-2 text-brand-gold">21</p>
+                <p class="text-xl uppercase tracking-widest mb-4">Noviembre</p>
+                <p class="text-lg tracking-[0.3em] text-brand-textlight">2026</p>
+            </div>
+
+            <!-- Small Calendar November 2026 -->
+            <div class="mt-10 mb-12 max-w-[250px] mx-auto border-t border-b border-brand-gold border-opacity-30 py-6">
+                <p class="font-sans text-xs uppercase tracking-widest text-brand-golddark font-medium mb-4">Noviembre</p>
+                <div class="grid grid-cols-7 gap-1 text-[10px] font-sans text-brand-textlight text-center">
+                    <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+                    <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div>
+                    <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div>
+                    <div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div>
+                    <div class="relative w-7 h-7 mx-auto flex items-center justify-center -mt-1">
+                        <svg class="absolute inset-0 text-brand-gold w-full h-full drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span class="relative text-white font-bold text-[10px] z-10 pt-[1px]">21</span>
+                    </div>
+                    <div>22</div><div>23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div>
+                    <div>29</div><div>30</div><div></div><div></div><div></div><div></div><div></div>
+                </div>
+            </div>
+
+            <!-- Countdown y texto -->
+            <div class="relative max-w-md mx-auto">
+                <p class="font-script text-4xl text-brand-textlight mb-6 mt-8">Faltan solo...</p>
+            </div>
+
+            <div class="flex justify-center space-x-4 font-serif text-brand-text text-center">
+                <div class="flex flex-col items-center">
+                    <span id="days" class="text-4xl">00</span>
+                    <span class="text-[10px] font-sans tracking-widest uppercase mt-1 text-brand-textlight">Días</span>
+                </div>
+                <span class="text-2xl text-brand-gold">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="hours" class="text-4xl">00</span>
+                    <span class="text-[10px] font-sans tracking-widest uppercase mt-1 text-brand-textlight">Horas</span>
+                </div>
+                <span class="text-2xl text-brand-gold">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="minutes" class="text-4xl">00</span>
+                    <span class="text-[10px] font-sans tracking-widest uppercase mt-1 text-brand-textlight">Min</span>
+                </div>
+                <span class="text-2xl text-brand-gold">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="seconds" class="text-4xl">00</span>
+                    <span class="text-[10px] font-sans tracking-widest uppercase mt-1 text-brand-textlight">Seg</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Image 2 -->
+        <section class="py-4 reveal">
+            <div class="separator-img-container h-[100svh]">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Ffoto_separador_2_1000063980.jpg?alt=media&token=2bac617d-ad43-4d0e-81ef-3e9e2d797294" alt="Separador 2">
+            </div>
+        </section>
+
+        <!-- Parents & Godparents -->
+        <section class="px-6 py-6 text-center reveal">
+            <h2 class="font-script text-4xl text-brand-gold mb-10">Con la bendición de Dios y de nuestros padres</h2>
+            
+            <div class="space-y-10">
+                <!-- Groom Parents -->
+                <div>
+                    <h3 class="font-sans text-xs tracking-widest uppercase text-brand-textlight mb-3 font-semibold">Familia Villagrana Alvarado</h3>
+                    <p class="font-serif text-xl text-brand-text">Nora Loreto Alvarado Carranza</p>
+                    <p class="font-serif text-xl text-brand-text mt-1">Armando Villagrana Ruiz</p>
+                </div>
+                
+                <!-- Bride Parents -->
+                <div>
+                    <h3 class="font-sans text-xs tracking-widest uppercase text-brand-textlight mb-3 font-semibold">Familia Pérez Díaz</h3>
+                    <p class="font-serif text-xl text-brand-text">Ibeth Díaz Ramirez</p>
+                    <p class="font-serif text-xl text-brand-text mt-1">Carlos Pérez Luna</p>
+                </div>
+            </div>
+
+           <div class="my-10 flex justify-center">
+              <img src="https://i.imgur.com/NtLISDJ.png" alt="Divisor decorativo dorado" class="w-1/2 max-w-md h-auto object-contain">
+           </div>
+
+            <h2 class="font-script text-4xl text-brand-gold mb-8">Nuestros Padrinos</h2>
+            
+            <div class="space-y-8">
+                <!-- Groom Godparents -->
+                <div>
+                    <h3 class="font-sans text-xs tracking-widest uppercase text-brand-textlight mb-2 font-semibold">Por parte del Novio</h3>
+                    <p class="font-serif text-xl text-brand-text">Diana Lopez <br> Marcos Rodriguez</p>
+                </div>
+                
+                <!-- Bride Godparents -->
+                <div>
+                    <h3 class="font-sans text-xs tracking-widest uppercase text-brand-textlight mb-2 font-semibold">Por parte de la Novia</h3>
+                    <p class="font-serif text-xl text-brand-text">Rosario Díaz <br> Elíseo Villanueva</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Image 3 -->
+        <section class="py-4 reveal">
+            <div class="separator-img-container h-[100svh]">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Ffoto_separador_3_1000234172.jpg?alt=media&token=c5941615-c0fb-4036-adbf-7236373d2960" alt="Separador 3">
+            </div>
+        </section>
+
+        <!-- Ceremony -->
+        <section class="px-6 py-4 text-center reveal">
+            <!-- Church Icon (SVG) -->
+           <div class="mx-auto mb-4 flex items-center justify-center">
+                <img src="https://i.imgur.com/6wwQtrQ.png" class="w-32 h-32" alt="Ceremonia">
+           </div>
+            
+            <h2 class="font-script text-5xl text-brand-gold mb-4">Ceremonia</h2>
+            <p class="font-serif text-2xl text-brand-text mb-2">12:00 hrs</p>
+            <p class="font-serif text-lg text-brand-text font-medium mb-4 uppercase tracking-wide">Parroquia de San Benito Abad</p>
+            
+            <!-- Mapa Interactivo Sepia -->
+            <div class="px-4 mb-8">
+                <div class="w-full h-56 rounded-xl overflow-hidden shadow-inner border border-brand-gold/30 relative">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d249.3636450214468!2d0!3d0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ce2b459e890a37%3A0x67bee1bf20256dae!2sParroquia%20de%20San%20Benito%20Abad!5e0!3m2!1ses-419!2smx!4v1785012423951!5m2!1ses-419!2smx" 
+                        class="w-full h-full border-0 map-sepia absolute inset-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+            <a href="https://maps.app.goo.gl/Ht1Y9NsLGBS7XctY9?g_st=aw" target="_blank" class="inline-block bg-brand-gold text-white font-sans text-xs uppercase tracking-[0.15em] py-3 px-8 rounded-full shadow-md hover:bg-brand-golddark transition-colors">
+                Ver Ubicación
+            </a>
+        </section>
+
+        
+
+        <!-- Reception -->
+        <section class="px-6 py-4 text-center reveal">
+            <!-- Glasses Icon (SVG) -->
+           <div class="mx-auto mb-4 flex items-center justify-center">
+                <img src="https://i.imgur.com/UA0jmhg.png" class="w-28 h-28" alt="Ceremonia">
+           </div>
+            
+            <h2 class="font-script text-5xl text-brand-gold mb-4">Recepción</h2>
+            <p class="font-serif text-2xl text-brand-text mb-2">14:00 hrs</p>
+            <p class="font-serif text-lg text-brand-text font-medium mb-4 uppercase tracking-wide">Casa</p>
+            
+            <!-- Mapa Interactivo Sepia -->
+            <div class="px-4 mb-8">
+                <div class="w-full h-56 rounded-xl overflow-hidden shadow-inner border border-brand-gold/30 relative">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7512.310274195201!2d-101.1921715!3d19.7060182!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ce2a7dc51595ed%3A0x42a08afe9c969ed9!2s5%20de%20Mayo%2035%2C%20Centro%2C%2074116%20Ju%C3%A1rez%20Coronaco%2C%20Pue.!5e0!3m2!1ses-419!2smx!4v1785012526719!5m2!1ses-419!2smx" 
+                        class="w-full h-full border-0 map-sepia absolute inset-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+            <a href="https://maps.app.goo.gl/5pkPao4XTnmKtBHa6?g_st=aw" target="_blank" class="inline-block bg-brand-gold text-white font-sans text-xs uppercase tracking-[0.15em] py-3 px-8 rounded-full shadow-md hover:bg-brand-golddark transition-colors">
+                Ver Ubicación
+            </a>
+        </section>
+<!-- Separator Image 4 -->
+        <section class="py-4 reveal">
+            <div class="separator-img-container h-[100svh]">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Ffoto_separador_4_1000234151.jpg?alt=media&token=65a7e039-977e-4554-bfe5-280ccb28de06" alt="Separador 4">
+            </div>
+        </section>
+
+        <!-- Our Story (Horizontal Carousel) -->
+        <section class="py-12 reveal">
+            <div class="text-center px-6 mb-4">
+                <h2 class="font-script text-5xl text-brand-gold mb-2">Nuestra Historia</h2>
+            </div>
+
+            <!-- Carousel Container -->
+            <!-- AGREGAMOS UN ID AQUÍ -->
+            <div id="story-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-8 pt-4 no-scrollbar scroll-smooth">
+                
+                <!-- Card 1 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_1_1000066304.jpg?alt=media&token=d0759eaa-c613-4a4b-bbda-d079911c2208" alt="Historia 1" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"Nos conocimos de la forma más random, pero en el momento perfecto, como todo lo que Dios hace."</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_2_1000066270.jpg?alt=media&token=d3df1550-65ba-44a8-8f78-7fd17d65d064" alt="Historia 2" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"Que bendición haber coincidido en este camino y poder recorrerlo juntos"</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_3_1000064386.jpg?alt=media&token=17a43fb9-44fd-4c2e-be6d-07d7c32f4e32" alt="Historia 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"Dios escribió nuestra historia, y cada dia a tu lado es una bendición"</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_4_1000066191.jpg?alt=media&token=6aec0101-d9a6-4402-aef7-31c55295dd78" alt="Historia 4" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"La felicidad no esta en el lugar o el lujo, sino en la persona que lo hace especial"</p>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_5_1000071188.jpg?alt=media&token=f29c3d24-2798-4aad-ab6b-d961b938e468" alt="Historia 5" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"Esta foto prueba que los mejores momentos no se planean; simplemente ocurren cuando estamos juntos"</p>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="story-card snap-center shrink-0 w-[85%] bg-white rounded-2xl shadow-lg border border-brand-gold border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="h-80 w-full overflow-hidden">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Dulce_Rosario_P%C3%A9rez_D%C3%ADaz_1784904620472%2Fhistoria_foto_6_1000234152.jpg?alt=media&token=c349ef6c-3291-4f84-8cd0-e3374b5fc31c" alt="Historia 6" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 text-center flex-grow flex items-center justify-center">
+                        <p class="font-serif text-base text-brand-text italic">"Si la vida es un camino, que suerte tuvimos el haber coincidido los 2 y poder caminarlo juntos"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress indicators dots (AHORA CON ID PARA JAVASCRIPT Y CLASES DE TRANSICIÓN) -->
+            <div id="story-dots" class="flex justify-center space-x-2 mt-4">
+                <div class="w-2.5 h-2.5 rounded-full bg-brand-gold transition-all duration-300 transform scale-110"></div>
+                <div class="w-2 h-2 rounded-full bg-brand-gold opacity-40 transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-brand-gold opacity-40 transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-brand-gold opacity-40 transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-brand-gold opacity-40 transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-brand-gold opacity-40 transition-all duration-300"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN ÁLBUM COMPARTIDO -->
+        <section class="min-h-[60svh] relative flex flex-col justify-center px-6 py-12 text-center reveal">
+            <!-- Imagen de la izquierda -->
+            <img src="https://i.imgur.com/7RQMHts.png" class="absolute opacity-80 left-5 top-10 w-16 transform -scale-x-100" alt="Decoración lateral">
+
+            <!-- Imagen de la derecha -->
+            <img src="https://i.imgur.com/7RQMHts.png" class="absolute right-5 top-[30rem] opacity-80 w-16" alt="Decoración lateral">
+            <div class="mb-4">
+                <svg class="w-12 h-12 mx-auto text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+            </div>
+            <h3 class="font-script text-4xl text-brand-gold mb-4">Álbum Compartido</h3>
+            <p class="font-serif text-lg text-brand-text mb-8 max-w-[280px] mx-auto leading-relaxed">
+                Ayúdanos a capturar cada momento.<br>Sube tus fotos y videos de la boda aquí.
+            </p>
+            <div class="bg-white p-4 inline-block border border-brand-gold border-opacity-30 rounded-xl shadow-md mb-6 mx-auto">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adainvite.com/BodaDyB/recuerdos" class="w-40 h-40 opacity-90" alt="QR Album">
+            </div>
+            <br>
+            <p class="font-sans text-[10px] tracking-widest uppercase text-brand-textlight mt-2 mb-6">Usa tu cámara para escanear</p>
+            
+            <a href="https://adainvite.com/BodaDyB/recuerdos" target="_blank" class="inline-block bg-brand-gold text-white font-sans text-xs uppercase tracking-[0.15em] py-3 px-8 rounded-full shadow-md hover:bg-brand-golddark transition-colors mx-auto">
+                Ver Galería
+            </a>
+        </section>
+
+        <!-- Separator Image 5 (Footer Image) -->
+        <section class="py-4 reveal">
+            <div class="separator-img-container h-[100svh]">
+                <img src="https://i.imgur.com/9x3c7xW.jpeg" alt="Separador 5">
+            </div>
+        </section>
+        
+        <!-- Footer Closing -->
+        <footer class="px-6 pt-4 pb-20 text-center reveal">
+            <h2 class="font-script text-5xl text-brand-gold mb-4">¡Te esperamos!</h2>
+            <div class="font-serif text-2xl tracking-widest text-brand-text mb-4">
+                DULCE <span class="font-script text-brand-gold mx-2 text-3xl">&</span> BRAYAN
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- Lógica del Sobre y Audio ---
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver(); // Iniciar observer de scroll hasta que se abre
+            initCarouselObserver(); // Iniciar animación de los puntos del carrusel
+            playAudio(); 
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => { document.getElementById('audio-btn').classList.remove('hidden'); }, 1000);
+            setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
+        }
+
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('animate-pulse-custom');
+            }).catch(error => console.log("Autoplay bloqueado."));
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('animate-pulse-custom');
+            } else {
+                audio.play();
+                audioIcon.classList.add('animate-pulse-custom');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- Countdown Logic ---
+        const weddingDate = new Date("November 21, 2026 12:00:00").getTime();
+
+        const updateCountdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+
+        // --- Scroll Reveal Animation ---
+        function initObserver() {
+            var reveals = document.querySelectorAll(".reveal");
+            
+            function checkReveal() {
+                for (var i = 0; i < reveals.length; i++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[i].getBoundingClientRect().top;
+                    var elementVisible = 100;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[i].classList.add("active");
+                    }
+                }
+            }
+            
+            window.addEventListener("scroll", checkReveal);
+            checkReveal(); // Trigger once on init
+        }
+
+        // --- Carousel Dots Logic (Nuevo Código) ---
+        function initCarouselObserver() {
+            const carousel = document.getElementById('story-carousel');
+            const cards = carousel.querySelectorAll('.story-card');
+            const dots = document.querySelectorAll('#story-dots > div');
+
+            // Creamos un observador para saber qué tarjeta está en el centro de la pantalla
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Encontramos el índice de la tarjeta visible
+                        const index = Array.from(cards).indexOf(entry.target);
+                        
+                        // Actualizamos todos los puntos
+                        dots.forEach((dot, i) => {
+                            if (i === index) {
+                                dot.classList.remove('opacity-40', 'w-2', 'h-2');
+                                dot.classList.add('w-2.5', 'h-2.5', 'scale-110'); // Hacemos un poco más grande el actual
+                            } else {
+                                dot.classList.add('opacity-40', 'w-2', 'h-2');
+                                dot.classList.remove('w-2.5', 'h-2.5', 'scale-110');
+                            }
+                        });
+                    }
+                });
+            }, {
+                root: carousel, 
+                threshold: 0.6 // Se activa cuando la tarjeta es visible al menos en un 60%
+            });
+
+            // Ponemos a observar cada una de las tarjetas de la historia
+            cards.forEach(card => observer.observe(card));
+        }
+    </script>
+</body>
+</html>
