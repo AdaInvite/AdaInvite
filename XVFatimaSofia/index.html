@@ -352,11 +352,11 @@
     <div class="relative z-10 w-full flex flex-col items-center pb-6">
         <div id="seccion-pases-inicio" class="w-full max-w-xs mx-auto hidden mb-6">
             <div class="bg-white/20 backdrop-blur-md border border-white/40 rounded-xl px-4 py-3 shadow-lg text-center transition-all">
-                <p class="text-xs uppercase text-rosa-elegante font-bold mb-1">Invitación especial para</p>
-                <p id="nombre-invitado-inicio" class="text-2xl font-script text-rosa-elegante mb-1 capitalize"></p>
+                <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
+                <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
                 <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/40 pt-1.5 w-[70%] mx-auto">
-                    <span class="text-xs uppercase font-bold text-rosa-elegante">Pases:</span>
-                    <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-rosa-elegante"></span>
+                    <span class="text-xs uppercase font-bold text-white">Pases:</span>
+                    <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
                 </div>
             </div>
         </div>
@@ -540,17 +540,18 @@
                 </div>
 
                 <p class="text-base uppercase text-[#2C2A2A] font-bold mt-4 mb-6">Agrega al calendario</p>
-              <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-lg mx-auto">
+             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-lg mx-auto">
     <!-- Google Calendar (Android / Web) -->
     <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+Fatima+Sofia&dates=20261226T210000Z/20261227T060000Z&details=Acompa%C3%B1ame+a+celebrar+mis+XV+A%C3%B1os.&location=Tlahuac,+CDMX" target="_blank" class="w-full sm:w-auto bg-rosa-elegante text-white px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-transparent hover:text-rosa-elegante border border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
         Google Calendar
     </a>
     
-    <!-- Apple Calendar (iPhone - Interceptado por el OS) -->
-    <a href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:Mis%20XV%20Fatima%20Sofia%0ADTSTART:20261226T210000Z%0ADTEND:20261227T060000Z%0ADESCRIPTION:Acompa%C3%B1ame%20a%20celebrar%20mis%20XV%20A%C3%B1os.%0ALOCATION:Tlahuac,%20CDMX%0AEND:VEVENT%0AEND:VCALENDAR" target="_blank" class="w-full sm:w-auto bg-white text-[#2C2A2A] px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-rosa-elegante hover:text-white border border-gray-200 hover:border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
+    <!-- Apple Calendar (iPhone) -->
+    <button onclick="descargarCalendarioApple()" class="w-full sm:w-auto bg-white text-[#2C2A2A] px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-rosa-elegante hover:text-white border border-gray-200 hover:border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
         Apple Calendar
-    </a>
+    </button>
 </div>
+
 
             </div>
         </section>
@@ -1646,5 +1647,33 @@
         })();
       })();
     </script>
+    <script>
+    function descargarCalendarioApple() {
+        const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Mis XV Fatima Sofia
+DTSTART:20261226T210000Z
+DTEND:20261227T060000Z
+DESCRIPTION:Acompañame a celebrar mis XV Años.
+LOCATION:Tlahuac, CDMX
+END:VEVENT
+END:VCALENDAR`.replace(/\n/g, "\r\n");
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        link.href = url;
+        link.setAttribute('download', 'XV_Fatima_Sofia.ics');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        setTimeout(() => window.URL.revokeObjectURL(url), 100);
+    }
+</script>
+
 </body>
 </html>
