@@ -402,14 +402,27 @@
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
+                
+                // Corrección: Priorizamos SIEMPRE la suma real de adultos y niños confirmados
+                let ad = parseInt(data.adultos) || 0;
+                let ni = parseInt(data.ninos) || 0;
+                let totalPersonas = ad + ni;
+
+                // Si la suma es 0 (ej. solo se generó el pase pero aún no confirman el desglose), 
+                // tomamos el total original y lo tratamos como adultos para no desajustar los iconos
+                if (totalPersonas === 0 && (data.totalPases || data.pasesAsignados)) {
+                    totalPersonas = parseInt(data.totalPases) || parseInt(data.pasesAsignados) || 0;
+                    ad = totalPersonas;
+                }
+
                 listaInvitadosGlobal.push({
                     id: docSnap.id,
                     nombre: data.nombre,
                     folio: data.folio || '-',
                     mesa: data.mesa || '', 
-                    adultos: parseInt(data.adultos) || 0,
-                    ninos: parseInt(data.ninos) || 0,
-                    totalPersona: parseInt(data.totalPases) || (parseInt(data.adultos) || 0) + (parseInt(data.ninos) || 0),
+                    adultos: ad,
+                    ninos: ni,
+                    totalPersona: totalPersonas,
                     fecha: data.fecha ? data.fecha.toDate() : null
                 });
             });
@@ -590,7 +603,23 @@
                     mesas[m].total += inv.totalPersona;
                     mesas[m].adultos += inv.adultos;
                     mesas[m].ninos += inv.ninos;
-                    mesas[m].nombres.push(inv.nombre.split(' ')[0]); // Solo primer nombre o familia para no saturar
+                    
+                    // Texto desglosado explícitamente para evitar confusiones en las sumas
+                    let textoAdultos = inv.adultos === 1 ? '1 adulto' : `${inv.adultos} adultos`;
+                    let textoNinos = inv.ninos === 1 ? '1 niño' : `${inv.ninos} niños`;
+                    
+                    let detalle = '';
+                    if (inv.adultos > 0 && inv.ninos > 0) {
+                        detalle = `${textoAdultos}, ${textoNinos}`;
+                    } else if (inv.ninos > 0) {
+                        detalle = textoNinos;
+                    } else if (inv.adultos > 0) {
+                        detalle = textoAdultos;
+                    } else {
+                        detalle = `${inv.totalPersona} pers`; // Respaldo por si faltan datos
+                    }
+
+                    mesas[m].nombres.push(`• ${inv.nombre} (${detalle})`); 
                 }
             });
 
@@ -645,8 +674,8 @@
                         <!-- Invitados (Dibujitos) -->
                         ${iconsHtml}
                     </div>
-                    <div class="w-full text-center bg-gray-50 p-3 rounded-xl border border-gray-100">
-                        <p class="text-[11px] text-gray-600 leading-relaxed font-medium break-words">${data.nombres.join(', ')}</p>
+                    <div class="w-full text-left bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <p class="text-[11px] text-gray-600 leading-relaxed font-medium break-words">${data.nombres.join('<br>')}</p>
                     </div>
                 </div>
                 `;
