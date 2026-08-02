@@ -93,18 +93,14 @@
             </div>
 
             <!-- SECCIÓN 2: ESTADÍSTICAS -->
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-3 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Confirmados</p>
-                    <p class="text-4xl font-bold text-primary" id="stat-total">-</p>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Familias</p>
+                    <p class="text-3xl font-bold text-gray-800" id="stat-familias">-</p>
                 </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-1 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Adultos</p>
-                    <p class="text-2xl font-bold text-gray-800" id="stat-adultos">-</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-2 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Niños</p>
-                    <p class="text-2xl font-bold text-gray-800" id="stat-ninos">-</p>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Pases</p>
+                    <p class="text-3xl font-bold text-primary" id="stat-total">-</p>
                 </div>
             </div>
 
@@ -290,14 +286,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
-                    const firebaseConfig = {
-                  apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
-                  authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
-                  projectId: "invitaciones-xv-e28d5",
-                  storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
-                  messagingSenderId: "531033690105",
-                  appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
-                };
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -318,12 +314,12 @@
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
+                // Aunque quitamos adultos/niños de la interfaz, el cálculo interno 
+                // se mantiene por si hay registros viejos en la base de datos.
                 listaInvitadosGlobal.push({
                     id: docSnap.id,
                     nombre: data.nombre,
                     folio: data.folio || '-',
-                    adultos: parseInt(data.adultos) || 0,
-                    ninos: parseInt(data.ninos) || 0,
                     totalPersona: parseInt(data.totalPases) || (parseInt(data.adultos) || 0) + (parseInt(data.ninos) || 0),
                     fecha: data.fecha ? data.fecha.toDate() : null
                 });
@@ -352,8 +348,6 @@
 
         function renderizarLista(lista, actualizarStats = true) {
             let totalFamilias = 0;
-            let totalAdultos = 0;
-            let totalNinos = 0;
             let totalPasesGlobal = 0;
             let htmlTarjetas = '';
 
@@ -364,7 +358,7 @@
                         <p class="text-xs uppercase tracking-widest font-bold">Sin resultados</p>
                     </div>
                 `;
-                if(actualizarStats) actualizarEstadisticas(0, 0, 0, 0);
+                if(actualizarStats) actualizarEstadisticas(0, 0);
                 lucide.createIcons();
                 return;
             }
@@ -372,8 +366,6 @@
             lista.forEach(inv => {
                 if(actualizarStats) {
                     totalFamilias++;
-                    totalAdultos += inv.adultos;
-                    totalNinos += inv.ninos;
                     totalPasesGlobal += inv.totalPersona;
                 }
 
@@ -410,7 +402,7 @@
                             </div>
                             <div class="flex justify-between items-end mt-1 border-t border-gray-50 pt-2 pl-2 pr-2">
                                 <div class="text-[10px] uppercase font-bold text-gray-500">
-                                    <span>${inv.adultos} Adultos</span> <span class="text-gray-300 mx-1">|</span> <span>${inv.ninos} Niños</span>
+                                    <span>Asistencia Confirmada</span>
                                 </div>
                                 <div class="text-[9px] text-gray-400 flex items-center gap-1">
                                     <i data-lucide="clock" class="w-3 h-3"></i> ${fechaFormateada}
@@ -422,15 +414,9 @@
                         <div id="edicion-${inv.id}" class="hidden pl-2 pr-2">
                             <p class="font-bold text-gray-800 text-sm capitalize leading-tight mb-3">${inv.nombre}</p>
                             
-                            <div class="flex gap-3 mb-3">
-                                <div class="flex-1">
-                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Adultos</label>
-                                    <input type="number" id="edit-ad-${inv.id}" value="${inv.adultos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
-                                </div>
-                                <div class="flex-1">
-                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Niños</label>
-                                    <input type="number" id="edit-ni-${inv.id}" value="${inv.ninos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
-                                </div>
+                            <div class="mb-3">
+                                <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Total de Pases</label>
+                                <input type="number" id="edit-total-${inv.id}" value="${inv.totalPersona}" min="1" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
                             </div>
 
                             <div class="flex justify-end gap-2 border-t border-gray-50 pt-3">
@@ -445,19 +431,17 @@
             });
 
             document.getElementById('listaAsistencia').innerHTML = htmlTarjetas;
-            if(actualizarStats) actualizarEstadisticas(totalFamilias, totalAdultos, totalNinos, totalPasesGlobal);
+            if(actualizarStats) actualizarEstadisticas(totalFamilias, totalPasesGlobal);
             lucide.createIcons();
         }
 
-        function actualizarEstadisticas(fam, ad, ni, tot) {
+        function actualizarEstadisticas(fam, tot) {
             document.getElementById('stat-total').innerText = tot;
-            document.getElementById('stat-adultos').innerText = ad;
-            document.getElementById('stat-ninos').innerText = ni;
+            document.getElementById('stat-familias').innerText = fam;
             document.getElementById('contador-tarjetas').innerText = fam + " confirmados";
         }
 
         // --- 3. EXPORTAR A CSV ---
-        // Asignamos la función a window para que el HTML la encuentre, pero usamos async para el modal
         window.descargarCSV = async () => {
             if(listaInvitadosGlobal.length === 0) {
                 await showModal({ 
@@ -469,12 +453,12 @@
             }
             
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Folio,Nombre,Adultos,Ninos,Total Asistentes,Fecha\n";
+            csvContent += "Folio,Nombre,Total Asistentes,Fecha\n";
             
             listaInvitadosGlobal.forEach(inv => {
                 let fecha = inv.fecha ? inv.fecha.toLocaleString('es-MX') : "";
                 let nombreLimpio = inv.nombre.replace(/,/g, " "); 
-                csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${fecha}\n`;
+                csvContent += `${inv.folio},${nombreLimpio},${inv.totalPersona},${fecha}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
@@ -505,18 +489,15 @@
         };
 
         window.guardarEdicion = async (id) => {
-            const adInput = document.getElementById(`edit-ad-${id}`).value;
-            const niInput = document.getElementById(`edit-ni-${id}`).value;
-            
-            const adultosNum = parseInt(adInput) || 0;
-            const ninosNum = parseInt(niInput) || 0;
-            const total = adultosNum + ninosNum;
+            const totalInput = document.getElementById(`edit-total-${id}`).value;
+            const totalNum = parseInt(totalInput) || 0;
 
             try {
-                await updateDoc(doc(db, "confirmaciones_marcela", id), {
-                    adultos: adultosNum,
-                    ninos: ninosNum,
-                    totalPases: total
+                // CORREGIDO: Apuntando a "confirmaciones_valeria" en vez de marcela
+                await updateDoc(doc(db, "confirmaciones_valeria", id), {
+                    totalPases: totalNum,
+                    adultos: 0, // Se mantienen en 0 por consistencia en la base de datos, si los requiere la invitación.
+                    ninos: 0 
                 });
             } catch (error) {
                 console.error("Error actualizando documento: ", error);
@@ -528,7 +509,6 @@
             }
         };
 
-        // Reemplazo del confirm() nativo con el modal asíncrono
         window.eliminarRegistro = async (id, nombre) => {
             const confirmacion = await showModal({
                 type: 'danger',
