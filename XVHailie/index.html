@@ -610,14 +610,11 @@
             <img src="https://i.imgur.com/MeXx7qs.png" class="absolute -top-6 -right-6 w-32 object-contain z-20 pointer-events-none drop-shadow-sm" alt="Esquina Superior Derecha">
             <img src="https://i.imgur.com/OUNbBqj.png" class="absolute -bottom-7 -left-6 w-32 object-contain z-20 pointer-events-none drop-shadow-sm" alt="Esquina Inferior Izquierda">
 
-            <!-- Icono de Sol Añadido -->
-            <img src="https://i.imgur.com/yn5aHF4.png" alt="Icono Sol" class="w-14 mx-auto mb-2 mt-4 object-contain opacity-80">
-            <h3 class="text-5xl font-script mb-2 text-tema-lilaoscuro px-4">Confirmar Asistencia</h3>
+            <h3 id="rsvpTitle" class="text-5xl font-script mb-2 text-tema-lilaoscuro px-4">Confirmar Asistencia</h3>
            
-          
-            
+            <!-- PANTALLA DEL FORMULARIO -->
             <div id="formSectionContainer" class="relative z-10">
-                <p class="text-xs tracking-widest text-tema-lila mb-8 font-bold">POR FAVOR, CONFIRMA ANTES DEL 10 DE AGOSTO DE 2026</p>
+                <p class="text-xs tracking-widest text-tema-lila mb-8 mt-2 font-bold">POR FAVOR, CONFIRMA ANTES DEL 10 DE AGOSTO DE 2026</p>
                 
                 <form id="rsvpForm" class="space-y-5 text-left mt-4">
                     <div>
@@ -636,16 +633,21 @@
                     </div>
                     
                     <button type="submit" class="w-full bg-tema-lilaoscuro text-white font-bold py-4 mb-4 mt-6 rounded-lg tracking-widest text-[11px] shadow-md transition-all active:scale-95">
-                        CONFIRMAR Y ENVIAR
+                        CONFIRMAR LUGARES
                     </button>
-                    <p class="text-[9px] text-tema-lila text-center">*LA CONFIRMACIÓN TE DIRIGIRÁ A WHATSAPP</p>
                 </form>
             </div>
 
+            <!-- PANTALLA INTERMEDIA DE VALIDACIÓN (NUEVA CON REDIRECCIÓN AUTOMÁTICA) -->
+            <div id="rsvpSuccessMessage" class="hidden text-center py-6 relative z-10 transition-all duration-500">
+                <!-- Se inyectará el contenido dinámicamente desde JS -->
+            </div>
+
+            <!-- PANTALLA YA REGISTRADO (EXISTENTE) -->
             <div id="alreadyRegisteredMessage" class="hidden text-center py-6 relative z-10">
                 <svg class="w-16 h-16 text-tema-dorado mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <p class="text-tema-lilaoscuro font-bold text-xl mb-3">¡YA CONFIRMASTE!</p>
-                <p class="text-tema-lila text-sm leading-relaxed">DIRÍGETE ABAJO PARA <strong>DESCARGAR TU PASE</strong>.</p>
+                <p class="text-tema-lila text-sm leading-relaxed">DIRÍGETE ABAJO PARA <strong>CONSULTAR TU PASE</strong>.</p>
             </div>
         </div>
     </section>
@@ -654,18 +656,17 @@
     <section class="w-full py-20 flex flex-col justify-center items-center px-6 text-center seccion-vintage z-10 bg-tema-beige">
         <div class="reveal-scale relative z-10 w-full max-w-md mx-auto tarjeta-info bg-tema-lila text-white border-none shadow-xl"> 
             
-            <!-- Icono de Sol Añadido con Filtro Invert (para que sea blanco y combine con el fondo Lila) -->
-            <img src="https://i.imgur.com/yn5aHF4.png" alt="Icono Sol" class="w-14 mx-auto mb-2 object-contain brightness-0 invert opacity-90">
-            <h2 class="text-5xl font-script mb-2 text-white">Tu Pase</h2>
+            <!-- Título Actualizado -->
+            <h2 class="text-5xl font-script mb-2 text-white">Consultar Pase</h2>
             
             <!-- Subtítulo -->
-            <p class="text-xs tracking-widest text-white/90 mb-8 font-bold">DESCARGA TU ACCESO OFICIAL</p>
+            <p class="text-xs tracking-widest text-white/90 mb-8 font-bold mt-2">DESCARGA TU ACCESO OFICIAL</p>
 
             <form id="searchPassForm" class="space-y-4 text-left w-full px-2 relative z-10">
                 <div class="border-b border-tema-dorado/60 pb-2">
                     <input type="text" id="searchName" required placeholder="INGRESA TU NOMBRE..." class="w-full bg-white/10 border-none py-3 px-4 rounded-lg outline-none text-base text-white placeholder-white/70 focus:ring-1 focus:ring-tema-dorado uppercase">
                 </div>
-                <button type="submit" class="w-full bg-white text-tema-lilaoscuro font-bold py-4 mt-6 rounded-lg shadow-md tracking-widest text-[11px] active:scale-95 transition-all">BUSCAR</button>
+                <button type="submit" class="w-full bg-white text-tema-lilaoscuro font-bold py-4 mt-6 rounded-lg shadow-md tracking-widest text-[11px] active:scale-95 transition-all">BUSCAR MI PASE</button>
             </form>
 
             <div id="searchResultMessage" class="hidden mt-10 w-full relative z-10"></div>
@@ -865,6 +866,7 @@
                     
                     if (!querySnapshot.empty) {
                         document.getElementById('formSectionContainer').classList.add('hidden');
+                        document.getElementById('rsvpTitle').classList.add('hidden');
                         document.getElementById('alreadyRegisteredMessage').classList.remove('hidden');
                     }
                 } catch (error) { console.log(error); }
@@ -872,7 +874,7 @@
             checkRegistrationStatus();
         }
 
-        // RSVP WhatsApp
+        // RSVP WhatsApp - LÓGICA CON REDIRECCIÓN AUTOMÁTICA
         document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -903,14 +905,41 @@
                 // WhatsApp 8332047320 (México)
                 const numeroWhatsApp = "528332047320"; 
                 const msg = encodeURIComponent(`¡Hola! Acabo de registrar mi confirmación para los XV de Hailie.\n\nSoy *${name}* y seremos *${numAdultos}* adultos y *${numNinos}* niños. ¡Nos vemos pronto!`);
-                window.location.href = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${msg}`;
+                
+                // Mostrar pantalla intermedia
+                document.getElementById('formSectionContainer').classList.add('hidden');
+                document.getElementById('rsvpTitle').classList.add('hidden');
+                const successDiv = document.getElementById('rsvpSuccessMessage');
+                successDiv.classList.remove('hidden');
+                
+                // Mensaje Inicial
+                successDiv.innerHTML = `
+                    <h3 class="text-tema-lilaoscuro font-script text-4xl mb-4">¡Gracias por confirmar!</h3>
+                    <p class="text-tema-lilaoscuro text-sm leading-relaxed mb-4 font-bold px-4 tracking-wide">
+                        Tus lugares serán validados por el anfitrión. Una vez que lo haga, podrás descargar tu pase en la sección de <br><strong class="text-tema-dorado block mt-2 text-base">Consultar Pase</strong>.
+                    </p>
+                `;
+
+                // Tiempo para mostrar el siguiente mensaje y redirigir
+                setTimeout(() => {
+                    successDiv.innerHTML += `
+                        <p class="text-tema-lila text-[11px] mt-6 font-bold animate-pulse uppercase tracking-widest">
+                            Espera, te vamos a redirigir a WhatsApp para avisarnos que ya confirmaste asistencia...
+                        </p>
+                    `;
+                    
+                    // Redirección a WhatsApp después de 3.5 segundos
+                    setTimeout(() => {
+                        window.location.href = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${msg}`;
+                    }, 3500);
+                }, 5000);
 
             } catch (error) {
                 alert("Error al enviar."); btn.innerHTML = originalText; btn.disabled = false;
             }
         });
         
-        // BÚSQUEDA PASE
+        // BÚSQUEDA PASE CON DESCARGA ROBUSTA TIPO ARLETH
         document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('searchName').value.trim();
@@ -932,31 +961,102 @@
                     
                     if (docData.estado === 'aprobado') {
                         const folio = "HP-" + docId.substring(0, 4).toUpperCase();
+                        
+                        // DISEÑO DEL PASE DIGITAL (Sin sol central, solo en esquinas)
                         resultDiv.innerHTML = `
-                            <div id="tarjetaPaseDigital" class="bg-white border-2 border-tema-dorado p-6 text-center rounded-xl shadow-lg relative overflow-hidden">
-                                <h3 class="font-script text-3xl text-tema-lilaoscuro mb-2">XV Años Hailie</h3>
-                                <p class="text-[10px] tracking-widest text-tema-dorado mb-4">PASE OFICIAL</p>
-                                <h4 class="font-bold text-2xl text-tema-lilaoscuro mb-4 capitalize font-script">${docData.nombre}</h4>
-                                <div class="border-y border-tema-dorado/30 py-4 mb-4">
-                                    <p class="text-[10px] tracking-widest text-tema-lila mb-1">PASES</p>
-                                    <p class="text-5xl text-tema-lilaoscuro font-bold">${docData.pasesAsignados}</p>
+                            <div id="tarjetaPaseDigital" class="bg-tema-beige border-4 border-tema-dorado p-8 text-center shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[350px]">
+                                <!-- Fondo decorativo / Soles (crossorigin es muy importante para poder descargarlas) -->
+                                <img src="https://i.imgur.com/yn5aHF4.png" crossorigin="anonymous" class="absolute -top-10 -right-10 w-40 opacity-20 rotate-45 pointer-events-none filter sepia(1) hue-rotate(-30deg)" alt="Fondo Sol">
+                                <img src="https://i.imgur.com/yn5aHF4.png" crossorigin="anonymous" class="absolute -bottom-10 -left-10 w-40 opacity-20 -rotate-45 pointer-events-none filter sepia(1) hue-rotate(-30deg)" alt="Fondo Sol">
+                                
+                                <h3 class="font-script text-5xl text-tema-lilaoscuro mb-3 mt-4 relative z-10">XV Hailie</h3>
+                                <p class="text-[9px] tracking-[0.3em] text-tema-dorado mb-8 relative z-10 font-bold">PASE DE ACCESO OFICIAL</p>
+                                
+                                <div class="bg-white/60 backdrop-blur-sm px-6 py-6 border border-tema-dorado/30 w-full mb-6 relative z-10 shadow-sm">
+                                    <h4 class="font-bold text-3xl text-tema-lilaoscuro mb-5 capitalize font-script">${docData.nombre}</h4>
+                                    <div class="border-t border-tema-dorado/30 pt-5 pb-2">
+                                        <div class="text-center w-full">
+                                            <p class="text-[10px] tracking-widest text-tema-lila mb-3 font-bold">LUGARES RESERVADOS</p>
+                                            <p class="text-6xl text-tema-lilaoscuro font-bold pb-2">${docData.pasesAsignados}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-[10px] text-tema-lila">FOLIO: ${folio}</p>
+                                
+                                <div class="relative z-10 mt-auto flex flex-col items-center gap-2">
+                                    <p class="text-[10px] text-tema-lila font-bold tracking-widest">FOLIO: <span class="text-tema-dorado">${folio}</span></p>
+                                    <p class="text-[7.5px] uppercase tracking-[0.2em] text-tema-lila/70 font-bold">MUESTRA ESTA TARJETA EN RECEPCIÓN</p>
+                                </div>
                             </div>
-                            <button id="btnDescargarPase" class="mt-6 bg-white text-tema-lilaoscuro text-[10px] tracking-widest font-bold py-3 px-6 rounded-lg w-full shadow-md">DESCARGAR IMAGEN</button>
+                            
+                            <button id="btnDescargarPase" class="mt-6 bg-white text-tema-lilaoscuro text-[11px] tracking-widest font-bold py-4 px-6 rounded-lg w-full shadow-lg active:scale-95 transition-all">DESCARGAR PASE OFICIAL</button>
                         `;
 
-                        document.getElementById('btnDescargarPase').addEventListener('click', () => {
+                        // LÓGICA DE DESCARGA CLONANDO EL ELEMENTO
+                        const btnDescarga = document.getElementById('btnDescargarPase');
+                        btnDescarga.addEventListener('click', () => {
                             const tarjeta = document.getElementById('tarjetaPaseDigital');
-                            html2canvas(tarjeta, { scale: 3 }).then(canvas => {
-                                const url = canvas.toDataURL('image/png');
-                                const enlace = document.createElement('a');
-                                enlace.href = url; enlace.download = 'Pase_XV_Hailie.png';
-                                enlace.click();
+                            const textoOriginal = btnDescarga.innerText;
+                            btnDescarga.innerText = "GENERANDO IMAGEN...";
+                            btnDescarga.disabled = true;
+
+                            const clone = tarjeta.cloneNode(true);
+                            clone.style.width = "400px"; // Forzar ancho para evitar recortes
+                            clone.style.height = "auto";
+                            clone.style.position = "fixed";
+                            clone.style.top = "-9999px";
+                            clone.style.left = "-9999px";
+                            clone.style.zIndex = "-9999";
+                            document.body.appendChild(clone);
+                            
+                            html2canvas(clone, { 
+                                backgroundColor: "#F5F2EB", 
+                                scale: 3, 
+                                useCORS: true, 
+                                scrollX: 0, 
+                                scrollY: 0 
+                            }).then(canvas => {
+                                document.body.removeChild(clone);
+                                const base64 = canvas.toDataURL('image/png');
+                                
+                                canvas.toBlob(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const enlace = document.createElement('a');
+                                    enlace.style.display = 'none';
+                                    enlace.href = url;
+                                    enlace.download = 'Pase_Oficial_XV_Hailie.png';
+                                    document.body.appendChild(enlace);
+                                    enlace.click();
+                                    document.body.removeChild(enlace);
+                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                                }, 'image/png');
+
+                                // Transformar la vista actual en la imagen generada (por si falla la descarga directa)
+                                tarjeta.style.padding = "0";
+                                tarjeta.style.border = "none";
+                                tarjeta.style.background = "transparent";
+                                tarjeta.innerHTML = `
+                                    <img src="${base64}" alt="Pase" class="w-full shadow-2xl rounded-2xl" />
+                                    <p class="text-[9px] uppercase text-tema-lila font-bold mt-4 tracking-widest text-center px-2">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                                `;
+
+                                btnDescarga.innerText = "¡DESCARGA INICIADA!";
+                                setTimeout(() => {
+                                    btnDescarga.innerText = textoOriginal;
+                                    btnDescarga.disabled = false;
+                                }, 4000);
+
+                            }).catch(err => {
+                                if(document.body.contains(clone)) document.body.removeChild(clone);
+                                console.error("Error en captura:", err);
+                                btnDescarga.innerText = "ERROR AL DESCARGAR";
+                                setTimeout(() => {
+                                    btnDescarga.innerText = textoOriginal;
+                                    btnDescarga.disabled = false;
+                                }, 3000);
                             });
                         });
                     } else {
-                        resultDiv.innerHTML = `<p class="text-white font-bold">SOLICITUD RECIBIDA.</p><p class="text-sm text-white/80 mt-2">TU PASE ESTÁ PENDIENTE DE VALIDACIÓN.</p>`;
+                        resultDiv.innerHTML = `<p class="text-white font-bold">SOLICITUD RECIBIDA.</p><p class="text-sm text-white/80 mt-2">TUS LUGARES AÚN ESTÁN PENDIENTES DE VALIDACIÓN POR EL ANFITRIÓN.</p>`;
                     }
                 } else {
                     resultDiv.innerHTML = `<p class="text-white font-bold">NO ENCONTRADO.</p><p class="text-sm text-white/80 mt-2">VERIFICA QUE TU NOMBRE ESTÉ ESCRITO CORRECTAMENTE.</p>`;
@@ -964,7 +1064,7 @@
             } catch (error) {
                 resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-tema-dorado font-bold">ERROR EN CONSULTA.</p>`;
             } finally {
-                btnSubmit.innerText = "BUSCAR"; btnSubmit.disabled = false;
+                btnSubmit.innerText = "BUSCAR MI PASE"; btnSubmit.disabled = false;
             }
         });
     </script>
