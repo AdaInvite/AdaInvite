@@ -75,9 +75,11 @@
         /* Ajustes para el contenedor de video nativo */
         #reader {
             width: 100%;
+            min-height: 250px;
             border-radius: 0.75rem;
             overflow: hidden;
             border: none;
+            position: relative;
         }
         #reader video {
             border-radius: 0.75rem;
@@ -192,6 +194,11 @@
         window.arrancarCamara = async function() {
             cameraError.classList.add('hidden');
             
+            // 1. IMPORTANTE: Mostrar el contenedor ANTES de iniciar la cámara 
+            // para que el navegador le asigne el tamaño correcto al video.
+            permissionUi.classList.add('hidden');
+            readerEl.classList.remove('hidden');
+            
             try {
                 // Se fuerza explícitamente "environment" (cámara trasera)
                 await html5QrCode.start(
@@ -200,13 +207,13 @@
                     onScanSuccess,
                     onScanFailure
                 );
-                
-                // Si la cámara enciende con éxito, ocultamos el botón y mostramos el video
-                permissionUi.classList.add('hidden');
-                readerEl.classList.remove('hidden');
-                
             } catch (err) {
                 console.error("Error al iniciar cámara:", err);
+                
+                // Si falla, volvemos a ocultar el recuadro y mostramos el botón
+                readerEl.classList.add('hidden');
+                permissionUi.classList.remove('hidden');
+                
                 cameraError.innerText = "Revisa los permisos de tu navegador o recarga la página.";
                 cameraError.classList.remove('hidden');
             }
@@ -248,9 +255,9 @@
 
             try {
                 const paseRef = doc(db, COL_NAME, docId);
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 6000));
                 
-                const paseSnap = await Promise.race([getDoc(paseRef), timeoutPromise]);
+                // SIN TIMEOUT ARTIFICIAL: Esperamos a Firebase normalmente
+                const paseSnap = await getDoc(paseRef);
 
                 if (paseSnap.exists()) {
                     const data = paseSnap.data();
@@ -284,11 +291,11 @@
                     renderizarResultado('#5C554F', 'Registro No Encontrado', 'El código escaneado no corresponde a una invitación válida.', 'Acceso Denegado');
                 }
             } catch (error) {
-                const isTimeout = error.message === "TIMEOUT";
+                console.error("Error al validar:", error);
                 renderizarResultado(
                     '#5C554F',
-                    isTimeout ? 'Conexión Lenta' : 'Error de Conexión',
-                    isTimeout ? 'El internet está tardando demasiado. Revisa tu conexión.' : 'Ocurrió un problema al conectar con la base de datos.',
+                    'Error de Conexión',
+                    'Ocurrió un problema al conectar con la base de datos. Por favor, revisa tu conexión e inténtalo de nuevo.',
                     'Error del Sistema'
                 );
             }
