@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Escáner • A & E</title>
- <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
-    
-  <link rel="apple-touch-icon" href="https://i.imgur.com/VKapPfR.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/VKapPfR.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -73,31 +72,16 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Estilos para limpiar la UI de la librería html5-qrcode */
+        /* Ajustes para el contenedor de video nativo */
         #reader {
             width: 100%;
-            border: none !important;
             border-radius: 0.75rem;
             overflow: hidden;
-        }
-        #reader__dashboard_section_csr span, #reader__dashboard_section_swaplink {
-            font-family: var(--font-elegant);
-            color: #5C554F;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.75rem;
-        }
-        #reader button {
-            background-color: #7A8B71;
-            color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.75rem;
-            margin-top: 10px;
-            cursor: pointer;
+        }
+        #reader video {
+            border-radius: 0.75rem;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -116,7 +100,20 @@
             <div class="absolute top-0 left-0 w-full h-1 bg-verde-principal"></div>
             <p class="text-sm uppercase tracking-widest text-gray-500 mb-4 text-center font-bold">Escáner de Accesos</p>
             
-            <div id="reader"></div>
+            <!-- Interfaz de Permisos en Español -->
+            <div id="permission-ui" class="text-center py-6">
+                <div class="w-16 h-16 mx-auto mb-4 bg-white rounded-full flex items-center justify-center border border-cafe-claro/30 shadow-sm">
+                    <svg class="w-8 h-8 text-verde-principal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <p class="text-xs text-gray-500 mb-6 leading-relaxed px-2">Para escanear los pases, autoriza el uso de la cámara de tu dispositivo.</p>
+                <button onclick="arrancarCamara()" class="bg-verde-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-xs hover:bg-verde-oscuro transition-all rounded-xl shadow-md active:scale-95">
+                    Activar Cámara
+                </button>
+                <p id="camera-error" class="text-red-500 text-[10px] uppercase tracking-widest font-bold mt-4 hidden">No se pudo acceder a la cámara</p>
+            </div>
+
+            <!-- Contenedor del video de la cámara -->
+            <div id="reader" class="hidden"></div>
         </div>
 
         <!-- Contenedor de Resultados (Oculto inicialmente) -->
@@ -125,7 +122,7 @@
                 <!-- El contenido se inyectará mediante JS -->
             </div>
             
-            <button onclick="reiniciarEscaner()" class="mt-8 bg-verde-principal text-white font-bold py-4 px-8 uppercase tracking-[0.2em] text-xs hover:bg-verde-oscuro transition-all rounded-xl shadow-md flex items-center justify-center gap-2 w-full">
+            <button onclick="reiniciarEscaner()" class="mt-8 bg-verde-principal text-white font-bold py-4 px-8 uppercase tracking-[0.2em] text-xs hover:bg-verde-oscuro transition-all rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
                 Escanear Siguiente Pase
             </button>
         </div>
@@ -167,51 +164,74 @@
         const COL_NAME = "confirmaciones_abril_enrique";
 
         // --- VARIABLES GLOBALES ---
-        let html5QrcodeScanner = null;
-        let procesandoPase = false; // CANDADO DE SEGURIDAD
+        let html5QrCode = null;
+        let procesandoPase = false; 
         const scannerContainer = document.getElementById('scanner-container');
+        const permissionUi = document.getElementById('permission-ui');
+        const readerEl = document.getElementById('reader');
         const resultContainer = document.getElementById('result-container');
         const resultCard = document.getElementById('result-card');
+        const cameraError = document.getElementById('camera-error');
 
-        // --- INICIALIZACIÓN DEL ESCÁNER ---
-        function iniciarEscaner() {
+        // --- INICIALIZACIÓN DE LA UI ---
+        function mostrarPantallaInicio() {
             resultContainer.classList.add('hidden');
             scannerContainer.classList.remove('hidden');
+            readerEl.classList.add('hidden');
+            permissionUi.classList.remove('hidden');
+            cameraError.classList.add('hidden');
             procesandoPase = false; 
 
-            // Si ya existe un escáner previo, lo limpiamos antes de recrear
-            if (html5QrcodeScanner) {
-                try { html5QrcodeScanner.clear(); } catch(e) {}
+            if (!html5QrCode) {
+                // Instanciamos el motor principal (sin la UI en inglés)
+                html5QrCode = new Html5Qrcode("reader");
             }
-
-            html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader",
-                { fps: 10, qrbox: {width: 250, height: 250}, rememberLastUsedCamera: true },
-                false
-            );
-
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
         }
+
+        // --- ARRANCAR CÁMARA TRASERA ---
+        window.arrancarCamara = async function() {
+            cameraError.classList.add('hidden');
+            
+            try {
+                // Se fuerza explícitamente "environment" (cámara trasera)
+                await html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess,
+                    onScanFailure
+                );
+                
+                // Si la cámara enciende con éxito, ocultamos el botón y mostramos el video
+                permissionUi.classList.add('hidden');
+                readerEl.classList.remove('hidden');
+                
+            } catch (err) {
+                console.error("Error al iniciar cámara:", err);
+                cameraError.innerText = "Revisa los permisos de tu navegador o recarga la página.";
+                cameraError.classList.remove('hidden');
+            }
+        };
 
         // --- MANEJO DE LECTURA EXITOSA ---
         async function onScanSuccess(decodedText, decodedResult) {
-            // Evitar que la cámara lea el mismo código repetidas veces
+            // Candado
             if (procesandoPase) return;
             procesandoPase = true;
 
-            // Limpiar escáner en segundo plano (sin 'await' para evitar bloqueos de UI)
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear().catch(e => console.log("Limpieza cámara:", e));
+            // Detener el escáner para evitar sobrecarga y mostrar el resultado
+            try {
+                await html5QrCode.stop();
+            } catch (err) {
+                console.log("Aviso al detener cámara:", err);
             }
             
             scannerContainer.classList.add('hidden');
-            
             resultContainer.classList.remove('hidden');
             resultContainer.classList.add('flex');
             resultCard.className = "w-full textura-beige p-8 rounded-2xl shadow-lg border border-cafe-claro/30 text-center";
             resultCard.innerHTML = `<p class="text-sm uppercase tracking-widest text-cafe-texto font-bold animate-pulse">Validando registro...</p>`;
 
-            // Extraer ID (Por si escanean el QR antiguo que contenía la URL completa)
+            // Extraer ID (limpieza)
             let docId = decodedText.trim();
             if (docId.includes('http')) {
                 try {
@@ -219,7 +239,7 @@
                     docId = urlStr.searchParams.get('id') || urlStr.searchParams.get('data') || docId.split('/').pop();
                 } catch(e) {}
             }
-            docId = docId.replace(/[^a-zA-Z0-9_-]/g, ''); // Limpiar ID para evitar errores en Firebase
+            docId = docId.replace(/[^a-zA-Z0-9_-]/g, '');
 
             if (!docId) {
                 renderizarResultado('#5C554F', 'Código Inválido', 'El QR no contiene un identificador válido.', 'Error');
@@ -228,11 +248,8 @@
 
             try {
                 const paseRef = doc(db, COL_NAME, docId);
-                
-                // Timeout de 6 segundos por si el internet falla por completo
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 6000));
                 
-                // Hacemos una carrera: si Firebase tarda más de 6s, lanzamos error
                 const paseSnap = await Promise.race([getDoc(paseRef), timeoutPromise]);
 
                 if (paseSnap.exists()) {
@@ -247,7 +264,7 @@
                             'Atención Requerida'
                         );
                     } else {
-                        // PASE VÁLIDO - MOSTRAR UI INMEDIATAMENTE (Sin esperar confirmación del servidor)
+                        // PASE VÁLIDO - MOSTRAR UI INMEDIATAMENTE
                         renderizarResultado(
                             '#7A8B71', 
                             'Acceso Correcto',
@@ -257,35 +274,28 @@
                             'Registro Exitoso'
                         );
 
-                        // Registrar ingreso en Firebase en segundo plano ("Fire and forget")
+                        // Registrar ingreso
                         updateDoc(paseRef, {
                             ingresoValidado: true,
                             fechaIngreso: serverTimestamp()
-                        }).catch(err => console.log("Error de sincronización (Ignorar si hay micro-cortes de red):", err));
+                        }).catch(err => console.log("Sincronización en segundo plano:", err));
                     }
                 } else {
-                    // CÓDIGO NO EXISTE EN DB
-                    renderizarResultado(
-                        '#5C554F', 
-                        'Registro No Encontrado',
-                        'El código escaneado no corresponde a una invitación válida para este evento.',
-                        'Acceso Denegado'
-                    );
+                    renderizarResultado('#5C554F', 'Registro No Encontrado', 'El código escaneado no corresponde a una invitación válida.', 'Acceso Denegado');
                 }
             } catch (error) {
-                console.error("Error al validar:", error);
                 const isTimeout = error.message === "TIMEOUT";
                 renderizarResultado(
                     '#5C554F',
                     isTimeout ? 'Conexión Lenta' : 'Error de Conexión',
-                    isTimeout ? 'El internet está tardando demasiado. Por favor, revisa tu conexión y vuelve a intentarlo.' : 'Ocurrió un problema al conectar con la base de datos.',
+                    isTimeout ? 'El internet está tardando demasiado. Revisa tu conexión.' : 'Ocurrió un problema al conectar con la base de datos.',
                     'Error del Sistema'
                 );
             }
         }
 
         function onScanFailure(error) {
-            // Se ejecuta constantemente mientras escanea en vacío. No se requiere acción.
+            // Se ejecuta constantemente mientras escanea en vacío. No requiere acción.
         }
 
         // --- RENDERIZADO VISUAL DEL RESULTADO ---
@@ -303,14 +313,17 @@
 
         // --- EXPONER FUNCIÓN DE REINICIO ---
         window.reiniciarEscaner = function() {
-            iniciarEscaner();
+            resultContainer.classList.add('hidden');
+            scannerContainer.classList.remove('hidden');
+            procesandoPase = false;
+            // Arrancar cámara directamente sin pedir clic otra vez
+            window.arrancarCamara(); 
         };
 
         // --- ESCUCHA EN TIEMPO REAL DE LOS INGRESOS ---
         function iniciarMonitoreoAsistencia() {
             const refCol = collection(db, COL_NAME);
             
-            // Consultamos todos y filtramos localmente para evitar bloqueos por falta de índices en Firebase
             onSnapshot(refCol, (snapshot) => {
                 const listaContenedor = document.getElementById('lista-invitados');
                 const contadorTxt = document.getElementById('contador-ingresos');
@@ -326,7 +339,6 @@
                     }
                 });
                 
-                // Ordenar: Los más recientes primero de forma segura
                 docs.sort((a, b) => {
                     const timeA = (a.fechaIngreso && typeof a.fechaIngreso.toDate === 'function') ? a.fechaIngreso.toDate().getTime() : 0;
                     const timeB = (b.fechaIngreso && typeof b.fechaIngreso.toDate === 'function') ? b.fechaIngreso.toDate().getTime() : 0;
@@ -364,7 +376,7 @@
 
         // Iniciar procesos al cargar la página
         document.addEventListener("DOMContentLoaded", () => {
-            iniciarEscaner();
+            mostrarPantallaInicio();
             iniciarMonitoreoAsistencia();
         });
 
