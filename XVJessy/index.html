@@ -186,32 +186,33 @@
             50% { transform: translateY(-10px); }
         }
 
-       .slider-historia, .chambelanes-slider { 
-    display: flex; 
-    overflow-x: auto; 
-    scroll-snap-type: x mandatory; 
-    scroll-behavior: smooth; 
-    gap: 20px; 
-    padding: 20px 0px;
-    scrollbar-width: none; 
-    width: 100%; 
-}
+      /* Sliders */
+        .slider-historia, .chambelanes-slider { 
+            display: flex; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            scroll-behavior: smooth; 
+            gap: 20px; 
+            padding: 20px 0px; /* Quitamos el padding lateral interno */
+            scrollbar-width: none; 
+            width: 100%; 
+            align-self: stretch; /* ESTO ES LA MAGIA: Obliga al slider a tocar los bordes del óvalo */
+        }
         .slider-historia::-webkit-scrollbar, .chambelanes-slider::-webkit-scrollbar { display: none; }
         
-      .tarjeta-nueva {
-    flex: 0 0 100%; /* Cambiado de 280px a 100% */
-    box-sizing: border-box; /* Agrega esta línea */
-    scroll-snap-align: center; position: relative;
-    background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.4s ease; display: flex; flex-direction: column; align-items: center;
-}
-        .tarjeta-nueva:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); }
-        .img-historia { 
-            width: 100%; height: 300px; object-fit: cover; 
-            border-radius: 8px;
-            filter: grayscale(20%); transition: all 0.4s ease; 
+        .tarjeta-nueva {
+            flex: 0 0 85%; /* Toma el 85% del ancho, permitiendo que se asome la siguiente foto */
+            min-width: 280px; /* Seguro de vida para que NUNCA se haga más chica que esto */
+            max-width: 380px; /* Límite para pantallas muy grandes */
+            box-sizing: border-box;
+            margin: 0 auto;
+            scroll-snap-align: center; position: relative;
+            background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease; display: flex; flex-direction: column; align-items: center;
         }
+
+      
         .tarjeta-nueva:hover .img-historia { filter: none; }
         .info-historia { width: 100%; text-align: center; margin-top: 8px; color: #FFFFFF; }
         .año-badge {
