@@ -46,28 +46,39 @@
             --rosa-elegante: #BA8797;
             --blanco-perla: #FCF9F9;
             --font-elegant: 'Forum', serif;
-            --font-script: 'Forum', serif; 
+            --font-script: 'Forum', serif; /* Se sobrescribe para evitar cursivas */
             --font-numbers: 'Forum', sans-serif; 
         }
 
-        /* --- AJUSTES PARA VISTA DE ESCRITORIO (Contenedor tipo móvil) --- */
+        /* --- ESTRUCTURA DE CENTRADO (Móvil en PC) --- */
         html {
-            background-color: #E8DEE1; /* Fondo suave por fuera del contenedor en PC */
+            background-color: #E8DEE1;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         body {
-            margin: 0 auto;
+            margin: 0;
             padding: 0;
             width: 100%;
-            max-width: 450px; /* Ancho máximo para simular pantalla móvil en PC */
             min-height: 100vh;
-            font-family: var(--font-elegant);
+            display: flex;
+            justify-content: center; /* Centra el contenedor horizontalmente siempre */
+            align-items: flex-start;
+            background-color: #E8DEE1;
+        }
+
+        /* Contenedor que simula la pantalla del móvil */
+        #app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
             background-color: var(--blanco-perla);
-            overflow-x: hidden;
-            color: var(--rosa-elegante);
-            scroll-behavior: smooth;
             position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15); /* Sombra elegante para destacar el marco */
+            box-shadow: 0 0 40px rgba(0,0,0,0.15); /* Sombra para resaltar */
+            overflow-x: hidden;
+            font-family: var(--font-elegant);
+            color: var(--rosa-elegante);
         }
 
         h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
@@ -75,7 +86,7 @@
         }
 
         .font-numbers { font-family: var(--font-numbers) !important; }
-        body, p, span, input, select, button, textarea { font-weight: 400; }
+        p, span, input, select, button, textarea { font-weight: 400; }
         .font-bold, h3, label { font-weight: 700; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
@@ -128,14 +139,13 @@
             filter: brightness(0) invert(1) drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
 
-        /* Envoltura ajustada al contenedor móvil */
         #envelope-wrapper {
             position: fixed; 
             top: 0; 
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 450px; /* Igual que el body */
+            max-width: 450px; 
             height: 100%;
             z-index: 100;
             display: flex; align-items: center; justify-content: center;
@@ -179,9 +189,7 @@
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
             mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
         }
-        @media (min-width: 768px) {
-            .separador-img { min-height: auto !important; height: auto !important; width: 100% !important; }
-        }
+   
         
         .footer-mask {
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
@@ -249,436 +257,433 @@
 </head>
 <body>
 
-    <audio id="bg-music" loop>
-        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FTaylorSwift_Lover.mp3?alt=media&token=30031767-107c-4209-98e0-19612506617d" type="audio/mpeg">
-    </audio>
-    
-    <!-- UI Fija confinada al ancho central -->
-    <div class="ui-layer">
-        <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
-            <img id="audio-icon" src="https://i.imgur.com/DxCMVS8.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
-        </div>
-    </div>
+    <div id="app-container">
 
-    <!-- Sobre -->
-    <div id="envelope-wrapper">
-        <div class="envelope-bg"></div>
-        <div id="envelope-container" class="w-full h-full relative z-10">
-            <div class="flap-wrapper flap-left-wrapper">
-                <div class="flap flap-left"></div>
-            </div>
-            <div class="flap-wrapper flap-right-wrapper">
-                <div class="flap flap-right"></div>
-            </div>
-            <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-sm mb-4 animate-bounce text-black tracking-widest drop-shadow-md font-bold uppercase">Toca para abrir</div>
-                <img src="https://i.imgur.com/lb0H16A.png" class="w-[160px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+        <audio id="bg-music" loop>
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FTaylorSwift_Lover.mp3?alt=media&token=30031767-107c-4209-98e0-19612506617d" type="audio/mpeg">
+        </audio>
+        
+        <!-- UI Fija confinada al ancho central -->
+        <div class="ui-layer">
+            <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+                <img id="audio-icon" src="https://i.imgur.com/DxCMVS8.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
             </div>
         </div>
-    </div>
 
-    <main id="section-main" class="relative">
-        
-        <!-- MARCO FLOTANTE GLOBAL -->
-        <div class="absolute inset-4 border border-rosa-elegante rounded-2xl md:rounded-3xl z-30 pointer-events-none"></div>
-        
-        <!-- HEADER -->
-        <header class="relative min-h-[100svh] flex flex-col justify-between">
-            <div class="absolute inset-0 w-full h-full z-0">
-                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_portada_DSC09493%20--.jpg?alt=media&token=470985ea-7969-4605-a509-c83bca221180" class="w-full h-full object-cover object-center" alt="Hero Fernanda">
-                <div class="absolute inset-0 bg-black/30"></div> 
+        <div id="envelope-wrapper">
+            <div class="envelope-bg"></div>
+            <div id="envelope-container" class="w-full h-full relative z-10">
+                <div class="flap-wrapper flap-left-wrapper">
+                    <div class="flap flap-left"></div>
+                </div>
+                <div class="flap-wrapper flap-right-wrapper">
+                    <div class="flap flap-right"></div>
+                </div>
+                <div class="seal-wrapper" onclick="openEnvelope()">
+                    <div class="text-sm mb-4 animate-bounce text-black tracking-widest drop-shadow-md font-bold uppercase">Toca para abrir</div>
+                    <img src="https://i.imgur.com/lb0H16A.png" class="w-[160px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+                </div>
             </div>
-             
-            <div class="relative z-10 flex flex-col items-center text-center px-6 pt-4">
-                <p class="text-lg text-white font-bold drop-shadow-md uppercase">Mis XV</p>
-                <h1 class="text-4xl text-white font-script drop-shadow-lg pr-1 uppercase tracking-widest">Fernanda <br>Valentina</h1>
-            </div>
+        </div>
+
+        <main id="section-main" class="relative w-full">
             
-            <div class="relative z-10 flex flex-col items-center text-center px-6 w-full mt-auto mb-6">
-                <div class="flex items-end justify-center gap-3 md:gap-6 reveal-scale font-numbers text-white drop-shadow-md">
-                    <div class="flex items-center justify-center border-y border-white py-1 px-4 md:px-8 w-16 mb-1">
-                        <span class="text-xl md:text-3xl tracking-wider">SEP</span>
-                    </div>
-                    <span class="text-6xl px-1 md:px-3">19</span>
-                    <div class="flex items-center justify-center border-y border-white py-1 px-4 md:px-8 w-16 mb-1">
-                        <span class="text-xl md:text-3xl tracking-wider">2026</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#FCF9F9] to-transparent z-20 pointer-events-none"></div>
-        </header>
-
-        <!-- SECCIÓN DE BIENVENIDA -->
-        <section class="min-h-[100svh] flex flex-col justify-center px-6 text-center relative seccion-blanca overflow-hidden">
-            <div class="bg-texture-main opacity-10"></div>
-            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] w-full">
-                
-                <h2 class="text-3xl md:text-4xl text-rosa-elegante mt-16 mb-6 font-script uppercase tracking-widest">Una Etapa Especial</h2>
-                
-                <div class="max-w-3xl mx-auto mb-8 p-5 bg-rosa-elegante border-[6px] border-white border-double rounded-2xl shadow-xl">
-                    <p class="text-sm uppercase leading-relaxed font-bold mb-2 text-white">
-                        "Mujer virtuosa, ¿quién la hallará? Porque su estima sobrepasa largamente a la de las piedras preciosas."
-                    </p>
-                    <span class="text-xs font-bold block uppercase tracking-widest text-white/90">
-                        — Proverbios 31:10
-                    </span>
-                </div>
-                
-                <p class="text-lg leading-relaxed font-bold px-6 uppercase mb-12 tracking-wide">
-                    Con el corazón lleno de alegría y gratitud, celebro la hermosa bendición de llegar a esta etapa tan especial gracias a Dios y hoy quiero que me acompañes a celebrarla.
-                </p>
-                
-            </div>
-        </section>
-
-        <!-- SEPARADOR 1 -->
-        <div class="w-full h-screen md:h-auto relative z-20 -my-[12vh] pointer-events-none">
-            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_1_DSC09823%20--.jpg?alt=media&token=eb46cdd3-7e25-43e1-9faa-a2a32357e9b6" class="separador-img w-full h-full md:h-auto object-cover" alt="Separador 1">
-        </div>
-
-        <!-- SECCIÓN HISTORIA -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 bg-floral-section relative overflow-hidden">
-            <div class="max-w-6xl mx-auto relative z-10 w-full">
-                <div class="text-center reveal">
-                    <h2 class="text-4xl md:text-5xl mb-2 font-script text-white drop-shadow-lg reveal-scale uppercase tracking-widest">Mi Historia</h2>
-                    <p class="text-xs font-bold opacity-90 text-white uppercase tracking-widest">Momentos inolvidables</p>
-                </div>
-
-                <div class="slider-historia mt-2">
-                    <div class="tarjeta-polaroid">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_1_649055307_10165582363434252_2658055772687719716_n.jpg?alt=media&token=70f01b9f-587f-4e32-b4f2-2c262aa39827" class="img-polaroid" alt="Historia 1">
-                        <div class="info-polaroid">
-                            <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">2011. Como un suspiro del destino llegué a este mundo</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-polaroid">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_2_653713023_10165642815219252_2835898994212464109_n.jpg?alt=media&token=5f8c7357-f2f6-4f4e-a256-e6bf2dddc2c2" class="img-polaroid" alt="Historia 2">
-                        <div class="info-polaroid">
-                            <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Mis primeros años entre dulces caricias y tiernas sonrisas</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-polaroid">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_3_VIC_7056.jpg?alt=media&token=526024bb-20fa-4334-b1ef-ef919f0a599e" class="img-polaroid" alt="Historia 3">
-                        <div class="info-polaroid">
-                            <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Con ilusión en el corazón comencé a descubrir</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-polaroid">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_4_518004001_10164346625459252_1770782742968441492_n.jpg?alt=media&token=bc7ec718-f4dd-49ca-a0dd-114803be317a" class="img-polaroid" alt="Historia 4">
-                        <div class="info-polaroid">
-                            <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Mi infancia un jardín de recuerdos lleno de alegría</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta-polaroid">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_5_118906550_10159380000679252_5922812690769525428_n.jpg?alt=media&token=922baad8-fbe3-4ad6-b3a3-185368e608d7" class="img-polaroid" alt="Historia 5">
-                        <div class="info-polaroid">
-                            <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Creciendo poco a poco aprendí a brillar con luz propia</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-white text-xs mt-6 font-bold uppercase tracking-widest">Arrastra para ver más →</p>
-            </div>
-        </section>
-
-        <!-- SEPARADOR 2 -->
-        <div class="w-full h-screen md:h-auto relative z-20 -my-[12vh] pointer-events-none">
-            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_2_24x30%20---.jpg?alt=media&token=4635e63c-7ee9-4252-bbfe-15bad3f5add0" class="separador-img w-full h-full md:h-auto object-cover" alt="Separador 2">
-        </div>
-
-        <!-- SECCIÓN CUENTA REGRESIVA -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 seccion-blanca relative overflow-hidden text-center">
-            <div class="bg-texture-main opacity-10"></div>
-            <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
-                <h2 class="text-4xl md:text-5xl mb-12 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Faltan solo...</h2>
-                
-                <div id="countdown" class="flex gap-6 md:gap-14 justify-center mb-16">
-                    <div class="flex flex-col items-center">
-                        <span id="days" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
-                        <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Días</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="hours" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
-                        <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Horas</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="minutes" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
-                        <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Min</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="seconds" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
-                        <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Seg</span>
-                    </div>
-                </div>
-
-                <p class="text-base text-[#2C2A2A] font-bold mt-4 mb-6 uppercase">Agrega al calendario</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-lg mx-auto">
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=XV+Fernanda+Valentina&dates=20260919T220000Z/20260920T060000Z&details=Acompa%C3%B1ame+a+celebrar+mis+XV+A%C3%B1os.&location=Parroquia+San+Francisco+de+Asis" target="_blank" class="w-full sm:w-auto bg-rosa-elegante text-white px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-transparent hover:text-rosa-elegante border border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
-                        Google Calendar
-                    </a>
-                    <button onclick="descargarCalendarioApple()" class="w-full sm:w-auto bg-white text-[#2C2A2A] px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-rosa-elegante hover:text-white border border-gray-200 hover:border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
-                        Apple Calendar
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEPARADOR 3 -->
-        <div class="w-full h-screen md:h-auto relative z-20 -my-[12vh] pointer-events-none">
-            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_3__MG_1338%20--.jpg?alt=media&token=6ab1585a-d53d-4057-ae2a-8cb543a7bb2a" class="separador-img w-full h-full md:h-auto object-cover" alt="Separador 3">
-        </div>
-
-        <!-- SECCIÓN ITINERARIO -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 bg-floral-section relative overflow-hidden text-center">
-            <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <div class="text-center">
-                    <h1 class="text-4xl md:text-5xl mb-2 text-white font-script reveal-scale drop-shadow-lg uppercase tracking-widest">Itinerario</h1>
-                    <p class="text-xs font-bold drop-shadow-md mb-8 uppercase tracking-widest">Los momentos que tendremos</p>
-                </div>
-                <div class="relative space-y-8 md:space-y-20">
-                    <div class="timeline-line"></div>
-                    
-                    <div class="flex items-center w-full relative z-10 reveal-left">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
-                            <img src="https://i.imgur.com/T6yLarn.png" class="w-20 object-contain filtro-blanco" alt="Ceremonia">
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">5:00 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Misa</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center w-full relative z-10 reveal-right">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:00 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Recepción</span>
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
-                            <img src="https://i.imgur.com/yvzojba.png" class="w-20 object-contain filtro-blanco" alt="Recepción">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center w-full relative z-10 reveal-left">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
-                            <img src="https://i.imgur.com/dN1jMDS.png" class="w-20 object-contain filtro-blanco" alt="Entrada">
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:15 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Mi Entrada</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center w-full relative z-10 reveal-right">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:30 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Vals</span>
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
-                            <img src="https://i.imgur.com/tRNwEAy.png" class="w-20 object-contain filtro-blanco" alt="Vals">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center w-full relative z-10 reveal-left">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
-                            <img src="https://i.imgur.com/AIApde9.png" class="w-20 object-contain filtro-blanco" alt="Cena">
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">8:15 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Cena</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center w-full relative z-10 reveal-right">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">8:45 P.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Fiesta</span>
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
-                            <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-20 object-contain filtro-blanco" alt="Fiesta">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center w-full relative z-10 reveal-left">
-                        <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
-                            <svg class="w-20 text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
-                            <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">1:00 A.M</span>
-                            <span class="text-lg md:text-xl text-white drop-shadow-md">Despedida</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- SEPARADOR 4 -->
-        <div class="w-full h-screen md:h-auto relative z-20 -my-[12vh] pointer-events-none">
-            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_4_DSC09565%20--.jpg?alt=media&token=7b099c43-5cd1-45f0-8ff9-1cf44b403a2d" class="separador-img w-full h-full md:h-auto object-cover" alt="Separador 4">
-        </div>
-        
-        <!-- SECCIÓN UBICACIONES -->
-        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-28 seccion-blanca relative">
-            <div class="bg-texture-main opacity-10"></div>
-            <div class="max-w-5xl mx-auto relative z-10 w-full px-4">
-                
-                <div class="grid md:grid-cols-2 gap-6 w-full">
-                    <!-- Templo -->
-                    <div class="reveal flex flex-col items-center justify-center w-full bg-white/50 p-6 rounded-3xl border border-rosa-elegante/20 shadow-lg">
-                        <img src="https://i.imgur.com/T6yLarn.png" class="w-20 object-contain mb-4 filtro-rosa" alt="Iglesia">
-                        <h1 class="text-3xl md:text-4xl text-rosa-elegante text-center mb-2 font-script drop-shadow-sm uppercase tracking-widest">Ceremonia</h1>
-                        <p class="text-[#2C2A2A] text-center font-bold text-base md:text-lg mb-1 uppercase tracking-wide">Parroquia San Francisco de Asis</p>
-                            <p class="text-rosa-elegante text-center text-xl mt-2 font-numbers font-bold">5:00 P.M.</p>
-                        
-                        <div class="w-full mt-4 rounded-xl overflow-hidden shadow h-48 relative border border-gray-200">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3584.226267884981!2d-98.2853889!3d26.0588607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86650f146f2f246d%3A0xb95479c9354bd75!2sParroquia%20San%20Francisco%20de%20As%C3%ADs!5e0!3m2!1ses-419!2smx!4v1786141881339!5m2!1ses-419!2smx"" class="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-
-                        <div class="w-full mt-6">
-                            <a href="https://maps.app.goo.gl/9mRZGyMmd5J2ZjP58" target="_blank" class="w-full block text-center bg-rosa-elegante border border-rosa-elegante text-white font-bold px-8 py-4 text-xs uppercase hover:bg-transparent hover:text-rosa-elegante shadow-md transition-all rounded-xl active:scale-95 tracking-wider">Ver Ubicación</a>
-                        </div>
-                    </div>
-
-                    <!-- Salón -->
-                    <div class="reveal flex flex-col items-center justify-center w-full bg-white/50 mb-20 p-6 rounded-3xl border border-rosa-elegante/20 shadow-lg delay-200">
-                        <img src="https://i.imgur.com/yvzojba.png" class="w-20 object-contain mb-4 filtro-rosa" alt="Recepción">
-                        <h1 class="text-3xl md:text-4xl text-rosa-elegante text-center mb-2 font-script drop-shadow-sm uppercase tracking-widest">Recepción</h1>
-                        <p class="text-[#2C2A2A] text-center font-bold text-base md:text-lg mb-1 uppercase tracking-wide">Ara Eventos</p>
-                       
-                        <p class="text-rosa-elegante text-center text-xl mt-2 font-numbers font-bold">7:00 P.M.</p>
-                        
-                        <div class="w-full mt-4 rounded-xl overflow-hidden shadow h-48 relative border border-gray-200">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3583.6043126995132!2d-98.2816944!3d26.079185!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86650f003009cb2d%3A0x98233023a09a7386!2sARA%20EVENTOS!5e0!3m2!1ses-419!2smx!4v1786141977334!5m2!1ses-419!2smx" class="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-
-                        <div class="w-full mt-6">
-                            <a href="https://maps.app.goo.gl/DSqVpnvV33roeaCu6" target="_blank" class="w-full block text-center bg-rosa-elegante border border-rosa-elegante text-white font-bold px-8 py-4 text-xs uppercase hover:bg-transparent hover:text-rosa-elegante shadow-md transition-all rounded-xl active:scale-95 tracking-wider">Ver Ubicación</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SEPARADOR 5 -->
-        <div class="w-full h-screen md:h-auto relative z-20 -my-[12vh] pointer-events-none">
-            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_5_DSC09727%20--.jpg?alt=media&token=4ab2f154-9604-48e0-b166-7f0836761306" class="separador-img w-full h-full md:h-auto object-cover" alt="Separador 5">
-        </div>
-
-        <!-- SECCIÓN CÓDIGO DE VESTIMENTA & REGALOS -->
-        <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 seccion-blanca relative text-center">
-            <div class="bg-texture-main opacity-10"></div>
-            <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full mb-16">
-                <div class="mx-auto flex items-center justify-center">
-                    <img src="https://i.imgur.com/HEpd8Ab.png" class="w-28 object-contain mb-2 filtro-rosa" alt="Código de Vestimenta">
-                </div>
-                <h2 class="text-3xl mb-4 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Código de Vestimenta</h2>
-                <p class="text-xs font-bold bg-rosa-elegante text-white uppercase inline-block px-8 py-3 rounded-full shadow-md tracking-wider">Formal</p>
-                
-                <p class="text-sm md:text-base text-[#2C2A2A] mt-8 font-bold uppercase tracking-wide">Colores reservados exclusivamente para la quinceañera:</p>
-                
-                <div class="flex gap-4 md:gap-10 justify-center mt-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #FFB6C1;"></div>
-                        <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Rosa</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #FFE4E1;"></div>
-                        <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Blush</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #D4AF37;"></div>
-                        <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Dorado</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lluvia de Sobres -->
-            <div class="max-w-4xl mx-auto reveal relative z-10 w-full pt-10 border-t border-rosa-elegante/20">
-                <h2 class="text-3xl mb-6 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Mesa de Regalos</h2>
-                
-                <div class="mx-auto p-5 bg-rosa-elegante border-[6px] mb-16 border-white border-double rounded-2xl shadow-xl w-full max-w-sm flex flex-col items-center justify-center transition-all hover:-translate-y-2 hover:shadow-2xl duration-500 group">
-                    <svg class="w-16 h-16 mb-4 text-white transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
-                    </svg>
-                    <h3 class="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-wide">Lluvia de Sobres</h3>
-                    <p class="text-xs md:text-sm font-bold text-white text-center w-full uppercase tracking-wide">
-                        El mejor regalo es tu presencia, pero si deseas tener un detalle conmigo, habrá una pequeña urna en la entrada del salón.
-                    </p>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- SECCIÓN RSVP (CONFIRMACIÓN) -->
-        <section class="min-h-[100svh] flex flex-col justify-center px-6 bg-floral-section text-center relative overflow-hidden">
+            <!-- MARCO FLOTANTE GLOBAL -->
+            <div class="absolute inset-4 border border-rosa-elegante rounded-2xl z-30 pointer-events-none"></div>
             
-            <div class="absolute top-0 left-0 w-full h-12 md:h-40 bg-gradient-to-b from-[#FCF9F9] to-transparent z-20 pointer-events-none"></div>
-
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start py-24"> 
-                <h2 class="text-4xl md:text-5xl font-script mb-4 text-white drop-shadow-lg uppercase tracking-widest">Confirmar Asistencia</h2>
-                <p class="text-xs md:text-sm mb-1 text-white font-bold drop-shadow-md uppercase tracking-widest">Fecha límite: 4 de Septiembre de 2026</p>
+            <!-- HEADER -->
+            <header class="relative min-h-[100svh] flex flex-col justify-between">
+                <div class="absolute inset-0 w-full h-full z-0">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_portada_DSC09493%20--.jpg?alt=media&token=470985ea-7969-4605-a509-c83bca221180" class="w-full h-full object-cover object-center" alt="Hero Fernanda">
+                    <div class="absolute inset-0 bg-black/30"></div> 
+                </div>
+                 
+                <div class="relative z-10 flex flex-col items-center text-center px-6 pt-4">
+                    <p class="text-lg text-white font-bold drop-shadow-md uppercase">Mis XV</p>
+                    <h1 class="text-4xl text-white font-script drop-shadow-lg pr-1 uppercase tracking-widest">Fernanda <br>Valentina</h1>
+                </div>
                 
-                <div class="bg-transparent backdrop-blur-md border border-white/50 shadow-2xl p-6 md:p-10 rounded-3xl transition-all duration-500 w-full mx-auto relative z-20 mt-6">
+                <div class="relative z-10 flex flex-col items-center text-center px-6 w-full mt-auto mb-6">
+                    <div class="flex items-end justify-center gap-3 md:gap-6 reveal-scale font-numbers text-white drop-shadow-md">
+                        <div class="flex items-center justify-center border-y border-white py-1 px-4 md:px-8 w-16 mb-1">
+                            <span class="text-xl md:text-3xl tracking-wider">SEP</span>
+                        </div>
+                        <span class="text-6xl px-1 md:px-3">19</span>
+                        <div class="flex items-center justify-center border-y border-white py-1 px-4 md:px-8 w-16 mb-1">
+                            <span class="text-xl md:text-3xl tracking-wider">2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#FCF9F9] to-transparent z-20 pointer-events-none"></div>
+            </header>
+
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 text-center relative seccion-blanca overflow-hidden">
+                <div class="bg-texture-main opacity-10"></div>
+                <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] w-full">
                     
-                    <div class="mb-10 flex flex-col items-center justify-center space-y-3">
-                        <div class="w-48 h-[1px] bg-white/60"></div>
-                        <p class="text-sm font-medium uppercase tracking-[0.15em] text-white text-center drop-shadow-sm">
-                            Por favor, No Niños
+                    <h2 class="text-3xl md:text-4xl text-rosa-elegante mt-16 mb-6 font-script uppercase tracking-widest">Una Etapa Especial</h2>
+                    
+                    <div class="max-w-3xl mx-auto mb-8 p-5 bg-rosa-elegante border-[6px] border-white border-double rounded-2xl shadow-xl">
+                        <p class="text-sm uppercase leading-relaxed font-bold mb-2 text-white">
+                            "Mujer virtuosa, ¿quién la hallará? Porque su estima sobrepasa largamente a la de las piedras preciosas."
                         </p>
-                        <div class="w-48 h-[1px] bg-white/60"></div>
-                        <p class="text-xs md:text-sm font-medium uppercase tracking-[0.15em] text-white/90 text-center drop-shadow-sm">
-                            Agradecemos respetar los pases asignados
-                        </p>
-                        <div class="w-48 h-[1px] bg-white/60"></div>
-                        <p class="text-xs md:text-sm font-medium uppercase tracking-[0.15em] text-white/90 text-center drop-shadow-sm">
-                            Indispensable confirmar asistencia
-                        </p>
-                        <div class="w-48 h-[1px] bg-white/60"></div>
+                        <span class="text-xs font-bold block uppercase tracking-widest text-white/90">
+                            — Proverbios 31:10
+                        </span>
+                    </div>
+                    
+                    <p class="text-lg leading-relaxed font-bold px-6 uppercase mb-12 tracking-wide">
+                        Con el corazón lleno de alegría y gratitud, celebro la hermosa bendición de llegar a esta etapa tan especial gracias a Dios y hoy quiero que me acompañes a celebrarla.
+                    </p>
+                    
+                </div>
+            </section>
+
+            <!-- SEPARADOR 1 -->
+            <div class="w-full h-screen relative z-20 -my-[12vh] pointer-events-none">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_1_DSC09823%20--.jpg?alt=media&token=eb46cdd3-7e25-43e1-9faa-a2a32357e9b6" class="separador-img w-full h-full object-cover" alt="Separador 1">
+            </div>
+
+            <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 bg-floral-section relative overflow-hidden">
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="text-center reveal">
+                        <h2 class="text-4xl md:text-5xl mb-2 font-script text-white drop-shadow-lg reveal-scale uppercase tracking-widest">Mi Historia</h2>
+                        <p class="text-xs font-bold opacity-90 text-white uppercase tracking-widest">Momentos inolvidables</p>
                     </div>
 
-                    <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
-                        
-                        <div id="customAlert" class="hidden mb-2 bg-white/20 backdrop-blur-md border border-red-500/50 rounded-xl p-3 text-center transition-all duration-300 shadow-xl">
-                            <p id="customAlertText" class="text-white text-xs font-bold"></p>
+                    <div class="slider-historia mt-2">
+                        <div class="tarjeta-polaroid">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_1_649055307_10165582363434252_2658055772687719716_n.jpg?alt=media&token=70f01b9f-587f-4e32-b4f2-2c262aa39827" class="img-polaroid" alt="Historia 1">
+                            <div class="info-polaroid">
+                                <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">2011. Como un suspiro del destino llegué a este mundo</p>
+                            </div>
                         </div>
+                        <div class="tarjeta-polaroid">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_2_653713023_10165642815219252_2835898994212464109_n.jpg?alt=media&token=5f8c7357-f2f6-4f4e-a256-e6bf2dddc2c2" class="img-polaroid" alt="Historia 2">
+                            <div class="info-polaroid">
+                                <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Mis primeros años entre dulces caricias y tiernas sonrisas</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-polaroid">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_3_VIC_7056.jpg?alt=media&token=526024bb-20fa-4334-b1ef-ef919f0a599e" class="img-polaroid" alt="Historia 3">
+                            <div class="info-polaroid">
+                                <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Con ilusión en el corazón comencé a descubrir</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-polaroid">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_4_518004001_10164346625459252_1770782742968441492_n.jpg?alt=media&token=bc7ec718-f4dd-49ca-a0dd-114803be317a" class="img-polaroid" alt="Historia 4">
+                            <div class="info-polaroid">
+                                <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Mi infancia un jardín de recuerdos lleno de alegría</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-polaroid">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Fhistoria_foto_5_118906550_10159380000679252_5922812690769525428_n.jpg?alt=media&token=922baad8-fbe3-4ad6-b3a3-185368e608d7" class="img-polaroid" alt="Historia 5">
+                            <div class="info-polaroid">
+                                <p class="text-xs font-bold text-[#2C2A2A] uppercase tracking-wider">Creciendo poco a poco aprendí a brillar con luz propia</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-white text-xs mt-6 font-bold uppercase tracking-widest">Arrastra para ver más →</p>
+                </div>
+            </section>
 
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-sm uppercase text-white font-bold drop-shadow-md">Nombre</label>
-                            <input type="text" id="rsvpName" required placeholder="Ingresa tu nombre" class="w-full bg-transparent py-2 uppercase outline-none text-sm text-white font-bold text-center md:text-left placeholder-white/50">
+            <!-- SEPARADOR 2 -->
+            <div class="w-full h-screen relative z-20 -my-[12vh] pointer-events-none">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_2_24x30%20---.jpg?alt=media&token=4635e63c-7ee9-4252-bbfe-15bad3f5add0" class="separador-img w-full h-full object-cover" alt="Separador 2">
+            </div>
+
+            <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 seccion-blanca relative overflow-hidden text-center">
+                <div class="bg-texture-main opacity-10"></div>
+                <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
+                    <h2 class="text-4xl md:text-5xl mb-12 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Faltan solo...</h2>
+                    
+                    <div id="countdown" class="flex gap-6 md:gap-14 justify-center mb-16">
+                        <div class="flex flex-col items-center">
+                            <span id="days" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
+                            <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Días</span>
                         </div>
-                        
-                        <div class="border-b border-white/50 pb-2 w-full md:w-1/2">
-                            <label class="text-sm uppercase text-white font-bold drop-shadow-md">Asistentes (Solo Adultos)</label>
-                            <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="1" class="w-full uppercase bg-transparent py-2 outline-none text-sm text-white font-bold text-center md:text-left placeholder-white/50">
+                        <div class="flex flex-col items-center">
+                            <span id="hours" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
+                            <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Horas</span>
                         </div>
-                        
-                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-[#2C2A2A] font-bold py-5 px-8 uppercase text-sm hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6 tracking-wider">
-                            Enviar Confirmación
+                        <div class="flex flex-col items-center">
+                            <span id="minutes" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
+                            <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Min</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span id="seconds" class="serif text-5xl md:text-7xl text-[#2C2A2A] font-numbers">00</span>
+                            <span class="time-label text-xs text-[#2C2A2A] font-bold uppercase">Seg</span>
+                        </div>
+                    </div>
+
+                    <p class="text-base text-[#2C2A2A] font-bold mt-4 mb-6 uppercase">Agrega al calendario</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-lg mx-auto">
+                        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=XV+Fernanda+Valentina&dates=20260919T220000Z/20260920T060000Z&details=Acompa%C3%B1ame+a+celebrar+mis+XV+A%C3%B1os.&location=Parroquia+San+Francisco+de+Asis" target="_blank" class="w-full sm:w-auto bg-rosa-elegante text-white px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-transparent hover:text-rosa-elegante border border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
+                            Google Calendar
+                        </a>
+                        <button onclick="descargarCalendarioApple()" class="w-full sm:w-auto bg-white text-[#2C2A2A] px-8 py-4 rounded-xl text-xs uppercase font-bold shadow-md hover:bg-rosa-elegante hover:text-white border border-gray-200 hover:border-rosa-elegante transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
+                            Apple Calendar
                         </button>
-                    </form>
-
-                    <div id="loadingMessage" class="hidden mt-6 bg-transparent flex-col items-center justify-center transition-all duration-500">
-                        <div class="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                        <p class="text-xl font-bold text-white mb-2 drop-shadow-md">Procesando...</p>
-                        <p class="text-sm text-white opacity-90">Te redirigiremos a WhatsApp</p>
                     </div>
                 </div>
+            </section>
+
+            <!-- SEPARADOR 3 -->
+            <div class="w-full h-screen relative z-20 -my-[12vh] pointer-events-none">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_3__MG_1338%20--.jpg?alt=media&token=6ab1585a-d53d-4057-ae2a-8cb543a7bb2a" class="separador-img w-full h-full object-cover" alt="Separador 3">
             </div>
 
-            <div class="w-full h-16 md:h-32"></div>
+            <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 bg-floral-section relative overflow-hidden text-center">
+                <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
+                    <div class="text-center">
+                        <h1 class="text-4xl md:text-5xl mb-2 text-white font-script reveal-scale drop-shadow-lg uppercase tracking-widest">Itinerario</h1>
+                        <p class="text-xs font-bold drop-shadow-md mb-8 uppercase tracking-widest">Los momentos que tendremos</p>
+                    </div>
+                    <div class="relative space-y-8 md:space-y-20">
+                        <div class="timeline-line"></div>
+                        
+                        <div class="flex items-center w-full relative z-10 reveal-left">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
+                                <img src="https://i.imgur.com/T6yLarn.png" class="w-20 object-contain filtro-blanco" alt="Ceremonia">
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">5:00 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Misa</span>
+                            </div>
+                        </div>
 
-        </section>
+                        <div class="flex items-center w-full relative z-10 reveal-right">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:00 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Recepción</span>
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
+                                <img src="https://i.imgur.com/yvzojba.png" class="w-20 object-contain filtro-blanco" alt="Recepción">
+                            </div>
+                        </div>
 
-        <!-- FOOTER -->
-        <footer class="min-h-[100svh] flex flex-col justify-center px-6 text-center relative z-20 -mt-[12vh] footer-mask bg-cover bg-center overflow-hidden" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_portada_DSC09493%20--.jpg?alt=media&token=470985ea-7969-4605-a509-c83bca221180'); background-color: var(--rosa-elegante);">
+                        <div class="flex items-center w-full relative z-10 reveal-left">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
+                                <img src="https://i.imgur.com/dN1jMDS.png" class="w-20 object-contain filtro-blanco" alt="Entrada">
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:15 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Mi Entrada</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center w-full relative z-10 reveal-right">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">7:30 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Vals</span>
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
+                                <img src="https://i.imgur.com/tRNwEAy.png" class="w-20 object-contain filtro-blanco" alt="Vals">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10 reveal-left">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
+                                <img src="https://i.imgur.com/AIApde9.png" class="w-20 object-contain filtro-blanco" alt="Cena">
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">8:15 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Cena</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10 reveal-right">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end flex-col text-right">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">8:45 P.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Fiesta</span>
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start">
+                                <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-20 object-contain filtro-blanco" alt="Fiesta">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10 reveal-left">
+                            <div class="w-1/2 pr-6 md:pr-10 flex justify-end">
+                                <svg class="w-20 text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div class="w-1/2 pl-6 md:pl-10 flex justify-start flex-col text-left">
+                                <span class="text-xl md:text-2xl italic text-white font-numbers font-bold drop-shadow-md leading-tight">1:00 A.M</span>
+                                <span class="text-lg md:text-xl text-white drop-shadow-md">Despedida</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEPARADOR 4 -->
+            <div class="w-full h-screen relative z-20 -my-[12vh] pointer-events-none">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_4_DSC09565%20--.jpg?alt=media&token=7b099c43-5cd1-45f0-8ff9-1cf44b403a2d" class="separador-img w-full h-full object-cover" alt="Separador 4">
+            </div>
             
-            <div class="absolute inset-0 bg-black/50 z-0"></div>
-            <p class="text-5xl md:text-7xl font-script mb-4 text-white drop-shadow-md relative z-10 uppercase tracking-widest">¡No Faltes!</p>
-            <p class="text-xs md:text-sm text-white font-bold font-numbers relative z-10 uppercase tracking-widest">19 • Septiembre • 2026</p>
+            <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-28 seccion-blanca relative">
+                <div class="bg-texture-main opacity-10"></div>
+                <div class="max-w-5xl mx-auto relative z-10 w-full px-4">
+                    
+                    <!-- AQUI APILAMOS LAS UBICACIONES EN UNA SOLA COLUMNA -->
+                    <div class="flex flex-col gap-10 w-full">
+                        
+                        <!-- Templo -->
+                        <div class="reveal flex flex-col items-center justify-center w-full bg-white/50 p-6 rounded-3xl border border-rosa-elegante/20 shadow-lg">
+                            <img src="https://i.imgur.com/T6yLarn.png" class="w-20 object-contain mb-4 filtro-rosa" alt="Iglesia">
+                            <h1 class="text-3xl md:text-4xl text-rosa-elegante text-center mb-2 font-script drop-shadow-sm uppercase tracking-widest">Ceremonia</h1>
+                            <p class="text-[#2C2A2A] text-center font-bold text-base md:text-lg mb-1 uppercase tracking-wide">Parroquia San Francisco de Asis</p>
+                                <p class="text-rosa-elegante text-center text-xl mt-2 font-numbers font-bold">5:00 P.M.</p>
+                            
+                            <div class="w-full mt-4 rounded-xl overflow-hidden shadow h-48 relative border border-gray-200">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3584.226267884981!2d-98.2853889!3d26.0588607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86650f146f2f246d%3A0xb95479c9354bd75!2sParroquia%20San%20Francisco%20de%20As%C3%ADs!5e0!3m2!1ses-419!2smx!4v1786141881339!5m2!1ses-419!2smx"" class="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
 
-        </footer>
-    </main>
+                            <div class="w-full mt-6">
+                                <a href="https://maps.app.goo.gl/9mRZGyMmd5J2ZjP58" target="_blank" class="w-full block text-center bg-rosa-elegante border border-rosa-elegante text-white font-bold px-8 py-4 text-xs uppercase hover:bg-transparent hover:text-rosa-elegante shadow-md transition-all rounded-xl active:scale-95 tracking-wider">Ver Ubicación</a>
+                            </div>
+                        </div>
+
+                        <!-- Salón -->
+                        <div class="reveal flex flex-col items-center justify-center w-full bg-white/50 p-6 rounded-3xl border border-rosa-elegante/20 shadow-lg delay-200">
+                            <img src="https://i.imgur.com/yvzojba.png" class="w-20 object-contain mb-4 filtro-rosa" alt="Recepción">
+                            <h1 class="text-3xl md:text-4xl text-rosa-elegante text-center mb-2 font-script drop-shadow-sm uppercase tracking-widest">Recepción</h1>
+                            <p class="text-[#2C2A2A] text-center font-bold text-base md:text-lg mb-1 uppercase tracking-wide">Ara Eventos</p>
+                           
+                            <p class="text-rosa-elegante text-center text-xl mt-2 font-numbers font-bold">7:00 P.M.</p>
+                            
+                            <div class="w-full mt-4 rounded-xl overflow-hidden shadow h-48 relative border border-gray-200">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3583.6043126995132!2d-98.2816944!3d26.079185!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86650f003009cb2d%3A0x98233023a09a7386!2sARA%20EVENTOS!5e0!3m2!1ses-419!2smx!4v1786141977334!5m2!1ses-419!2smx" class="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+
+                            <div class="w-full mt-6">
+                                <a href="https://maps.app.goo.gl/DSqVpnvV33roeaCu6" target="_blank" class="w-full block text-center bg-rosa-elegante border border-rosa-elegante text-white font-bold px-8 py-4 text-xs uppercase hover:bg-transparent hover:text-rosa-elegante shadow-md transition-all rounded-xl active:scale-95 tracking-wider">Ver Ubicación</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SEPARADOR 5 -->
+            <div class="w-full h-screen relative z-20 -my-[12vh] pointer-events-none">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_separador_5_DSC09727%20--.jpg?alt=media&token=4ab2f154-9604-48e0-b166-7f0836761306" class="separador-img w-full h-full object-cover" alt="Separador 5">
+            </div>
+
+            <section class="min-h-[100svh] flex flex-col justify-center py-28 px-6 seccion-blanca relative text-center">
+                <div class="bg-texture-main opacity-10"></div>
+                <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full mb-16">
+                    <div class="mx-auto flex items-center justify-center">
+                        <img src="https://i.imgur.com/HEpd8Ab.png" class="w-28 object-contain mb-2 filtro-rosa" alt="Código de Vestimenta">
+                    </div>
+                    <h2 class="text-3xl mb-4 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Código de Vestimenta</h2>
+                    <p class="text-xs font-bold bg-rosa-elegante text-white uppercase inline-block px-8 py-3 rounded-full shadow-md tracking-wider">Formal</p>
+                    
+                    <p class="text-sm md:text-base text-[#2C2A2A] mt-8 font-bold uppercase tracking-wide">Colores reservados exclusivamente para la quinceañera:</p>
+                    
+                    <div class="flex gap-4 md:gap-10 justify-center mt-6">
+                        <div class="flex flex-col items-center">
+                            <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #FFB6C1;"></div>
+                            <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Rosa</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #FFE4E1;"></div>
+                            <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Blush</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-14 h-20 md:w-16 md:h-24 rounded-t-full rounded-b-md shadow-lg border-2 border-white" style="background-color: #D4AF37;"></div>
+                            <span class="text-[10px] md:text-xs mt-3 font-bold uppercase tracking-widest text-[#2C2A2A]">Dorado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lluvia de Sobres -->
+                <div class="max-w-4xl mx-auto reveal relative z-10 w-full pt-10 border-t border-rosa-elegante/20">
+                    <h2 class="text-3xl mb-6 font-script text-rosa-elegante drop-shadow-sm uppercase tracking-widest">Mesa de Regalos</h2>
+                    
+                    <div class="mx-auto p-5 bg-rosa-elegante border-[6px] mb-16 border-white border-double rounded-2xl shadow-xl w-full max-w-sm flex flex-col items-center justify-center transition-all hover:-translate-y-2 hover:shadow-2xl duration-500 group">
+                        <svg class="w-16 h-16 mb-4 text-white transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
+                        </svg>
+                        <h3 class="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-wide">Lluvia de Sobres</h3>
+                        <p class="text-xs md:text-sm font-bold text-white text-center w-full uppercase tracking-wide">
+                            El mejor regalo es tu presencia, pero si deseas tener un detalle conmigo, habrá una pequeña urna en la entrada del salón.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 bg-floral-section text-center relative overflow-hidden">
+                
+                <div class="absolute top-0 left-0 w-full h-12 md:h-40 bg-gradient-to-b from-[#FCF9F9] to-transparent z-20 pointer-events-none"></div>
+
+                <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start py-24"> 
+                    <h2 class="text-4xl md:text-5xl font-script mb-4 text-white drop-shadow-lg uppercase tracking-widest">Confirmar Asistencia</h2>
+                    <p class="text-xs md:text-sm mb-1 text-white font-bold drop-shadow-md uppercase tracking-widest">Fecha límite: 4 de Septiembre de 2026</p>
+                    
+                    <div class="bg-transparent backdrop-blur-md border border-white/50 shadow-2xl p-6 md:p-10 rounded-3xl transition-all duration-500 w-full mx-auto relative z-20 mt-6">
+                        
+                        <div class="mb-10 flex flex-col items-center justify-center space-y-3">
+                            <div class="w-48 h-[1px] bg-white/60"></div>
+                            <p class="text-sm font-medium uppercase tracking-[0.15em] text-white text-center drop-shadow-sm">
+                                Por favor, No Niños
+                            </p>
+                            <div class="w-48 h-[1px] bg-white/60"></div>
+                            <p class="text-xs md:text-sm font-medium uppercase tracking-[0.15em] text-white/90 text-center drop-shadow-sm">
+                                Agradecemos respetar los pases asignados
+                            </p>
+                            <div class="w-48 h-[1px] bg-white/60"></div>
+                            <p class="text-xs md:text-sm font-medium uppercase tracking-[0.15em] text-white/90 text-center drop-shadow-sm">
+                                Indispensable confirmar asistencia
+                            </p>
+                            <div class="w-48 h-[1px] bg-white/60"></div>
+                        </div>
+
+                        <!-- Formulario de RSVP sin lógica de URL -->
+                        <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
+                            
+                            <div id="customAlert" class="hidden mb-2 bg-white/20 backdrop-blur-md border border-red-500/50 rounded-xl p-3 text-center transition-all duration-300 shadow-xl">
+                                <p id="customAlertText" class="text-white text-xs font-bold"></p>
+                            </div>
+
+                            <div class="border-b border-white/50 pb-2">
+                                <label class="text-sm uppercase text-white font-bold drop-shadow-md">Nombre</label>
+                                <input type="text" id="rsvpName" required placeholder="Ingresa tu nombre" class="w-full bg-transparent py-2 uppercase outline-none text-sm text-white font-bold text-center md:text-left placeholder-white/50">
+                            </div>
+                            
+                            <div class="border-b border-white/50 pb-2 w-full md:w-1/2">
+                                <label class="text-sm uppercase text-white font-bold drop-shadow-md">Asistentes (Solo Adultos)</label>
+                                <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="1" class="w-full uppercase bg-transparent py-2 outline-none text-sm text-white font-bold text-center md:text-left placeholder-white/50">
+                            </div>
+                            
+                            <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-[#2C2A2A] font-bold py-5 px-8 uppercase text-sm hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6 tracking-wider">
+                                Enviar Confirmación
+                            </button>
+                        </form>
+
+                        <div id="loadingMessage" class="hidden mt-6 bg-transparent flex-col items-center justify-center transition-all duration-500">
+                            <div class="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                            <p class="text-xl font-bold text-white mb-2 drop-shadow-md">Procesando...</p>
+                            <p class="text-sm text-white opacity-90">Te redirigiremos a WhatsApp</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full h-16 md:h-32"></div>
+
+            </section>
+
+            <footer class="min-h-[100svh] flex flex-col justify-center px-6 text-center relative z-20 -mt-[12vh] footer-mask bg-cover bg-center overflow-hidden" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_MARIA_GUADALUPE_TORRES_SANCHEZ__1786071263642%2Ffoto_portada_DSC09493%20--.jpg?alt=media&token=470985ea-7969-4605-a509-c83bca221180'); background-color: var(--rosa-elegante);">
+                
+                <div class="absolute inset-0 bg-black/50 z-0"></div>
+                <p class="text-5xl md:text-7xl font-script mb-4 text-white drop-shadow-md relative z-10 uppercase tracking-widest">¡No Faltes!</p>
+                <p class="text-xs md:text-sm text-white font-bold font-numbers relative z-10 uppercase tracking-widest">19 • Septiembre • 2026</p>
+
+            </footer>
+        </main>
+    </div> <!-- FIN APP CONTAINER -->
 
     <script>
         function openEnvelope() {
@@ -781,7 +786,6 @@
         });
     </script>
     
-    <!-- LÓGICA FIREBASE Y REDIRECCIÓN WHATSAPP (SIN LIMITACIONES DE URL) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -825,7 +829,6 @@
             }
         }
 
-        // GUARDAR RSVP Y REDIRIGIR A WHATSAPP
         const rsvpFormElement = document.getElementById('rsvpForm');
         if (rsvpFormElement) {
             rsvpFormElement.addEventListener('submit', async (e) => {
