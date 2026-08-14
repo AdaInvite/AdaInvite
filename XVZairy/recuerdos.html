@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>XV Zairy Sofia - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/74ug9SC.jpeg">
+    
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Zairy Sofia - Recuerdos">
+    <meta property="og:description" content="Ayúdame a capturar los mejores momentos de mis XV años.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        negro: {
+                            principal: '#000000'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Librería para convertir HEIC a JPG -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+    <style>
+        :root {
+            --negro-principal: #000000;
+            --font-elegant: 'Forum', serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant);
+            background-color: var(--negro-principal);
+            color: #ffffff;
+            scroll-behavior: smooth;
+        }
+
+        /* TEXTOS GENERALES: BLANCO, MAYÚSCULAS Y ESPACIADO REDUCIDO */
+        body, p, span, div, input, select, label, h1, h2, h3, h4, button {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #ffffff;
+            font-family: var(--font-elegant);
+        }
+
+        /* TÍTULOS CURSIVA: GRADIENTE DORADO Y PADDING */
+        .font-script, .font-script * {
+            font-family: var(--font-script) !important; 
+            font-weight: 400 !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+            padding: 0.1em 0.1em !important;
+            line-height: 1.2 !important;
+            background: linear-gradient(180deg, #ceae67 0%, #eed382 30%, #9a7036 60%, #d1b16a 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            color: transparent !important;
+            text-shadow: none !important; 
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));
+        }
+
+        /* CLASES ESPECIALES PARA BORDES CON GRADIENTE */
+        .borde-gradiente {
+            border: 1px solid transparent !important;
+            background-image: linear-gradient(var(--negro-principal), var(--negro-principal)), linear-gradient(180deg, #ceae67 0%, #eed382 30%, #9a7036 60%, #d1b16a 100%) !important;
+            background-origin: border-box !important;
+            background-clip: padding-box, border-box !important;
+        }
+        
+        .linea-gradiente {
+            border-bottom: 1px solid transparent !important;
+            border-image: linear-gradient(90deg, transparent 0%, #ceae67 20%, #eed382 50%, #9a7036 80%, transparent 100%) 1 !important;
+        }
+
+        /* BOTONES TRANSPARENTES CON BORDE DE GRADIENTE DORADO */
+        button.btn-oro, .tag-oro {
+            border: 1px solid transparent !important;
+            background-image: linear-gradient(var(--negro-principal), var(--negro-principal)), linear-gradient(180deg, #ceae67 0%, #eed382 30%, #9a7036 60%, #d1b16a 100%) !important;
+            background-origin: border-box !important;
+            background-clip: padding-box, border-box !important;
+            color: #eed382 !important;
+            transition: all 0.4s ease;
+        }
+
+        button.btn-oro:hover {
+            background-image: linear-gradient(rgba(197, 151, 64, 0.15), rgba(197, 151, 64, 0.15)), linear-gradient(180deg, #ceae67 0%, #eed382 30%, #9a7036 60%, #d1b16a 100%) !important;
+            box-shadow: 0 0 15px rgba(197, 151, 64, 0.3) !important;
+        }
+
+        /* INPUTS */
+        .input-boda {
+            background-color: transparent; 
+            border: none;
+            border-bottom: 1px solid #9a7036;
+            color: #FFFFFF;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .input-boda:focus { border-bottom-color: #eed382; outline: none; background-color: rgba(197, 151, 64, 0.05); }
+        .input-boda::placeholder { color: rgba(255, 255, 255, 0.3); font-weight: 300; }
+        select option { background-color: var(--negro-principal); color: #FFFFFF; }
+
+        #uploadModal { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px; width: 100%; max-height: 220px; overflow-y: auto; padding: 10px;
+        }
+        
+        /* OVERLAY DE CARGA */
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(0, 0, 0, 0.90); backdrop-filter: blur(4px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 0.75rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* TOAST ELEGANTES */
+        #toastMessage {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-visible {
+            opacity: 1 !important;
+            transform: translate(-50%, 0) !important;
+            pointer-events: auto !important;
+        }
+        
+        /* TRANSICIÓN DE TARJETAS */
+        .tarjeta-recuerdo {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .tarjeta-recuerdo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(197, 151, 64, 0.25);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FONDO ANIMADO TIPO INVITACIÓN -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-black/85 z-10"></div>
+        <img src="https://i.imgur.com/cUx5XZC.gif" class="w-full h-full object-cover filter grayscale blur-sm transform scale-110">
+    </div>
+
+    <!-- Toast de Notificaciones -->
+    <div id="toastMessage" class="fixed top-8 left-1/2 transform -translate-x-1/2 -translate-y-16 opacity-0 pointer-events-none px-8 py-4 rounded-xl shadow-2xl z-[9999] text-[10px] uppercase font-bold tracking-[0.2em] text-center min-w-[300px] borde-gradiente">
+        Mensaje aquí
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="w-full min-h-screen flex flex-col relative z-10">
+
+        <!-- HEADER LIMPIO Y ELEGANTE -->
+        <header class="w-full pt-20 md:pt-28 pb-2 px-6 flex flex-col items-center text-center relative z-10">
+            
+            <p class="text-xs uppercase tracking-[0.4em] text-[#eed382] font-bold z-10 text-center drop-shadow-md mb-2">
+                Muro de Recuerdos
+            </p>
+            
+            <h1 class="text-6xl md:text-8xl font-script mb-4">XV Zairy</h1>
+
+            <div class="w-3/4 max-w-[300px] linea-gradiente mb-4 mx-auto"></div>
+
+            <p class="text-[11px] md:text-sm text-gray-300 leading-relaxed max-w-lg mx-auto opacity-90 mb-2 px-2 tracking-widest">
+                Ayúdame a capturar la magia de este día subiendo tus fotos y videos.
+            </p>
+
+            <button id="openModalBtn" class="btn-oro font-bold py-4 px-10 rounded-xl uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-lg hover:-translate-y-1 active:scale-95 duration-300">
+                Subir mis fotos 
+            </button>
+        </header>
+
+        <!-- SECCIÓN DE GALERÍA -->
+        <main class="w-full flex-grow max-w-[1400px] mx-auto px-4 md:px-8 pb-4 relative z-10 mt-4">
+            
+            <!-- CONTROLES DE VISTA -->
+            <div class="w-full flex flex-col items-center pt-2 mb-2 gap-2">
+                <p class="text-[9px] uppercase tracking-[0.3em] text-[#ceae67] font-bold">Vista de Galería</p>
+                <div class="borde-gradiente bg-black/50 rounded-xl p-1 flex shadow-sm w-fit mx-auto">
+                    <button id="btn1Col" class="px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] bg-white/10 text-[#eed382] rounded-lg transition-all shadow-sm">Amplia</button>
+                    <button id="btn2Col" class="px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 hover:text-[#eed382] hover:bg-white/5 rounded-lg transition-all">Cuadrícula</button>
+                </div>
+            </div>
+            
+            <!-- CONTENEDOR MASONRY (Muro) -->
+            <div id="muro" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10">
+                <!-- Tarjetas generadas dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE SUBIDA PREMIUM -->
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-md hidden w-full h-full">
+        <div class="relative bg-black borde-gradiente rounded-3xl w-full max-w-lg p-8 md:p-10 shadow-[0_0_30px_rgba(197,151,64,0.15)] flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar">
+            
+            <button id="closeModalBtnIcon" class="absolute top-6 right-6 text-[#ceae67] hover:text-[#eed382] transition-colors z-20 bg-white/5 rounded-full p-2 shadow-sm borde-gradiente">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="text-center mb-4 mt-2 relative z-10 flex flex-col items-center">
+                <h2 class="text-5xl font-script mb-2">Tus Momentos</h2>
+              
+            </div>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-8 text-left relative z-10">
+                <div>
+                    <label class="text-white text-[9px] font-bold tracking-[0.3em] uppercase mb-2 block text-center">Familia / Nombre</label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Familia López" class="input-boda py-3 w-full">
+                </div>
+                
+                <div>
+                    <label class="text-white text-[9px] font-bold tracking-[0.3em] uppercase mb-2 block text-center">Momento del evento</label>
+                    <select id="folderSelect" class="input-boda py-3 w-full cursor-pointer appearance-none font-bold">
+                        <option value="" disabled selected class="text-gray-500">Selecciona el momento...</option>
+                        <option value="Ceremonia">La Ceremonia</option>
+                        <option value="Recepción">La Recepción</option>
+                        <option value="Cena">La Cena</option>
+                        <option value="El Baile">El Baile</option>
+                        <option value="Con Zairy">Con la Quinceañera</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-white text-[9px] font-bold tracking-[0.3em] uppercase mb-3 block text-center">Tus Archivos</label>
+                    <div id="dropZone" class="relative borde-gradiente bg-white/5 rounded-2xl p-4 text-center transition-all hover:bg-white/10 cursor-pointer overflow-hidden group">
+                        
+                        <div id="processingOverlay" class="hidden">
+                            <svg class="animate-spin h-8 w-8 text-[#eed382] mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-[#eed382] text-[8px] font-bold uppercase tracking-[0.3em] text-center px-2">Procesando archivos...<br>No cierres esta ventana</p>
+                        </div>
+
+                        <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
+                        <svg class="w-10 h-10 mx-auto text-[#ceae67] group-hover:text-[#eed382] transition-colors mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-white text-[10px] font-bold uppercase tracking-[0.2em]">Toca aquí para buscar</p>
+                        <p class="text-gray-400 text-[8px] tracking-[0.3em] mt-2 uppercase">(Videos máximo 30s)</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-6 borde-gradiente rounded-2xl bg-black shadow-sm overflow-hidden">
+                        <p class="text-[8px] text-[#ceae67] text-center py-3 uppercase font-bold border-b border-[#ceae67]/30 tracking-[0.3em] bg-white/5">Imágenes a subir:</p>
+                        <div id="previewContainer" class="bg-black/50"></div>
+                        <button id="removePreviewBtn" class="w-full py-3 text-[9px] text-red-400 bg-red-900/20 uppercase font-bold hover:bg-red-900/40 transition-colors tracking-widest border-t border-red-900/30">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-2">
+                    <button id="btnCancelar" class="flex-1 bg-transparent border border-white/20 text-white font-bold rounded-xl py-4 text-[9px] tracking-[0.3em] uppercase hover:bg-white/10 transition-colors">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] btn-oro font-bold rounded-xl py-4 text-[9px] tracking-[0.3em] uppercase active:scale-95 shadow-md">Subir a la galería</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[9px] uppercase tracking-[0.3em] font-bold mt-6 text-[#eed382] borde-gradiente p-4 rounded-xl hidden text-center w-full relative z-10 shadow-md bg-black"></p>
+        </div>
+    </div>
+
+    <!-- FIREBASE Y LÓGICA CORE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // CREDENCIALES DE ZAIRY SOFIA
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // GESTIÓN DE LIKES (LocalStorage) para 1 like por persona
+        let likedPosts = JSON.parse(localStorage.getItem('liked_posts_zairy')) || [];
+
+        // SISTEMA DE ALERTAS (TOAST ELEGANTES)
+        window.showToast = function(msg, isError = true) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = msg;
+            if(isError) {
+                toast.style.background = "#000000";
+                toast.style.color = "#ef4444";
+                toast.style.borderColor = "#ef4444";
+            } else {
+                toast.style.background = ""; // Usa la clase borde-gradiente
+                toast.style.color = "#eed382";
+            }
+            toast.classList.add('toast-visible');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-visible');
+            }, 3500);
+        };
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+        const processingOverlay = document.getElementById('processingOverlay');
+
+        // Modal triggers
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // Medir duración video
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        // INPUT ARCHIVOS (HEIC Y VIDEOS)
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            processingOverlay.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+            
+            const archivosProcesados = new DataTransfer();
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                const fileName = file.name.toLowerCase();
+
+                // Límite Video 30s
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        window.showToast(`El video "${file.name}" dura más de 30s y no se subirá.`, true);
+                        continue; 
+                    }
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // HEIC Conversión
+                if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                    try {
+                        const conversionPromise = heic2any({ blob: file, toType: "image/jpeg", quality: 0.5 });
+                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Tiempo agotado")), 15000));
+                        const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                        const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                        file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), { type: "image/jpeg" });
+                    } catch (err) {
+                        console.warn(`Error al convertir ${file.name}:`, err);
+                        continue;
+                    }
+                }
+
+                archivosProcesados.items.add(file);
+                
+                // Miniaturas
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-24 bg-white/10 rounded-lg overflow-hidden shadow-sm borde-gradiente";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = archivosProcesados.files;
+            processingOverlay.classList.add('hidden');
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+                dropZone.classList.remove('hidden');
+                previsualizacion.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        // SUBIR ARCHIVOS
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) {
+                window.showToast("POR FAVOR, COMPLETA TODOS LOS CAMPOS.", true);
+                return;
+            }
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_zairy/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_xvzairy"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡IMÁGENES GUARDADAS CON ÉXITO!";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // VISTAS DEL GRID
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-[#eed382] bg-white/10 rounded-lg transition-all shadow-sm";
+            btn2Col.className = "px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 hover:text-[#eed382] hover:bg-white/5 rounded-lg transition-all";
+            // Amplia: 1 col movil, 2 cols tablet, 3 cols desktop
+            muro.className = "columns-1 sm:columns-2 lg:columns-3 gap-6 w-full pb-10";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-[#eed382] bg-white/10 rounded-lg transition-all shadow-sm";
+            btn1Col.className = "px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 hover:text-[#eed382] hover:bg-white/5 rounded-lg transition-all";
+            // Cuadrícula: 2 cols movil, 3 cols tablet, 4-5 cols desktop
+            muro.className = "columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 w-full pb-10";
+        });
+
+        // RENDERIZAR MURO
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_xvzairy"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="text-[#ceae67] font-bold text-xs md:text-sm col-span-full py-20 text-center break-inside-avoid tracking-widest uppercase">Aún no hay recuerdos. ¡Sé el primero en subir un momento mágico!</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-white/5 cursor-pointer object-cover"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover" loading="lazy">`;
+                    
+                    const userLiked = likedPosts.includes(id);
+                    // Efecto de oro para likes
+                    const heartColorClass = userLiked ? 'text-[#eed382] fill-current' : 'text-white/40';
+
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-6 bg-black borde-gradiente rounded-2xl flex flex-col overflow-hidden relative z-20 shadow-[0_0_20px_rgba(197,151,64,0.1)]";
+                    
+                    divTarjeta.innerHTML = `
+                        <div class="relative w-full">
+                            <!-- Etiqueta superior izquierda, estilo oro transparente -->
+                            <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md border border-[#ceae67]/50 text-[#eed382] text-[8px] md:text-[9px] font-bold px-4 py-1.5 rounded-full shadow-lg uppercase tracking-[0.2em] z-10">${datos.momento}</span>
+                            ${media}
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-black border-t border-[#ceae67]/30">
+                            <h4 class="text-white font-bold uppercase text-[9px] md:text-[10px] tracking-[0.3em] truncate flex-1">${datos.nombre}</h4>
+                            <div class="flex items-center gap-2 pl-2">
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                    <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    <span id="contador-likes-${id}" class="font-bold text-sm text-[#eed382]">${datos.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) contadorLikes.innerText = datos.likes;
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) tarjetaRemover.remove();
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        // 1 LIKE POR PERSONA
+        window.darLike = async function(id) {
+            if (likedPosts.includes(id)) {
+                window.showToast("YA DISTE ME GUSTA A ESTE RECUERDO", false);
+                return;
+            }
+
+            const heartIcon = document.getElementById(`heart-icon-${id}`);
+            const contadorText = document.getElementById(`contador-likes-${id}`);
+            
+            if (heartIcon) {
+                heartIcon.classList.remove('text-white/40', 'fill-none');
+                heartIcon.classList.add('text-[#eed382]', 'fill-current');
+            }
+            if (contadorText) {
+                contadorText.innerText = (parseInt(contadorText.innerText) || 0) + 1;
+            }
+
+            likedPosts.push(id);
+            localStorage.setItem('liked_posts_zairy', JSON.stringify(likedPosts));
+
+            try {
+                await updateDoc(doc(db, "muro_xvzairy", id), { likes: increment(1) });
+            } catch (error) {
+                console.error("Error al dar like:", error);
+                window.showToast("ERROR AL CONECTAR.", true);
+            }
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
