@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XV Frida Zoé</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+   <link rel="apple-touch-icon" href="https://i.imgur.com/2sMztkP.jpeg">
+    
+    <meta name="theme-color" content="#d48b9e">
+    <meta property="og:title" content="XV Frida Zoé">
+    <meta property="og:description" content="Acompañame a celebrar mis XV años.">
+    <meta property="og:type" content="website">
+   <meta property="og:image" content="https://i.imgur.com/gHbkIlE.jpeg">
+
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: {
+                        'xxs': '0.65rem',
+                    },
+                    colors: {
+                        rosa: '#BC919C', /* Rosa elegante para títulos y botones */
+                        rosaclaro: '#FEEDF1', /* Fondo suave para tarjetas */
+                        textooscuro: '#374151', /* Gris oscuro para texto cuerpo */
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rosa-principal: #d48b9e;
+            --font-elegant: 'Unna', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-numbers: 'Unna', serif; 
+            --texto-oscuro: #374151;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #fdf8f9; /* Base rosa palo suave */
+            overflow-x: hidden;
+            color: var(--texto-oscuro);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
+            font-family: var(--font-elegant); 
+        }
+
+        .font-numbers {
+            font-family: var(--font-numbers) !important;
+            font-weight: 700;
+        }
+
+        body, p, span, input, select { font-weight: 400; }
+        .font-bold, h3, label { font-weight: 700; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+
+        /* Tarjetas de cristal adaptadas a fondo claro */
+        .glass-card {
+            background-color: rgba(253, 242, 245, 0.85);
+ /* Rosa palo translúcido */
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 139, 158, 0.4); /* Borde rosa */
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);  
+            color: var(--texto-oscuro);
+            position: relative;
+            z-index: 10;
+        }
+
+        .forma-ovalada {
+            background-color: rgba(243, 217, 223, 0.50); /* Rosa palo translúcido */
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(212, 139, 158, 0.5); /* Borde rosa */
+            color: var(--texto-oscuro);
+            border-radius: 250px 250px 0 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);  
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            width: 95vw;
+            max-width: 480px; 
+            height: 96svh; 
+            padding: 5% 6%; 
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none; 
+        }
+        .forma-ovalada::-webkit-scrollbar { display: none; } 
+
+        .text-shadow-light { text-shadow: 0px 2px 4px rgba(255,255,255,0.8); }
+
+        .filtro-oscuro { filter: brightness(0) opacity(0.7); } /* Para íconos en fondo claro */
+
+        /* ESTILOS DEL SOBRE (Se mantienen tal cual) */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg");
+            background-size: cover; 
+            background-position: center;
+            transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        #envelope-container { position: absolute !important; inset: 0 !important; z-index: 10; }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); isolation: isolate; }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); isolation: isolate; }
+        .flap { 
+            width: 100%; height: 100%; 
+            background-image: url("https://i.imgur.com/TxvkWmv.jpeg"); 
+            background-size: cover; background-position: center;
+        }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; filter: brightness(0.95); }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; filter: brightness(0.90); }
+        
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* VIDEO DE FONDO FIJO */
+        .video-background-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 1; pointer-events: none; background-color: #fdf8f9;
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        .video-overlay { position: absolute; inset: 0; background-color: transparent; z-index: 2; } /* Transparente para dejar lucir el video */
+
+        #section-main { display: none; position: relative; z-index: 10; }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #countdown { background: none !important; border: none !important; box-shadow: none !important; display: flex; justify-content: center; align-items: center; }
+        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 700; line-height: 1; }
+        #countdown .time-label { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; }
+        
+        input[type=range] { -webkit-appearance: none; background: rgba(212, 139, 158, 0.3); border-radius: 8px; height: 4px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--rosa-principal); cursor: pointer; }
+
+        /* Estilos de inputs para fondo claro */
+        input[type="text"], input[type="number"] {
+            color: var(--texto-oscuro);
+            border-bottom: 1px solid rgba(212, 139, 158, 0.5);
+        }
+        input::placeholder { color: #9ca3af; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <!-- Música -->
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FCascanueces_ElValsDeLasFlores.mp3?alt=media&token=ab53a072-2a0b-43b1-9d59-144bbe8e1984" type="audio/mpeg">
+    </audio>
+
+    <!-- Nuevo Fondo de Video Flores Rosas -->
+    <div class="video-background-container">
+        <div class="video-overlay"></div>
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FFondoFloresRosas.MP4?alt=media&token=abc4d4e5-9d6d-46cb-a5c8-e1fb9c5c0e4e" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Sobre (Se mantiene igual a petición del cliente) -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-sm font-bold uppercase mb-4 animate-bounce text-textooscuro font-elegant">
+                    Toca para abrir
+                </div>
+                <img src="https://i.imgur.com/rJjuWSm.png" class="w-[180px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <main id="section-main">
+        
+        <!-- INICIO -->
+        <header class="relative min-h-[100svh] flex flex-col px-10"> 
+            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center">
+                <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
+                    <h2 class="font-script text-5xl md:text-6xl text-rosa mb-2 drop-shadow-sm">Mis 15</h2>
+                    <!-- Corona intacta -->
+                    <img src="https://i.imgur.com/Tytmpkd.png" alt="Corona" class="w-32 mb-6 relative z-10 drop-shadow-sm">
+                    
+                    <h1 class="text-7xl font-script text-rosa drop-shadow-lg mb-6 relative z-10">Frida<br>Zoé</h1>
+                    
+                    <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-4 px-2 relative z-10">
+                        <div class="flex-1 flex justify-center items-center border-t border-b border-rosa/50 py-2">
+                            <span class="text-xl md:text-2xl font-bold font-elegant uppercase text-rosa">Oct</span>
+                        </div>
+                        <span class="text-6xl leading-none font-numbers font-bold text-textooscuro mx-4 drop-shadow-sm">24</span>
+                        <div class="flex-1 flex justify-center items-center border-t border-b border-rosa/50 py-2">
+                            <span class="text-xl md:text-2xl font-bold font-elegant text-rosa">2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Sistema de pases visual -->
+                    <div id="seccion-pases-inicio" class="w-full max-w-[200px] mx-auto mt-8 hidden reveal-scale active delay-200 relative z-10">
+                        <div class="bg-rosaclaro/80 rounded-[24px] px-1 py-1 shadow-lg text-center transition-all border border-rosa/30">
+                            <p class="text-xxs uppercase text-textooscuro font-bold mb-1 tracking-widest pt-1">Invitación para</p>
+                            <p id="nombre-invitado-inicio" class="text-xl font-script text-rosa mb-1 capitalize"></p>
+                            <div class="flex items-center justify-center gap-2 mt-1 border-t border-rosa/20 w-[80%] mx-auto pb-1">
+                                <span class="text-xxs uppercase font-bold text-textooscuro tracking-widest">Pases:</span>
+                                <span id="pases-invitado-inicio" class="font-numbers font-bold text-xl text-rosa"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="relative z-10 w-full pb-4 flex flex-col items-center reveal-scale active delay-100 text-center mt-6">
+                <svg class="w-8 h-8 text-rosa animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </header>
+
+        <!-- CITA Y PADRES -->
+        <section class="min-h-[100svh] flex flex-col justify-start px-10 text-center relative">
+            <div class="max-w-4xl mx-auto reveal relative z-10 w-full flex flex-col h-full flex-grow">
+                
+                <!-- Reproductor -->
+                <div class="w-full max-w-[300px] mx-auto glass-card p-2 reveal-scale">
+                    <div class="text-center mb-1">
+                        <h3 class="text-xl font-bold mb-0.5 font-elegant text-textooscuro">El Vals de las Flores</h3>
+                        <p class="text-sm font-light text-rosa font-elegant">Cascanueces</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-1">
+                        <span id="current-time" class="text-sm font-numbers font-light w-10 text-left opacity-80">0:00</span>
+                        <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
+                        <span id="duration-time" class="text-sm font-numbers font-light w-10 text-right opacity-80">-0:00</span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2">
+                        <button onclick="toggleAudio()" class="w-8 h-8 bg-rosa text-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
+                            <svg id="icon-play" class="w-6 h-6 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="icon-pause" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex-grow flex flex-col justify-center py-10 mt-6">
+                    <p class="text-lg md:text-xl text-textooscuro font-bold leading-relaxed mb-16 px-10 md:px-24">
+                        "Hace XV años, mis padres daban gracias a Dios por mi nacimiento. Hoy doy gracias a Dios por ellos, por cuidarme, tenerme paciencia, aconsejarme y por su amor infinito e incondicional.<br><br>
+                        Doy gracias también a mi familia y amigos por hacer aún más especial este día. Acompañame a celebrar mis XV años."
+                    </p>
+                    
+                    <div class="grid md:grid-cols-1 gap-4 text-textooscuro max-w-lg mx-auto w-full">
+                        <div class="glass-card p-2 border-rosa/20">
+                            <h3 class="text-4xl mb-2 font-script text-rosa drop-shadow-lg">Mis Padres</h3>
+                            <p class="text-lg font-bold mb-2 tracking-wide">Angel Tello Franco</p>
+                            <p class="text-xl font-script text-rosa">&</p>
+                            <p class="text-lg font-bold mt-2 tracking-wide">Dulce Anel Juárez Acuña</p>
+                        </div>
+
+                        <div class="glass-card p-2 border-rosa/40">
+                            <h3 class="text-4xl mb-2 font-script text-rosa drop-shadow-lg">Mis Padrinos</h3>
+                            <p class="text-lg font-bold mb-2 tracking-wide">Josefina Acuña Delgado</p>
+                          
+                            <p class="text-lg font-bold mb-2 tracking-wide">Paola Gloria Juárez Acuña</p>
+
+  <p class="text-lg font-bold mt-2 tracking-wide">Mariano de Jesús Juárez Martínez</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTADOR -->
+        <section class="min-h-[80svh] flex flex-col justify-center py-6 px-6 md:px-10 text-center relative">
+            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full">
+                <h3 class="text-5xl md:text-6xl font-script text-rosa text-shadow-lg mb-12">Faltan solo...</h3>
+
+                <div id="countdown" class="flex gap-4 md:gap-10 justify-center px-2 md:px-10 mb-16">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 md:w-24 md:h-24 glass-card border-rosa/40 flex items-center justify-center mb-4 p-0">
+                            <span id="days" class="time-num text-3xl md:text-4xl text-textooscuro">00</span>
+                        </div>
+                        <span class="time-label text-rosa font-bold">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 md:w-24 md:h-24 glass-card border-rosa/40 flex items-center justify-center mb-4 p-0">
+                            <span id="hours" class="time-num text-3xl md:text-4xl text-textooscuro">00</span>
+                        </div>
+                        <span class="time-label text-rosa font-bold">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 md:w-24 md:h-24 glass-card border-rosa/40 flex items-center justify-center mb-4 p-0">
+                            <span id="minutes" class="time-num text-3xl md:text-4xl text-textooscuro">00</span>
+                        </div>
+                        <span class="time-label text-rosa font-bold">Min</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 md:w-24 md:h-24 glass-card border-rosa/40 flex items-center justify-center mb-4 p-0">
+                            <span id="seconds" class="time-num text-3xl md:text-4xl text-textooscuro">00</span>
+                        </div>
+                        <span class="time-label text-rosa font-bold">Seg</span>
+                    </div>
+                </div>
+
+                <div class="reveal-scale delay-200 mt-12">
+                    <p class="text-sm uppercase mb-6 text-textooscuro font-bold tracking-widest">Reserva el momento <br> en tu calendario</p>
+                    <div class="flex justify-center">
+                        <button onclick="calendarLink('XV Frida Zoé', 'Parroquia Josefina del Espíritu Santo', '20261024T174500')" class="bg-rosa text-white px-10 py-4 text-[13px] uppercase font-bold hover:bg-transparent hover:text-rosa border border-rosa transition-all duration-300 shadow-md rounded-xl tracking-widest">
+                            Agregar al calendario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UBICACIONES -->
+        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-8 px-6 relative overflow-hidden">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-6 md:gap-12 relative z-10 w-full">
+                <!-- Ceremonia -->
+                <div class="glass-card p-6 md:p-10 reveal flex flex-col h-full rounded-3xl border-rosa/40">
+                    <div class="text-center mb-4">
+                        <div class="mx-auto mb-4 flex items-center justify-center">
+                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 h-24 md:w-28 md:h-28 filtro-oscuro" alt="Ceremonia">
+                        </div>
+                        <h1 class="text-5xl md:text-6xl mb-2 font-script text-rosa drop-shadow-lg">Ceremonia Religiosa</h1>
+                        <p class="text-textooscuro italic text-xl font-bold mt-4">Parroquia Josefina del Espíritu Santo</p>
+                        <p class="text-textooscuro font-numbers font-bold text-2xl mt-2">17:45 HRS</p>
+                    </div>
+                 
+                    <div class="flex-grow w-full relative min-h-[250px] md:min-h-[300px] rounded-xl overflow-hidden border border-rosa/30 mb-6 shadow-md bg-gray-100">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d249.3636450214468!2d0!3d0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8c384a465b3%3A0x6955a6d14fa47776!2sParroquia%20Josefina%20del%20Esp%C3%ADritu%20Santo!5e0!3m2!1ses-419!2smx!4v1786756497715!5m2!1ses-419!2smx" class="absolute top-0 left-0 w-full h-full grayscale contrast-125 opacity-80 mix-blend-multiply" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <a href="https://maps.app.goo.gl/XFo2wuhgsyR5qnV29?g_st=ic" target="_blank" class="w-full block text-center bg-rosa border border-rosa text-white font-bold px-8 py-4 text-[13px] uppercase hover:bg-transparent hover:text-rosa transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl tracking-widest">Abrir en Maps</a>
+                </div>
+
+                <!-- Recepción -->
+                <div class="glass-card p-6 md:p-10 reveal flex flex-col h-full rounded-3xl border-rosa/40">
+                    <div class="text-center mb-4">
+                        <div class="mx-auto mb-4 flex items-center justify-center">
+                            <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 md:w-28 md:h-28 filtro-oscuro" alt="Recepción">
+                        </div>
+                        <h1 class="text-5xl md:text-6xl mb-2 font-script text-rosa drop-shadow-lg">Recepción</h1>
+                        <p class="text-textooscuro italic text-xl font-bold mt-4">Salón Salamandre</p>
+                        <p class="text-textooscuro font-numbers font-bold text-2xl mt-2">19:30 HRS</p>
+                    </div>
+                    
+                    <div class="flex-grow w-full relative min-h-[250px] md:min-h-[300px] rounded-xl overflow-hidden border border-rosa/30 mb-6 shadow-md bg-gray-100"> 
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d249.3636450214468!2d0!3d0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8c4fd266acb%3A0xc9ecebfbfe89337f!2sSal%C3%B3n%20la%20Salamandre!5e0!3m2!1ses-419!2smx!4v1786756565513!5m2!1ses-419!2smx" class="absolute top-0 left-0 w-full h-full grayscale contrast-125 opacity-80 mix-blend-multiply" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+
+                    <a href="https://maps.app.goo.gl/iuVYCiqiy2cdXYgL6?g_st=ic" target="_blank" class="w-full block text-center bg-rosa border border-rosa text-white font-bold px-8 py-4 text-[13px] uppercase hover:bg-transparent hover:text-rosa transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl tracking-widest">Abrir en Maps</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRESS CODE -->
+        <section class="min-h-[100svh] flex flex-col justify-center px-6 relative text-center">
+            <div class="max-w-3xl mx-auto reveal-scale relative z-10 mt-10 w-full">
+                <div class="mx-auto mb-2 flex items-center justify-center">
+                    <img src="https://i.imgur.com/raf1i46.png" class="w-24 h-24 md:w-32 md:h-32 object-contain filtro-oscuro" alt="Código de Vestimenta">
+                </div>
+                <h2 class="text-5xl md:text-6xl mb-4 font-script text-rosa drop-shadow-lg">Código de <br>Vestimenta</h2>
+                <p class="text-[14px] uppercase text-white mb-6 font-bold bg-rosa inline-block px-8 py-3 shadow-md rounded-full tracking-widest">Formal</p>
+                <p class="text-base md:text-lg font-bold uppercase text-textooscuro mb-4 leading-relaxed px-10 md:px-20 tracking-wide">¡Prepárate para lucir increíble en esta noche tan especial!</p>
+                
+                <div class="glass-card p-2 w-full max-w-xl mx-auto text-center mt-6 border-rosa/50">
+                    <p class="text-sm uppercase text-textooscuro font-bold mb-2 tracking-widest leading-relaxed">Nota importante</p>
+                    <p class="text-lg text-rosa font-bold italic mb-2">Por favor, excluir el color rosa en su vestimenta, ya que está reservado para la quinceañera.</p>
+                    
+                    <div class="flex flex-wrap justify-center items-center gap-2 md:gap-8">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-8 h-8 rounded-full shadow-md border-2 border-white transition-transform hover:scale-110" style="background-color: #f472b6;" title="Rosa"></div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-8 h-8 rounded-full shadow-md border-2 border-white transition-transform hover:scale-110" style="background-color: #db2777;" title="Fucsia"></div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 relative">
+                            <div class="w-8 h-8 rounded-full shadow-md border-2 border-white transition-transform hover:scale-110" style="background-color: #fbcfe8;" title="Rosa Claro"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGALOS (Lluvia de sobres) -->
+        <section class="min-h-[80svh] flex flex-col justify-center px-6 md:px-10 text-center relative overflow-hidden">
+            <div class="max-w-3xl mx-auto reveal relative z-10 w-full mt-10">
+                <h1 class="text-5xl md:text-6xl mb-6 text-rosa font-script reveal-scale drop-shadow-lg">Sugerencia <br>de Regalo</h1>
+             
+                <div class="mt-4 glass-card p-4 flex flex-col items-center justify-center gap-4 reveal-scale delay-300 w-full max-w-md mx-auto border-rosa/40">
+                    <p class="text-textooscuro block mt-1 text-lg text-center leading-relaxed font-bold">El mejor regalo es que me acompañes en este día tan especial.</p>
+                    <svg class="w-20 h-20 text-rosa shrink-0 my-1 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"/>
+                    </svg>
+                    <h3 class="text-textooscuro block text-lg text-center leading-relaxed font-bold">Si deseas tener un detalle, tendremos una urna para sobres en la entrada del salón.</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN RSVP -->
+        <section class="min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 relative overflow-hidden">
+            <div class="forma-ovalada w-full mx-auto reveal-scale text-center flex flex-col justify-center border-rosa/50 shadow-xl"> 
+                <h2 class="text-5xl md:text-6xl font-script mb-4 px-4 text-rosa w-full drop-shadow-lg">Confirmar Asistencia</h2>
+                <p class="text-sm uppercase mb-2 font-bold w-full px-4 text-textooscuro tracking-widest">Por favor, confirma antes del<br>15 de Septiembre de 2026</p>
+                
+                <form id="rsvpForm" class="w-[90%] max-w-[320px] mx-auto space-y-6 text-left transition-all duration-500 mb-6">
+                    
+                    <div id="customAlert" class="hidden mb-2 bg-rosaclaro border border-rosa/60 rounded-xl p-3 text-center transition-all duration-300 shadow-md">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-rosa" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p id="customAlertTitle" class="text-rosa font-bold text-xs uppercase tracking-widest">Aviso</p>
+                        </div>
+                        <p id="customAlertText" class="text-textooscuro text-sm font-bold">Mensaje aquí</p>
+                    </div>
+
+                    <div class="border-b border-rosa/50 pb-2 bg-transparent">
+                        <label class="text-sm uppercase text-textooscuro font-bold tracking-widest">Nombre Completo</label>
+                        <input type="text" id="rsvpName" required placeholder="Tu Nombre / Familia" class="w-full bg-transparent py-2 outline-none text-xl font-bold text-center md:text-left">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border-b border-rosa/50 pb-2">
+                            <label class="text-sm uppercase text-textooscuro font-bold tracking-widest">Adultos</label>
+                            <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="0" class="w-full bg-transparent py-1 outline-none text-xl font-bold text-center">
+                        </div>
+                        <div class="border-b border-rosa/50 pb-2">
+                            <label class="text-sm uppercase text-textooscuro font-bold tracking-widest">Niños</label>
+                            <input type="number" id="rsvpKids" required placeholder="Ej. 0" min="0" class="w-full bg-transparent py-1 outline-none text-xl font-bold text-center">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="btnSubmitRSVP" class="w-full bg-rosa text-white font-bold py-4 px-8 uppercase text-[12px] hover:bg-transparent hover:text-rosa border border-rosa transition-all hover:scale-105 active:scale-95 shadow-md duration-300 rounded-xl mt-6 tracking-widest">
+                        Confirmar Asistencia
+                    </button>
+                </form>
+
+                <div id="loadingMessage" class="hidden mt-8 flex-col items-center justify-center transition-all duration-500 w-full max-w-[320px] mx-auto">
+                    <div class="w-12 h-12 border-4 border-rosa border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                    <p id="loadingText" class="text-4xl md:text-5xl font-script text-textooscuro mb-2">Procesando...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN RECUPERAR PASE -->
+        <section class="min-h-[60svh] flex flex-col justify-center px-6 text-center relative overflow-hidden">
+            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                <h2 class="text-5xl md:text-6xl font-script mb-6 text-rosa drop-shadow-lg">Recuperar Pase</h2>
+                <p class="text-sm uppercase mb-8 text-textooscuro font-bold tracking-widest">¿Ya confirmaste y perdiste tu pase?</p>
+
+                <form id="searchPassForm" class="glass-card p-8 md:p-12 space-y-4 text-left transition-all duration-500 border-rosa/40">
+                    <div class="border-b border-rosa/50 pb-2">
+                        <label class="text-sm uppercase text-textooscuro font-bold tracking-widest">Nombre o Familia</label>
+                        <input type="text" id="searchName" required placeholder="Ingresa tu nombre exacto" class="w-full bg-transparent py-2 outline-none text-xl font-bold text-center md:text-left">
+                    </div>
+                    <button type="submit" class="w-full bg-rosa text-white font-bold py-5 px-8 uppercase text-[13px] hover:bg-transparent hover:text-rosa border border-rosa transition-all hover:scale-105 active:scale-95 shadow-md duration-300 rounded-xl mt-4 tracking-widest">Buscar mi Pase</button>
+                </form>
+
+                <div id="searchResultMessage" class="hidden mt-8 transition-all duration-500"></div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="min-h-[50svh] flex flex-col justify-center px-6 text-center relative z-10">
+            <!-- Dejamos fluir el texto directamente sobre el video -->
+            <div class="max-w-md mx-auto">
+                <p class="text-6xl md:text-7xl font-script mb-4 text-rosa drop-shadow-sm relative z-10">¡No faltes!</p>
+                <p class="text-sm md:text-base text-textooscuro uppercase tracking-widest font-bold font-numbers relative z-10 text-shadow-light">24 • Octubre • 2026</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPT DE INTERFAZ Y ANIMACIONES -->
+    <script>
+        window.maxPasesGlobal = undefined;
+
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            playAudio(); 
+            
+            const bgVideo = document.getElementById('bg-video');
+            if (bgVideo) {
+                bgVideo.play().catch(e => console.log("Video autoplay bloqueado por navegador", e));
+            }
+
+            document.getElementById('envelope-wrapper').classList.add('open');
+
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        const audio = document.getElementById("bg-music");
+        let isPlaying = false;
+
+        function playAudio() {
+            const playIcon = document.getElementById("icon-play");
+            const pauseIcon = document.getElementById("icon-pause");
+            
+            audio.play().then(() => {
+                isPlaying = true;
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            }).catch(error => {
+                console.log("Audio autoplay bloqueado. El usuario debe tocar el botón.");
+                isPlaying = false;
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            });
+        }
+
+        function toggleAudio() {
+            const playIcon = document.getElementById("icon-play");
+            const pauseIcon = document.getElementById("icon-pause");
+
+            if (isPlaying) {
+                audio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            } else {
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        const progressBar = document.getElementById("progress-bar");
+        const currentTimeEl = document.getElementById("current-time");
+        const durationTimeEl = document.getElementById("duration-time");
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.value = progressPercent;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                const remaining = audio.duration - audio.currentTime;
+                durationTimeEl.textContent = "-" + formatTime(remaining);
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationTimeEl.textContent = "-" + formatTime(audio.duration);
+        });
+
+        progressBar.addEventListener('input', (e) => {
+            const seekTime = (e.target.value / 100) * audio.duration;
+            audio.currentTime = seekTime;
+        });
+
+        const targetDate = new Date("Oct 24, 2026 17:45:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+
+    <!-- LÓGICA FIREBASE Y VALIDACIONES -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyBfOoalLZWJmJtIqOXT28djcf2sJWWhTTE",
+          authDomain: "xv-marcela.firebaseapp.com",
+          projectId: "xv-marcela",
+          storageBucket: "xv-marcela.firebasestorage.app",
+          messagingSenderId: "378572984549",
+          appId: "1:378572984549:web:75d1ad755acfbe0354440c"
+        };
+
+        let db;
+        try {
+            if(Object.keys(firebaseConfig).length > 0) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+            }
+        } catch (error) {
+            console.error("Error inicializando Firebase:", error);
+        }
+
+        // ==========================================
+        // SISTEMA DE ALERTAS PERSONALIZADAS
+        // ==========================================
+        function mostrarAlerta(titulo, mensaje) {
+            const customAlert = document.getElementById('customAlert');
+            const customAlertTitle = document.getElementById('customAlertTitle');
+            const customAlertText = document.getElementById('customAlertText');
+            
+            if(customAlert && customAlertTitle && customAlertText) {
+                customAlertTitle.innerText = titulo;
+                customAlertText.innerText = mensaje;
+                customAlert.classList.remove('hidden');
+                
+                customAlert.classList.add('scale-105');
+                setTimeout(() => customAlert.classList.remove('scale-105'), 200);
+                
+                clearTimeout(window.alertTimeout);
+                window.alertTimeout = setTimeout(() => {
+                    customAlert.classList.add('hidden');
+                }, 4500); 
+            }
+        }
+
+        // ==========================================
+        // VALIDACIÓN EN TIEMPO REAL (AL ESCRIBIR)
+        // ==========================================
+        const inputAdults = document.getElementById('rsvpAdults');
+        const inputKids = document.getElementById('rsvpKids');
+
+        function validarPasesEnTiempoReal(e) {
+            if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal)) {
+                const adultos = parseInt(inputAdults.value) || 0;
+                const ninos = parseInt(inputKids.value) || 0;
+                
+                if (adultos + ninos > window.maxPasesGlobal) {
+                    mostrarAlerta("Límite de Pases", `Cuentas con un máximo de ${window.maxPasesGlobal} pases asignados en total.`);
+                    
+                    if (e.target.id === 'rsvpAdults') {
+                        inputAdults.value = Math.max(0, window.maxPasesGlobal - ninos);
+                    } else if (e.target.id === 'rsvpKids') {
+                        inputKids.value = Math.max(0, window.maxPasesGlobal - adultos);
+                    }
+                } else {
+                    const customAlert = document.getElementById('customAlert');
+                    if(customAlert) customAlert.classList.add('hidden');
+                }
+            }
+        }
+
+        if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
+        if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
+
+
+        // ==========================================
+        // LECTURA DE URL AL CARGAR LA PÁGINA
+        // ==========================================
+        const params = new URLSearchParams(window.location.search);
+        const nombreUrl = params.get('n');      
+        const pasesUrl = params.get('pases');    
+
+        if (nombreUrl && pasesUrl) {
+            window.maxPasesGlobal = parseInt(pasesUrl, 10);
+
+            const seccionInicio = document.getElementById('seccion-pases-inicio');
+            const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+            const pasesInvitado = document.getElementById('pases-invitado-inicio');
+
+            if (seccionInicio && nombreInvitado && pasesInvitado) {
+                seccionInicio.classList.remove('hidden');
+                nombreInvitado.textContent = nombreUrl;   
+                pasesInvitado.textContent = pasesUrl;    
+            }
+
+            const formName = document.getElementById('rsvpName');
+            if (formName) {
+                formName.value = nombreUrl;
+                formName.readOnly = true; 
+                formName.classList.add('cursor-not-allowed', 'opacity-80'); 
+            }
+
+            const searchName = document.getElementById('searchName');
+            if (searchName) {
+                searchName.value = nombreUrl;
+                searchName.readOnly = true; 
+                searchName.classList.add('cursor-not-allowed', 'opacity-80'); 
+            }
+
+            if (db) {
+                const confirmacionesRef = collection(db, "confirmaciones_frida"); // Adaptado nombre colección
+                const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+                getDocs(q).then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        const form = document.getElementById('rsvpForm');
+                        if(form) {
+                            form.innerHTML = `
+                                <div class="glass-card p-8 rounded-3xl text-center border-rosa/40">
+                                    <p class="text-rosa font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
+                                    <p class="text-textooscuro text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Error verificando registro previo en Firebase:", err);
+                });
+            }
+        }
+
+
+        // ==========================================
+        // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
+        // ==========================================
+        const rsvpFormElement = document.getElementById('rsvpForm');
+        if (rsvpFormElement) {
+            rsvpFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('rsvpName').value.trim();
+                const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
+                const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+                const totalPases = numAdultos + numNinos;
+                
+                if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal) && totalPases > window.maxPasesGlobal) {
+                    mostrarAlerta("Límite de Pases", `Solo tienes asignados ${window.maxPasesGlobal} pases. Ajusta la cantidad antes de enviar.`);
+                    return; 
+                }
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                const textLoader = document.getElementById('loadingText');
+                
+                form.style.display = 'none';
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+
+                try {
+                    if (db) {
+                        textLoader.innerText = "Verificando...";
+                        
+                        const confirmacionesRef = collection(db, "confirmaciones_frida");
+                        const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
+                        const querySnapshot = await getDocs(q);
+
+                        if (!querySnapshot.empty) {
+                            form.innerHTML = `
+                                <div class="glass-card p-8 rounded-3xl text-center mt-6 border-rosa/40">
+                                    <p class="text-rosa font-bold text-xl mb-2">¡Asistencia Confirmada!</p>
+                                    <p class="text-textooscuro text-sm tracking-wide font-bold">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                            form.style.display = 'block';
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                            return;
+                        }
+                    }
+
+                    textLoader.innerText = "Generando pase...";
+                    const folio = "XV-FRIDA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+                    if (db) {
+                        await addDoc(collection(db, "confirmaciones_frida"), {
+                            nombre: name,
+                            nombre_lower: name.toLowerCase(),
+                            adultos: numAdultos,
+                            ninos: numNinos,
+                            totalPases: totalPases,
+                            folio: folio,
+                            fecha: serverTimestamp() 
+                        });
+                    }
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const numeroWhatsApp = "525657660898"; // Actualizado según instrucciones
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Frida Zoé. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños. (Folio: ${folio})`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto max-w-[320px]"; 
+                    
+                    // Diseño del pase ajustado a tema claro
+                    resultDiv.innerHTML = `
+                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full bg-white border-2 border-rosa/50 rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-rosa"></div>
+                            <img src="https://i.imgur.com/Tytmpkd.png" crossorigin="anonymous" class="w-16 mx-auto mb-4" alt="Corona">
+                            <p class="text-[12px] uppercase text-rosa font-bold mb-2 tracking-widest">Pase Oficial</p>
+                            <h4 class="font-script text-4xl md:text-5xl text-textooscuro mb-6 leading-tight capitalize">${name}</h4>
+                            
+                            <div class="inline-block border-t border-b border-rosa/40 py-4 px-10 mb-6 w-full">
+                                <p class="text-[12px] uppercase text-gray-500 font-bold mb-1 tracking-widest">Pases Confirmados</p>
+                                <p class="font-numbers text-5xl md:text-6xl text-rosa font-bold drop-shadow-sm">${totalPases}</p>
+                            </div>
+                            
+                            <p class="text-[12px] uppercase text-gray-400 font-numbers mb-2 tracking-widest">Folio: ${folio}</p>
+                            <p class="text-[10px] uppercase text-gray-500 tracking-widest font-bold">Muestra esta tarjeta en recepción</p>
+                        </div>
+                        
+                        <div class="flex flex-col gap-4 w-full mt-8">
+                            <button id="btnDescargarImagenRSVP" class="bg-rosa text-white font-bold py-4 px-8 uppercase text-[12px] hover:bg-transparent hover:text-rosa border border-rosa transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-widest">
+                                Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-[12px] hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-widest">
+                                Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
+                        document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+                        
+                        html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                            const enlace = document.createElement('a');
+                            enlace.download = 'Pase_XV_Frida.png';
+                            enlace.href = canvas.toDataURL('image/png');
+                            enlace.click();
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        }).catch(err => {
+                            console.error("Error", err);
+                            document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
+                        });
+                    });
+
+                } catch(error) {
+                    console.error("Error al guardar:", error);
+                    mostrarAlerta("Error de Conexión", "No pudimos guardar tu pase. Revisa tu internet e intenta de nuevo.");
+                    form.style.display = 'block';
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                }
+            });
+        }
+
+        // ==========================================
+        // BUSCADOR / RECUPERAR PASE
+        // ==========================================
+        const searchPassFormElement = document.getElementById('searchPassForm');
+        if (searchPassFormElement) {
+            searchPassFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const searchName = document.getElementById('searchName').value.trim();
+                const resultDiv = document.getElementById('searchResultMessage');
+                const btnSubmit = e.target.querySelector('button[type="submit"]');
+                
+                btnSubmit.innerText = "Buscando...";
+                btnSubmit.disabled = true;
+                resultDiv.classList.add('hidden');
+
+                try {
+                    if(!db) throw new Error("Firebase no inicializado");
+
+                    const confirmacionesRef = collection(db, "confirmaciones_frida");
+                    const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+
+                    resultDiv.classList.remove('hidden');
+
+                    if (!querySnapshot.empty) {
+                        const docData = querySnapshot.docs[0].data();
+                        
+                        resultDiv.innerHTML = `
+                            <div class="mt-4 flex flex-col items-center w-full">
+                                <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-rosa/50 rounded-3xl p-8 shadow-2xl text-center overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-2 bg-rosa"></div>
+                                    <img src="https://i.imgur.com/Tytmpkd.png" crossorigin="anonymous" class="w-16 mx-auto mb-4 opacity-80" style="filter: brightness(0.5) sepia(1) hue-rotate(300deg) saturate(3);" alt="Corona">
+                                    
+                                    <p class="text-[12px] uppercase text-rosa font-bold mb-2 tracking-widest">Pase Oficial</p>
+                                    <h4 class="font-script text-4xl md:text-5xl text-textooscuro mb-6 leading-tight capitalize">${docData.nombre}</h4>
+                                    
+                                    <div class="inline-block border-t border-b border-rosa/40 py-4 px-10 mb-6 w-full">
+                                        <p class="text-[12px] uppercase text-gray-500 font-bold mb-1 tracking-widest">Pases Asignados</p>
+                                        <p class="font-numbers text-5xl md:text-6xl text-rosa font-bold drop-shadow-sm">${docData.totalPases}</p>
+                                    </div>
+                                    
+                                    <p class="text-[12px] uppercase text-gray-400 font-numbers mb-2 tracking-widest">Folio: ${docData.folio}</p>
+                                    <p class="text-[10px] uppercase text-gray-500 font-bold tracking-widest">Muestra esta tarjeta en recepción</p>
+                                </div>
+                                
+                                <button id="btnDescargarPaseBuscado" class="mt-8 bg-rosa text-white font-bold py-4 px-8 uppercase text-[13px] hover:bg-transparent hover:text-rosa border border-rosa transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95 tracking-widest">
+                                    Descargar Pase
+                                </button>
+                            </div>
+                        `;
+
+                        const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
+                        btnDescargarPase.addEventListener('click', () => {
+                            const tarjeta = document.getElementById('tarjetaPaseDigital');
+                            const originalText = btnDescargarPase.innerHTML;
+                            btnDescargarPase.innerText = "Generando imagen...";
+                            
+                            html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
+                                const enlace = document.createElement('a');
+                                enlace.download = 'Pase_XV_Frida.png';
+                                enlace.href = canvas.toDataURL('image/png');
+                                enlace.click();
+                                btnDescargarPase.innerHTML = originalText;
+                            }).catch(error => {
+                                console.error("Error al generar la imagen: ", error);
+                                btnDescargarPase.innerHTML = "Error al descargar";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                            });
+                        });
+
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="glass-card p-8 rounded-3xl text-center border-rosa/40">
+                                <p class="text-rosa font-bold mb-2 text-xl">Reserva no encontrada.</p>
+                                <p class="text-textooscuro text-base font-bold">Asegúrate de escribir el nombre exactamente igual a como se confirmó.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error("Error al buscar:", error);
+                    resultDiv.innerHTML = `
+                            <div class="glass-card p-8 rounded-3xl text-center border-rosa/40">
+                                <p class="text-red-400 font-bold mb-2 text-xl">Error de conexión</p>
+                                <p class="text-textooscuro text-base font-bold">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
+                            </div>
+                        `;
+                    resultDiv.classList.remove('hidden');
+                } finally {
+                    btnSubmit.innerText = "Buscar mi Pase";
+                    btnSubmit.disabled = false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
