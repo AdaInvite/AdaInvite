@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>XV Maritza - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/BLo32xt.png">
+    
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="XV Maritza - Recuerdos">
+    <meta property="og:description" content="Sube tus fotos y videos favoritos de la noche.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#1A1A1A',
+                        blanco: {
+                            perla: '#000000'
+                        },
+                        beige: '#D8C3A5'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <!-- Librería para convertir HEIC a JPG -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+    <style>
+        :root {
+            --font-elegant: 'Unna', serif;
+            --font-script: 'Imperial Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #000000;
+            color: #FFFFFF;
+            scroll-behavior: smooth;
+        }
+
+        /* VIDEO DE FONDO FIJO */
+        .video-background-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 0; pointer-events: none; 
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            opacity: 0.8;
+        }
+        .video-overlay { 
+            position: absolute; inset: 0; 
+            background: radial-gradient(circle, rgba(0,0,0,0.3) 20%, #000000 100%); 
+            z-index: 2; 
+        }
+
+        h1, h2, h3, p, select, button, label, input { font-family: var(--font-elegant); font-weight: 400; }
+        .font-bold { font-weight: 700; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+
+        /* Efecto Glassmorphism Premium */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);  
+            color: #FFFFFF;
+        }
+
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.8); }
+
+        select option { background-color: #1a1a1a; color: #FFFFFF; font-family: var(--font-elegant); font-weight: 400;}
+        select { text-align-last: center; } 
+        
+        .input-boda {
+            background-color: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(216, 195, 165, 0.4);
+            color: #FFFFFF;
+            border-radius: 12px; 
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .input-boda:focus { border-color: #D8C3A5; outline: none; background-color: rgba(255, 255, 255, 0.1); box-shadow: 0 4px 12px rgba(216, 195, 165, 0.2); }
+        .input-boda::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 400; }
+
+        #uploadModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px; width: 100%; max-height: 200px; overflow-y: auto; padding: 10px;
+        }
+        
+        /* Pantalla de carga para procesamiento HEIC/Video */
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 1.5rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Estilo para Notificaciones Toast */
+        #toastMessage {
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-visible {
+            opacity: 1 !important;
+            transform: translate(-50%, 0) !important;
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor Toast para Alertas Elegantes -->
+    <div id="toastMessage" class="fixed top-8 left-1/2 transform -translate-x-1/2 -translate-y-16 opacity-0 pointer-events-none px-6 py-4 rounded-xl shadow-2xl z-[9999] text-xs font-bold tracking-widest text-center min-w-[280px] border border-beige/40">
+        Mensaje aquí
+    </div>
+
+    <!-- VIDEO DE FONDO FIJO -->
+    <div class="video-background-container">
+        <div class="video-overlay"></div>
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FHarry.mp4?alt=media&token=643f3f37-bf4b-42c3-a972-bb5dd4af5e67" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="w-full min-h-screen flex flex-col relative z-10">
+
+        <header class="w-full pt-20 md:pt-32 pb-4 px-6 flex flex-col items-center text-center relative z-10">
+            
+            <p class="text-[12px] md:text-[14px] tracking-[0.3em] uppercase text-beige font-bold mb-4 text-center">Muro de Recuerdos</p>
+            <img src="https://i.imgur.com/Tytmpkd.png" alt="Corona" class="w-24 mb-4 relative z-10 drop-shadow-sm filter sepia(1) hue-rotate(15deg) brightness(1.2)">
+            <h1 class="text-6xl font-script text-white mb-6 text-center leading-none text-shadow-light">XV Maritza</h1>
+
+            <p class="text-base md:text-xl text-white/90 leading-relaxed mb-6 text-center max-w-sm italic">
+                La magia está en todas partes, solo tienes que saber dónde mirar. 
+            </p>
+
+            <button id="openModalBtn" class="bg-beige text-black font-bold py-2 px-4 rounded-xl uppercase tracking-[0.2em] text-xs shadow-[0_0_20px_rgba(216,195,165,0.4)] hover:bg-transparent hover:text-beige border border-beige transition-all active:scale-95 duration-300">
+                Compartir momentos  
+            </button>
+        </header>
+
+        <main class="w-full flex-grow max-w-[1400px] mx-auto px-4 md:px-8 pb-2 relative z-10">
+            
+            <div class="w-full flex flex-col items-center border-t border-white/20 mb-4 gap-2">
+                <p class="text-[11px] mt-4 text-white/70 uppercase tracking-widest font-bold">Vista de Galería</p>
+                <div class="glass-card p-1 flex inline-flex mb-2 border-beige/30 rounded-xl">
+                    <button id="btn1Col" class="px-4 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-black bg-beige rounded-lg transition-all">Amplia</button>
+                    <button id="btn2Col" class="px-4 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-lg transition-all">Cuadrícula</button>
+                </div>
+            </div>
+            
+            <div id="muro" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 w-full pb-4">
+                <!-- Tarjetas generadas dinámicamente -->
+            </div>
+        </main>
+
+        <!-- MODAL DE SUBIDA -->
+        <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-md hidden absolute h-full w-full">
+            <div class="relative glass-card border border-beige/40 rounded-3xl w-full max-w-md p-8 md:p-10 shadow-[0_0_40px_rgba(216,195,165,0.15)] flex flex-col items-center max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar bg-black/50">
+                
+                <button id="closeModalBtnIcon" class="absolute top-6 right-6 text-white/60 hover:text-white transition-colors z-20 bg-white/10 rounded-full p-2 border border-white/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <h2 class="text-5xl font-script text-beige mb-4 mt-2 text-center relative z-10 text-shadow-light">Tus Momentos</h2>
+
+                <div id="uploadForm" class="w-full flex flex-col gap-6 text-left relative z-10 px-2">
+                    <div>
+                        <label class="text-beige text-[11px] font-bold tracking-[0.2em] uppercase mb-1.5 block">Familia / Nombre</label>
+                        <input type="text" id="nombreInput" placeholder="Ej: Familia López" class="input-boda py-3.5 px-4 w-full text-center">
+                    </div>
+                    
+                    <div>
+                        <label class="text-beige text-[11px] font-bold tracking-[0.2em] uppercase mb-1.5 block">Momento del evento</label>
+                        <select id="folderSelect" class="input-boda py-3.5 px-4 w-full cursor-pointer appearance-none text-center uppercase tracking-widest text-xs">
+                            <option value="" disabled selected class="text-white/40">Elige una opción...</option>
+                            <option value="Ceremonia">Ceremonia Religiosa</option>
+                            <option value="Recepción">La Recepción</option>
+                            <option value="Cena">La Cena</option>
+                            <option value="Vals">El Vals</option>
+                            <option value="La Fiesta">Pista de Baile</option>
+                            <option value="Con Maritza">Con la Quinceañera</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <label class="text-beige text-[11px] font-bold tracking-[0.2em] uppercase mb-2 block">Seleccionar archivos</label>
+                        <div id="dropZone" class="relative border-2 border-dashed border-beige/40 bg-white/5 rounded-2xl p-8 text-center transition-colors hover:bg-white/10 cursor-pointer overflow-hidden">
+                            
+                            <div id="processingOverlay" class="hidden">
+                                <svg class="animate-spin h-8 w-8 text-beige mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p class="text-beige text-[10px] font-bold uppercase tracking-widest text-center px-2">Procesando archivos...<br>No cierres esta ventana</p>
+                            </div>
+
+                            <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            <svg class="w-8 h-8 mx-auto text-beige mb-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <p class="text-white text-xs font-bold uppercase tracking-widest">Toca aquí para buscar</p>
+                            <p class="text-white/50 text-[10px] uppercase tracking-widest mt-2">(Videos máximo 30s)</p>
+                        </div>
+
+                        <div id="previsualizacion" class="w-full relative hidden mt-4 border border-white/20 rounded-2xl bg-black/40 shadow-sm overflow-hidden">
+                            <p class="text-[10px] text-white/80 text-center py-3 uppercase font-bold border-b border-white/10 tracking-[0.2em] bg-white/5">Archivos seleccionados:</p>
+                            <div id="previewContainer"></div>
+                            <button id="removePreviewBtn" class="w-full py-3 text-[11px] text-red-400 bg-red-900/30 uppercase font-bold hover:bg-red-900/50 transition-colors tracking-widest border-t border-red-900/40">Limpiar selección</button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mt-4">
+                        <button id="btnCancelar" class="flex-1 bg-transparent border border-beige/40 text-white font-bold rounded-xl py-4 text-[11px] tracking-[0.2em] uppercase hover:bg-white/10 transition-colors">Cancelar</button>
+                        <button id="btnSubir" class="flex-[1.5] bg-beige text-black font-bold rounded-xl py-4 text-[11px] tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(216,195,165,0.4)] hover:bg-transparent hover:text-beige border border-beige transition-all active:scale-95">Subir Álbum</button>
+                    </div>
+                </div>
+                
+                <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-6 text-black bg-beige p-4 rounded-xl hidden text-center w-full relative z-10 shadow-lg"></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // CREDENCIALES DE MARITZA
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfOoalLZWJmJtIqOXT28djcf2sJWWhTTE",
+            authDomain: "xv-marcela.firebaseapp.com",
+            projectId: "xv-marcela",
+            storageBucket: "xv-marcela.firebasestorage.app",
+            messagingSenderId: "378572984549",
+            appId: "1:378572984549:web:75d1ad755acfbe0354440c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // GESTIÓN DE LIKES (LocalStorage) para 1 like por persona
+        let likedPosts = JSON.parse(localStorage.getItem('liked_posts_maritza')) || [];
+
+        // SISTEMA DE ALERTAS (TOAST)
+        window.showToast = function(msg, isError = true) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = msg;
+            if(isError) {
+                toast.classList.add('bg-red-900', 'text-white', 'border-red-500/50');
+                toast.classList.remove('bg-black', 'text-beige', 'border-beige/40');
+            } else {
+                toast.classList.remove('bg-red-900', 'text-white', 'border-red-500/50');
+                toast.classList.add('bg-black', 'text-beige', 'border-beige/40');
+            }
+            toast.classList.add('toast-visible');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-visible');
+            }, 3500);
+        };
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+        const processingOverlay = document.getElementById('processingOverlay');
+
+        // Función auxiliar para medir duración de video
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // LÓGICA UNIVERSAL: DataTransfer + HEIC Conversion + 30s Video Limit
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            processingOverlay.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+            
+            const archivosProcesados = new DataTransfer();
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                const fileName = file.name.toLowerCase();
+
+                // Límite Video 30s
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        window.showToast(`El video "${file.name}" dura más de 30s y no se subirá.`, true);
+                        continue; 
+                    }
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 150));
+
+                // HEIC Conversión
+                if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                    try {
+                        const conversionPromise = heic2any({
+                            blob: file,
+                            toType: "image/jpeg",
+                            quality: 0.5 
+                        });
+
+                        const timeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error("Tiempo agotado")), 15000)
+                        );
+
+                        const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                        const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                        
+                        file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), {
+                            type: "image/jpeg"
+                        });
+                    } catch (err) {
+                        console.warn(`Error al convertir ${file.name}:`, err);
+                        continue; 
+                    }
+                }
+
+                archivosProcesados.items.add(file);
+                
+                // Miniaturas
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-20 bg-white/10 rounded-xl overflow-hidden shadow-sm border border-white/20";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/50"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = archivosProcesados.files;
+            
+            processingOverlay.classList.add('hidden');
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+                dropZone.classList.remove('hidden');
+                previsualizacion.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value;
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) {
+                window.showToast("POR FAVOR, COMPLETA TODOS LOS CAMPOS.", true);
+                return;
+            }
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    // CARPETA ESPECÍFICA MARITZA
+                    const storageRef = ref(storage, 'xv_maritza/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            // COLECCIÓN ESPECÍFICA MARITZA
+                            await addDoc(collection(db, "muro_xvmaritza"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡RECUERDOS GUARDADOS CON ÉXITO!";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // Alternar vistas
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] text-black bg-beige rounded-lg transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-lg transition-all";
+            muro.className = "columns-1 sm:columns-2 lg:columns-3 gap-6 w-full";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] text-black bg-beige rounded-lg transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/10 rounded-lg transition-all";
+            muro.className = "columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 w-full";
+        });
+
+        // Dibujar Muro
+        let isFirstLoad = true;
+        // CONSULTA A COLECCIÓN MARITZA
+        const q = query(collection(db, "muro_xvmaritza"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="text-white/60 font-bold text-base col-span-full py-16 text-center break-inside-avoid">AÚN NO HAY RECUERDOS. ¡SÉ EL PRIMERO EN SUBIR UNO!</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-black/40 cursor-pointer object-cover"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover">`;
+                    
+                    // Verificar si el usuario ya dio like previamente
+                    const userLiked = likedPosts.includes(id);
+                    const heartColorClass = userLiked ? 'text-beige fill-current' : 'text-white/50';
+
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "break-inside-avoid mb-6 glass-card border border-beige/30 flex flex-col group hover:-translate-y-1 transition-transform duration-300 overflow-hidden relative z-20";
+                    
+                    divTarjeta.innerHTML = `
+                        <div class="relative w-full">
+                            <span class="absolute top-1 left-1 bg-black/40 backdrop-blur-md border border-white/20 text-white text-[8px] font-bold px-1 py-1 rounded-full shadow-lg uppercase tracking-widest z-10">${datos.momento}</span>
+                            ${media}
+                        </div>
+                        <div class="flex flex-col p-4 bg-black/40 border-t border-white/10 gap-3">
+                            <div class="flex items-center justify-between w-full">
+                                <h4 class="text-white font-bold uppercase text-[10px] tracking-[0.2em] truncate flex-1">${datos.nombre}</h4>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-colors focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                        <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-sm font-numbers text-white">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        window.darLike = async function(id) {
+            // VERIFICAR LÍMITE DE UN LIKE POR PERSONA MEDIANTE LOCALSTORAGE
+            if (likedPosts.includes(id)) {
+                window.showToast("¡YA LE DISTE ME GUSTA A ESTE RECUERDO!", false);
+                return;
+            }
+
+            // Actualización Visual Inmediata (Optimistic UI)
+            const heartIcon = document.getElementById(`heart-icon-${id}`);
+            const contadorText = document.getElementById(`contador-likes-${id}`);
+            
+            if (heartIcon) {
+                heartIcon.classList.remove('text-white/50', 'fill-none');
+                heartIcon.classList.add('text-beige', 'fill-current');
+            }
+            
+            if (contadorText) {
+                let currentLikes = parseInt(contadorText.innerText) || 0;
+                contadorText.innerText = currentLikes + 1;
+            }
+
+            // Guardar en LocalStorage
+            likedPosts.push(id);
+            localStorage.setItem('liked_posts_maritza', JSON.stringify(likedPosts));
+
+            // ACTUALIZAR LIKES EN DB DE MARITZA
+            try {
+                const docRef = doc(db, "muro_xvmaritza", id);
+                await updateDoc(docRef, { likes: increment(1) });
+            } catch (error) {
+                console.error("Error al dar like:", error);
+                window.showToast("HUBO UN PROBLEMA AL DAR LIKE.", true);
+            }
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
