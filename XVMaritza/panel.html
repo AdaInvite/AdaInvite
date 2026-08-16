@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel XV Maritza</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <meta name="theme-color" content="#9B8AA5">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/2sMztkP.jpeg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9B8AA5', /* Lila original del panel */
+                        surface: '#FAF9FB',
+                        text: '#3D3542',
+                        babyPink: '#E57388',
+                        babyBlue: '#4A8BCA',
+                    },
+                    fontFamily: {
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        dancing: ['"Dancing Script"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { box-sizing: border-box; background-color: #FAF9FB; color: #3D3542; }
+        :root { --primary-color: #9B8AA5; --surface-color: #FAF9FB; --text-color: #3D3542; --white: #FFFFFF; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(155, 138, 165, 0.2); }
+        .info-label { color: var(--primary-color); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Ocultar barra de scroll para vista más limpia en móvil */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-full font-sans antialiased">
+    
+    <div id="app-wrapper" class="w-full h-full overflow-x-hidden overflow-y-auto">
+        <!-- HEADER MÓVIL -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-3 px-4 flex justify-between items-center">
+            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-10">
+            <div class="flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span class="text-[10px] font-bold text-primary uppercase tracking-widest">En vivo</span>
+            </div>
+        </nav>
+
+        <section class="pt-20 pb-12 px-4 max-w-lg mx-auto space-y-8">
+            
+            <div class="text-center mt-4">
+                <h2 class="font-dancing text-5xl mb-2 text-primary">Panel de Control</h2>
+                <p class="text-xs uppercase tracking-widest font-bold text-gray-500">XV Años • Maritza</p>
+            </div>
+
+            <!-- SECCIÓN 1: GENERADOR DE PASES -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <h3 class="info-label mb-4 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4"></i> Generar Enlace de Invitado</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <input type="text" id="inputFamilia" placeholder="Nombre (Ej. Familia Perez)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                    </div>
+                    <div>
+                        <input type="tel" id="inputPases" placeholder="Cantidad de Pases (Ej. 4)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                    </div>
+                    <button onclick="generarLink()" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95">
+                        Generar Enlace
+                    </button>
+                </div>
+
+                <!-- Resultado Generador -->
+                <div id="resultadoContainer" class="hidden mt-5 pt-5 border-t border-gray-100">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-2">Mensaje generado:</p>
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-3 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto" id="linkGenerado"></div>
+                    <button onclick="copiarLink()" id="btnCopiar" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors active:scale-95">
+                        <i data-lucide="copy" class="w-4 h-4"></i>Copia y pega en WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: ESTADÍSTICAS -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-3 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Confirmados</p>
+                    <p class="text-4xl font-bold text-primary" id="stat-total">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-1 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Adultos</p>
+                    <p class="text-2xl font-bold text-gray-800" id="stat-adultos">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-2 sm:col-span-1">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Niños</p>
+                    <p class="text-2xl font-bold text-gray-800" id="stat-ninos">-</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: LISTA DE ASISTENCIA -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Asistencia</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 listados</span>
+                        <button onclick="descargarCSV()" class="p-1.5 bg-gray-50 rounded-full text-primary hover:bg-gray-100 transition-colors" title="Descargar Lista">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Buscador -->
+                <div class="mb-4 relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="buscador" placeholder="Buscar por nombre o folio..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm transition-all text-gray-700 focus:bg-white focus:border-primary">
+                </div>
+
+                <div id="listaAsistencia" class="space-y-3">
+                    <!-- Esqueleto de Carga -->
+                    <div class="py-10 text-center text-gray-400">
+                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-primary"></i>
+                        <p class="text-xs uppercase tracking-widest font-bold">Cargando datos...</p>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+    </div>
+
+    <!-- MODAL PERSONALIZADO (POPUP) -->
+    <div id="customModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeModal(false)"></div>
+        <div class="relative bg-white p-6 rounded-3xl shadow-2xl w-[85%] max-w-sm transform scale-95 transition-transform duration-300" id="modalContentBox">
+            <div id="modalIconContainer" class="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4"></div>
+            <h3 id="modalTitle" class="text-lg font-bold text-center text-gray-800 mb-2 font-sans">Título</h3>
+            <p id="modalMessage" class="text-sm text-center text-gray-500 mb-6 font-sans leading-relaxed">Mensaje descriptivo</p>
+            <div id="modalButtons" class="flex gap-3 justify-center"></div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- SISTEMA DE MODALES ---
+        let modalResolve = null;
+
+        function showModal({ type = 'info', title, message, showCancel = false, confirmText = 'Aceptar' }) {
+            return new Promise((resolve) => {
+                modalResolve = resolve;
+                
+                const modal = document.getElementById('customModal');
+                const box = document.getElementById('modalContentBox');
+                const titleEl = document.getElementById('modalTitle');
+                const messageEl = document.getElementById('modalMessage');
+                const buttonsEl = document.getElementById('modalButtons');
+                const iconEl = document.getElementById('modalIconContainer');
+                
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+                
+                if (type === 'danger') {
+                    iconEl.className = 'mx-auto w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4 text-red-500';
+                    iconEl.innerHTML = '<i data-lucide="trash-2" class="w-7 h-7"></i>';
+                } else if (type === 'warning') {
+                    iconEl.className = 'mx-auto w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-500';
+                    iconEl.innerHTML = '<i data-lucide="alert-triangle" class="w-7 h-7"></i>';
+                } else {
+                    iconEl.className = 'mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary';
+                    iconEl.innerHTML = '<i data-lucide="info" class="w-7 h-7"></i>';
+                }
+                
+                buttonsEl.innerHTML = '';
+                if (showCancel) {
+                    buttonsEl.innerHTML += `<button onclick="closeModal(false)" class="flex-1 px-4 py-3 bg-gray-100 text-gray-600 rounded-xl font-bold text-[11px] uppercase tracking-wider hover:bg-gray-200 transition-colors active:scale-95">Cancelar</button>`;
+                }
+                
+                const btnColorClass = type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-opacity-90';
+                buttonsEl.innerHTML += `<button onclick="closeModal(true)" class="flex-1 px-4 py-3 ${btnColorClass} text-white rounded-xl font-bold text-[11px] uppercase tracking-wider transition-colors active:scale-95">${confirmText}</button>`;
+                
+                lucide.createIcons();
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    box.classList.remove('scale-95');
+                }, 10);
+            });
+        }
+
+        function closeModal(result) {
+            const modal = document.getElementById('customModal');
+            const box = document.getElementById('modalContentBox');
+            
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if (modalResolve) {
+                    modalResolve(result);
+                    modalResolve = null; 
+                }
+            }, 300);
+        }
+
+        // --- LÓGICA DEL GENERADOR DE PASES ---
+        const URL_BASE_INVITACION = "https://adainvite.com/XVMaritza/";
+        let textoCompleto = "";
+
+        async function generarLink() {
+            const familia = document.getElementById('inputFamilia').value.trim();
+            const pases = document.getElementById('inputPases').value.trim();
+            
+            if(!familia || !pases) {
+                await showModal({ 
+                    type: 'warning', 
+                    title: 'Faltan datos', 
+                    message: 'Por favor, llena el nombre del invitado/familia y la cantidad de pases.' 
+                });
+                return;
+            }
+            
+            const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}&pases=${pases}`;
+            textoCompleto = `${linkFinal}
+¡Hola! Estoy muy feliz porque pronto celebraré mis XV años, y no podría faltar tu presencia en este momento tan especial.\n\nTe pido de cariño que me ayudes confirmando tu asistencia dando clic en el enlace. ¡Gracias!`;
+            
+            document.getElementById('linkGenerado').innerText = textoCompleto;
+            document.getElementById('resultadoContainer').classList.remove('hidden');
+            
+            const btn = document.getElementById('btnCopiar');
+            btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
+            lucide.createIcons();
+        }
+
+        async function copiarLink() {
+            const textArea = document.createElement("textarea");
+            textArea.value = textoCompleto;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('btnCopiar');
+                btn.classList.replace('border-primary', 'border-green-500');
+                btn.classList.replace('text-primary', 'text-green-600');
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado con éxito`;
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    btn.classList.replace('border-green-500', 'border-primary');
+                    btn.classList.replace('text-green-600', 'text-primary');
+                    btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
+                    lucide.createIcons();
+                }, 3000);
+            } catch (err) {
+                await showModal({ 
+                    type: 'warning', 
+                    title: 'Error al copiar', 
+                    message: 'No se pudo copiar el texto a tu portapapeles.' 
+                });
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+
+    <!-- --- LÓGICA DE FIREBASE PARA TARJETAS EN TIEMPO REAL --- -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // BASE DE DATOS
+        const firebaseConfig = {
+          apiKey: "AIzaSyBfOoalLZWJmJtIqOXT28djcf2sJWWhTTE",
+          authDomain: "xv-marcela.firebaseapp.com",
+          projectId: "xv-marcela",
+          storageBucket: "xv-marcela.firebasestorage.app",
+          messagingSenderId: "378572984549",
+          appId: "1:378572984549:web:75d1ad755acfbe0354440c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // COLECCIÓN DE MARITZA
+        const COL_NAME = "confirmaciones_maritza";
+
+        const confirmacionesRef = collection(db, COL_NAME);
+        const q = query(confirmacionesRef, orderBy("fecha", "desc"));
+
+        let listaInvitadosGlobal = [];
+
+        onSnapshot(q, (snapshot) => {
+            listaInvitadosGlobal = [];
+            
+            if(snapshot.empty) {
+                renderizarLista([]);
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                
+                // Leemos el folio desde firebase, si no está se crea uno estético
+                const folioFirebase = data.folio || ("XV-" + docSnap.id.substring(0, 6).toUpperCase());
+
+                listaInvitadosGlobal.push({
+                    id: docSnap.id,
+                    nombre: data.nombre,
+                    folio: folioFirebase,
+                    adultos: parseInt(data.adultos) || 0,
+                    ninos: parseInt(data.ninos) || 0,
+                    totalPersona: parseInt(data.totalPases) || ((parseInt(data.adultos) || 0) + (parseInt(data.ninos) || 0)),
+                    fecha: data.fecha ? data.fecha.toDate() : null
+                });
+            });
+
+            renderizarLista(listaInvitadosGlobal);
+        }, (error) => {
+            console.error("Error cargando asistencias:", error);
+            document.getElementById('listaAsistencia').innerHTML = `
+                <div class="py-8 text-center text-red-400">
+                    <p class="text-sm font-bold">Error al conectar con la base de datos.</p>
+                </div>
+            `;
+        });
+
+        const inputBuscador = document.getElementById('buscador');
+        inputBuscador.addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const filtrados = listaInvitadosGlobal.filter(inv => 
+                inv.nombre.toLowerCase().includes(termino) || 
+                inv.folio.toLowerCase().includes(termino)
+            );
+            renderizarLista(filtrados, false);
+        });
+
+        function renderizarLista(lista, actualizarStats = true) {
+            let totalFamilias = 0;
+            let totalAdultos = 0;
+            let totalNinos = 0;
+            let totalPasesGlobal = 0;
+            let htmlTarjetas = '';
+
+            if(lista.length === 0) {
+                document.getElementById('listaAsistencia').innerHTML = `
+                    <div class="py-10 text-center text-gray-400">
+                        <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-xs uppercase tracking-widest font-bold">Sin resultados</p>
+                    </div>
+                `;
+                if(actualizarStats) actualizarEstadisticas(0, 0, 0, 0);
+                lucide.createIcons();
+                return;
+            }
+
+            lista.forEach(inv => {
+                if(actualizarStats) {
+                    totalFamilias++;
+                    totalAdultos += inv.adultos;
+                    totalNinos += inv.ninos;
+                    totalPasesGlobal += inv.totalPersona;
+                }
+
+                let fechaFormateada = "Sin fecha";
+                if(inv.fecha) {
+                    const opciones = { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit'};
+                    fechaFormateada = inv.fecha.toLocaleDateString('es-MX', opciones);
+                }
+
+                htmlTarjetas += `
+                    <div class="p-4 border border-gray-100 rounded-2xl bg-white flex flex-col gap-2 relative overflow-hidden group hover:shadow-md transition-shadow" id="tarjeta-${inv.id}">
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+                        
+                        <div class="absolute top-2 right-2 flex gap-1 z-10" id="acciones-${inv.id}">
+                            <button onclick="toggleEdicion('${inv.id}')" class="bg-blue-50 text-blue-500 p-1.5 rounded-lg hover:bg-blue-100 transition-colors shadow-sm" title="Editar pases">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="eliminarRegistro('${inv.id}', '${inv.nombre}')" class="bg-red-50 text-red-500 p-1.5 rounded-lg hover:bg-red-100 transition-colors shadow-sm" title="Eliminar registro">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div id="vista-${inv.id}">
+                            <div class="flex justify-between items-start pl-2 pr-16">
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm capitalize leading-tight">${inv.nombre}</p>
+                                    <p class="text-[10px] font-mono text-gray-400 uppercase tracking-wider mt-0.5">${inv.folio}</p>
+                                </div>
+                                <div class="bg-primary text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+                                    ${inv.totalPersona}
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-end mt-1 border-t border-gray-50 pt-2 pl-2 pr-2">
+                                <div class="text-[10px] uppercase font-bold text-gray-500">
+                                    <span>${inv.adultos} Adultos</span> <span class="text-gray-300 mx-1">|</span> <span>${inv.ninos} Niños</span>
+                                </div>
+                                <div class="text-[9px] text-gray-400 flex items-center gap-1">
+                                    <i data-lucide="clock" class="w-3 h-3"></i> ${fechaFormateada}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="edicion-${inv.id}" class="hidden pl-2 pr-2">
+                            <p class="font-bold text-gray-800 text-sm capitalize leading-tight mb-3">${inv.nombre}</p>
+                            
+                            <div class="flex gap-3 mb-3">
+                                <div class="flex-1">
+                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Adultos</label>
+                                    <input type="number" id="edit-ad-${inv.id}" value="${inv.adultos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Niños</label>
+                                    <input type="number" id="edit-ni-${inv.id}" value="${inv.ninos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-2 border-t border-gray-50 pt-3">
+                                <button onclick="toggleEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancelar</button>
+                                <button onclick="guardarEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-white bg-primary rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-1">
+                                    <i data-lucide="save" class="w-3 h-3"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('listaAsistencia').innerHTML = htmlTarjetas;
+            if(actualizarStats) actualizarEstadisticas(totalFamilias, totalAdultos, totalNinos, totalPasesGlobal);
+            lucide.createIcons();
+        }
+
+        function actualizarEstadisticas(fam, ad, ni, tot) {
+            document.getElementById('stat-total').innerText = tot;
+            document.getElementById('stat-adultos').innerText = ad;
+            document.getElementById('stat-ninos').innerText = ni;
+            document.getElementById('contador-tarjetas').innerText = fam + " confirmados";
+        }
+
+        window.descargarCSV = async () => {
+            if(listaInvitadosGlobal.length === 0) {
+                await showModal({ 
+                    type: 'info', 
+                    title: 'Lista vacía', 
+                    message: 'Aún no hay invitados confirmados para exportar.' 
+                });
+                return;
+            }
+            
+            let csvContent = "Folio,Nombre,Adultos,Ninos,Total Asistentes,Fecha\n";
+            
+            listaInvitadosGlobal.forEach(inv => {
+                let fecha = inv.fecha ? inv.fecha.toLocaleString('es-MX') : "";
+                let nombreLimpio = inv.nombre.replace(/,/g, " "); 
+                csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${fecha}\n`;
+            });
+
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "Asistencia_XV_Maritza.csv";
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        };
+
+        window.toggleEdicion = (id) => {
+            const vista = document.getElementById(`vista-${id}`);
+            const edicion = document.getElementById(`edicion-${id}`);
+            const acciones = document.getElementById(`acciones-${id}`);
+            
+            if (vista.classList.contains('hidden')) {
+                vista.classList.remove('hidden');
+                edicion.classList.add('hidden');
+                acciones.classList.remove('hidden');
+            } else {
+                vista.classList.add('hidden');
+                edicion.classList.remove('hidden');
+                acciones.classList.add('hidden');
+            }
+        };
+
+        window.guardarEdicion = async (id) => {
+            const adInput = document.getElementById(`edit-ad-${id}`).value;
+            const niInput = document.getElementById(`edit-ni-${id}`).value;
+            
+            const adultosNum = parseInt(adInput) || 0;
+            const ninosNum = parseInt(niInput) || 0;
+            const total = adultosNum + ninosNum;
+
+            try {
+                await updateDoc(doc(db, COL_NAME, id), {
+                    adultos: adultosNum,
+                    ninos: ninosNum,
+                    totalPases: total
+                });
+            } catch (error) {
+                console.error("Error actualizando documento: ", error);
+                await showModal({ 
+                    type: 'warning', 
+                    title: 'Error de conexión', 
+                    message: 'Ocurrió un error al intentar guardar los cambios.' 
+                });
+            }
+        };
+
+        window.eliminarRegistro = async (id, nombre) => {
+            const confirmacion = await showModal({
+                type: 'danger',
+                title: 'Eliminar Registro',
+                message: `¿Estás seguro de que deseas eliminar la asistencia de: ${nombre}? \nEsta acción no se puede deshacer.`,
+                showCancel: true,
+                confirmText: 'Sí, eliminar'
+            });
+
+            if (confirmacion) {
+                try {
+                    await deleteDoc(doc(db, COL_NAME, id));
+                } catch (error) {
+                    console.error("Error eliminando documento: ", error);
+                    await showModal({ 
+                        type: 'warning', 
+                        title: 'Error', 
+                        message: 'Ocurrió un error al intentar eliminar el registro.' 
+                    });
+                }
+            }
+        };
+
+    </script>
+</body>
+</html>
