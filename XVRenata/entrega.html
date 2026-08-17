@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Entrega de Invitación | Renata</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+    <meta name="theme-color" content="#9B8AA5">
+    <meta property="og:title" content="¡Tu invitación está lista!">
+    <meta property="og:description" content="Haz clic para ver y compartir tu invitación">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/oztyyGt.jpeg">
+      
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+  
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9B8AA5',
+                        primaryDark: '#7E6D88',
+                        primaryLight: '#F3EFF5',
+                        textMain: '#3D3542',
+                        surfaceBg: '#FAF9FB',
+                        whatsapp: '#25D366',
+                        iosBlue: '#007AFF',
+                        iosGreen: '#E1F7CB',
+                        iosBg: '#E5E5EA'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        dancing: ['Dancing Script', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-purple: #9B8AA5;
+            --text-color: #3D3542;
+        }
+        body {
+            background-color: #FAF9FB;
+            color: #3D3542;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Transiciones suaves */
+        .tab-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Sombra premium para tarjetas más suave y elegante */
+        .card-shadow {
+            box-shadow: 0 10px 40px -10px rgba(155, 138, 165, 0.12), 0 4px 12px -2px rgba(155, 138, 165, 0.05);
+        }
+        
+        /* Ocultar barra de scroll pero mantener funcionalidad */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Scrollbar elegante para el chat simulado */
+        .chat-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.15);
+            border-radius: 10px;
+        }
+
+        /* Animación del Cursor de iOS */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink::after {
+            content: '';
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background-color: #007AFF;
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+        }
+
+        /* Notificación Toast */
+        #toast-notification {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="h-full font-sans antialiased selection:bg-primary/20 selection:text-textMain">
+
+    <div id="app-wrapper" class="w-full h-full overflow-x-hidden overflow-y-auto">
+        
+        <!-- Barra de navegación -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 py-3.5 px-6 flex justify-between items-center shadow-sm">
+            <a href="https://adainvite.com" class="flex items-center gap-2">
+                <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-8 md:h-9 object-contain">
+            </a>
+            <span class="text-[10px] tracking-widest uppercase font-bold text-primary bg-primaryLight px-3 py-1.5 rounded-full">
+                Clientes
+            </span>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="pt-24 pb-6 px-4 max-w-5xl mx-auto space-y-4">
+            
+            <div class="text-center max-w-2xl mx-auto space-y-1">
+                <h1 class="font-dancing text-4xl text-primary drop-shadow-sm pb-1">¡Tu invitación está lista!</h1>
+            </div>
+
+            <!-- DETALLES DEL EVENTO -->
+            <div class="bg-white rounded-[2rem] p-6 md:p-8 card-shadow border border-primary/10 transition-transform duration-300">
+                <p class="text-[11px] font-bold tracking-widest text-primary uppercase mb-5 border-b border-primary/10 pb-3 flex items-center gap-2">
+                    <i data-lucide="clipboard-list" class="w-4 h-4"></i> Datos de Servicio
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Cliente</span>
+                        <span class="text-sm font-semibold text-textMain block">Paola Silva Castellanos</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Contacto</span>
+                        <span class="text-sm font-semibold text-textMain block">7712956543</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Evento</span>
+                        <span class="text-sm font-semibold text-textMain block leading-tight">
+                            XV Años <br>
+                            <span class="text-xs text-primary font-bold mt-1 block">5 de Septiembre de 2026</span>
+                        </span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Paquete</span>
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primaryLight border border-primary/20 px-3 py-1 rounded-lg">
+                            Básico
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENSAJE SUGERIDO CTA -->
+            <div class="bg-gradient-to-tr from-white to-primary/5 rounded-[2.5rem] p-6 md:p-10 card-shadow border border-primary/10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start">
+                    
+                    <div class="flex-1 w-full text-center md:text-left">
+                        <div class="w-14 h-14 bg-primaryLight/80 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-sm border border-white mx-auto md:mx-0">
+                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                        </div>
+                        <h2 class="font-dancing text-4xl md:text-5xl text-primary mb-4 pb-1">Comparte tu Invitación</h2>
+                        <p class="text-sm md:text-base text-gray-500 leading-relaxed mb-6 font-medium max-w-md mx-auto md:mx-0">
+                            Copia el mensaje sugerido de abajo. Al pegarlo en WhatsApp, recuerda esperar un par de segundos para que se genere la vista previa con tu foto.
+                        </p>
+                        <a href="https://adainvite.com/XVRenata/" target="_blank" class="px-6 py-3 bg-white border border-primary/20 text-primary hover:bg-primaryLight font-bold rounded-xl shadow-sm transition-all flex items-center justify-center md:justify-start gap-2 uppercase tracking-wider text-xs w-full md:w-auto inline-flex mb-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i> Ver mi invitación web
+                        </a>
+                    </div>
+
+                    <!-- Caja de copia de mensaje -->
+                    <div class="w-full md:w-[380px] bg-white rounded-2xl border border-primary/10 shadow-lg p-1.5 relative overflow-hidden flex-shrink-0">
+                        <div class="bg-gray-50/80 rounded-xl p-4 text-sm text-gray-700 font-medium whitespace-pre-wrap leading-relaxed border border-gray-100" id="mensaje-sugerido">https://adainvite.com/XVRenata/
+
+¡Hola! Estoy muy feliz porque pronto celebraré mis XV años, y no podría faltar tu presencia en este momento tan especial. 
+
+De cariño te pido que me ayudes confirmando tu asistencia dando clic en el enlace. ¡Gracias!</div>
+                        
+                        <button onclick="copiarMensaje()" class="w-full mt-2 px-4 py-3.5 bg-primary hover:bg-primaryDark text-white font-bold rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 uppercase tracking-wider text-xs">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar para WhatsApp
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SECCIÓN: CÓMO PEGAR EN WHATSAPP (SIMULADOR EN VIVO) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center bg-white rounded-[2.5rem] p-6 md:p-12 card-shadow border border-primary/10 mt-8">
+                
+                <div class="lg:col-span-6 space-y-6 pr-0 lg:pr-6">
+                    <div class="inline-flex items-center gap-2 bg-primaryLight/50 border border-primary/10 text-primary text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i> Consejo para el Envío
+                    </div>
+    
+                    <h3 class="text-2xl md:text-3xl font-serif font-bold text-textMain leading-tight">Espera la vista previa</h3>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed font-medium">
+                        Recuerda esperar de <strong>3 a 4 segundos</strong> después de pegar el mensaje, para que WhatsApp genere la miniatura de tu invitación antes de presionar enviar. 
+                    </p>
+                    
+                    <button onclick="reiniciarSimulador()" class="mt-4 px-5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-primary font-bold hover:bg-gray-100 flex items-center gap-2 group transition-all">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500"></i> Repetir demostración
+                    </button>
+                </div>
+
+                <!-- Simulador Móvil de WhatsApp en Directo -->
+                <div class="lg:col-span-6 flex justify-center mt-2 lg:mt-0">
+                    <div class="w-full max-w-[340px] bg-iosBg rounded-[2.5rem] border-[10px] border-gray-800 shadow-2xl overflow-hidden relative font-sans aspect-[9/18] flex flex-col justify-between transform scale-[0.82] md:scale-100 origin-top -mb-[120px] md:mb-0 transition-transform">
+                        
+                        <!-- Cabecera -->
+                        <div class="bg-[#F6F6F6] text-black/90 pt-10 pb-2 px-4 flex items-center justify-between text-xs shadow-sm z-10 border-b border-gray-200">
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center text-iosBlue font-medium">
+                                    <i data-lucide="chevron-left" class="w-5 h-5 -ml-2"></i>
+                                    <span class="text-[14px]">114</span>
+                                </div>
+                                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+                                    <img src="https://i.pravatar.cc/100?img=47" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex flex-col">
+                                    <p class="font-bold text-[12px] leading-tight">Familia Hernández</p>
+                                    <p class="text-[9px] text-gray-500">Envía mensajes a este...</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 text-iosBlue">
+                                <i data-lucide="video" class="w-5 h-5"></i>
+                                <i data-lucide="phone" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+
+                        <!-- Zona de Chat -->
+                        <div class="flex-1 p-3 space-y-4 overflow-y-auto flex flex-col chat-scroll relative" id="chat-content">
+                            <div class="flex justify-center mt-2">
+                                <span class="bg-gray-400/20 text-gray-600 text-[10px] font-medium px-3 py-1 rounded-full">Hoy</span>
+                            </div>
+
+                            <!-- Burbuja Final Enviada -->
+                            <div id="sent-message-bubble" class="bg-iosGreen text-textMain text-[10px] p-1.5 rounded-2xl rounded-tr-sm self-end max-w-[85%] shadow-sm flex flex-col hidden transition-all duration-300 transform translate-y-4 opacity-0 relative mt-auto">
+                                
+                                <div id="bubble-rendered-preview" class="bg-[#E4D9DC] rounded-xl overflow-hidden mb-1 border border-black/5">
+                                    <!-- Foto de Renata en el Simulador Actualizada -->
+                                    <img src="https://i.imgur.com/utCpJDq.jpeg" alt="Invitación Portada" class="w-full aspect-square object-cover object-center border-b border-black/5">
+                                    <div class="p-2.5 text-left bg-[#fdf8f9]">
+                                        <p class="font-bold text-[9px] text-[#374151] truncate mb-1">Mis XV • Renata</p>
+                                        <p class="text-[9px] text-gray-600 line-clamp-2 leading-tight">Hay momentos inolvidables que se atesoran en el corazón para siempre. Acompáñame...</p>
+                                        <div class="flex items-center gap-1 mt-1.5 opacity-60 text-gray-500">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                            <p class="text-[8px] tracking-wide">adainvite.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p class="whitespace-pre-wrap px-1.5 pb-4 pt-1 leading-relaxed text-[#111111]" id="bubble-rendered-text"></p>
+                                
+                                <div class="absolute bottom-1 right-2 flex items-center gap-1">
+                                    <span class="text-[10px] text-[#557F60]">10:26 a. m.</span>
+                                    <svg viewBox="0 0 16 15" width="16" height="15" class="text-[#34B7F1]">
+                                        <path fill="currentColor" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Inferior Estilo iOS -->
+                        <div class="relative w-full bg-[#F6F6F6] flex flex-col z-20 pb-4">
+                            
+                            <!-- Cajón de Vista Previa -->
+                            <div id="input-preview-drawer" class="bg-[#F0F0F0] border-t border-gray-200 p-2 flex items-center gap-2.5 transition-all duration-300 hidden">
+                                <div class="relative w-12 h-12 bg-white rounded flex-shrink-0 flex items-center justify-center border border-gray-200 overflow-hidden">
+                                    <div id="drawer-image-loader" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+                                        <div class="w-4 h-4 border-2 border-gray-300 border-t-iosBlue rounded-full animate-spin"></div>
+                                    </div>
+                                    <!-- Foto de Renata en el Cajón Actualizada -->
+                                    <img id="drawer-preview-img" src="https://i.imgur.com/utCpJDq.jpeg" alt="Previsualización" class="w-full h-full object-cover hidden">
+                                </div>
+                                <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                    <p id="drawer-title" class="font-semibold text-[13px] text-black truncate leading-tight">Cargando...</p>
+                                    <p id="drawer-desc" class="text-[12px] text-gray-500 truncate leading-tight">Espera un momento</p>
+                                    <p class="text-[9px] text-gray-400 mt-0.5 hidden" id="drawer-domain">adainvite.com</p>
+                                </div>
+                                <button class="w-6 h-6 flex items-center justify-center text-gray-400 bg-gray-200 rounded-full flex-shrink-0">
+                                    <i data-lucide="x" class="w-3.5 h-3.5 text-gray-600"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative w-full px-3 pt-2">
+                                <!-- TOOLTIP PEGAR IOS -->
+                                <div id="ios-paste-menu" class="absolute z-50 bg-black/90 text-white text-[13px] font-medium px-4 py-1.5 rounded-[8px] shadow-xl -top-[22px] left-14 opacity-0 transition-all duration-200 hidden pointer-events-none">
+                                    <span id="paste-text-btn" class="transition-opacity duration-150 block">Pegar</span>
+                                    <div class="absolute -bottom-[5px] left-4 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-black/90"></div>
+                                </div>
+
+                                <!-- Barra de Herramientas e Input -->
+                                <div class="flex items-end gap-2.5 w-full">
+                                    <i data-lucide="plus" class="w-6 h-6 text-iosBlue flex-shrink-0 mb-1.5"></i>
+                                    <div class="flex-1 bg-white rounded-3xl py-[7px] px-3 border border-gray-300 flex items-center shadow-sm max-h-24 overflow-y-auto chat-scroll" id="input-container">
+                                        <div class="w-full relative">
+                                            <div id="input-draft-text" class="text-black text-[15px] leading-[1.3] font-normal whitespace-pre-wrap break-all min-h-[20px] outline-none flex items-center" data-placeholder="Mensaje"></div>
+                                        </div>
+                                        <i data-lucide="sticker" class="w-5 h-5 text-gray-400 flex-shrink-0 ml-1 bg-white self-end"></i>
+                                    </div>
+                                    <div class="flex items-center gap-3 mb-1.5 text-iosBlue flex-shrink-0" id="btn-group-right">
+                                        <i data-lucide="camera" class="w-6 h-6" id="icon-cam"></i>
+                                        <i data-lucide="mic" class="w-6 h-6" id="icon-mic"></i>
+                                        <div class="w-[28px] h-[28px] rounded-full bg-iosBlue flex items-center justify-center text-white hidden cursor-pointer active:scale-90 transition-transform" id="btn-send-sim">
+                                            <svg class="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 0l-7 7m7-7l7 7"></path></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RECOMENDACIONES Y REDES SOCIALES -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+
+                <!-- Recomendaciones Reestructuradas -->
+                <div class="bg-white p-8 md:p-10 rounded-[2rem] card-shadow border border-primary/10 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-dancing text-4xl text-primary mb-6">Recomendaciones</h4>
+                        <ul class="space-y-5 text-sm text-gray-600 font-medium">
+                            <li class="flex items-start gap-3.5">
+                                <i data-lucide="calendar" class="w-5 h-5 text-primary/70 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Envía tus invitaciones con <strong>1 a 2 meses</strong> de anticipación para garantizar que tus invitados aparten la fecha con tiempo.</span>
+                            </li>
+                            <li class="flex items-start gap-3.5">
+                                <i data-lucide="clock" class="w-5 h-5 text-primary/70 flex-shrink-0 mt-0.5"></i>
+                                <span class="leading-relaxed">Si requieres algún cambio en los datos, contáctanos con un margen mínimo de <strong>48 horas</strong> de anticipación.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Redes y Mensaje de Agradecimiento -->
+                <div class="bg-gradient-to-br from-white to-primary/10 p-8 md:p-10 rounded-[2rem] card-shadow border border-primary/10 flex flex-col justify-center text-center">
+                    <h4 class="font-dancing text-4xl text-primary mb-4">¡Muchísimas Gracias!</h4>
+                    <p class="text-sm text-gray-500 mb-8 font-medium leading-relaxed max-w-sm mx-auto">
+                        Nos hace inmensamente felices ser parte de sus grandes momentos. Si te encantó tu invitación, apóyanos compartiendo tu recomendación en redes sociales. ¡Significa muchísimo para nosotros!
+                    </p>
+
+                    <div class="flex justify-center gap-5">
+                        <a href="https://www.facebook.com/share/1Gt5BxRvWn/?mibextid=wwXIfr" target="_blank" class="p-3 bg-white rounded-2xl border border-gray-100 text-gray-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-center w-14 h-14">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="https://www.instagram.com/adainvite?igsh=MWlqazNzYmczdDdwNA==" target="_blank" class="p-3 bg-white rounded-2xl border border-gray-100 text-gray-400 hover:text-pink-600 hover:border-pink-200 hover:bg-pink-50 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-center w-14 h-14">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Soporte Técnico -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full opacity-10" style="background-color: var(--primary-purple);"></div>
+                    <div>
+                        <h4 class="font-serif text-xl md:text-2xl mb-4 flex items-center gap-2" style="color: var(--text-color);">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--primary-purple);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                            Soporte Técnico
+                        </h4>
+                        <p class="text-sm mb-6 opacity-80 leading-relaxed">
+                            Si algo llega a fallar con el link, la música o el mapa de tu invitación, escríbenos de inmediato. Estamos listos para corregir cualquier error.
+                        </p>
+                    </div>
+                    <a href="https://wa.me/524492867153?text=Hola,%20tengo%20un%20problema%20técnico%20con%20la%20invitación" target="_blank" class="w-full text-center py-3 md:py-3.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 block text-white shadow-md flex items-center justify-center gap-2 mt-auto" style="background-color: var(--text-color);"> 
+                        Reportar un problema
+                    </a>
+                </div>
+
+            </div>
+
+            <footer class="flex flex-col items-center mt-20 pt-10 border-t border-gray-200 pb-8">
+                <p class="text-gray-400 text-[11px] font-bold tracking-widest uppercase">Con amor para tu gran día,</p>
+                <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-9 mt-4 opacity-80 hover:opacity-100 transition-opacity">
+                <p class="text-[11px] text-gray-400 mt-5 font-medium">&copy; 2026 AdaInvite. Todos los derechos reservados.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Toast de Notificación Copiado -->
+    <div id="toast-notification" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-6 py-3 rounded-full text-sm font-semibold flex items-center gap-3 shadow-2xl opacity-0 pointer-events-none translate-y-4 z-50 backdrop-blur-sm border border-white/10">
+        <div class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        Mensaje copiado al portapapeles
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Función para copiar mensaje
+        function copiarMensaje() {
+            const texto = document.getElementById('mensaje-sugerido').innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                mostrarToast();
+            }).catch(err => {
+                // Fallback clásico si la API de clipboard no está disponible
+                const textArea = document.createElement("textarea");
+                textArea.value = texto;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    mostrarToast();
+                } catch (err) {
+                    alert('No se pudo copiar el mensaje. Por favor, selecciona el texto y cópialo manualmente.');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function mostrarToast() {
+            const toast = document.getElementById('toast-notification');
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3000);
+        }
+
+        let simTimeouts = [];
+
+        // TEXTOS DEL SIMULADOR
+        const urlParaSimular = "https://adainvite.com/XVRenata/";
+        const soloTexto = "¡Hola! Estoy muy feliz porque pronto celebraré mis XV años, y no podría faltar tu presencia en este momento tan especial.\n\nDe cariño te pido que me ayudes confirmando tu asistencia dando clic en el enlace. ¡Gracias!";
+        const mensajeCompletoPegado = urlParaSimular + "\n\n" + soloTexto;
+
+        function iniciarSimulacion() {
+            clearAllSimulations();
+
+            const inputDraft = document.getElementById('input-draft-text');
+            const inputContainer = document.getElementById('input-container');
+            const previewDrawer = document.getElementById('input-preview-drawer');
+            const drawerImgLoader = document.getElementById('drawer-image-loader');
+            const drawerPreviewImg = document.getElementById('drawer-preview-img');
+            const drawerDomain = document.getElementById('drawer-domain');
+            const drawerTitle = document.getElementById('drawer-title');
+            const drawerDesc = document.getElementById('drawer-desc');
+            
+            const pasteMenu = document.getElementById('ios-paste-menu');
+            const pasteBtn = document.getElementById('paste-text-btn');
+            
+            const iconCam = document.getElementById('icon-cam');
+            const iconMic = document.getElementById('icon-mic');
+            const btnSend = document.getElementById('btn-send-sim');
+            
+            const sentBubble = document.getElementById('sent-message-bubble');
+            const bubbleRenderedText = document.getElementById('bubble-rendered-text');
+            const chatContent = document.getElementById('chat-content');
+
+            // 1. Resetear Interfaz a Estado Inicial
+            inputDraft.innerHTML = '<span class="text-gray-400">Mensaje</span>';
+            inputDraft.classList.remove('cursor-blink');
+            pasteMenu.classList.add('hidden', 'opacity-0');
+            
+            previewDrawer.classList.add('hidden');
+            drawerImgLoader.classList.remove('hidden');
+            drawerPreviewImg.classList.add('hidden');
+            drawerDomain.classList.add('hidden');
+            drawerTitle.innerText = "Cargando...";
+            drawerDesc.innerText = "Espera un momento";
+            
+            iconCam.classList.remove('hidden');
+            iconMic.classList.remove('hidden');
+            btnSend.classList.add('hidden');
+
+            sentBubble.classList.add('hidden', 'opacity-0', 'translate-y-4');
+            sentBubble.style.display = 'none';
+
+            // 2. Acción 1: Entrar al chat y simular "Tap" en el input (Aparece cursor)
+            let t1 = setTimeout(() => {
+                inputDraft.innerHTML = '';
+                inputDraft.classList.add('cursor-blink');
+                
+                // 3. Acción 2: Aparece el tooltip de "Pegar" de iOS
+                let t2 = setTimeout(() => {
+                    pasteMenu.classList.remove('hidden');
+                    // Forzar reflow para animación suave
+                    void pasteMenu.offsetWidth; 
+                    pasteMenu.classList.remove('opacity-0');
+
+                    // 4. Acción 3: Simular "Tap" en el botón Pegar
+                    let t3 = setTimeout(() => {
+                        // Feedback visual en el texto "Pegar"
+                        pasteBtn.classList.add('opacity-40');
+                        
+                        let t3_5 = setTimeout(() => {
+                            pasteBtn.classList.remove('opacity-40');
+                            pasteMenu.classList.add('opacity-0');
+                            
+                            setTimeout(() => { pasteMenu.classList.add('hidden') }, 200);
+
+                            // Pega el texto y quita el cursor animado
+                            inputDraft.classList.remove('cursor-blink');
+                            inputDraft.innerHTML = mensajeCompletoPegado;
+                            
+                            iconCam.classList.add('hidden');
+                            iconMic.classList.add('hidden');
+                            btnSend.classList.remove('hidden');
+
+                            inputContainer.scrollTop = inputContainer.scrollHeight;
+
+                            // 5. WhatsApp detecta el Link y muestra la barrita de carga
+                            let t4 = setTimeout(() => {
+                                previewDrawer.classList.remove('hidden');
+
+                                // 6. Tras 2.5 segundos, la miniatura se carga en el borrador
+                                let t5 = setTimeout(() => {
+                                    drawerImgLoader.classList.add('hidden');
+                                    drawerPreviewImg.classList.remove('hidden');
+                                    drawerDomain.classList.remove('hidden');
+                                    
+                                    // TÍTULOS EXACTOS DE LA IMAGEN
+                                    drawerTitle.innerText = "Mis XV • Renata";
+                                    drawerDesc.innerText = "Hay momentos inolvidables que se atesoran en el corazón para siempre. Acompáñame...";
+
+                                    // 7. El usuario presiona ENVIAR
+                                    let t6 = setTimeout(() => {
+                                        btnSend.classList.add('scale-90');
+                                        
+                                        setTimeout(() => {
+                                            btnSend.classList.remove('scale-90');
+                                            
+                                            // Limpiar Borrador
+                                            previewDrawer.classList.add('hidden');
+                                            inputDraft.innerHTML = '<span class="text-gray-400">Mensaje</span>';
+                                            iconCam.classList.remove('hidden');
+                                            iconMic.classList.remove('hidden');
+                                            btnSend.classList.add('hidden');
+                                            
+                                            // 8. Aparece el MENSAJE ENVIADO
+                                            bubbleRenderedText.innerText = soloTexto;
+                                            
+                                            sentBubble.style.display = 'flex';
+                                            sentBubble.classList.remove('hidden');
+                                            
+                                            chatContent.scrollTop = chatContent.scrollHeight;
+                                            
+                                            setTimeout(() => {
+                                                sentBubble.classList.remove('opacity-0', 'translate-y-4');
+                                                chatContent.scrollTop = chatContent.scrollHeight;
+                                            }, 50);
+
+                                        }, 150);
+                                    }, 2000); 
+                                    simTimeouts.push(t6);
+                                }, 2500); 
+                                simTimeouts.push(t5);
+                            }, 400); 
+                            simTimeouts.push(t4);
+                        }, 150);
+                        simTimeouts.push(t3_5);
+                    }, 1200); 
+                    simTimeouts.push(t3);
+                }, 800);
+                simTimeouts.push(t2);
+            }, 800);
+            simTimeouts.push(t1);
+        }
+
+        function clearAllSimulations() {
+            simTimeouts.forEach(t => clearTimeout(t));
+            simTimeouts = [];
+        }
+
+        function reiniciarSimulador() {
+            iniciarSimulacion();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            iniciarSimulacion();
+        });
+    </script>
+</body>
+</html>
