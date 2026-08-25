@@ -93,7 +93,6 @@
         </div>
 
         <div class="p-4 flex flex-col gap-2">
-            <!-- Opción "Todos / General" -->
             <button onclick="cargarTodosGeneral(this)" id="btn-todos" class="tab-btn active w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors bg-[#9B8AA5] text-white">
                 <span>Resumen</span>
                 <span id="badge-todos" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
@@ -146,24 +145,13 @@
   <!-- ÁREA PRINCIPAL -->
     <main id="main-content" class="w-full flex-1 bg-white flex flex-col min-h-screen md:min-h-0 overflow-hidden hidden-until-login opacity-0 transition-opacity duration-500">
         
-        <div class="p-4 md:p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center bg-white sticky top-0 z-10 gap-4 md:gap-0">
-            <div>
-                <h2 id="vista-cliente-nombre" class="text-lg md:text-2xl font-bold text-[#3D3542]">Selecciona una solicitud</h2>
-                <p id="vista-cliente-evento" class="text-xs text-[#9B8AA5]">Para ver datos y prompt</p>
-            </div>
-        </div>
-        
-        <!-- CONTENEDOR CON SCROLL -->
+        <!-- CONTENEDOR CON SCROLL (Completamente limpio hasta seleccionar un cliente) -->
         <div class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-50 flex flex-col gap-6">
             
-            <div id="empty-state" class="h-full flex items-center justify-center text-gray-400 font-medium p-8 text-center text-sm md:text-base">
-                Selecciona un cliente de la lista para ver su información.
-            </div>
-
             <!-- CUADRITO INDEPENDIENTE: DATOS DEL CLIENTE -->
             <div id="datos-cliente-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-[#3D3542] uppercase tracking-wider">Información del Cliente</h3>
+                    <h3 class="text-sm font-bold text-[#3D3542] uppercase tracking-wider" id="vista-cliente-nombre">Información del Cliente</h3>
                     <button onclick="copiarDatosCliente()" id="btn-copiar-datos" class="px-4 py-2 bg-gray-800 text-white rounded-lg font-bold text-xs shadow-sm hover:bg-gray-900 transition-all flex items-center gap-1.5">
                         Copiar Datos
                     </button>
@@ -244,10 +232,8 @@
             'vip': ['solicitudes_vip', 'vip']
         };
 
-        // --- VERIFICAR SI YA HAY UNA SESIÓN ABIIERTA AL CARGAR LA PÁGINA ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Si ya está logueado, ocultamos el login y cargamos los datos directo
                 document.getElementById('login-screen').classList.add('hidden');
                 const elementosPanel = document.querySelectorAll('.hidden-until-login');
                 elementosPanel.forEach(el => {
@@ -274,7 +260,6 @@
             const passwordIngresada = passInput.value;
             
             try {
-                // Configurar persistencia para que la sesión se quede abierta
                 await setPersistence(auth, browserLocalPersistence);
                 await signInWithEmailAndPassword(auth, miCorreoAdmin, passwordIngresada);
                 
@@ -317,10 +302,7 @@
 
             document.getElementById('prompt-wrapper').classList.add('hidden');
             document.getElementById('datos-cliente-container').classList.add('hidden');
-            document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('estado-container').classList.add('hidden');
-            document.getElementById('vista-cliente-nombre').innerText = "Selecciona una solicitud";
-            document.getElementById('vista-cliente-evento').innerText = "Para ver datos y prompt";
 
             let todasLasColecciones = ['solicitudes_basico', 'basico', 'solicitudes_premium', 'premium', 'solicitudes_vip', 'vip'];
             let todosLosDocumentos = [];
@@ -367,10 +349,7 @@
             
             document.getElementById('prompt-wrapper').classList.add('hidden');
             document.getElementById('datos-cliente-container').classList.add('hidden');
-            document.getElementById('empty-state').classList.remove('hidden');
             document.getElementById('estado-container').classList.add('hidden');
-            document.getElementById('vista-cliente-nombre').innerText = "Selecciona una solicitud";
-            document.getElementById('vista-cliente-evento').innerText = "Para ver datos y prompt";
 
             try {
                 let todosLosDocumentos = [];
@@ -544,14 +523,12 @@
             document.querySelectorAll('.order-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
 
-            document.getElementById('empty-state').classList.add('hidden');
             const promptContainer = document.getElementById('prompt-container');
             const promptWrapper = document.getElementById('prompt-wrapper');
             const datosClienteContainer = document.getElementById('datos-cliente-container');
             const datosClienteTexto = document.getElementById('datos-cliente-texto');
             
-            document.getElementById('vista-cliente-nombre').innerText = data.contacto_nombre || "Cliente sin nombre";
-            document.getElementById('vista-cliente-evento').innerText = `${data.tipo_evento || 'Evento'} de ${data.festejado_nombre || 'Festejado'}`;
+            document.getElementById('vista-cliente-nombre').innerText = `Información del Cliente (${data.festejado_nombre || 'Cliente'})`;
 
             // --- 1. DATOS DEL CLIENTE ---
             let textoDatosCliente = `Nombre del cliente: ${data.contacto_nombre || 'N/A'}\n`;
