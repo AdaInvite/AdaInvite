@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Librería para compresión automática de imágenes -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+
     <style>
         :root {
             --primary-purple: #9B8AA5;
@@ -403,7 +406,7 @@
 
             <div id="progress-container" class="hidden mt-4 mb-4">
                 <div class="flex justify-between text-sm font-bold text-[#9B8AA5] mb-2">
-                    <span>Subiendo archivos, por favor no cierres la ventana...</span>
+                    <span>Optimizando y subiendo archivos, por favor no cierres la ventana...</span>
                     <span id="progress-text">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
@@ -511,12 +514,57 @@
         const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
         const missingFieldsList = document.getElementById('missing-fields-list');
 
-        // Manejar el botón "Regresar a llenar"
+        // --- SISTEMA DE AUTO-GUARDADO (Local Storage) ---
+        let isDirty = false;
+        
+        function saveToLocal() {
+            const data = {};
+            const formData = new FormData(formPremium);
+            formData.forEach((value, key) => {
+                const input = formPremium.elements[key];
+                if(input && input.type !== 'file') {
+                    data[key] = value;
+                }
+            });
+            formPremium.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                data[cb.name] = cb.checked;
+            });
+            localStorage.setItem('premium_form_autosave_single', JSON.stringify(data));
+            isDirty = true;
+        }
+
+        function restoreFromLocal() {
+            const saved = localStorage.getItem('premium_form_autosave_single');
+            if(saved) {
+                const data = JSON.parse(saved);
+                for(let key in data) {
+                    const input = formPremium.elements[key];
+                    if(input) {
+                        if(input.type === 'checkbox') input.checked = data[key];
+                        else if(input.type !== 'file') input.value = data[key];
+                    }
+                }
+            }
+        }
+
+        formPremium.addEventListener('input', saveToLocal);
+        formPremium.addEventListener('change', saveToLocal);
+        document.addEventListener('DOMContentLoaded', restoreFromLocal);
+
+        // Prevención de cierre accidental de pestaña
+        window.addEventListener('beforeunload', (e) => {
+            if(isDirty) {
+                e.preventDefault();
+                e.returnValue = ''; 
+            }
+        });
+        // -----------------------------------------------
+
+        // Manejar modal
         btnCancelSubmit.addEventListener('click', () => {
             warningModal.classList.add('hidden');
         });
 
-        // Manejar el botón "Sí, enviar así"
         btnConfirmSubmit.addEventListener('click', () => {
             warningModal.classList.add('hidden');
             ejecutarEnvioFirebase();
@@ -534,11 +582,10 @@
                     alert('El link de música debe ser exclusivamente de YouTube.\nEjemplo: https://www.youtube.com/watch?v=...');
                     inputMusica.focus();
                     inputMusica.classList.add('border-red-500', 'bg-red-50');
-                    // Quitar el borde rojo cuando empiecen a escribir de nuevo
                     inputMusica.addEventListener('input', function() {
                         this.classList.remove('border-red-500', 'bg-red-50');
                     }, { once: true });
-                    return; // Detiene el envío
+                    return; 
                 }
             }
 
@@ -566,7 +613,6 @@
                         missingStrictNames.push(fieldName);
                         if (!firstStrictInput) firstStrictInput = input;
                         
-                        // Pintamos el borde en rojo de los campos estrictos faltantes
                         input.classList.add('border-red-500', 'bg-red-50');
                         input.addEventListener('input', function() {
                             this.classList.remove('border-red-500', 'bg-red-50');
@@ -579,12 +625,10 @@
 
             // 3. Mostrar Modal si faltan datos o enviar directamente si todo está lleno
             if (missingStrictNames.length > 0) {
-                // Si faltan datos obligatorios de cliente, se frena el envío.
                 alert('Por favor completa los siguientes datos obligatorios de contacto:\n\n- ' + missingStrictNames.join('\n- '));
                 firstStrictInput.focus();
                 return; 
             } else if (missingSoftNames.length > 0) {
-                // Si solo faltan datos opcionales, mostramos el modal de advertencia
                 missingFieldsList.innerHTML = '';
                 missingSoftNames.forEach(name => {
                     const li = document.createElement('li');
@@ -593,20 +637,25 @@
                 });
                 warningModal.classList.remove('hidden');
             } else {
-                // Si todo está lleno, se envía directo
                 ejecutarEnvioFirebase();
             }
         });
 
-        // Función original de envío separada para llamarla cuando aprueben el modal
+        // Configuración para que comprima a máximo 1MB
+        const compOptions = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+        };
+
         async function ejecutarEnvioFirebase() {
+            // Quitamos la advertencia de cierre accidental porque sí quieren enviar
+            isDirty = false;
+            
             submitBtn.disabled = true;
             const originalBtnText = submitBtn.innerHTML;
-            
-            // Ocultamos el botón de enviar
             submitBtn.classList.add('hidden');
 
-            // Mostrar la barra de progreso
             const progressContainer = document.getElementById('progress-container');
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
@@ -642,7 +691,14 @@
                 const uploadSingleFile = async (inputId, storagePath) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
-                        const file = fileInput.files[0];
+                        let file = fileInput.files[0];
+                        
+                        // Compresión de imagen antes de subir a Firebase
+                        if (file.type.startsWith('image/') && window.imageCompression) {
+                            try { file = await window.imageCompression(file, compOptions); } 
+                            catch (e) { console.warn("Error comprimiendo, subiendo original"); }
+                        }
+                        
                         const fileRef = ref(storage, `${storagePath}/${inputId}_${file.name}`);
                         await uploadBytes(fileRef, file);
                         actualizarProgreso();
@@ -665,13 +721,19 @@
                 const urlHistoria5 = await uploadSingleFile('historia_foto_5', folderName);
                 const urlHistoria6 = await uploadSingleFile('historia_foto_6', folderName);
 
-                // Subir fotos múltiples (Galería) - Premium tiene limitador
+                // Subir fotos múltiples (Galería) con compresión
                 const uploadMultipleFiles = async (inputId, subFolder) => {
                     const urls = [];
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         for (let i = 0; i < fileInput.files.length; i++) {
-                            const file = fileInput.files[i];
+                            let file = fileInput.files[i];
+                            
+                            if (file.type.startsWith('image/') && window.imageCompression) {
+                                try { file = await window.imageCompression(file, compOptions); } 
+                                catch (e) {}
+                            }
+                            
                             const fileRef = ref(storage, `${folderName}/${subFolder}/foto_${i}_${file.name}`);
                             await uploadBytes(fileRef, file);
                             actualizarProgreso();
@@ -691,6 +753,10 @@
                         datosCliente[key] = value;
                     }
                 }
+                
+                formPremium.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    datosCliente[cb.name] = cb.checked;
+                });
 
                 const documentoFinal = {
                     ...datosCliente, 
@@ -718,6 +784,11 @@
 
                 progressBar.style.width = '100%';
                 progressText.innerText = '100%';
+                submitBtn.innerHTML = '¡Datos enviados con éxito!';
+                submitBtn.style.backgroundColor = '#4CAF50';
+                
+                // Limpiar auto-guardado
+                localStorage.removeItem('premium_form_autosave_single');
                 
                 // Mostrar pantalla de éxito y ocultar formulario
                 setTimeout(() => {
@@ -739,6 +810,8 @@
                 
                 // Ocultamos la barra de progreso
                 progressContainer.classList.add('hidden');
+                
+                isDirty = true; // Reactivamos el candado por si intentan cerrar
             }
         }
     </script>
