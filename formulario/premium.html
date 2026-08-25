@@ -75,26 +75,48 @@
             </a>
         </div>
 
-        <form id="form-premium" class="space-y-8">
+        <!-- VENTANA MODAL DE ADVERTENCIA DE CAMPOS VACÍOS -->
+        <div id="warning-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4 transition-opacity">
+            <div class="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl relative">
+                <h3 class="text-3xl font-semibold mb-2 text-[#9B8AA5]" style="font-family: 'Dancing Script', cursive;">¡Faltan algunos datos!</h3>
+                <p class="text-sm text-[#3D3542] mb-4 font-medium">¿Estás seguro de enviar el formulario sin la siguiente información?</p>
+                
+                <ul id="missing-fields-list" class="list-disc pl-5 text-sm text-gray-600 mb-6 max-h-48 overflow-y-auto space-y-1 font-medium bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <!-- Se llena dinámicamente mediante JS -->
+                </ul>
+                
+                <div class="flex flex-col sm:flex-row gap-3 justify-end">
+                    <button type="button" id="btn-cancel-submit" class="px-6 py-3 text-sm font-bold text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                        Regresar a llenar
+                    </button>
+                    <button type="button" id="btn-confirm-submit" class="px-6 py-3 text-sm font-bold text-white rounded-full transition-colors shadow-md hover:opacity-90" style="background-color: var(--primary-purple);">
+                        Sí, enviar así
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario con novalidate agregado -->
+        <form id="form-premium" class="space-y-8" novalidate>
             
             <div>
                 <h3 class="text-xl font-semibold mb-4 text-[#9B8AA5]">1. Datos Generales</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="text-sm font-medium">Tipo de evento</label>
-                        <input type="text" id="tipo_evento" name="tipo_evento" class="form-input" placeholder="Ej. XV Años, Boda, Bautizo..." required>
+                        <input type="text" id="tipo_evento" name="tipo_evento" data-name="Tipo de evento" class="form-input strict-required" placeholder="Ej. XV Años, Boda, Bautizo..." required>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Nombre completo (Cliente)</label>
-                        <input type="text" id="contacto_nombre" name="contacto_nombre" class="form-input" placeholder="Ej. María García" required>
+                        <input type="text" id="contacto_nombre" name="contacto_nombre" data-name="Nombre del Cliente" class="form-input strict-required" placeholder="Ej. María García" required>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Teléfono celular</label>
-                        <input type="tel" id="contacto_telefono" name="contacto_telefono" class="form-input" placeholder="Ej. 449 123 4567" required>
+                        <input type="tel" id="contacto_telefono" name="contacto_telefono" data-name="Teléfono celular" class="form-input strict-required" placeholder="Ej. 449 123 4567" required>
                     </div>
                     <div class="md:col-span-2">
                         <label class="text-sm font-medium">Correo electrónico</label>
-                        <input type="email" id="contacto_correo" name="contacto_correo" class="form-input" placeholder="correo@ejemplo.com" required>
+                        <input type="email" id="contacto_correo" name="contacto_correo" data-name="Correo electrónico" class="form-input strict-required" placeholder="correo@ejemplo.com" required>
                     </div>
                 </div>
             </div>
@@ -104,15 +126,15 @@
                 <div class="grid grid-cols-1 gap-4">
                     <div>
                         <label class="text-sm font-medium">Nombre del Festejado/a (Como aparecerá en la invitación)</label>
-                        <input type="text" id="festejado_nombre" name="festejado_nombre" class="form-input" placeholder="Ej. Ana Sofía" required>
+                        <input type="text" id="festejado_nombre" name="festejado_nombre" data-name="Nombre del Festejado/a" class="form-input" placeholder="Ej. Ana Sofía" required>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Frase principal de Portada</label>
-                        <textarea id="festejado_frase" name="festejado_frase" class="form-input" rows="2" placeholder="Ej. Hay momentos inolvidables que se atesoran en el corazón..." required></textarea>
+                        <textarea id="festejado_frase" name="festejado_frase" data-name="Frase de Portada" class="form-input" rows="2" placeholder="Ej. Hay momentos inolvidables que se atesoran en el corazón..." required></textarea>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Fecha del Evento</label>
-                        <input type="date" id="evento_fecha" name="evento_fecha" class="form-input" required>
+                        <input type="date" id="evento_fecha" name="evento_fecha" data-name="Fecha del Evento" class="form-input" required>
                     </div>
                 </div>
             </div>
@@ -122,11 +144,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-medium">Nombres de los Papás</label>
-                        <textarea id="familia_papas" name="familia_papas" class="form-input" rows="3" placeholder="Ej. Juan Pérez y Laura Gómez" required></textarea>
+                        <textarea id="familia_papas" name="familia_papas" data-name="Nombres de los Papás" class="form-input" rows="3" placeholder="Ej. Juan Pérez y Laura Gómez" required></textarea>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Nombres de los Padrinos</label>
-                        <textarea id="familia_padrinos" name="familia_padrinos" class="form-input" rows="3" placeholder="Ej. Carlos Ruiz y Diana Silva" required></textarea>
+                        <textarea id="familia_padrinos" name="familia_padrinos" data-name="Nombres de los Padrinos" class="form-input" rows="3" placeholder="Ej. Carlos Ruiz y Diana Silva" required></textarea>
                     </div>
                 </div>
             </div>
@@ -136,15 +158,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-medium">Temática del evento</label>
-                        <input type="text" id="tematica" name="tematica" class="form-input" placeholder="Ej. Vaquero, Elegante, Mariposas..." required>
+                        <input type="text" id="tematica" name="tematica" data-name="Temática del evento" class="form-input" placeholder="Ej. Vaquero, Elegante, Mariposas..." required>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Paleta de colores</label>
-                        <input type="text" id="colores" name="colores" class="form-input" placeholder="Ej. Lila, Plata y Blanco" required>
+                        <input type="text" id="colores" name="colores" data-name="Paleta de colores" class="form-input" placeholder="Ej. Lila, Plata y Blanco" required>
                     </div>
                     <div class="md:col-span-2">
                         <label class="text-sm font-medium">¿Qué modelo de nuestro portafolio te gustó para tomarlo como base para tu diseño?</label>
-                        <input type="text" id="modelo_base" name="modelo_base" class="form-input" placeholder="Ej. Tema Cereza, Tema Vaquero, etc." required>
+                        <input type="text" id="modelo_base" name="modelo_base" data-name="Modelo base del portafolio" class="form-input" placeholder="Ej. Tema Cereza, Tema Vaquero, etc." required>
                     </div>
                 </div>
             </div>
@@ -156,15 +178,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="section-group !mt-0">
                         <h4 class="text-md font-medium mb-2 text-[#9B8AA5]">Tarjeta 1</h4>
-                        <input type="text" name="historia_frase_1" class="form-input mb-2" placeholder="Frase: Ej. Recuerdos que brillan..." required>
+                        <input type="text" name="historia_frase_1" data-name="Frase para Tarjeta 1 (Historia)" class="form-input mb-2" placeholder="Frase: Ej. Recuerdos que brillan..." required>
                         <label class="text-xs font-medium">Foto para tarjeta 1</label>
-                        <input type="file" id="historia_foto_1" name="historia_foto_1" class="form-input text-sm cursor-pointer" accept="image/*" required>
+                        <input type="file" id="historia_foto_1" name="historia_foto_1" data-name="Foto para Tarjeta 1 (Historia)" class="form-input text-sm cursor-pointer" accept="image/*" required>
                     </div>
                     <div class="section-group !mt-0">
                         <h4 class="text-md font-medium mb-2 text-[#9B8AA5]">Tarjeta 2</h4>
-                        <input type="text" name="historia_frase_2" class="form-input mb-2" placeholder="Frase: Ej. De juegos y travesuras..." required>
+                        <input type="text" name="historia_frase_2" data-name="Frase para Tarjeta 2 (Historia)" class="form-input mb-2" placeholder="Frase: Ej. De juegos y travesuras..." required>
                         <label class="text-xs font-medium">Foto para tarjeta 2</label>
-                        <input type="file" id="historia_foto_2" name="historia_foto_2" class="form-input text-sm cursor-pointer" accept="image/*" required>
+                        <input type="file" id="historia_foto_2" name="historia_foto_2" data-name="Foto para Tarjeta 2 (Historia)" class="form-input text-sm cursor-pointer" accept="image/*" required>
                     </div>
                     <div class="section-group !mt-0">
                         <h4 class="text-md font-medium mb-2 text-[#9B8AA5]">Tarjeta 3</h4>
@@ -197,7 +219,7 @@
                 <h3 class="text-xl font-semibold mb-4 text-[#9B8AA5]">6. Itinerario del Evento</h3>
                 <div>
                     <label class="text-sm font-medium">Desglosa los horarios y actividades de tu evento</label>
-                    <textarea id="itinerario" name="itinerario" class="form-input mt-2" rows="5" placeholder="Ejemplo:
+                    <textarea id="itinerario" name="itinerario" data-name="Itinerario del Evento" class="form-input mt-2" rows="5" placeholder="Ejemplo:
 4:00 PM - Ceremonia Religiosa
 5:30 PM - Recepción
 6:10 PM - Entrada de la quinceañera
@@ -236,19 +258,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-sm font-medium">Nombre del Lugar (Recepción)</label>
-                            <input type="text" id="recepcion_lugar" name="recepcion_lugar" class="form-input" placeholder="Ej. Salón Golden Park" required>
+                            <input type="text" id="recepcion_lugar" name="recepcion_lugar" data-name="Nombre del Lugar (Recepción)" class="form-input" placeholder="Ej. Salón Golden Park" required>
                         </div>
                         <div>
                             <label class="text-sm font-medium">Horario de Inicio</label>
-                            <input type="time" id="recepcion_hora" name="recepcion_hora" class="form-input" required>
+                            <input type="time" id="recepcion_hora" name="recepcion_hora" data-name="Horario de Inicio (Recepción)" class="form-input" required>
                         </div>
                         <div class="md:col-span-2">
                             <label class="text-sm font-medium">Dirección Completa</label>
-                            <input type="text" id="recepcion_direccion" name="recepcion_direccion" class="form-input" placeholder="Calle, Número, Colonia, Municipio" required>
+                            <input type="text" id="recepcion_direccion" name="recepcion_direccion" data-name="Dirección de la Recepción" class="form-input" placeholder="Calle, Número, Colonia, Municipio" required>
                         </div>
                         <div class="md:col-span-2">
                             <label class="text-sm font-medium">Link de Google Maps</label>
-                            <input type="url" id="recepcion_maps" name="recepcion_maps" class="form-input" placeholder="https://maps.google.com/..." required>
+                            <input type="url" id="recepcion_maps" name="recepcion_maps" data-name="Link de Google Maps (Recepción)" class="form-input" placeholder="https://maps.google.com/..." required>
                         </div>
                     </div>
                 </div>
@@ -262,11 +284,11 @@
                         <div class="space-y-3">
                             <div>
                                 <label class="text-sm font-medium">Estilo</label>
-                                <input type="text" id="vestimenta_estilo" name="vestimenta_estilo" class="form-input" placeholder="Ej. Vaquero Formal, Etiqueta Rigurosa..." required>
+                                <input type="text" id="vestimenta_estilo" name="vestimenta_estilo" data-name="Estilo de Vestimenta" class="form-input" placeholder="Ej. Vaquero Formal, Etiqueta Rigurosa..." required>
                             </div>
                             <div>
                                 <label class="text-sm font-medium">Colores reservados (No permitidos)</label>
-                                <input type="text" id="vestimenta_reservados" name="vestimenta_reservados" class="form-input" placeholder="Ej. Blanco y Dorado" required>
+                                <input type="text" id="vestimenta_reservados" name="vestimenta_reservados" data-name="Colores Reservados" class="form-input" placeholder="Ej. Blanco y Dorado" required>
                             </div>
                         </div>
                     </div>
@@ -296,11 +318,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-medium">Fecha límite para confirmar asistencia</label>
-                        <input type="date" id="fecha_limite" name="fecha_limite" class="form-input" required>
+                        <input type="date" id="fecha_limite" name="fecha_limite" data-name="Fecha límite para confirmar" class="form-input" required>
                     </div>
                     <div>
                         <label class="text-sm font-medium">¿Cómo necesitas las confirmaciones?</label>
-                        <select id="tipo_confirmacion" name="tipo_confirmacion" class="form-input" required>
+                        <select id="tipo_confirmacion" name="tipo_confirmacion" data-name="Tipo de confirmaciones" class="form-input" required>
                             <option value="" disabled selected>Selecciona una opción</option>
                             <option value="adultos_y_ninos">Cantidad de adultos y niños</option>
                             <option value="solo_adultos">Solo adultos</option>
@@ -310,17 +332,17 @@
                     </div>
                     <div>
                         <label class="text-sm font-medium">Número de WhatsApp (Para recibir confirmaciones)</label>
-                        <input type="tel" id="evento_whatsapp" name="evento_whatsapp" class="form-input" placeholder="Ej. +52 449 123 4567" required>
+                        <input type="tel" id="evento_whatsapp" name="evento_whatsapp" data-name="Número de WhatsApp (Confirmaciones)" class="form-input" placeholder="Ej. +52 449 123 4567" required>
                     </div>
                     <div>
-                        <label class="text-sm font-medium">Canción de fondo (Link de Spotify o YouTube)</label>
-                        <input type="url" id="evento_musica" name="evento_musica" class="form-input" placeholder="Link de la canción" required>
+                        <label class="text-sm font-medium">Canción de fondo (Solo link de YouTube)</label>
+                        <input type="url" id="evento_musica" name="evento_musica" data-name="Canción de fondo (Link YouTube)" class="form-input" placeholder="Ej. https://www.youtube.com/watch?v=..." required>
                     </div>
                     
                     <div class="md:col-span-2 section-group !mt-4 !mb-0">
                         <label class="text-sm font-bold text-[#3D3542]">Pases Individuales</label>
                         <p class="text-xs opacity-80 mb-2">¿Cómo prefieres manejar la entrega de los pases para tus invitados?</p>
-                        <select id="entrega_pases" name="entrega_pases" class="form-input" required>
+                        <select id="entrega_pases" name="entrega_pases" data-name="Entrega de pases" class="form-input" required>
                             <option value="" disabled selected>Selecciona una opción</option>
                             <option value="enviar_con_invitacion">Enviar los pases junto con la invitación</option>
                             <option value="esperar_confirmacion">Esperar a que confirmen asistencia para asignar y enviar los pases</option>
@@ -342,7 +364,7 @@
                 <div class="section-group !bg-white !border-gray-200 shadow-sm mb-4">
                     <h4 class="text-md font-bold mb-1 text-[#3D3542]">Foto Principal (Portada)</h4>
                     <p class="text-xs opacity-70 mb-3">Sugerencia: Foto en formato vertical.</p>
-                    <input type="file" id="foto_portada" name="foto_portada" class="form-input border-dashed p-4 text-center cursor-pointer" accept="image/*" required>
+                    <input type="file" id="foto_portada" name="foto_portada" data-name="Foto de Portada" class="form-input border-dashed p-4 text-center cursor-pointer" accept="image/*" required>
                 </div>
 
 
@@ -350,15 +372,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="section-group !mb-0">
                         <h4 class="text-md font-medium mb-1 text-[#9B8AA5]">Separador 1 (Requerido)</h4>
-                        <input type="file" id="foto_separador_1" name="foto_separador_1" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
+                        <input type="file" id="foto_separador_1" name="foto_separador_1" data-name="Foto Separador 1" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
                     </div>
                     <div class="section-group !mb-0">
                         <h4 class="text-md font-medium mb-1 text-[#9B8AA5]">Separador 2 (Requerido)</h4>
-                        <input type="file" id="foto_separador_2" name="foto_separador_2" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
+                        <input type="file" id="foto_separador_2" name="foto_separador_2" data-name="Foto Separador 2" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
                     </div>
                     <div class="section-group !mb-0">
                         <h4 class="text-md font-medium mb-1 text-[#9B8AA5]">Separador 3 (Requerido)</h4>
-                        <input type="file" id="foto_separador_3" name="foto_separador_3" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
+                        <input type="file" id="foto_separador_3" name="foto_separador_3" data-name="Foto Separador 3" class="form-input border-dashed p-3 text-center cursor-pointer bg-white" accept="image/*" required>
                     </div>
                     <div class="section-group !mb-0">
                         <h4 class="text-md font-medium mb-1 text-[#9B8AA5]">Separador 4 (Opcional)</h4>
@@ -484,10 +506,100 @@
         const submitBtn = document.getElementById('btn-submit');
         const formHeader = document.getElementById('form-header');
         const successScreen = document.getElementById('success-screen');
+        const warningModal = document.getElementById('warning-modal');
+        const btnCancelSubmit = document.getElementById('btn-cancel-submit');
+        const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+        const missingFieldsList = document.getElementById('missing-fields-list');
 
-        formPremium.addEventListener('submit', async (e) => {
+        // Manejar el botón "Regresar a llenar"
+        btnCancelSubmit.addEventListener('click', () => {
+            warningModal.classList.add('hidden');
+        });
+
+        // Manejar el botón "Sí, enviar así"
+        btnConfirmSubmit.addEventListener('click', () => {
+            warningModal.classList.add('hidden');
+            ejecutarEnvioFirebase();
+        });
+
+        // Evento de Envío del Formulario (Validaciones)
+        formPremium.addEventListener('submit', (e) => {
             e.preventDefault(); 
             
+            // 1. Validar Filtro de YouTube
+            const inputMusica = document.getElementById('evento_musica');
+            if (inputMusica && inputMusica.value.trim() !== '') {
+                const url = inputMusica.value.toLowerCase();
+                if (!url.includes('youtube.com') && !url.includes('youtu.be')) {
+                    alert('El link de música debe ser exclusivamente de YouTube.\nEjemplo: https://www.youtube.com/watch?v=...');
+                    inputMusica.focus();
+                    inputMusica.classList.add('border-red-500', 'bg-red-50');
+                    // Quitar el borde rojo cuando empiecen a escribir de nuevo
+                    inputMusica.addEventListener('input', function() {
+                        this.classList.remove('border-red-500', 'bg-red-50');
+                    }, { once: true });
+                    return; // Detiene el envío
+                }
+            }
+
+            // 2. Revisar qué campos que eran obligatorios están vacíos
+            const requiredInputs = formPremium.querySelectorAll('[required]');
+            let missingStrictNames = [];
+            let missingSoftNames = [];
+            let firstStrictInput = null;
+
+            requiredInputs.forEach(input => {
+                const fieldName = input.getAttribute('data-name') || input.name;
+                const isStrict = input.classList.contains('strict-required');
+                let isEmpty = false;
+                
+                if (input.type === 'file') {
+                    if (input.files.length === 0) isEmpty = true;
+                } else if (input.tagName === 'SELECT') {
+                    if (!input.value) isEmpty = true;
+                } else {
+                    if (input.value.trim() === '') isEmpty = true;
+                }
+
+                if (isEmpty) {
+                    if (isStrict) {
+                        missingStrictNames.push(fieldName);
+                        if (!firstStrictInput) firstStrictInput = input;
+                        
+                        // Pintamos el borde en rojo de los campos estrictos faltantes
+                        input.classList.add('border-red-500', 'bg-red-50');
+                        input.addEventListener('input', function() {
+                            this.classList.remove('border-red-500', 'bg-red-50');
+                        }, { once: true });
+                    } else {
+                        missingSoftNames.push(fieldName);
+                    }
+                }
+            });
+
+            // 3. Mostrar Modal si faltan datos o enviar directamente si todo está lleno
+            if (missingStrictNames.length > 0) {
+                // Si faltan datos obligatorios de cliente, se frena el envío.
+                alert('Por favor completa los siguientes datos obligatorios de contacto:\n\n- ' + missingStrictNames.join('\n- '));
+                firstStrictInput.focus();
+                return; 
+            } else if (missingSoftNames.length > 0) {
+                // Si solo faltan datos opcionales, mostramos el modal de advertencia
+                missingFieldsList.innerHTML = '';
+                missingSoftNames.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name;
+                    missingFieldsList.appendChild(li);
+                });
+                warningModal.classList.remove('hidden');
+            } else {
+                // Si todo está lleno, se envía directo
+                ejecutarEnvioFirebase();
+            }
+        });
+
+        // Función original de envío separada para llamarla cuando aprueben el modal
+        async function ejecutarEnvioFirebase() {
             submitBtn.disabled = true;
             const originalBtnText = submitBtn.innerHTML;
             
@@ -520,7 +632,11 @@
             }
 
             try {
-                const clienteNombre = document.getElementById('contacto_nombre').value.replace(/\s+/g, '_');
+                let clienteNombre = "Sin_Nombre";
+                const inputNombre = document.getElementById('contacto_nombre');
+                if(inputNombre && inputNombre.value.trim() !== ''){
+                    clienteNombre = inputNombre.value.replace(/\s+/g, '_');
+                }
                 const folderName = `Premium_${clienteNombre}_${Date.now()}`;
 
                 const uploadSingleFile = async (inputId, storagePath) => {
@@ -549,7 +665,7 @@
                 const urlHistoria5 = await uploadSingleFile('historia_foto_5', folderName);
                 const urlHistoria6 = await uploadSingleFile('historia_foto_6', folderName);
 
-                // Subir fotos múltiples (Galería)
+                // Subir fotos múltiples (Galería) - Premium tiene limitador
                 const uploadMultipleFiles = async (inputId, subFolder) => {
                     const urls = [];
                     const fileInput = document.getElementById(inputId);
@@ -624,7 +740,7 @@
                 // Ocultamos la barra de progreso
                 progressContainer.classList.add('hidden');
             }
-        });
+        }
     </script>
 </body>
 </html>
