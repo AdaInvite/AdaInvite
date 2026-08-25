@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Escáner • Melissa y Miguel</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/CPNCOvd.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tema: {
+                            negro: '#1A1A1A',
+                            blanco: '#FFFFFF',
+                            amarillo: '#FFE596', 
+                            amarillomutado: '#FFCB57', 
+                            amarilloclaro: '#FFFCF0', 
+                            amarillohover: '#E5B242', 
+                            gris: '#4A4A4A',
+                            borde: '#E5E7EB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Librería para el escáner de QR -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        :root {
+            --font-elegant: 'Forum', serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            font-family: var(--font-elegant);
+            color: #4A4A4A;
+            background-color: #FFFFFF;
+        }
+
+        .textura-papel {
+            background-color: #FFFFFF;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+        }
+
+        .textura-tarjeta {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+        }
+
+        h1, h2, h3, h4, p, span, div, button {
+            font-family: var(--font-elegant);
+        }
+
+        .font-script { 
+            font-family: var(--font-script) !important; 
+        }
+
+        /* Ocultar barra de scroll */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Ajustes para el contenedor de video nativo */
+        #reader {
+            width: 100%;
+            min-height: 250px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: none;
+            position: relative;
+        }
+        #reader video {
+            border-radius: 0.75rem;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="textura-papel flex flex-col items-center py-10 px-6">
+
+    <main class="w-full max-w-md mx-auto">
+        
+        <!-- Encabezado -->
+        <div class="text-center mb-10 mt-4">
+            <img src="https://i.imgur.com/1yxib4f.png" alt="Logo Melissa y Miguel" class="w-36 mx-auto mb-4 drop-shadow-sm">
+            <p class="text-xs uppercase tracking-[0.3em] text-tema-gris font-bold border-b border-tema-amarillomutado inline-block pb-2">Recepción de Invitados</p>
+        </div>
+
+        <!-- Contenedor del Escáner -->
+        <div id="scanner-container" class="bg-tema-amarilloclaro textura-tarjeta p-6 rounded-2xl shadow-md border border-tema-amarillomutado relative overflow-hidden mb-8">
+            <div class="absolute top-0 left-0 w-full h-1 bg-tema-amarillomutado"></div>
+            <p class="text-sm uppercase tracking-widest text-tema-gris mb-4 text-center font-bold">Escáner de Accesos</p>
+            
+            <!-- Interfaz de Permisos -->
+            <div id="permission-ui" class="text-center py-6">
+                <div class="w-16 h-16 mx-auto mb-4 bg-white rounded-full flex items-center justify-center border border-tema-amarillomutado shadow-sm">
+                    <svg class="w-8 h-8 text-tema-negro" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <p class="text-xs text-tema-gris mb-6 leading-relaxed px-2 font-sans font-medium">Para escanear los pases, autoriza el uso de la cámara de tu dispositivo.</p>
+                <button onclick="arrancarCamara()" class="bg-tema-amarillomutado textura-tarjeta text-tema-negro font-bold py-3 px-8 uppercase tracking-[0.2em] text-xs hover:bg-tema-amarillohover transition-all rounded-xl shadow-md active:scale-95">
+                    Activar Cámara
+                </button>
+                <p id="camera-error" class="text-red-500 text-[10px] uppercase tracking-widest font-bold mt-4 hidden">No se pudo acceder a la cámara</p>
+            </div>
+
+            <!-- Contenedor del video de la cámara -->
+            <div id="reader" class="hidden"></div>
+        </div>
+
+        <!-- Contenedor de Resultados (Oculto inicialmente) -->
+        <div id="result-container" class="hidden flex-col items-center w-full animate-fade-in mb-8">
+            <div id="result-card" class="w-full bg-white p-8 rounded-2xl shadow-lg border relative overflow-hidden text-center">
+                <!-- El contenido se inyectará mediante JS -->
+            </div>
+            
+            <button onclick="reiniciarEscaner()" class="mt-8 bg-tema-amarillomutado textura-tarjeta text-tema-negro font-bold py-4 px-8 uppercase tracking-[0.2em] text-xs hover:bg-tema-amarillohover transition-all rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                Escanear Siguiente Pase
+            </button>
+        </div>
+
+        <!-- Sección de Control de Aforo -->
+        <div class="mt-8 border-t border-tema-amarillomutado pt-10">
+            <h3 class="text-sm uppercase tracking-[0.3em] text-tema-negro font-bold mb-2 text-center">Registro de Ingresos</h3>
+            <div class="flex justify-center items-center gap-2 mb-8">
+                <div class="w-2 h-2 rounded-full bg-tema-amarillomutado animate-pulse"></div>
+                <p id="contador-ingresos" class="text-xs uppercase tracking-widest text-tema-gris text-center font-bold">Total de pases ingresados: 0</p>
+            </div>
+            
+            <!-- Lista en Tiempo Real -->
+            <div id="lista-invitados" class="space-y-4 max-h-96 overflow-y-auto pr-2 scrollbar-hide">
+                <!-- Los invitados se cargarán aquí por Firebase -->
+                <p class="text-xs text-center text-gray-400 uppercase tracking-widest italic mt-4">Conectando con el registro...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Lógica de Firebase y Escáner -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // --- CONFIGURACIÓN DE FIREBASE ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyDx6aIzPkxE3BKLwLegToNKb7hyEaddGA8",
+          authDomain: "boda-a-y-r.firebaseapp.com",
+          projectId: "boda-a-y-r",
+          storageBucket: "boda-a-y-r.firebasestorage.app",
+          messagingSenderId: "74608605808",
+          appId: "1:74608605808:web:dd4bdb1a9d2bedb2c8d2b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // COLECCIÓN DE MELISSA Y MIGUEL
+        const COL_NAME = "confirmaciones_melissa_miguel";
+
+        // --- VARIABLES GLOBALES ---
+        let html5QrCode = null;
+        let procesandoPase = false; 
+        const scannerContainer = document.getElementById('scanner-container');
+        const permissionUi = document.getElementById('permission-ui');
+        const readerEl = document.getElementById('reader');
+        const resultContainer = document.getElementById('result-container');
+        const resultCard = document.getElementById('result-card');
+        const cameraError = document.getElementById('camera-error');
+
+        // --- INICIALIZACIÓN DE LA UI ---
+        function mostrarPantallaInicio() {
+            resultContainer.classList.add('hidden');
+            scannerContainer.classList.remove('hidden');
+            readerEl.classList.add('hidden');
+            permissionUi.classList.remove('hidden');
+            cameraError.classList.add('hidden');
+            procesandoPase = false; 
+
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+        }
+
+        // --- ARRANCAR CÁMARA TRASERA ---
+        window.arrancarCamara = async function() {
+            cameraError.classList.add('hidden');
+            
+            permissionUi.classList.add('hidden');
+            readerEl.classList.remove('hidden');
+            
+            try {
+                await html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess,
+                    onScanFailure
+                );
+            } catch (err) {
+                console.error("Error al iniciar cámara:", err);
+                
+                readerEl.classList.add('hidden');
+                permissionUi.classList.remove('hidden');
+                
+                cameraError.innerText = "Revisa los permisos de tu navegador o recarga la página.";
+                cameraError.classList.remove('hidden');
+            }
+        };
+
+        // --- MANEJO DE LECTURA EXITOSA ---
+        async function onScanSuccess(decodedText, decodedResult) {
+            if (procesandoPase) return;
+            procesandoPase = true;
+
+            try {
+                await html5QrCode.stop();
+            } catch (err) {
+                console.log("Aviso al detener cámara:", err);
+            }
+            
+            scannerContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            resultContainer.classList.add('flex');
+            resultCard.className = "w-full bg-tema-amarilloclaro textura-tarjeta p-8 rounded-2xl shadow-lg border border-tema-amarillomutado text-center";
+            resultCard.innerHTML = `<p class="text-sm uppercase tracking-widest text-tema-gris font-bold animate-pulse">Validando registro...</p>`;
+
+            // Extraer ID 
+            let docId = decodedText.trim();
+            if (docId.includes('http')) {
+                try {
+                    const urlStr = new URL(docId);
+                    docId = urlStr.searchParams.get('id') || urlStr.searchParams.get('data') || docId.split('/').pop();
+                } catch(e) {}
+            }
+            docId = docId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+            if (!docId) {
+                renderizarResultado('#1A1A1A', 'Código Inválido', 'El QR no contiene un identificador válido.', 'Error');
+                return;
+            }
+
+            try {
+                const paseRef = doc(db, COL_NAME, docId);
+                const paseSnap = await getDoc(paseRef);
+
+                if (paseSnap.exists()) {
+                    const data = paseSnap.data();
+                    const limiteAsignado = data.pasesAsignados || data.totalSolicitado || 0;
+
+                    if (data.ingresoValidado) {
+                        // PASE YA UTILIZADO
+                        renderizarResultado(
+                            '#4A4A4A', 
+                            'Registro Duplicado',
+                            `El pase a nombre de <br><b>${data.nombre}</b><br> ya ha sido registrado en la recepción.`,
+                            'Atención Requerida'
+                        );
+                    } else {
+                        // PASE VÁLIDO 
+                        renderizarResultado(
+                            '#FFCB57', 
+                            'Acceso Correcto',
+                            `<span class="block text-2xl font-serif text-tema-negro capitalize my-4">${data.nombre}</span>
+                             <span class="block text-xs uppercase tracking-widest text-tema-gris mb-1">Pases Autorizados</span>
+                             <span class="block text-5xl font-serif text-tema-negro">${limiteAsignado}</span>`,
+                            'Registro Exitoso'
+                        );
+
+                        // Registrar ingreso
+                        updateDoc(paseRef, {
+                            ingresoValidado: true,
+                            fechaIngreso: serverTimestamp()
+                        }).catch(err => console.log("Sincronización en segundo plano:", err));
+                    }
+                } else {
+                    renderizarResultado('#1A1A1A', 'Registro No Encontrado', 'El código escaneado no corresponde a una invitación válida.', 'Acceso Denegado');
+                }
+            } catch (error) {
+                console.error("Error al validar:", error);
+                renderizarResultado(
+                    '#1A1A1A',
+                    'Error de Conexión',
+                    'Ocurrió un problema al conectar con la base de datos. Por favor, revisa tu conexión e inténtalo de nuevo.',
+                    'Error del Sistema'
+                );
+            }
+        }
+
+        function onScanFailure(error) {
+            // Ignorar errores de escaneo continuo
+        }
+
+        // --- RENDERIZADO VISUAL DEL RESULTADO ---
+        function renderizarResultado(colorTema, titulo, contenidoHTML, subtitulo) {
+            resultCard.style.borderColor = colorTema;
+            resultCard.innerHTML = `
+                <div class="absolute top-0 left-0 w-full h-2" style="background-color: ${colorTema}"></div>
+                <p class="text-[10px] uppercase tracking-[0.2em] font-bold mb-6" style="color: ${colorTema === '#FFCB57' ? '#1A1A1A' : colorTema}">${subtitulo}</p>
+                <h3 class="text-xl text-tema-negro font-bold uppercase tracking-widest border-b border-tema-amarillomutado/30 pb-4 mb-4">${titulo}</h3>
+                <div class="text-base text-gray-700 leading-relaxed mb-2">
+                    ${contenidoHTML}
+                </div>
+            `;
+        }
+
+        // --- EXPONER FUNCIÓN DE REINICIO ---
+        window.reiniciarEscaner = function() {
+            resultContainer.classList.add('hidden');
+            scannerContainer.classList.remove('hidden');
+            procesandoPase = false;
+            window.arrancarCamara(); 
+        };
+
+        // --- ESCUCHA EN TIEMPO REAL DE LOS INGRESOS ---
+        function iniciarMonitoreoAsistencia() {
+            const refCol = collection(db, COL_NAME);
+            
+            onSnapshot(refCol, (snapshot) => {
+                const listaContenedor = document.getElementById('lista-invitados');
+                const contadorTxt = document.getElementById('contador-ingresos');
+                
+                let totalPases = 0;
+                let htmlLista = '';
+                const docs = [];
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if(data.ingresoValidado === true) {
+                        docs.push({ id: doc.id, ...data });
+                    }
+                });
+                
+                docs.sort((a, b) => {
+                    const timeA = (a.fechaIngreso && typeof a.fechaIngreso.toDate === 'function') ? a.fechaIngreso.toDate().getTime() : 0;
+                    const timeB = (b.fechaIngreso && typeof b.fechaIngreso.toDate === 'function') ? b.fechaIngreso.toDate().getTime() : 0;
+                    return timeB - timeA;
+                });
+
+                docs.forEach(data => {
+                    const limite = data.pasesAsignados || data.totalSolicitado || 0;
+                    totalPases += limite;
+                    
+                    htmlLista += `
+                        <div class="bg-tema-amarilloclaro textura-tarjeta border border-tema-amarillomutado p-5 rounded-2xl shadow-sm flex justify-between items-center transition-all">
+                            <div class="text-left">
+                                <p class="font-serif text-lg text-tema-negro capitalize leading-tight mb-1">${data.nombre}</p>
+                                <p class="text-[9px] uppercase tracking-[0.2em] text-tema-gris font-bold">Pases autorizados: ${limite}</p>
+                            </div>
+                            <div class="text-right pl-4 border-l border-tema-amarillomutado/50">
+                                <span class="inline-block text-tema-negro text-[9px] uppercase tracking-widest font-bold">
+                                    Ingresó
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (docs.length === 0) {
+                    htmlLista = `<p class="text-xs text-center text-gray-400 uppercase tracking-widest italic mt-8 font-sans">Aún no hay ingresos registrados.</p>`;
+                }
+                
+                listaContenedor.innerHTML = htmlLista;
+                contadorTxt.innerText = `Total de pases ingresados: ${totalPases}`;
+            }, (error) => {
+                console.error("Error obteniendo la lista en tiempo real: ", error);
+            });
+        }
+
+        // Iniciar procesos al cargar la página
+        document.addEventListener("DOMContentLoaded", () => {
+            mostrarPantallaInicio();
+            iniciarMonitoreoAsistencia();
+        });
+
+    </script>
+</body>
+</html>
