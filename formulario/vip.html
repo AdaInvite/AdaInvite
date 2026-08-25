@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Librería para compresión automática de imágenes -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    
     <style>
         :root {
             --primary-purple: #9B8AA5;
@@ -55,7 +58,7 @@
     
     <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
         
-        <!-- ENCABEZADO VIP -->
+        <!-- ENCABEZADO VIP ORIGINAL -->
         <div id="form-header" class="text-center mb-12">
             <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-14 mx-auto mb-6">
             <h1 class="text-5xl md:text-6xl text-[#9B8AA5] mb-4">Paquete Vip</h1>
@@ -98,7 +101,6 @@
             </div>
         </div>
 
-        <!-- Se añadió "novalidate" para que el navegador no bloquee el envío por defecto -->
         <form id="form-vip" class="space-y-8" novalidate>
             
             <!-- SECCIÓN 1: DATOS GENERALES Y CONTACTO -->
@@ -424,6 +426,11 @@
                     <h4 class="text-md font-bold mb-1 text-[#3D3542]">Foto Principal (Portada)</h4>
                     <input type="file" id="foto_portada" name="foto_portada" data-name="Foto de Portada" class="form-input border-dashed p-4 text-center cursor-pointer" accept="image/*" required>
                 </div>
+                
+                <div class="section-group !bg-white !border-gray-200 shadow-sm mb-4">
+                    <h4 class="text-md font-bold mb-1 text-[#3D3542]">Galería VIP (Máx 10)</h4>
+                    <input type="file" id="fotos_galeria" name="fotos_galeria" data-name="Galería de Fotos" class="form-input border-dashed p-4 text-center cursor-pointer" accept="image/*" multiple required>
+                </div>
 
                 <h4 class="text-md font-semibold mb-3 text-[#3D3542]">Fondos Separadores</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -462,7 +469,7 @@
             <!-- BARRA DE PROGRESO (Oculta por defecto) -->
             <div id="progress-container" class="hidden mt-4 mb-4">
                 <div class="flex justify-between text-sm font-bold text-[#9B8AA5] mb-2">
-                    <span>Subiendo archivos, por favor no cierres la ventana...</span>
+                    <span>Optimizando y subiendo archivos, por favor no cierres la ventana...</span>
                     <span id="progress-text">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
@@ -543,7 +550,7 @@
         });
     </script>
 
-    <!-- SCRIPT DE INTEGRACIÓN CON FIREBASE Y VALIDACIONES -->
+    <!-- SCRIPT DE INTEGRACIÓN CON FIREBASE, AUTO-SAVE Y COMPRESIÓN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -571,18 +578,60 @@
         const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
         const missingFieldsList = document.getElementById('missing-fields-list');
 
-        // Manejar el botón "Regresar a llenar"
-        btnCancelSubmit.addEventListener('click', () => {
-            warningModal.classList.add('hidden');
-        });
+        // --- SISTEMA DE AUTO-GUARDADO (Local Storage) ---
+        let isDirty = false;
+        
+        function saveToLocal() {
+            const data = {};
+            const formData = new FormData(formVIP);
+            formData.forEach((value, key) => {
+                const input = formVIP.elements[key];
+                if(input && input.type !== 'file') {
+                    data[key] = value;
+                }
+            });
+            formVIP.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                data[cb.name] = cb.checked;
+            });
+            localStorage.setItem('vip_form_autosave_single', JSON.stringify(data));
+            isDirty = true;
+        }
 
-        // Manejar el botón "Sí, enviar así"
+        function restoreFromLocal() {
+            const saved = localStorage.getItem('vip_form_autosave_single');
+            if(saved) {
+                const data = JSON.parse(saved);
+                for(let key in data) {
+                    const input = formVIP.elements[key];
+                    if(input) {
+                        if(input.type === 'checkbox') input.checked = data[key];
+                        else if(input.type !== 'file') input.value = data[key];
+                    }
+                }
+            }
+        }
+
+        formVIP.addEventListener('input', saveToLocal);
+        formVIP.addEventListener('change', saveToLocal);
+        document.addEventListener('DOMContentLoaded', restoreFromLocal);
+
+        // Prevención de cierre accidental de pestaña
+        window.addEventListener('beforeunload', (e) => {
+            if(isDirty) {
+                e.preventDefault();
+                e.returnValue = ''; 
+            }
+        });
+        // -----------------------------------------------
+
+        // Manejar modal
+        btnCancelSubmit.addEventListener('click', () => { warningModal.classList.add('hidden'); });
         btnConfirmSubmit.addEventListener('click', () => {
             warningModal.classList.add('hidden');
             ejecutarEnvioFirebase();
         });
 
-        // Evento de Envío del Formulario (Validaciones)
+        // Validaciones al enviar
         formVIP.addEventListener('submit', (e) => {
             e.preventDefault(); 
             
@@ -594,15 +643,12 @@
                     alert('El link de música debe ser exclusivamente de YouTube.\nEjemplo: https://www.youtube.com/watch?v=...');
                     inputMusica.focus();
                     inputMusica.classList.add('border-red-500', 'bg-red-50');
-                    // Quitar el borde rojo cuando empiecen a escribir de nuevo
-                    inputMusica.addEventListener('input', function() {
-                        this.classList.remove('border-red-500', 'bg-red-50');
-                    }, { once: true });
-                    return; // Detiene el envío
+                    inputMusica.addEventListener('input', function() { this.classList.remove('border-red-500', 'bg-red-50'); }, { once: true });
+                    return; 
                 }
             }
 
-            // 2. Revisar qué campos que eran obligatorios están vacíos
+            // 2. Revisar campos vacíos
             const requiredInputs = formVIP.querySelectorAll('[required]');
             let missingStrictNames = [];
             let missingSoftNames = [];
@@ -626,25 +672,20 @@
                         missingStrictNames.push(fieldName);
                         if (!firstStrictInput) firstStrictInput = input;
                         
-                        // Pintamos el borde en rojo de los campos estrictos faltantes
                         input.classList.add('border-red-500', 'bg-red-50');
-                        input.addEventListener('input', function() {
-                            this.classList.remove('border-red-500', 'bg-red-50');
-                        }, { once: true });
+                        input.addEventListener('input', function() { this.classList.remove('border-red-500', 'bg-red-50'); }, { once: true });
                     } else {
                         missingSoftNames.push(fieldName);
                     }
                 }
             });
 
-            // 3. Mostrar Modal si faltan datos o enviar directamente si todo está lleno
+            // 3. Flujo (Bloqueo vs Modal)
             if (missingStrictNames.length > 0) {
-                // Si faltan datos obligatorios de cliente, no se muestra el modal, se frena el envío.
                 alert('Por favor completa los siguientes datos obligatorios de contacto:\n\n- ' + missingStrictNames.join('\n- '));
                 firstStrictInput.focus();
-                return; // Bloquea el envío
+                return; 
             } else if (missingSoftNames.length > 0) {
-                // Si solo faltan datos opcionales, mostramos el modal de advertencia
                 missingFieldsList.innerHTML = '';
                 missingSoftNames.forEach(name => {
                     const li = document.createElement('li');
@@ -653,37 +694,38 @@
                 });
                 warningModal.classList.remove('hidden');
             } else {
-                // Si todo está lleno, se envía directo
                 ejecutarEnvioFirebase();
             }
         });
 
-        // Función original de envío separada para llamarla cuando aprueben el modal
+        // Configuración para que comprima a máximo 1MB
+        const compOptions = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+        };
+
         async function ejecutarEnvioFirebase() {
+            // Quitamos la advertencia de cierre accidental porque sí quieren enviar
+            isDirty = false;
+            
             submitBtn.disabled = true;
             const originalBtnText = submitBtn.innerHTML;
-            
-            // Ocultamos el botón de enviar
             submitBtn.classList.add('hidden');
 
-            // Mostrar la barra de progreso
             const progressContainer = document.getElementById('progress-container');
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
             progressContainer.classList.remove('hidden');
             
-            // Contar cuántos archivos en total se van a subir
             let totalArchivos = 0;
             let archivosSubidos = 0;
             const todosLosInputs = document.querySelectorAll('input[type="file"]');
             
             todosLosInputs.forEach(input => {
-                if (input.files && input.files.length > 0) {
-                    totalArchivos += input.files.length;
-                }
+                if (input.files && input.files.length > 0) totalArchivos += input.files.length;
             });
 
-            // Función para actualizar la barra visualmente
             function actualizarProgreso() {
                 archivosSubidos++;
                 let porcentaje = Math.floor((archivosSubidos / totalArchivos) * 95);
@@ -703,7 +745,14 @@
                 const uploadSingleFile = async (inputId, storagePath) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
-                        const file = fileInput.files[0];
+                        let file = fileInput.files[0];
+                        
+                        // Compresión de imagen antes de subir a Firebase
+                        if (file.type.startsWith('image/') && window.imageCompression) {
+                            try { file = await window.imageCompression(file, compOptions); } 
+                            catch (e) { console.warn("Error comprimiendo, subiendo original"); }
+                        }
+
                         const fileRef = ref(storage, `${storagePath}/${inputId}_${file.name}`);
                         await uploadBytes(fileRef, file);
                         actualizarProgreso();
@@ -712,7 +761,7 @@
                     return null;
                 };
 
-                // Subir fotos individuales
+                // Subir fotos
                 const urlPortada = await uploadSingleFile('foto_portada', folderName);
                 const urlSep1 = await uploadSingleFile('foto_separador_1', folderName);
                 const urlSep2 = await uploadSingleFile('foto_separador_2', folderName);
@@ -727,13 +776,18 @@
                 const urlHistoria6 = await uploadSingleFile('historia_foto_6', folderName);
                 const urlVestimenta = await uploadSingleFile('vestimenta_imagen', folderName);
 
-                // Subir fotos múltiples (Galería y Corte)
                 const uploadMultipleFiles = async (inputId, subFolder) => {
                     const urls = [];
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         for (let i = 0; i < fileInput.files.length; i++) {
-                            const file = fileInput.files[i];
+                            let file = fileInput.files[i];
+                            
+                            if (file.type.startsWith('image/') && window.imageCompression) {
+                                try { file = await window.imageCompression(file, compOptions); } 
+                                catch (e) {}
+                            }
+
                             const fileRef = ref(storage, `${folderName}/${subFolder}/foto_${i}_${file.name}`);
                             await uploadBytes(fileRef, file);
                             actualizarProgreso();
@@ -754,26 +808,21 @@
                         datosCliente[key] = value;
                     }
                 }
+                formVIP.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    datosCliente[cb.name] = cb.checked;
+                });
 
                 const documentoFinal = {
                     ...datosCliente, 
                     paquete: "VIP",
                     imagenes: {
                         portada: urlPortada,
-                        separador1: urlSep1,
-                        separador2: urlSep2,
-                        separador3: urlSep3,
-                        separador4: urlSep4,
-                        separador5: urlSep5,
-                        historia1: urlHistoria1,
-                        historia2: urlHistoria2,
-                        historia3: urlHistoria3,
-                        historia4: urlHistoria4,
-                        historia5: urlHistoria5,
-                        historia6: urlHistoria6,
+                        separador1: urlSep1, separador2: urlSep2, separador3: urlSep3,
+                        separador4: urlSep4, separador5: urlSep5,
+                        historia1: urlHistoria1, historia2: urlHistoria2, historia3: urlHistoria3,
+                        historia4: urlHistoria4, historia5: urlHistoria5, historia6: urlHistoria6,
                         vestimenta: urlVestimenta,
-                        galeria: urlsGaleria,
-                        corteHonor: urlsCorte
+                        galeria: urlsGaleria, corteHonor: urlsCorte
                     },
                     fechaRegistro: serverTimestamp(),
                     estado: "Nuevo" 
@@ -781,13 +830,14 @@
 
                 await addDoc(collection(db, "solicitudes_vip"), documentoFinal);
 
-                // Llenar al 100% cuando termine todo
                 progressBar.style.width = '100%';
                 progressText.innerText = '100%';
                 submitBtn.innerHTML = '¡Datos enviados con éxito!';
                 submitBtn.style.backgroundColor = '#4CAF50';
                 
-                // Mostrar pantalla de éxito y ocultar formulario
+                // Limpiar auto-guardado
+                localStorage.removeItem('vip_form_autosave_single');
+                
                 setTimeout(() => {
                     formVIP.classList.add('hidden');
                     formHeader.classList.add('hidden');
@@ -800,14 +850,13 @@
                 console.error("Error al subir los datos: ", error);
                 alert("Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.");
                 
-                // Restauramos y volvemos a mostrar el botón
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.classList.remove('hidden');
-                
-                // Ocultamos la barra de progreso
                 progressContainer.classList.add('hidden');
+                
+                isDirty = true; // Reactivamos el candado por si intentan cerrar
             }
         }
     </script>
