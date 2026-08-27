@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>XV Zhabdy - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/bV9bZLx.png">
+    
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Mis XV • Zhabdy - Recuerdos">
+    <meta property="og:description" content="Ayúdame a capturar los mejores momentos de mis XV años.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#1A1A1A',
+                        blanco: {
+                            perla: '#000000'
+                        },
+                        beige: '#D8C3A5'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <!-- LIBRERÍAS DE CONVERSIÓN Y COMPRESIÓN -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
+
+    <style>
+        :root {
+            --font-elegant: 'Unna', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --font-numbers: 'Unna', serif; 
+            --beige: #D8C3A5;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #000000;
+            color: #FFFFFF;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, p, label, button, input, select, span { font-family: var(--font-elegant); }
+        .font-numbers { font-family: var(--font-numbers) !important; font-weight: 700; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; text-transform: none !important; }
+
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(216, 195, 165, 0.3); /* Borde Beige */
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);  
+            position: relative;
+            z-index: 10;
+        }
+
+        /* VIDEO DE FONDO FIJO */
+        .video-background-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 1; pointer-events: none; 
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+      
+
+        /* INPUTS ELEGANTES TEMA OSCURO */
+        .input-zhabdy {
+            background-color: transparent; 
+            border: none;
+            border-bottom: 1px solid rgba(216, 195, 165, 0.5);
+            color: #FFFFFF;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-radius: 0;
+            padding: 10px 5px;
+        }
+        .input-zhabdy:focus { border-bottom-color: var(--beige); outline: none; background-color: rgba(216, 195, 165, 0.05); }
+        .input-zhabdy::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 300; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;}
+        select option { background-color: #111111; color: #FFFFFF; }
+        select { text-align-last: center; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px !important;} 
+
+        #uploadModal { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px; width: 100%; max-height: 220px; overflow-y: auto; padding: 10px;
+        }
+        
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 1.5rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #toastMessage { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .toast-visible { opacity: 1 !important; transform: translate(-50%, 0) !important; pointer-events: auto !important; }
+        
+        .tarjeta-recuerdo { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .tarjeta-recuerdo:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(216, 195, 165, 0.15); z-index: 10; }
+        
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.8); }
+    </style>
+</head>
+<body>
+
+    <!-- FONDO DE VIDEO ZHABDY -->
+    <div class="video-background-container">
+        <div class="video-overlay"></div>
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FFondoazulfloresnegro.MP4?alt=media&token=e46ba342-15ab-4c2a-9781-3383dce31410" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Toast de Notificaciones -->
+    <div id="toastMessage" class="fixed top-8 left-1/2 transform -translate-x-1/2 -translate-y-16 opacity-0 pointer-events-none px-8 py-4 rounded-xl shadow-2xl z-[9999] text-xs uppercase font-bold tracking-[0.2em] text-center min-w-[300px] border border-beige bg-black/90 backdrop-blur-md text-beige">
+        Mensaje aquí
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL PANTALLA COMPLETA -->
+    <div class="w-full min-h-screen flex flex-col relative z-10">
+
+        <!-- HEADER ELEGANTE -->
+        <header class="w-full pt-20 md:pt-28 pb-6 px-6 flex flex-col items-center text-center relative z-10">
+            
+            <p class="text-sm uppercase tracking-[0.2em] text-beige font-bold z-10 text-center drop-shadow-md mb-4">
+                MIS XV
+            </p>
+            
+            <h1 class="text-7xl md:text-8xl font-script text-white mb-6 text-shadow-light"> Zhabdy</h1>
+
+            <p class="text-sm md:text-lg text-white leading-relaxed max-w-lg mx-auto font-medium uppercase mb-6 px-16 text-shadow-light">
+                "Ayúdame a capturar la magia de mis XV años subiendo tus fotos y videos."
+            </p>
+
+            <!-- Botón Estilo Zhabdy -->
+            <button id="openModalBtn" class="bg-beige border border-beige text-black font-bold py-3 px-6 rounded-xl uppercase tracking-[0.2em] text-xs shadow-lg hover:bg-transparent hover:text-beige transition-all active:scale-95 duration-300">
+                Subir mis fotos 
+            </button>
+        </header>
+
+        <!-- SECCIÓN DE GALERÍA -->
+        <main class="w-full flex-grow max-w-[1400px] mx-auto px-4 md:px-8 pb-10 relative z-10">
+            
+            <!-- CONTROLES DE VISTA -->
+            <div class="w-full flex flex-col items-center border-t border-white/20 pt-6 mb-6 gap-4">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-white/60 font-bold">Vista de Galería</p>
+                <div class="bg-black/40 backdrop-blur-md border border-beige/30 rounded-xl p-1 flex shadow-sm w-fit mx-auto">
+                    <button id="btn1Col" class="px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-black bg-beige rounded-lg transition-all">Amplia</button>
+                    <button id="btn2Col" class="px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white hover:text-beige rounded-lg transition-all">Cuadrícula</button>
+                </div>
+            </div>
+            
+            <!-- CONTENEDOR MASONRY (Muro) -->
+            <div id="muro" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10">
+                <!-- Tarjetas generadas dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE SUBIDA -->
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-md hidden w-full h-full">
+        <div class="relative bg-[#0a0a0a] border border-beige/40 rounded-3xl w-full max-w-lg p-8 md:p-10 shadow-[0_0_30px_rgba(216,195,165,0.2)] flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar">
+            
+            <button id="closeModalBtnIcon" class="absolute top-6 right-6 text-white/50 hover:text-beige transition-colors z-20 bg-white/5 rounded-full p-2 border border-white/10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="text-center mt-2 relative z-10 flex flex-col items-center">
+                <img src="https://i.imgur.com/Tytmpkd.png" alt="Corona" class="w-20 mb-4 opacity-80">
+                <h2 class="text-5xl font-script text-white mb-2">Tus Momentos</h2>
+             
+            </div>
+
+            <div id="uploadForm" class="w-full flex flex-col gap-8 text-left relative z-10">
+                <div>
+                    <label class="text-beige text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block text-center">Familia / Nombre</label>
+                    <input type="text" id="nombreInput" placeholder="Ej: Familia López" class="input-zhabdy w-full font-bold">
+                </div>
+                
+                <div>
+                    <label class="text-beige text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block text-center">Momento del evento</label>
+                    <select id="folderSelect" class="input-zhabdy w-full cursor-pointer appearance-none font-bold">
+                        <option value="" disabled selected class="text-white/40">Selecciona el momento...</option>
+                        <option value="La Ceremonia">La Ceremonia</option>
+                        <option value="La Recepción">La Recepción</option>
+                        <option value="El Vals">El Vals</option>
+                        <option value="La Fiesta">La Fiesta</option>
+                        <option value="Con Zhabdy">Con la Quinceañera</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-beige text-[10px] font-bold tracking-[0.2em] uppercase mb-3 block text-center">Tus Archivos</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-beige/40 bg-black/40 rounded-2xl p-8 text-center transition-colors hover:bg-white/5 cursor-pointer overflow-hidden group">
+                        
+                        <div id="processingOverlay" class="hidden">
+                            <svg class="animate-spin h-8 w-8 text-beige mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-beige text-[9px] font-bold uppercase tracking-[0.2em] text-center px-2">Optimizando calidad...<br>No cierres esta ventana</p>
+                        </div>
+
+                        <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
+                        <svg class="w-10 h-10 mx-auto text-white/40 group-hover:text-beige transition-colors mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-white text-xs font-bold uppercase tracking-[0.2em]">Toca aquí para buscar</p>
+                        <p class="text-white/40 text-[9px] tracking-widest mt-2 uppercase">(Videos máximo 30s / 20MB)</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-6 border border-beige/20 rounded-2xl bg-black/60 shadow-inner overflow-hidden">
+                        <p class="text-[9px] text-beige text-center py-3 uppercase font-bold border-b border-beige/20 tracking-[0.2em] bg-white/5">Archivos listos:</p>
+                        <div id="previewContainer" class="bg-black/50"></div>
+                        <button id="removePreviewBtn" class="w-full py-3 text-[10px] text-red-400 bg-red-900/30 uppercase font-bold hover:bg-red-900/50 transition-colors tracking-widest border-t border-red-900/40">Limpiar selección</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 mt-4">
+                    <button id="btnCancelar" class="flex-1 bg-transparent border border-white/30 text-white font-bold rounded-xl py-4 text-[10px] tracking-[0.2em] uppercase hover:bg-white/10 transition-colors">Cancelar</button>
+                    <button id="btnSubir" class="flex-[1.5] bg-beige border border-beige text-black font-bold rounded-xl py-4 text-[10px] tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(216,195,165,0.3)] hover:bg-transparent hover:text-beige transition-all active:scale-95">Subir Galería</button>
+                </div>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-[0.3em] font-bold mt-6 text-black bg-beige p-4 rounded-xl hidden text-center w-full relative z-10 shadow-lg"></p>
+        </div>
+    </div>
+
+    <!-- FIREBASE Y LÓGICA CORE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // CREDENCIALES ZHABDY
+        const firebaseConfig = {
+          apiKey: "AIzaSyBfOoalLZWJmJtIqOXT28djcf2sJWWhTTE",
+          authDomain: "xv-marcela.firebaseapp.com",
+          projectId: "xv-marcela",
+          storageBucket: "xv-marcela.firebasestorage.app",
+          messagingSenderId: "378572984549",
+          appId: "1:378572984549:web:75d1ad755acfbe0354440c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // GESTIÓN DE LIKES (LocalStorage)
+        let likedPosts = JSON.parse(localStorage.getItem('liked_posts_zhabdy')) || [];
+
+        // TOAST
+        window.showToast = function(msg, isError = true) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = msg;
+            if(isError) {
+                toast.style.borderColor = "#ef4444";
+                toast.style.color = "#ef4444";
+            } else {
+                toast.style.borderColor = "#D8C3A5";
+                toast.style.color = "#D8C3A5";
+            }
+            toast.classList.add('toast-visible');
+            setTimeout(() => { toast.classList.remove('toast-visible'); }, 3500);
+        };
+
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const estadoCarga = document.getElementById('estadoCarga');
+        const btnSubir = document.getElementById("btnSubir");
+        const processingOverlay = document.getElementById('processingOverlay');
+
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        document.getElementById('closeModalBtnIcon').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        document.getElementById('btnCancelar').addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // LÓGICA DE ARCHIVOS CON COMPRESIÓN
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            processingOverlay.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+            
+            const archivosProcesados = new DataTransfer();
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                const fileName = file.name.toLowerCase();
+
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        window.showToast(`El video dura más de 30s y no se subirá.`, true);
+                        continue; 
+                    }
+                    const videoSizeMB = file.size / 1024 / 1024;
+                    if (videoSizeMB > 20) {
+                        window.showToast(`El video es muy pesado (${videoSizeMB.toFixed(1)}MB). Máx 20MB.`, true);
+                        continue;
+                    }
+                } 
+                else if (file.type.includes("image")) {
+                    try {
+                        if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                            const conversionPromise = heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+                            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout HEIC")), 15000));
+                            const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                            const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                            file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), { type: "image/jpeg" });
+                        }
+
+                        const options = { maxSizeMB: 0.9, maxWidthOrHeight: 1920, useWebWorker: true };
+                        const compressedBlob = await imageCompression(file, options);
+                        file = new File([compressedBlob], file.name, { type: compressedBlob.type });
+                    } catch (err) {
+                        console.warn(`Error optimizando ${file.name}:`, err);
+                    }
+                }
+
+                archivosProcesados.items.add(file);
+                
+                // MINIATURAS
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-24 bg-white/10 rounded-xl overflow-hidden shadow-sm border border-white/20";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/50"><svg class="w-6 h-6 text-beige" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = archivosProcesados.files;
+            processingOverlay.classList.add('hidden');
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+                dropZone.classList.remove('hidden');
+                previsualizacion.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        // SUBIDA A FIREBASE
+        btnSubir.addEventListener("click", async () => {
+            const archivos = Array.from(archivoInput.files);
+            const nombre = document.getElementById("nombreInput").value.trim();
+            const momento = document.getElementById("folderSelect").value;
+
+            if (archivos.length === 0 || !nombre || !momento) {
+                window.showToast("POR FAVOR, COMPLETA TODOS LOS DATOS.", true);
+                return;
+            }
+
+            btnSubir.disabled = true;
+            estadoCarga.classList.remove('hidden');
+
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const total = archivos.length;
+                
+                await new Promise((resolve, reject) => {
+                    const storageRef = ref(storage, 'xv_zhabdy/' + Date.now() + "_" + file.name);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                        },
+                        (error) => { reject(error); },
+                        async () => {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            await addDoc(collection(db, "muro_xvzhabdy"), {
+                                nombre, momento, url_multimedia: url, likes: 0,
+                                tipo: file.type.includes("video") ? "video" : "imagen",
+                                fecha: new Date()
+                            });
+                            resolve();
+                        }
+                    );
+                });
+            }
+
+            estadoCarga.innerText = "¡MOMENTOS GUARDADOS CON ÉXITO!";
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // VISTAS DEL GRID
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-black bg-beige rounded-lg transition-all";
+            btn2Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white hover:text-beige rounded-lg transition-all";
+            muro.className = "columns-1 gap-6 w-full px-2";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-black bg-beige rounded-lg transition-all";
+            btn1Col.className = "px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white hover:text-beige rounded-lg transition-all";
+            muro.className = "columns-2 gap-4 w-full px-1";
+        });
+
+        // RENDERIZAR MURO
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_xvzhabdy"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `<div id="emptyMessage" class="text-white/60 font-bold text-sm col-span-full py-12 text-center break-inside-avoid tracking-widest uppercase">AÚN NO HAY RECUERDOS. ¡SÉ EL PRIMERO EN SUBIR UNO!</div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const media = datos.tipo === "video" 
+                        ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-black/40 cursor-pointer object-cover"></video>` 
+                        : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover" loading="lazy">`;
+                    
+                    const userLiked = likedPosts.includes(id);
+                    const heartColorClass = userLiked ? 'text-beige fill-current' : 'text-white/40';
+
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-6 glass-card flex flex-col overflow-hidden relative z-20";
+                    
+                    divTarjeta.innerHTML = `
+                        <div class="relative w-full">
+                            <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md border border-beige/40 text-beige text-[12px] font-bold px-3 py-1.5 rounded-full shadow-lg uppercase z-10">${datos.momento}</span>
+                            ${media}
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-black/40 border-t border-white/10">
+                            <h4 class="text-white font-bold uppercase text-sm truncate flex-1">${datos.nombre}</h4>
+                            <div class="flex items-center gap-2 pl-2">
+                                <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-colors focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                    <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    <span id="contador-likes-${id}" class="font-bold text-sm font-numbers text-beige">${datos.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) {
+                        contadorLikes.innerText = datos.likes;
+                    }
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) {
+                        tarjetaRemover.remove();
+                    }
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        window.darLike = async function(id) {
+            if (likedPosts.includes(id)) {
+                window.showToast("YA DISTE ME GUSTA A ESTE RECUERDO", false);
+                return;
+            }
+
+            const heartIcon = document.getElementById(`heart-icon-${id}`);
+            const contadorText = document.getElementById(`contador-likes-${id}`);
+            
+            if (heartIcon) {
+                heartIcon.classList.remove('text-white/40', 'fill-none');
+                heartIcon.classList.add('text-beige', 'fill-current');
+            }
+            if (contadorText) {
+                contadorText.innerText = (parseInt(contadorText.innerText) || 0) + 1;
+            }
+
+            likedPosts.push(id);
+            localStorage.setItem('liked_posts_zhabdy', JSON.stringify(likedPosts));
+
+            try {
+                await updateDoc(doc(db, "muro_xvzhabdy", id), { likes: increment(1) });
+            } catch (error) {
+                console.error("Error al dar like:", error);
+                window.showToast("ERROR AL CONECTAR.", true);
+            }
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
