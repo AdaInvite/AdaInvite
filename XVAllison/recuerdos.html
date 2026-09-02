@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>XV Allison Yamileth - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/yau6PD6.jpeg">
+    
+    <meta name="theme-color" content="#FCF9F9">
+    <meta property="og:title" content="Mis XV • Allison Yamileth - Recuerdos">
+    <meta property="og:description" content="Ayúdame a capturar los mejores momentos de mis XV años.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: {
+                            elegante: '#DFAFBC',
+                            hover: '#C89BA9'
+                        },
+                        blanco: {
+                            perla: '#FCF9F9'
+                        },
+                        texto: '#2C2A2A'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- LIBRERÍAS DE CONVERSIÓN Y COMPRESIÓN -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
+
+    <style>
+        :root {
+            --font-elegant: 'Forum', serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #FCF9F9; /* Fondo Blanco Perla */
+            color: #2C2A2A;
+            scroll-behavior: smooth;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h1, h2, h3, p, label, button, input, select, textarea, span { 
+            font-family: var(--font-elegant) !important; 
+            text-transform: uppercase; 
+        }
+
+        .font-script, .font-script * { 
+            font-family: var(--font-script) !important; 
+            font-weight: 400; 
+            text-transform: none !important; 
+            letter-spacing: normal !important;
+            line-height: 1.2 !important;
+        }
+        
+        .input-elegante {
+            background-color: #FFFFFF; 
+            border: 1px solid #E5E7EB;
+            color: #2C2A2A;
+            border-radius: 8px; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .input-elegante:focus { border-color: #DFAFBC; outline: none; box-shadow: 0 4px 15px rgba(223, 175, 188, 0.2); }
+        .input-elegante::placeholder { color: #9CA3AF; font-weight: 300; }
+
+        /* Estilos Pestañas Modal */
+        .tab-btn {
+            color: #9CA3AF;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #DFAFBC;
+            border-bottom: 2px solid #DFAFBC;
+            font-weight: bold;
+        }
+
+        #uploadModal { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px; width: 100%; max-height: 220px; overflow-y: auto; padding: 10px;
+        }
+        
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(252, 249, 249, 0.9); backdrop-filter: blur(4px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 1rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #toastMessage { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .toast-visible { opacity: 1 !important; transform: translate(-50%, 0) !important; pointer-events: auto !important; }
+        
+        .tarjeta-recuerdo { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .tarjeta-recuerdo:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(223, 175, 188, 0.2); z-index: 10; }
+
+        .comilla-decorativa {
+            color: #DFAFBC;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            z-index: 0;
+            opacity: 0.15;
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Fondo Textura Papel */
+        .bg-texture-main {
+            background-image: url('https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Textura%20sobre.png');
+            background-size: 400px;
+            opacity: 0.08;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-blanco-perla relative">
+
+    <div class="bg-texture-main"></div>
+
+    <!-- Toast de Notificaciones -->
+    <div id="toastMessage" class="fixed top-8 left-1/2 transform -translate-x-1/2 -translate-y-16 opacity-0 pointer-events-none px-8 py-4 rounded-xl shadow-xl z-[9999] text-xs uppercase font-bold tracking-[0.2em] text-center min-w-[300px] border bg-white text-rosa-elegante border-rosa-elegante/30">
+        Mensaje aquí
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="w-full min-h-screen flex flex-col relative z-10">
+
+        <!-- DECORACIONES FLORALES ESQUINAS -->
+        <img src="https://i.imgur.com/VTpAVsw.png" crossorigin="anonymous" class="absolute top-0 right-0 w-32 md:w-48 opacity-90 pointer-events-none z-0" alt="Floral">
+        <img src="https://i.imgur.com/eu7nWbE.png" crossorigin="anonymous" class="absolute top-0 left-0 w-32 md:w-48 opacity-90 pointer-events-none z-0 transform -scale-x-100" alt="Floral">
+
+        <!-- HEADER ELEGANTE -->
+        <header class="w-full pt-10 pb-6 px-6 flex flex-col items-center text-center relative z-10">
+            <p class="text-sm uppercase tracking-[0.2em] text-gray-500 font-bold mb-6 drop-shadow-sm">
+                Álbum de Recuerdos
+            </p>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-9xl font-script text-rosa-elegante mb-4 drop-shadow-sm leading-tight">Allison <br>Yamileth</h1>
+
+            <p class="text-xs md:text-sm text-[#2C2A2A]/80 leading-relaxed max-w-2xl mx-auto font-bold uppercase mb-4 px-2 tracking-widest">
+                "Las mejores historias se escriben juntas. Comparte tus fotos y videos favoritos del evento."
+            </p>
+
+            <button id="openModalBtn" class="bg-rosa-elegante text-white font-bold py-4 px-10 rounded-xl uppercase tracking-[0.2em] text-[10px] md:text-xs shadow-xl shadow-rosa-elegante/30 hover:bg-rosa-hover transition-all hover:-translate-y-1 active:scale-95 duration-300 border border-white/50">
+                Añadir Recuerdo
+            </button>
+        </header>
+
+        <!-- SECCIÓN DE GALERÍA -->
+        <main class="w-full flex-grow max-w-[1400px] mx-auto px-4 md:px-8 pb-20 relative z-10">
+            
+            <!-- CONTROLES DE VISTA -->
+            <div class="w-full flex justify-center border-t border-gray-200 pt-6 mb-4 gap-2">
+                <div class="bg-white border border-gray-200 rounded-xl p-1 flex shadow-sm w-fit">
+                    <button id="btn1Col" class="px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-rosa-elegante rounded-lg transition-all shadow-sm">Amplia</button>
+                    <button id="btn2Col" class="px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 hover:bg-gray-100 rounded-lg transition-all">Cuadrícula</button>
+                </div>
+            </div>
+            
+            <!-- CONTENEDOR MASONRY (Muro) -->
+            <div id="muro" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10 mt-6">
+                <!-- Tarjetas generadas dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE SUBIDA CON PESTAÑAS -->
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm hidden w-full h-full">
+        <div class="relative bg-blanco-perla rounded-3xl w-full max-w-lg p-6 md:p-10 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar border border-white/50">
+
+            <button id="closeModalBtnIcon" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-rosa-elegante transition-colors z-20 bg-white rounded-full p-2 border border-gray-200 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- TABS -->
+            <div class="flex w-full border-b border-gray-200 mb-8 mt-6 md:mt-6 relative z-10">
+                <button id="tabFotosBtn" class="flex-1 pb-4 text-[11px] uppercase tracking-widest tab-btn active font-bold">Subir Archivo</button>
+                <button id="tabMensajeBtn" class="flex-1 pb-4 text-[11px] uppercase tracking-widest tab-btn font-bold">Dejar Mensaje</button>
+            </div>
+
+            <!-- CONTENIDO PESTAÑA 1: FOTOS/VIDEOS -->
+            <div id="formFotos" class="w-full flex flex-col gap-2 text-left relative z-10 transition-all duration-300">
+                <div>
+                    <label class="text-rosa-elegante text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block">Familia / Nombre</label>
+                    <input type="text" id="nombreInputFoto" placeholder="Ej: Familia López" class="input-elegante py-3.5 px-4 w-full text-center">
+                </div>
+                
+                <!-- CAMPO: MOMENTO DEL EVENTO -->
+                <div>
+                    <label class="text-rosa-elegante text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block">Momento del evento</label>
+                    <select id="folderSelect" class="input-elegante py-3.5 px-4 w-full cursor-pointer appearance-none text-center">
+                        <option value="" disabled selected class="text-gray-400">Selecciona el momento...</option>
+                        <option value="La Ceremonia">La Ceremonia</option>
+                        <option value="La Recepción">La Recepción</option>
+                        <option value="El Vals">El Vals</option>
+                        <option value="La Fiesta">La Fiesta</option>
+                        <option value="Con Allison">Con la Quinceañera</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-rosa-elegante text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block">Tus Archivos</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-rosa-elegante/40 bg-white rounded-xl p-8 text-center transition-all hover:bg-gray-50 cursor-pointer overflow-hidden group shadow-sm">
+                        
+                        <div id="processingOverlay" class="hidden">
+                            <svg class="animate-spin h-8 w-8 text-rosa-elegante mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-rosa-elegante text-[9px] font-bold uppercase tracking-[0.2em] text-center px-2">Optimizando calidad...<br>No cierres esta ventana</p>
+                        </div>
+
+                        <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
+                        <svg class="w-10 h-10 mx-auto text-gray-300 group-hover:text-rosa-elegante transition-colors mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-gray-700 text-[11px] font-bold uppercase tracking-[0.2em]">Toca aquí para buscar</p>
+                        <p class="text-gray-400 text-[10px] tracking-widest mt-2 uppercase">(Videos máximo 30s / 20MB)</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
+                        <p class="text-[9px] text-gray-500 text-center py-3 uppercase font-bold border-b border-gray-200 tracking-[0.2em]">Archivos listos:</p>
+                        <div id="previewContainer" class="bg-gray-50"></div>
+                        <button id="removePreviewBtn" class="w-full py-3 text-[10px] text-red-500 bg-red-50 uppercase font-bold hover:bg-red-100 transition-colors tracking-widest border-t border-red-100">Limpiar selección</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO PESTAÑA 2: MENSAJE -->
+            <div id="formMensaje" class="w-full flex flex-col gap-2 text-left relative z-10 hidden transition-all duration-300">
+                <div>
+                    <label class="text-rosa-elegante text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block">Familia / Nombre</label>
+                    <input type="text" id="nombreInputMensaje" placeholder="Ej: Carlos y Ana" class="input-elegante py-3.5 px-4 w-full text-center">
+                </div>
+
+                <div>
+                    <label class="text-rosa-elegante text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block">Tu Mensaje Especial</label>
+                    <textarea id="textoMensaje" rows="5" maxlength="250" placeholder="Escribe aquí tus mejores deseos..." class="input-elegante py-4 px-5 w-full leading-relaxed resize-none text-center" style="text-transform: none;"></textarea>
+                    <p class="text-right text-[10px] text-gray-400 mt-1 uppercase tracking-widest"><span id="charCount">0</span>/250</p>
+                </div>
+            </div>
+
+            <!-- BOTONES COMPARTIDOS -->
+            <div class="flex gap-4 mt-8 relative z-10">
+                <button id="btnCancelar" class="flex-1 bg-white border border-gray-200 text-gray-500 font-bold rounded-xl py-4 text-[10px] tracking-[0.2em] uppercase hover:bg-gray-50 transition-colors shadow-sm">Cancelar</button>
+                <button id="btnSubir" class="flex-[1.5] bg-rosa-elegante text-white font-bold rounded-xl py-4 text-[10px] tracking-[0.2em] uppercase active:scale-95 shadow-lg hover:bg-rosa-hover transition-all">Subir Archivo</button>
+            </div>
+            
+            <p id="estadoCarga" class="text-[11px] uppercase tracking-widest font-bold mt-6 text-rosa-elegante bg-rosa-elegante/10 border border-rosa-elegante/30 p-4 rounded-xl hidden text-center w-full relative z-10 shadow-sm"></p>
+        </div>
+    </div>
+
+    <!-- FIREBASE Y LÓGICA CORE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // CREDENCIALES DE ALLISON YAMILETH
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // GESTIÓN DE LIKES
+        let likedPosts = JSON.parse(localStorage.getItem('liked_posts_allison')) || [];
+
+        // TOAST
+        window.showToast = function(msg, isError = true) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = msg;
+            if(isError) {
+                toast.classList.add('text-red-600', 'border-red-200', 'bg-red-50');
+                toast.classList.remove('text-rosa-elegante', 'border-rosa-elegante/30', 'bg-white');
+            } else {
+                toast.classList.remove('text-red-600', 'border-red-200', 'bg-red-50');
+                toast.classList.add('text-rosa-elegante', 'border-rosa-elegante/30', 'bg-white');
+            }
+            toast.classList.add('toast-visible');
+            setTimeout(() => { toast.classList.remove('toast-visible'); }, 3500);
+        };
+
+        // LÓGICA DE PESTAÑAS (TABS)
+        const tabFotosBtn = document.getElementById('tabFotosBtn');
+        const tabMensajeBtn = document.getElementById('tabMensajeBtn');
+        const formFotos = document.getElementById('formFotos');
+        const formMensaje = document.getElementById('formMensaje');
+        let currentTab = 'fotos'; 
+
+        tabFotosBtn.addEventListener('click', () => {
+            currentTab = 'fotos';
+            tabFotosBtn.classList.add('active');
+            tabMensajeBtn.classList.remove('active');
+            formFotos.classList.remove('hidden');
+            formMensaje.classList.add('hidden');
+            document.getElementById('btnSubir').innerText = 'Subir Archivo';
+        });
+
+        tabMensajeBtn.addEventListener('click', () => {
+            currentTab = 'mensaje';
+            tabMensajeBtn.classList.add('active');
+            tabFotosBtn.classList.remove('active');
+            formMensaje.classList.remove('hidden');
+            formFotos.classList.add('hidden');
+            document.getElementById('btnSubir').innerText = 'Publicar Mensaje';
+        });
+
+        const textoMensaje = document.getElementById('textoMensaje');
+        const charCount = document.getElementById('charCount');
+        textoMensaje.addEventListener('input', function() {
+            charCount.innerText = this.value.length;
+        });
+
+        // MODAL LÓGICA
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeModalBtnIcon = document.getElementById('closeModalBtnIcon');
+        const btnCancelar = document.getElementById('btnCancelar');
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        closeModalBtnIcon.addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        btnCancelar.addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // ARCHIVOS LÓGICA (CON COMPRESIÓN)
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const processingOverlay = document.getElementById('processingOverlay');
+        const btnSubir = document.getElementById("btnSubir");
+        const estadoCarga = document.getElementById('estadoCarga');
+
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            processingOverlay.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+            
+            const archivosProcesados = new DataTransfer();
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                const fileName = file.name.toLowerCase();
+
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        window.showToast(`El video dura más de 30s y no se subirá.`, true);
+                        continue; 
+                    }
+                    const videoSizeMB = file.size / 1024 / 1024;
+                    if (videoSizeMB > 20) {
+                        window.showToast(`El video es muy pesado (${videoSizeMB.toFixed(1)}MB). Máx 20MB.`, true);
+                        continue;
+                    }
+                } 
+                else if (file.type.includes("image")) {
+                    try {
+                        if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                            const conversionPromise = heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+                            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout HEIC")), 15000));
+                            const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                            const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                            file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), { type: "image/jpeg" });
+                        }
+
+                        const options = { maxSizeMB: 0.9, maxWidthOrHeight: 1920, useWebWorker: true };
+                        const compressedBlob = await imageCompression(file, options);
+                        file = new File([compressedBlob], file.name, { type: compressedBlob.type });
+                    } catch (err) {
+                        console.warn(`Error optimizando ${file.name}:`, err);
+                    }
+                }
+
+                archivosProcesados.items.add(file);
+                
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-24 bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = archivosProcesados.files;
+            processingOverlay.classList.add('hidden');
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+                dropZone.classList.remove('hidden');
+                previsualizacion.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        // LÓGICA UNIFICADA DE SUBIDA (FOTOS O MENSAJES)
+        btnSubir.addEventListener("click", async () => {
+            btnSubir.disabled = true;
+
+            if (currentTab === 'fotos') {
+                const archivos = Array.from(archivoInput.files);
+                const nombre = document.getElementById("nombreInputFoto").value.trim();
+                const momento = document.getElementById("folderSelect").value;
+
+                if (archivos.length === 0 || !nombre || !momento) {
+                    window.showToast("POR FAVOR, INGRESA TU NOMBRE Y SELECCIONA MOMENTO/ARCHIVOS.", true);
+                    btnSubir.disabled = false;
+                    return;
+                }
+
+                estadoCarga.classList.remove('hidden');
+
+                for (let i = 0; i < archivos.length; i++) {
+                    const file = archivos[i];
+                    const total = archivos.length;
+                    
+                    await new Promise((resolve, reject) => {
+                        // RUTA STORAGE PARA ALLISON
+                        const storageRef = ref(storage, 'xv_allison/' + Date.now() + "_" + file.name);
+                        const uploadTask = uploadBytesResumable(storageRef, file);
+
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                            },
+                            (error) => { reject(error); },
+                            async () => {
+                                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                                // COLECCIÓN FIRESTORE PARA ALLISON
+                                await addDoc(collection(db, "muro_xvallison"), {
+                                    nombre: nombre, 
+                                    momento: momento, 
+                                    url_multimedia: url, 
+                                    likes: 0,
+                                    tipo: file.type.includes("video") ? "video" : "imagen",
+                                    fecha: new Date()
+                                });
+                                resolve();
+                            }
+                        );
+                    });
+                }
+                estadoCarga.innerText = "¡MOMENTOS GUARDADOS CON ÉXITO!";
+                
+            } else if (currentTab === 'mensaje') {
+                const nombre = document.getElementById("nombreInputMensaje").value.trim();
+                const texto = document.getElementById("textoMensaje").value.trim();
+
+                if (!nombre || !texto) {
+                    window.showToast("POR FAVOR, INGRESA TU NOMBRE Y TU MENSAJE.", true);
+                    btnSubir.disabled = false;
+                    return;
+                }
+
+                estadoCarga.classList.remove('hidden');
+                btnSubir.innerText = "Publicando...";
+
+                try {
+                    // COLECCIÓN FIRESTORE PARA ALLISON
+                    await addDoc(collection(db, "muro_xvallison"), {
+                        nombre: nombre, 
+                        texto: texto, 
+                        likes: 0,
+                        tipo: "mensaje",
+                        fecha: new Date()
+                    });
+                    estadoCarga.innerText = "¡MENSAJE PUBLICADO CON ÉXITO!";
+                } catch (error) {
+                    window.showToast("Hubo un error al publicar el mensaje.", true);
+                    btnSubir.disabled = false;
+                    estadoCarga.classList.add('hidden');
+                    return;
+                }
+            }
+
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // VISTAS DEL GRID
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-rosa-elegante rounded-xl transition-all shadow-sm";
+            btn2Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 hover:bg-gray-100 rounded-xl transition-all";
+            muro.className = "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10 mt-6";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-rosa-elegante rounded-xl transition-all shadow-sm";
+            btn1Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 hover:bg-gray-100 rounded-xl transition-all";
+            muro.className = "columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 w-full pb-10 mt-6";
+        });
+
+        // RENDERIZAR MURO MIXTO (FOTOS Y MENSAJES)
+        let isFirstLoad = true;
+        // LECTURA DE COLECCIÓN PARA ALLISON
+        const q = query(collection(db, "muro_xvallison"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `
+                    <div id="emptyMessage" class="col-span-full py-20 text-center break-inside-avoid flex flex-col items-center justify-center">
+                        <svg class="w-16 h-16 text-rosa-elegante mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <p class="text-gray-500 font-bold text-sm md:text-base uppercase tracking-widest">Aún no hay recuerdos</p>
+                        <p class="text-gray-400 font-bold text-xs mt-2 uppercase tracking-wider">¡Sé el primero en compartir un momento mágico!</p>
+                    </div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const userLiked = likedPosts.includes(id);
+                    const heartColorClass = userLiked ? 'text-rosa-elegante fill-current' : 'text-gray-300';
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    
+                    // RENDERIZADO SI ES UN MENSAJE
+                    if (datos.tipo === "mensaje") {
+                        divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-6 bg-white border border-gray-100 rounded-3xl flex flex-col overflow-hidden relative z-20 shadow-md min-h-[120px] justify-between p-5 group";
+                        
+                        divTarjeta.innerHTML = `
+                            <svg class="comilla-decorativa" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                            
+                            <div class="relative z-10 w-full flex flex-col flex-grow justify-between">
+                                <p class="text-xl md:text-2xl text-[#2C2A2A] leading-relaxed text-center px-2 relative z-10 font-bold mb-4" style="text-transform: none;">"${datos.texto}"</p>
+                                
+                                <div class="flex items-center justify-between w-full border-t border-gray-100 pt-3 mt-auto relative z-10">
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-xs uppercase tracking-widest font-bold text-gray-800">${datos.nombre}</span>
+                                        <span class="text-[9px] uppercase text-gray-400 tracking-wider">Firma de invitado</span>
+                                    </div>
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                        <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-sm text-gray-600">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } 
+                    // RENDERIZADO SI ES IMAGEN O VIDEO
+                    else {
+                        const media = datos.tipo === "video" 
+                            ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-gray-100 cursor-pointer object-cover"></video>` 
+                            : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover" loading="lazy">`;
+
+                        const tagMomento = datos.momento ? `<span class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm border border-gray-200 text-rosa-elegante text-[9px] font-bold px-2 py-1 rounded-lg shadow-sm uppercase z-10">${datos.momento}</span>` : '';
+
+                        divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-6 bg-white border border-gray-100 rounded-3xl flex flex-col overflow-hidden relative z-20 shadow-md";
+                        
+                        divTarjeta.innerHTML = `
+                            <div class="relative w-full">
+                                ${tagMomento}
+                                ${media}
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white border-t border-gray-50">
+                                <div class="flex items-center gap-3 flex-1 overflow-hidden">
+                                    <h4 class="text-gray-800 font-bold uppercase text-xs tracking-[0.2em] truncate flex-1">${datos.nombre}</h4>
+                                </div>
+                                <div class="flex items-center gap-2 pl-4 border-l border-gray-100 ml-2">
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                        <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-sm text-gray-600">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) contadorLikes.innerText = datos.likes;
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) tarjetaRemover.remove();
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        // LIKES
+        window.darLike = async function(id) {
+            if (likedPosts.includes(id)) {
+                window.showToast("YA DISTE ME GUSTA", false);
+                return;
+            }
+
+            const heartIcon = document.getElementById(`heart-icon-${id}`);
+            const contadorText = document.getElementById(`contador-likes-${id}`);
+            
+            if (heartIcon) {
+                heartIcon.classList.remove('text-gray-300', 'fill-none');
+                heartIcon.classList.add('text-rosa-elegante', 'fill-current');
+            }
+            if (contadorText) {
+                contadorText.innerText = (parseInt(contadorText.innerText) || 0) + 1;
+            }
+
+            likedPosts.push(id);
+            localStorage.setItem('liked_posts_allison', JSON.stringify(likedPosts));
+
+            try {
+                // ACTUALIZACIÓN DE LIKES EN ALLISON
+                await updateDoc(doc(db, "muro_xvallison", id), { likes: increment(1) });
+            } catch (error) {
+                console.error("Error al dar like:", error);
+                window.showToast("ERROR AL CONECTAR.", true);
+            }
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+    </script>
+</body>
+</html>
