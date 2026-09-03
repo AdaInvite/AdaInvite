@@ -55,10 +55,9 @@
         }
 
         html {
-            background-color: #E8DEE1;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        background-color: #E8DEE1;
+            }
+
 
         body {
             margin: 0;
@@ -833,42 +832,13 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
+               
         const sliders = document.querySelectorAll('.slider-historia');
-        let scrollIntervals = [];
-
-        sliders.forEach((slider, index) => {
-            let isIntersecting = false; // Bandera para saber si lo estamos viendo
-            
-            function iniciarAutoScroll() {
-                if (scrollIntervals[index]) clearInterval(scrollIntervals[index]);
-                scrollIntervals[index] = setInterval(() => {
-                    if (!isIntersecting) return; // Si no lo vemos, no desplazamos nada (Evita saltos de pantalla)
-                    
-                    if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 10) {
-                        slider.scrollLeft = 0; // Usar scrollLeft previene saltos forzados del navegador móvil
-                    } else {
-                        slider.scrollBy({ left: 300, behavior: 'smooth' });
-                    }
-                }, 4000); 
-            }
-
-            const detenerCualquierInteraccion = () => clearInterval(scrollIntervals[index]);
-
-            slider.addEventListener('touchstart', detenerCualquierInteraccion, {passive: true});
-            slider.addEventListener('mousedown', detenerCualquierInteraccion);
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    isIntersecting = entry.isIntersecting; // Actualiza el estado
-                    if (entry.isIntersecting) {
-                        iniciarAutoScroll();
-                    } else {
-                        detenerCualquierInteraccion();
-                    }
-                });
-            }, { threshold: 0.5 });
-            observer.observe(slider);
+        sliders.forEach(slider => {
+            // Esto asegura que el toque manual sea suave y no interfiera con la página
+            slider.addEventListener('touchstart', () => {}, {passive: true});
         });
+
     </script>
     
     <!-- LÓGICA FIREBASE Y VALIDACIONES DE PASES -->
