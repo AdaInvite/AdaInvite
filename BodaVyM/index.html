@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nuestra Boda • V y M</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    
+   <link rel="apple-touch-icon" href="https://i.imgur.com/qRsUv6X.png">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Boda • V y M">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta property="og:title" content="Nuestra Boda • Víctor y Monse">
+    <meta property="og:description" content="El amor se compone de una sola alma que habita dos cuerpos. Acompáñanos.">
+    <meta property="og:image" content="https://i.imgur.com/jdu5ErF.jpeg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        azul: {
+                            principal: '#1f3a5e', // Azul marino elegante (no chillante)
+                            oscuro: '#112238'     // Azul marino muy oscuro
+                        },
+                        cafe: {
+                            claro: '#A39587',
+                            texto: '#5C554F'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-elegant: 'Forum', serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #FFFFFF; 
+            overflow-x: hidden;
+            color: #5C554F;
+            scroll-behavior: smooth;
+        }
+
+        .textura-papel {
+            background-color: #FFFFFF;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+        }
+
+        .textura-beige {
+            background-color: #F8F5F0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+        }
+
+        .textura-sobre {
+            background-color: #FFFFFF;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+        }
+
+        h1, h2, h3, h4, p, span, div, button, input {
+            font-family: var(--font-elegant);
+        }
+
+        .font-script { 
+            font-family: var(--font-script) !important; 
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: transparent;
+            min-height: 100vh;
+        }
+
+      #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+
+        .envelope-bg {
+            position: absolute; inset: 0;
+            transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.15)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.15)); }
+        
+        .flap { width: 100%; height: 100%; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        #section-main { display: none; }
+
+        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(30px); }
+        .reveal-left { transform: translateX(-40px); }
+        .reveal-right { transform: translateX(40px); }
+        .reveal-scale { transform: scale(0.9); }
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spin-slow { animation: spin 4s linear infinite; }
+
+        .hojas-decor {
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        /* Timeline styles */
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 2.5rem;
+        }
+        .timeline-item::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(163, 149, 135, 0.4);
+        }
+        .timeline-item:last-child::before { display: none; }
+        .timeline-item::after {
+            content: ''; position: absolute; left: -4px; top: 6px; width: 9px; height: 9px;
+            background: #2563eb; border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Audio Principal -->
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FEdSheeran_Perfect.mp3?alt=media&token=ba7bf17a-4c7c-4b61-b2c8-04324a88798d" type="audio/mpeg">
+    </audio>
+
+    <div id="audio-btn" class="fixed bottom-6 right-6 w-12 h-12 bg-transparent flex items-center justify-center z-[999] cursor-pointer hidden" onclick="toggleAudio()">
+         <img id="audio-icon" src="https://i.imgur.com/awaZ9vd.png" class="w-full h-full object-cover rounded-full" alt="Música">
+    </div>
+
+    <!-- SOBRE BLANCO -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg textura-sobre"></div>
+        <div id="envelope-container" class="w-full max-w-md mx-auto h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left textura-sobre border-r border-black/5"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right textura-sobre border-l border-black/5"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-sm uppercase mb-4 animate-bounce text-cafe-texto/70 drop-shadow-sm font-bold bg-transparent">Toca para abrir</div>
+                <img src="https://i.imgur.com/ULIk5uC.png" class="w-56" style="animation: floating 4s infinite ease-in-out;" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="section-main" class="app-container shadow-2xl">
+        
+       <!-- SECCIÓN 1: ENCABEZADO -->
+        <section class="min-h-[90svh] bg-white textura-papel relative flex flex-col justify-end items-center px-6 pb-8 text-center overflow-hidden">
+            <!-- Rama actualizada sin filtros de color -->
+            <img src="https://i.imgur.com/ILjVwuS.png" class="absolute top-0 right-0 w-[85%] hojas-decor" alt="Rama decoración">
+            
+            <div class="reveal-scale active flex flex-col items-center justify-center relative z-10 w-full">
+                <p class="text-sm uppercase tracking-widest text-cafe-texto leading-relaxed mb-2 max-w-[280px] mx-auto opacity-90 font-semibold italic">
+                    "El amor se compone de una sola alma que habita dos cuerpos."
+                </p>
+                
+                <div class="flex items-center justify-center gap-6 mb-8 mt-8">
+                    <span class="text-8xl text-azul-oscuro">V</span>
+                    <span class="text-8xl text-azul-oscuro font-light">|</span>
+                    <span class="text-8xl text-azul-oscuro">M</span>
+                </div>
+                
+                <p class="text-base uppercase tracking-[0.4em] text-cafe-texto font-bold">Nuestra Boda</p>
+            </div>
+        </section>
+
+        <!-- SEPARADOR DEBAJO DEL HERO -->
+        <div class="w-full textura-papel flex justify-center items-center overflow-hidden relative">
+            <img src="https://i.imgur.com/8D5NVe7.png" class="w-full h-auto object-cover block" alt="Nuestra Foto">
+        </div>
+
+       <!-- SECCIÓN 2: PADRES Y NOVIOS -->
+       <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center items-center px-10 text-center overflow-hidden">
+            <div class="reveal relative z-10 w-full mt-4">
+                <p class="text-base uppercase tracking-widest text-cafe-texto leading-loose mb-10 px-4 font-bold max-w-[300px] mx-auto">
+                    CON NUESTRO AMOR, LA BENDICIÓN DE DIOS Y LA DE NUESTROS PADRES
+                </p>
+
+                <div class="mb-4 textura-beige p-4 rounded-2xl shadow-sm border border-cafe-claro/20 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-azul-principal"></div>
+                    <div class="mb-6 space-y-1 mt-2">
+                        <p class="text-sm text-cafe-texto font-semibold uppercase tracking-widest">Padres de la Novia</p>
+                        <p class="text-base text-gray-500">María Guadalupe Retama Ruiz<br>&<br>Prudencio Torres Cuarto</p>
+                    </div>
+                    
+                    <p class="text-3xl text-cafe-texto font-script mb-2 opacity-50">&</p>
+
+                    <div class="space-y-1 mb-2">
+                        <p class="text-sm text-cafe-texto font-semibold uppercase tracking-widest">Padres del Novio</p>
+                        <p class="text-base text-gray-500">Elia Baje Nieto<br>&<br>Bertoldo Villalba Lugo</p>
+                    </div>
+                </div> 
+
+                <div class="mb-4 textura-beige p-4 rounded-2xl shadow-sm border border-cafe-claro/20 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-azul-principal"></div>
+                    <div class="my-2">
+                        <p class="text-sm mb-2 text-cafe-texto font-semibold uppercase tracking-widest">Nuestros Padrinos</p>
+                        <p class="text-base text-gray-500">Alicia Retama Ruiz<br>&<br>Francisco Aguilar Trujillo</p>
+                    </div>
+                </div>
+                
+                <div class="relative w-full py-20 mt-4 mb-8">
+                    <!-- Ramas decorativas sin filtros de color -->
+                    <img src="https://i.imgur.com/ILjVwuS.png" class="absolute top-0 -right-10 w-32 z-0 pointer-events-none" alt="deco">
+                    <img src="https://i.imgur.com/ILjVwuS.png" class="absolute bottom-0 -left-10 w-32 z-0 pointer-events-none transform rotate-180" alt="deco">
+                    
+                    <h2 class="text-6xl font-script text-azul-oscuro leading-tight relative z-10">
+                        Víctor
+                        <span class="text-5xl text-cafe-claro font-script block my-2">&</span>
+                        Monse
+                    </h2>
+                </div>
+                
+                <p class="text-sm uppercase tracking-[0.3em] text-gray-500 font-bold mb-8">Tenemos el honor de invitarte a nuestra boda</p>
+
+                <div class="text-center my-10 relative z-20">
+                    <p class="text-sm uppercase tracking-[0.4em] text-cafe-texto mb-4 font-bold">Noviembre</p>
+                    <div class="flex items-center justify-center gap-6 max-w-[280px] mx-auto">
+                        <div class="w-20 border-t border-b border-cafe-claro/50 py-2">
+                            <span class="text-sm uppercase tracking-widest text-cafe-texto font-bold">Viernes</span>
+                        </div>
+                        <span class="text-7xl text-azul-oscuro font-serif">20</span>
+                        <div class="w-20 border-t border-b border-cafe-claro/50 py-2">
+                            <span class="text-sm uppercase tracking-widest text-cafe-texto font-bold">2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEPARADOR 1 -->
+        <div class="w-full textura-papel flex justify-center items-center overflow-hidden">
+            <img src="https://i.imgur.com/hYfofYq.png" class="min-h-[100svh] w-full h-auto object-cover block" alt="Separador">
+        </div>
+
+       <!-- SECCIÓN UBICACIÓN Y CUENTA REGRESIVA -->
+     <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center px-6 text-center z-10">
+        <div class="reveal max-w-sm mx-auto w-full">
+            <h3 class="text-lg uppercase tracking-[0.4em] text-cafe-texto font-bold mb-4 border-b border-cafe-claro/30 inline-block pb-2">Ubicaciones</h3>
+            
+            <!-- Templo -->
+            <div class="mb-10 textura-beige p-8 rounded-2xl shadow-sm border border-cafe-claro/20 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-azul-principal"></div>
+                
+                <!-- Foto agregada -->
+                <img src="https://i.imgur.com/qe513y0.jpeg" alt="Parroquia de San Cristóbal" class="w-full h-48 object-cover rounded-xl mb-6 shadow-sm border border-cafe-claro/20">
+                
+                <p class="text-sm uppercase tracking-[0.3em] text-azul-oscuro font-bold mb-4 mt-2">17:00 HRS</p>
+                <h4 class="text-4xl text-azul-oscuro font-bold mb-3 font-script">Ceremonia Religiosa</h4>
+                <p class="text-base text-cafe-texto italic mb-6 leading-relaxed">Parroquia de San Cristóbal</p>
+            
+                <a href="https://maps.app.goo.gl/toTunvzwvrRMezNQ6?g_st=iw" target="_blank" class="inline-block w-full bg-azul-principal text-white font-bold px-8 py-4 rounded-lg text-xs uppercase tracking-widest shadow-md hover:bg-azul-oscuro hover:-translate-y-1 active:scale-95 transition-all">
+                    Ver Mapa de la Parroquia
+                </a>
+            </div>
+
+            <!-- Salón -->
+            <div class="mb-10 textura-beige p-8 rounded-2xl shadow-sm border border-cafe-claro/20 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-azul-principal"></div>
+                
+                <!-- Foto agregada -->
+                <img src="https://i.imgur.com/sagXPvd.png" alt="Salón Eclipse" class="w-full h-48 object-cover rounded-xl mb-6 shadow-sm border border-cafe-claro/20">
+
+                <p class="text-sm uppercase tracking-[0.3em] text-azul-oscuro font-bold mb-4 mt-2">18:30 HRS</p>
+                <h4 class="text-4xl text-azul-oscuro font-bold mb-3 font-script">Recepción</h4>
+                <p class="text-base text-cafe-texto italic mb-6 leading-relaxed">Salón Eclipse</p>
+            
+                <a href="https://maps.app.goo.gl/N7Sp6tsyQMvrnTBw9?g_st=ic" target="_blank" class="inline-block w-full bg-azul-principal text-white font-bold px-8 py-4 rounded-lg text-xs uppercase tracking-widest shadow-md hover:bg-azul-oscuro hover:-translate-y-1 active:scale-95 transition-all">
+                    Ver Mapa del Salón
+                </a>
+            </div>
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div class="mt-8 pt-8 border-t border-cafe-claro/20">
+            <p class="text-lg uppercase tracking-[0.4em] text-cafe-texto mb-8 font-bold">Faltan solo...</p>
+            <div id="countdown" class="flex gap-4 justify-center">
+                <div class="flex flex-col items-center">
+                    <span id="days" class="text-4xl text-azul-oscuro font-serif">00</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-500 mt-2">Días</span>
+                </div>
+                <span class="text-3xl text-cafe-claro font-light pt-1">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="hours" class="text-4xl text-azul-oscuro font-serif">00</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-500 mt-2">Hrs</span>
+                </div>
+                <span class="text-3xl text-cafe-claro font-light pt-1">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="minutes" class="text-4xl text-azul-oscuro font-serif">00</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-500 mt-2">Min</span>
+                </div>
+                <span class="text-3xl text-cafe-claro font-light pt-1">:</span>
+                <div class="flex flex-col items-center">
+                    <span id="seconds" class="text-4xl text-azul-oscuro font-serif">00</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-500 mt-2">Seg</span>
+                </div>
+            </div>
+            
+            <!-- BOTONES DE CALENDARIO (GOOGLE & APPLE) -->
+            <div class="mt-12 flex flex-col justify-center gap-4 w-full max-w-xs mx-auto">
+                <p class="text-base text-cafe-texto mb-4 font-bold">Agrega la fecha a tu calendario:</p>
+                <button onclick="calendarLink('Boda Víctor y Monse', 'Parroquia de San Cristóbal, Méx.', '20261120T170000', '20261121T020000')" class="inline-flex items-center justify-center gap-2 w-full textura-beige border border-azul-oscuro text-azul-oscuro font-bold px-4 py-4 rounded-lg text-xs uppercase tracking-widest hover:bg-azul-oscuro hover:text-white transition-all active:scale-95 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Google Calendar
+                </button>
+                <button onclick="appleCalendarLink('Boda Víctor y Monse', 'Parroquia de San Cristóbal, Méx.', '20261120T170000', '20261121T020000')" class="inline-flex items-center justify-center gap-2 w-full textura-beige border border-azul-oscuro text-azul-oscuro font-bold px-4 py-4 rounded-lg text-xs uppercase tracking-widest hover:bg-azul-oscuro hover:text-white transition-all active:scale-95 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Apple Calendar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEPARADOR 2 -->
+    <div class="w-full textura-papel flex justify-center items-center overflow-hidden">
+        <img src="https://i.imgur.com/SfMoiJU.png" class="min-h-[100svh] w-full h-auto object-cover block" alt="Separador">
+    </div>
+
+    <!-- SECCIÓN ITINERARIO -->
+    <section class="min-h-[70svh] bg-white textura-papel relative flex flex-col justify-center px-8 text-center z-10">
+        <div class="reveal max-w-sm mx-auto w-full">
+            <h3 class="text-lg uppercase tracking-[0.4em] text-cafe-texto font-bold mb-6 border-b border-cafe-claro/30 inline-block pb-2">Itinerario</h3>
+            
+            <div class="text-left pl-6">
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">5:00 pm</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Ceremonia Religiosa</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">6:30 pm</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Recepción</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">7:00 pm</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Baile de novios</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">8:00 pm</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Cena</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">9:30 pm</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Inicio de fiesta</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="text-lg font-script text-azul-oscuro leading-none">2:00 am</p>
+                    <p class="text-sm text-cafe-texto font-bold uppercase tracking-widest mt-1">Fin del evento</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DRESS CODE Y REGALOS -->
+    <section class="min-h-[50svh] bg-white textura-papel relative flex flex-col pt-12 justify-center px-8 text-center z-10">
+        <!-- Rama decorativa sin filtros -->
+        <img src="https://i.imgur.com/ILjVwuS.png" class="absolute -top-12 left-0 w-36 md:w-44 hojas-decor transform -scale-x-100 -translate-y-2 -translate-x-4 z-20" alt="Hojas">
+        
+        <!-- CONTENEDOR DRESS CODE -->
+        <div class="reveal max-w-4xl mx-auto w-full mb-16 textura-beige p-8 md:p-10 rounded-2xl shadow-sm border border-cafe-claro/20 relative overflow-hidden z-10">
+            <div class="absolute top-0 left-0 w-full h-1 bg-azul-principal"></div>
+            
+            <div class="flex flex-col items-center justify-center gap-6">
+                <div class="flex flex-col items-center text-center">
+                    <img src="https://i.imgur.com/HEpd8Ab.png" alt="Icono Dress" class="w-28 mb-4 object-contain">
+                    <h3 class="text-lg uppercase tracking-[0.4em] text-cafe-texto font-bold mb-2 border-b border-cafe-claro/30 pb-2">Dress Code</h3>
+                    <p class="text-5xl font-script text-azul-oscuro mt-2">Formal</p>
+                </div>
+                
+                <div class="flex flex-col items-center mt-2">
+                    <div class="flex flex-col items-center bg-[#e3d0b8]/20 border border-[#664229]/20 px-6 py-5 rounded-lg shadow-sm text-center max-w-[350px] mx-auto">
+                        <p class="text-xs text-center uppercase tracking-[0.1em] font-medium text-[#664229] mb-6">
+                            Por favor, te pedimos no usar estos colores ya que están reservados para la novia:
+                        </p>
+                        
+                        <div class="flex flex-col items-center w-full">
+                            <div class="flex rounded-xl overflow-hidden shadow-md border border-gray-200 mb-3 transition-transform hover:scale-105">
+                                <div class="w-14 h-16 bg-[#FFFFFF]"></div>
+                                <div class="w-14 h-16 bg-[#F5F5DC]"></div>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-widest text-cafe-texto font-bold">Blanco / Perla</span>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR REGALOS -->
+        <div class="max-w-3xl mx-auto w-full mb-4 relative z-10 reveal">
+            <img src="https://i.imgur.com/7RcITK3.png" alt="Icono regalo" class="w-20 mx-auto mb-4 object-contain">
+            <h3 class="text-lg uppercase tracking-[0.4em] text-cafe-texto font-bold mb-6 border-b border-cafe-claro/30 inline-block pb-2">Mesa de Regalos</h3>
+            <p class="text-base text-[#664229] mb-4 uppercase leading-relaxed max-w-md mx-auto">
+                Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle con nosotros, te compartimos nuestra mesa de regalos.
+            </p>
+            
+            <div class="flex flex-col items-center justify-center gap-5">
+                <a href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/60014222" target="_blank" class="inline-flex items-center justify-center bg-[#E10098] text-white font-bold px-4 py-4 rounded-lg text-xs uppercase tracking-widest shadow-md hover:bg-[#b00076] hover:-translate-y-1 active:scale-95 transition-all">
+                    Toca aquí para Ver Mesa en Liverpool
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEPARADOR 3 -->
+    <div class="w-full textura-papel flex justify-center items-center overflow-hidden">
+        <img src="https://i.imgur.com/oQENxAK.png" class="min-h-[100svh] w-full h-auto object-cover block" alt="Separador">
+    </div>
+
+    <!-- SECCIÓN RSVP DIRECTO A WHATSAPP -->
+    <section class="min-h-[80svh] bg-white textura-papel relative flex flex-col justify-center pb-16 px-8 text-center z-10">
+        <div class="reveal relative z-10 w-full max-w-md mx-auto textura-beige p-10 rounded-3xl shadow-lg border border-cafe-claro/20 mb-16">
+            <h3 class="text-lg uppercase tracking-[0.4em] text-cafe-texto font-bold mb-4 border-b border-cafe-claro/30 inline-block pb-2">Confirmar asistencia</h3>
+            
+            <p class="text-sm text-gray-400 uppercase tracking-widest font-bold mb-6">Fecha límite: 30 de Octubre de 2026</p>
+
+            <div id="formSectionContainer">
+                <form id="rsvpForm" class="space-y-6 text-left mt-8">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-cafe-texto mb-2 pl-1 font-bold">Nombre de Familia o Invitado</label>
+                        <input type="text" id="rsvpName" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 focus:outline-none focus:border-azul-principal focus:ring-1 focus:ring-azul-principal transition-all shadow-sm" placeholder="Ej. Familia López">
+                    </div>
+                    <div class="grid grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-cafe-texto mb-2 pl-1 font-bold">Adultos</label>
+                            <input type="number" id="rsvpAdults" required min="0" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 text-center focus:outline-none focus:border-azul-principal focus:ring-1 focus:ring-azul-principal transition-all shadow-sm" placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-cafe-texto mb-2 pl-1 font-bold">Niños</label>
+                            <input type="number" id="rsvpKids" required min="0" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 text-base text-gray-700 text-center focus:outline-none focus:border-azul-principal focus:ring-1 focus:ring-azul-principal transition-all shadow-sm" placeholder="0">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-azul-principal text-white font-bold py-5 mt-10 rounded-xl uppercase tracking-[0.15em] text-[11px] hover:bg-azul-oscuro hover:-translate-y-1 active:scale-95 transition-all shadow-md flex items-center justify-center gap-3">
+                        Confirmar
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Rama decorativa final sin filtros -->
+        <img src="https://i.imgur.com/ILjVwuS.png" class="absolute bottom-0 right-0 w-48 hojas-decor translate-y-4 translate-x-4" alt="Hojas">
+    </section>
+
+    <!-- CIERRE / FOOTER -->
+    <div class="w-full flex justify-center items-center textura-papel overflow-hidden relative">
+        <img src="https://i.imgur.com/yhWWmLe.png" class="min-h-[100svh] w-full h-auto object-cover block reveal" alt="Cierre">
+        
+        <!-- Filtro oscuro eliminado (fondo transparente) y sombras aumentadas en texto -->
+        <div class="absolute inset-0 bg-transparent flex flex-col items-center justify-center p-6 text-center z-10">
+            <p class="text-sm uppercase tracking-[0.4em] text-white mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Esperamos contar con su presencia</p>
+            <h2 class="text-[6rem] font-script text-white mb-8 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">Gracias</h2>
+        </div>
+    </div>
+
+</main>
+
+    <!-- SCRIPTS GLOBALES UI -->
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            playAudio(); 
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => { document.getElementById('audio-btn').classList.remove('hidden'); }, 1000);
+            setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
+        }
+
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('animate-pulse');
+            }).catch(error => console.log("Autoplay bloqueado."));
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('animate-pulse');
+            } else {
+                audio.play();
+                audioIcon.classList.add('animate-pulse');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // CALENDARIOS
+        function calendarLink(title, loc, start, end) {
+            window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&location=${encodeURIComponent(loc)}`, '_blank');
+        }
+        
+        function appleCalendarLink(title, loc, start, end) {
+            const icsData = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//AdaInvite//Boda//EN\nBEGIN:VEVENT\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${title}\nLOCATION:${loc}\nEND:VEVENT\nEND:VCALENDAR`;
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "Boda_Victor_y_Monse.ics";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => window.URL.revokeObjectURL(url), 100);
+        }
+
+        // COUNTDOWN
+        const targetDate = new Date("Nov 20, 2026 17:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "<p class='text-base uppercase tracking-widest text-azul-oscuro font-bold'>¡El gran día ha llegado!</p>";
+                return;
+            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // OBSERVER
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        // ENVÍO DE FORMULARIO DE RSVP A WHATSAPP
+        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('rsvpName').value.trim();
+            const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
+            const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+            const totalPases = numAdultos + numNinos;
+
+            if(totalPases <= 0) {
+                alert("Por favor indica al menos 1 adulto o niño.");
+                return;
+            }
+
+            // Datos de la boda
+            const numeroWhatsApp = "527226656225"; 
+            const mensaje = `¡Hola! Confirmo mi asistencia para su boda.\n\n*Nombre / Familia:* ${name}\n*Adultos:* ${numAdultos}\n*Niños:* ${numNinos}\n*Total confirmados:* ${totalPases}`;
+            
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
+            
+            // Abre WhatsApp en una nueva pestaña/aplicación
+            window.open(urlWhatsApp, '_blank');
+        });
+
+    </script>
+</body>
+</html>
