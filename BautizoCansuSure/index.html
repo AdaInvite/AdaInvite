@@ -1,17 +1,18 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bautizo Cansu Suré</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <link rel="apple-touch-icon" href="https://i.imgur.com/MzFADJL.png">
     
+    <!-- Configuración para barra transparente en móviles -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Bautizo Cansu">
-    <!-- El color base que luego se adaptará por JS -->
-    <meta name="theme-color" content="#FDF2F4" id="theme-color-meta">
+    <meta name="theme-color" content="transparent">
+    
     <meta property="og:title" content="Mi Bautizo • Cansu Suré">
     <meta property="og:description" content="Hoy comienzo un hermoso camino de la mano de Dios y quiero compartir esta alegría contigo.">
     <meta property="og:type" content="website">
@@ -63,6 +64,8 @@
             align-items: flex-start;
             background-color: #FDF2F4;
             font-family: var(--font-normal);
+            /* Padding para evitar que el contenido se oculte detrás de la barra transparente en iOS */
+            padding-top: env(safe-area-inset-top);
         }
 
         #app-container {
@@ -596,7 +599,7 @@ mano de Dios y quiero compartir esta alegría contigo."
                                 <label class="text-[10px] uppercase font-light tracking-widest block mb-2 pl-1 text-vintage-text">¿Alguna alergia o restricción?</label>
                                 <input type="text" id="rsvpAllergies" placeholder="Escribe aquí">
                             </div>
-                            <button type="submit" id="btnSubmitRSVP" class="btn-vintage btn-solid w-full mt-6">Enviar Confirmación</button>
+                            <button type="submit" id="btnSubmitRSVP" class="btn-vintage btn-solid w-full mt-6 relative z-50">Enviar Confirmación</button>
                         </form>
                         <div id="loadingMessage" class="hidden mt-4 flex-col items-center justify-center relative z-10">
                             <div class="w-8 h-8 border-2 border-vintage-rose border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
@@ -606,9 +609,9 @@ mano de Dios y quiero compartir esta alegría contigo."
                 </div>
             </section>
 
-            <section class="relative min-h-[70svh] flex flex-col justify-center items-center bg-white-section w-full">
+            <section class="relative min-h-[80svh] flex flex-col justify-center items-center bg-white-section w-full">
                 <img src="https://i.imgur.com/nvVJshz.png" class="lace-divider" alt="Lace Border">
-                <div class="reveal relative z-10 flex flex-col items-center text-center px-6 pt-16 w-full min-h-[70svh] justify-center">
+                <div class="reveal relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-12 w-full min-h-[80svh] justify-center">
                     <h2 class="text-6xl font-script text-vintage-rose mb-4">Recuperar Pase</h2>
                   
                     <form id="searchPassForm" class="space-y-6 text-left bg-white/80 backdrop-blur-md border border-vintage-border/50 p-6 md:p-8 rounded-[30px] w-full max-w-sm mx-auto shadow-sm relative z-10">
@@ -616,10 +619,10 @@ mano de Dios y quiero compartir esta alegría contigo."
                             <label class="text-[10px] uppercase font-light block mb-2 pl-1 tracking-widest text-vintage-text">Nombre:</label>
                             <input type="text" id="searchName" required placeholder="Ingresa tu nombre exacto" class="w-full">
                         </div>
-                        <!-- Botón mejorado para ser visible -->
-                        <button type="submit" class="btn-vintage btn-solid w-full mt-6">Buscar mi Pase</button>
+                        <button type="submit" class="btn-vintage btn-solid w-full mt-6 relative z-50">Buscar mi Pase</button>
                     </form>
-                    <div id="searchResultMessage" class="hidden mt-8 w-full max-w-sm relative z-10 transition-all duration-500">
+                    
+                    <div id="searchResultMessage" class="hidden mt-8 w-full max-w-sm relative z-20">
                         <div class="bg-white/80 border border-vintage-border p-8 rounded-[30px] shadow-sm flex flex-col items-center">
                             <p class="text-vintage-text text-[10px] font-light uppercase tracking-widest animate-pulse">Buscando pase...</p>
                         </div>
@@ -678,38 +681,6 @@ mano de Dios y quiero compartir esta alegría contigo."
 
     <script>
         window.maxPasesGlobal = undefined;
-
-        // --- SISTEMA DINÁMICO DE COLOR DE BARRA (THEME-COLOR) ---
-        function initThemeColorObserver() {
-            const themeColorMeta = document.getElementById('theme-color-meta');
-            const sections = document.querySelectorAll('.bg-pink-section, .bg-white-section');
-
-            const observerOptions = {
-                root: null,
-                // Usamos un margen negativo para que solo cuente la sección que esté dominando el centro de la pantalla
-                rootMargin: '-20% 0px -20% 0px',
-                threshold: 0
-            };
-
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (entry.target.classList.contains('bg-pink-section')) {
-                            themeColorMeta.setAttribute('content', '#FDF2F4');
-                        } else if (entry.target.classList.contains('bg-white-section')) {
-                            themeColorMeta.setAttribute('content', '#FFFFFF');
-                        }
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(section => {
-                sectionObserver.observe(section);
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', initThemeColorObserver);
-        // --------------------------------------------------------
 
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
@@ -821,66 +792,74 @@ mano de Dios y quiero compartir esta alegría contigo."
             }
         }
 
-        // --- FUNCIONES MEJORADAS DE DESCARGA (EVITA QUE DESAPAREZCA) ---
-        function descargarURI(uri, nombre) {
-            const enlace = document.createElement('a');
-            enlace.style.display = 'none';
-            enlace.href = uri;
-            enlace.download = nombre;
-            document.body.appendChild(enlace);
-            enlace.click();
-            document.body.removeChild(enlace);
-        }
-
-        function generarYDescargarPase(idTarjeta, idBoton, nombreArchivo) {
+        // --- SISTEMA DE DESCARGA ADAPTADO PARA MÓVILES (iOS/Android) ---
+        // En lugar de forzar la descarga con <a> que falla en Safari/iOS,
+        // generamos la imagen y reemplazamos el HTML, para que el usuario pueda presionar y guardar.
+        function convertirTarjetaEnImagen(idTarjeta, idBoton) {
             const tarjeta = document.getElementById(idTarjeta);
             const btnDescargar = document.getElementById(idBoton);
             
-            // Si el pase ya se generó como imagen, descargamos directo y evitamos romperlo
+            // Si ya se convirtió, no hacemos nada más
             if (tarjeta.dataset.generado === "true") {
-                const img = tarjeta.querySelector('img');
-                if (img) {
-                    descargarURI(img.src, nombreArchivo);
-                }
                 return;
             }
             
             const originalText = btnDescargar.innerHTML;
-            btnDescargar.innerText = "Generando...";
+            btnDescargar.innerText = "Generando pase...";
+            btnDescargar.disabled = true;
             
+            // Clonamos para tomar la foto en segundo plano y asegurar buena resolución
             const clone = tarjeta.cloneNode(true);
             clone.style.width = "400px";
             clone.style.height = "auto";
-            clone.style.position = "fixed";
+            clone.style.position = "absolute";
             clone.style.top = "-9999px";
             clone.style.left = "-9999px";
-            clone.style.zIndex = "-9999";
             document.body.appendChild(clone);
             
-            window.html2canvas(clone, { backgroundColor: "#FAEAED", scale: 3, useCORS: true, scrollX: 0, scrollY: 0 }).then(canvas => {
+            window.html2canvas(clone, { 
+                backgroundColor: "#FAEAED", 
+                scale: 3, 
+                useCORS: true, 
+                scrollX: 0, 
+                scrollY: 0 
+            }).then(canvas => {
                 document.body.removeChild(clone);
                 const base64 = canvas.toDataURL('image/png');
                 
-                descargarURI(base64, nombreArchivo);
-
-                // Sustituimos el HTML original por la imagen generada
+                // Marcamos que ya se generó
                 tarjeta.dataset.generado = "true";
+                
+                // Limpiamos los estilos de la tarjeta contenedora
                 tarjeta.style.padding = "0";
                 tarjeta.style.border = "none";
                 tarjeta.style.background = "transparent";
                 tarjeta.style.boxShadow = "none";
+                
+                // Insertamos la imagen pura y las instrucciones
                 tarjeta.innerHTML = `
-                    <img src="${base64}" alt="Pase" class="w-full shadow-lg rounded-[20px] border border-white" />
-                    <p class="text-[9px] uppercase font-light mt-4 text-center px-2 tracking-widest text-vintage-text/80">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                    <div class="relative w-full mx-auto animate-pulse-once">
+                        <img src="${base64}" alt="Pase" class="w-full h-auto shadow-xl rounded-[20px] border border-white" style="pointer-events: auto; user-select: none; -webkit-touch-callout: default;"/>
+                        <div class="bg-black/70 text-white text-[10px] uppercase tracking-widest font-light py-2 px-4 rounded-full absolute -bottom-4 left-1/2 transform -translate-x-1/2 whitespace-nowrap shadow-lg backdrop-blur-sm z-50 pointer-events-none">
+                            Mantén presionada la imagen para guardar
+                        </div>
+                    </div>
                 `;
                 
-                btnDescargar.innerHTML = "¡Descarga iniciada!";
-                setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+                // Cambiamos el texto del botón y lo deshabilitamos (ya no se ocupa)
+                btnDescargar.innerHTML = "¡Pase Listo! Presiona la imagen";
+                btnDescargar.classList.replace('btn-vintage', 'bg-gray-200');
+                btnDescargar.classList.replace('btn-solid', 'text-gray-500');
+                btnDescargar.classList.remove('hover:bg-vintage-gold', 'cursor-pointer');
+                
             }).catch(err => {
                 if(document.body.contains(clone)) document.body.removeChild(clone);
                 console.error("Error al generar imagen", err);
-                btnDescargar.innerHTML = "Error al descargar";
-                setTimeout(() => btnDescargar.innerHTML = originalText, 3000);
+                btnDescargar.innerHTML = "Error. Intenta de nuevo";
+                btnDescargar.disabled = false;
+                setTimeout(() => {
+                    btnDescargar.innerHTML = originalText;
+                }, 3000);
             });
         }
         // --------------------------------------------------------------
@@ -947,7 +926,7 @@ mano de Dios y quiero compartir esta alegría contigo."
                             document.getElementById('rsvpTitleText').classList.add('hidden');
                             document.getElementById('rsvpInstructions')?.classList.add('hidden');
                             form.innerHTML = `
-                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-4">
+                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-4 relative z-20">
                                     <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Asistencia Confirmada!</p>
                                     <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase oficial.</p>
                                 </div>
@@ -996,7 +975,7 @@ mano de Dios y quiero compartir esta alegría contigo."
                         if (!querySnapshot.empty) {
                             document.getElementById('rsvpTitleText').classList.add('hidden');
                             form.innerHTML = `
-                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-6">
+                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-6 relative z-20">
                                     <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Asistencia Confirmada!</p>
                                     <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
                                 </div>
@@ -1034,10 +1013,10 @@ mano de Dios y quiero compartir esta alegría contigo."
                     const waLink = `https://wa.me/${numeroWhatsApp}?text=${mensajeWa}`;
 
                     const resultDiv = document.createElement('div');
-                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-20 mx-auto"; 
                     
                     resultDiv.innerHTML = `
-                        <div id="tarjetaPaseDigitalGenerado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-hidden mx-auto">
+                        <div id="tarjetaPaseDigitalGenerado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-visible mx-auto mb-4">
                             <p class="text-xs uppercase font-sans text-vintage-text font-light tracking-widest mb-2 mt-4 relative z-10">Pase de Acceso</p>
                             <h4 class="font-script text-4xl text-vintage-rose mb-6 leading-tight relative z-10">${name}</h4>
                             <div class="block text-center bg-white/60 rounded-xl border border-white mb-6 w-full relative z-10 mx-auto py-4">
@@ -1047,9 +1026,9 @@ mano de Dios y quiero compartir esta alegría contigo."
                             <p class="text-[9px] uppercase font-sans text-vintage-text/60 font-light tracking-widest relative z-10">Folio: ${folio}</p>
                             <p class="text-[9px] uppercase font-sans text-vintage-text/50 font-light tracking-widest mt-1 mb-4 relative z-10">Muestra esta tarjeta en recepción</p>
                         </div>
-                        <div class="flex flex-col gap-3 w-full mt-6">
+                        <div class="flex flex-col gap-3 w-full mt-2">
                             <button id="btnDescargarImagenRSVP" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2">
-                                Descargar Pase
+                                Generar Pase para Guardar
                             </button>
                             <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-sans font-semibold py-3 px-6 uppercase text-[10px] rounded-full shadow-md flex items-center justify-center gap-2 w-full tracking-widest hover:bg-[#1DA851] transition-all">
                                 Avisar por WhatsApp
@@ -1058,9 +1037,8 @@ mano de Dios y quiero compartir esta alegría contigo."
                     `;
                     seccionRsvp.appendChild(resultDiv);
 
-                    // Adjuntamos el evento con el sistema de descarga robusto
                     document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
-                        generarYDescargarPase('tarjetaPaseDigitalGenerado', 'btnDescargarImagenRSVP', 'Pase_Cansu.png');
+                        convertirTarjetaEnImagen('tarjetaPaseDigitalGenerado', 'btnDescargarImagenRSVP');
                     });
 
                 } catch(error) {
@@ -1099,8 +1077,8 @@ mano de Dios y quiero compartir esta alegría contigo."
                         const docData = querySnapshot.docs[0].data();
                         
                         resultDiv.innerHTML = `
-                            <div class="mt-1 flex flex-col items-center w-full">
-                                <div id="tarjetaPaseDigitalBuscado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-hidden z-10 mx-auto">
+                            <div class="mt-4 flex flex-col items-center w-full relative z-20">
+                                <div id="tarjetaPaseDigitalBuscado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-visible z-10 mx-auto mb-4">
                                     <p class="text-xs uppercase font-sans text-vintage-text font-light tracking-widest mb-2 mt-4 relative z-10">Pase de Acceso</p>
                                     <h4 class="font-script text-4xl text-vintage-rose mb-6 leading-tight relative z-10">${docData.nombre}</h4>
                                     <div class="block text-center bg-white/60 rounded-xl border border-white mb-6 w-full relative z-10 mx-auto py-4">
@@ -1110,23 +1088,22 @@ mano de Dios y quiero compartir esta alegría contigo."
                                     <p class="text-[9px] uppercase font-sans text-vintage-text/60 font-light tracking-widest relative z-10">Folio: ${docData.folio}</p>
                                     <p class="text-[9px] uppercase font-sans text-vintage-text/50 font-light tracking-widest mt-1 mb-4 relative z-10">Muestra esta tarjeta en recepción</p>
                                 </div>
-                                <div class="flex flex-col gap-3 w-full mt-6">
-                                    <button id="btnDescargarPaseBuscado" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2 z-30">
-                                        Descargar Pase
+                                <div class="flex flex-col gap-3 w-full mt-2 relative z-30">
+                                    <button id="btnDescargarPaseBuscado" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2 relative z-50">
+                                        Generar Pase para Guardar
                                     </button>
                                 </div>
                             </div>
                         `;
 
-                        // Adjuntamos el evento con el sistema de descarga robusto
                         const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
                         btnDescargarPase.addEventListener('click', () => {
-                            generarYDescargarPase('tarjetaPaseDigitalBuscado', 'btnDescargarPaseBuscado', 'Pase_Cansu.png');
+                            convertirTarjetaEnImagen('tarjetaPaseDigitalBuscado', 'btnDescargarPaseBuscado');
                         });
 
                     } else {
                         resultDiv.innerHTML = `
-                            <div class="bg-white/80 border border-vintage-border p-8 rounded-[30px] shadow-sm flex flex-col items-center w-full text-center mt-4">
+                            <div class="bg-white/80 border border-vintage-border p-8 rounded-[30px] shadow-sm flex flex-col items-center w-full text-center mt-4 relative z-20">
                                 <p class="text-vintage-rose font-semibold mb-2 uppercase tracking-widest">Reserva no encontrada</p>
                                 <p class="text-vintage-text/80 text-[10px] font-light uppercase tracking-widest">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
                             </div>
@@ -1135,7 +1112,7 @@ mano de Dios y quiero compartir esta alegría contigo."
                 } catch (error) {
                     console.error("Error al buscar:", error);
                     resultDiv.innerHTML = `
-                            <div class="bg-red-50 border border-red-200 p-8 rounded-[30px] shadow-sm flex flex-col items-center w-full text-center mt-4">
+                            <div class="bg-red-50 border border-red-200 p-8 rounded-[30px] shadow-sm flex flex-col items-center w-full text-center mt-4 relative z-20">
                                 <p class="text-red-500 font-semibold mb-2 uppercase tracking-widest">Error de conexión</p>
                                 <p class="text-red-800/80 text-[10px] font-light uppercase tracking-widest">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
                             </div>
@@ -1222,5 +1199,15 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         window.addEventListener('DOMContentLoaded', adjustEnvelopeLace);
         adjustEnvelopeLace();
     </script>
+    <style>
+        @keyframes pulse-once {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .animate-pulse-once {
+            animation: pulse-once 0.5s ease-in-out;
+        }
+    </style>
 </body>
 </html>
