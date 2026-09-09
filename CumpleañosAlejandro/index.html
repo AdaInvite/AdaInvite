@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumpleaños Alejandro - Sorpresa</title>
+    
+    <meta name="theme-color" content="#090706">
+    <meta property="og:title" content="¡Cumpleaños Sorpresa de Alejandro!">
+    <meta property="og:description" content="Acompáñanos a celebrar. Sshh... ¡es sorpresa!">
+  <meta property="og:image" content="https://i.imgur.com/gsp26Un.jpeg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Rouge+Script&family=Rye&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oro: {
+                            claro: '#F5D690',
+                            base: '#D6A974',
+                            oscuro: '#C19F73',
+                            borde: '#8B6533'
+                        },
+                        fondo: {
+                            base: '#090706',
+                            caja: '#130E0C'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            background-color: theme('colors.fondo.base');
+            color: theme('colors.oro.base');
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Degradado de texto estilo oro */
+        .texto-dorado {
+            background: linear-gradient(to right, #C19F73, #F5D690, #C19F73);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Brillo sutil de fondo superior */
+        .brillo-top {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 400px;
+            background: radial-gradient(circle at 50% -20%, rgba(214, 169, 116, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Líneas divisorias con degradado */
+        .linea-div {
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(to right, transparent, theme('colors.oro.borde'), transparent);
+        }
+
+        /* Animaciones de revelado al scrollear */
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        /* Decoración de esquinas para cajas */
+        .esquina-dec {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: theme('colors.oro.base');
+        }
+        .esquina-tl { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+        .esquina-tr { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+        .esquina-bl { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+        .esquina-br { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+
+        /* Clases para íconos con filtro de color (Máscaras SVG/PNG) */
+        .icono-personalizado {
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+            display: inline-block;
+        }
+        .icono-sombrero {
+            -webkit-mask-image: url('https://i.imgur.com/69I5lyt.png');
+            mask-image: url('https://i.imgur.com/69I5lyt.png');
+        }
+        .icono-botas {
+            -webkit-mask-image: url('https://i.imgur.com/ov2pWLR.png');
+            mask-image: url('https://i.imgur.com/ov2pWLR.png');
+        }
+
+        #envelope-wrapper {
+            position: fixed; 
+            top: 0; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px; 
+            height: 100%;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url("https://i.imgur.com/t0jBxMo.jpeg");
+            background-size: cover; background-position: center; transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.8)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.8)); }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/t0jBxMo.jpeg"); background-size: cover; background-position: center; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        /* --- CLASES NUEVAS PARA EL AUDIO CALCADAS DE TU INVITACIÓN DE XV --- */
+        .ui-layer {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; height: 100%;
+            pointer-events: none; z-index: 90;
+        }
+        .audio-btn {
+            position: absolute; bottom: 20px; right: 20px; width: 45px; height: 45px;
+            background: black; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(214,169,116,0.5); pointer-events: auto;
+            cursor: pointer; transition: transform 0.3s; border: 2px black;
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 6s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Fuentes utilitarias */
+        .font-titulo { font-family: 'Rye', serif; }
+        .font-serif { font-family: 'Instrument Serif', serif; }
+        .font-script { font-family: 'Rouge Script', cursive; }
+        .font-sans { font-family: 'Instrument Serif', serif; }
+    </style>
+</head>
+<body class="flex justify-center min-h-screen">
+    
+    <!-- Audio de fondo (Formato MP3 compatible con iPhone) -->
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2Fvaquera.mp3?alt=media&token=ed6ab180-dd30-4c02-9ff4-35e4954896f4" type="audio/mpeg">
+    </audio>
+    
+    <!-- Capa UI con el botón flotante calcado de tu versión -->
+    <div class="ui-layer">
+        <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+            <!-- Usamos la foto de Alejandro para que gire como un disco -->
+            <img id="audio-icon" src="https://i.imgur.com/gsp26Un.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
+            
+            <!-- Círculo central para que parezca disco de vinilo -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-black rounded-full z-10 flex items-center justify-center shadow-[0_0_2px_rgba(0,0,0,0.8)] border border-black">
+                <!-- Puntito simulando el perno del tocadiscos -->
+                <div class="w-[3px] h-[3px] bg-gray-400 rounded-full opacity-80"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOBRE VIRTUAL -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper">
+                <div class="flap flap-left"></div>
+            </div>
+            <div class="flap-wrapper flap-right-wrapper">
+                <div class="flap flap-right"></div>
+            </div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-base mb-4 animate-bounce text-oro-claro tracking-widest drop-shadow-md font-bold uppercase text-center font-sans">
+                    Toca para abrir
+                </div>
+                <img src="https://i.imgur.com/exQm1fA.png" class="w-[180px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal estilo móvil -->
+    <main id="section-main" style="display: none;" class="w-full max-w-md relative z-10 bg-fondo-base shadow-2xl min-h-screen flex-col">
+        <!-- Decoración Superior -->
+        <img src="https://i.imgur.com/lAJhdu6.png" class="w-full h-auto relative z-20" alt="Decoración Superior">
+
+        <!-- Efecto de luz de fondo -->
+        <div class="brillo-top"></div>
+
+        <!-- ENCABEZADO -->
+        <header class="px-8 flex flex-col items-center text-center relative z-10">
+            <!-- Icono de sombrero usando la imagen con filtro (máscara) -->
+            <div class="icono-personalizado icono-sombrero bg-oro-base w-28 h-28 mb-4 drop-shadow-md"></div>
+            
+            <h2 class="font-titulo text-5xl font-semibold mb-4 text-oro-claro uppercase">
+                Mi Cumpleaños
+            </h2>
+            
+            <div class="flex items-center w-full mb-8 opacity-80">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+
+            <p class="font-serif text-2xl font-light leading-relaxed mb-4 text-oro-oscuro">
+                Este día marca un momento de historias, experiencias y recuerdos que quiero celebrar con las personas que más quiero.
+            </p>
+        </header>
+
+        <!-- FECHA -->
+        <section class="mt-12 px-8 flex flex-col items-center text-center reveal">
+            <i class="fa-solid fa-calendar-days text-8xl text-oro-base mb-6 opacity-90"></i>
+            
+            <div class="font-titulo font-bold text-oro-claro leading-none text-8xl mb-3 drop-shadow-md">
+                28
+            </div>
+            <div class="font-sans text-2xl tracking-[0.4em] font-medium text-oro-base mb-2">
+                NOVIEMBRE
+            </div>
+            <div class="font-titulo text-5xl text-oro-oscuro mb-10">
+                2026
+            </div>
+        </section>
+
+        <!-- FESTEJADO Y SORPRESA -->
+        <section class="mt-4 px-4 flex flex-col items-center text-center reveal">
+            <p class="font-script text-5xl mb-4 text-oro-claro leading-snug px-2">
+                Ponte botas y sombrero, acompáñame a celebrar
+            </p>
+            
+            <!-- Foto del festejado -->
+            <div class="relative w-[300px] h-[420px] mx-auto mb-8 rounded-[150px] border border-oro-borde/50 p-2 shadow-2xl">
+                <div class="w-full h-full rounded-[150px] overflow-hidden border border-oro-base/20 relative">
+                    <img src="https://i.imgur.com/Lgie3SC.jpeg" alt="Alejandro" class="w-full h-full object-cover object-top">
+                    <!-- Overlay sutil dorado para integrar la foto con los colores del tema -->
+                    <div class="absolute inset-0 bg-oro-base/10 mix-blend-overlay pointer-events-none"></div>
+                </div>
+            </div>
+            
+            <h1 class="text-6xl font-titulo py-4 font-bold mb-4 texto-dorado drop-shadow-lg tracking-wide">
+                Alejandro
+            </h1>
+
+            <div class="flex items-center w-3/4 mx-auto mb-8 opacity-80">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+
+            <!-- BLOQUE DE SORPRESA DESTACADO -->
+            <div class="w-full bg-fondo-caja border-y border-oro-borde/40 py-8 mb-6 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                <p class="text-4xl font-titulo text-oro-claro tracking-[0.3em] font-bold mb-3 drop-shadow-md">
+                    S H H . .
+                </p>
+                <p class="text-2xl font-sans text-oro-base tracking-[0.4em] font-light">
+                    ES SORPRESA
+                </p>
+            </div>
+        </section>
+
+        <!-- UBICACIÓN -->
+        <section class="mt-12 px-6 flex flex-col items-center text-center reveal w-full">
+            <div class="w-full relative border border-oro-borde/50 rounded-[150px] bg-fondo-caja pt-16 pb-14 px-6 shadow-2xl overflow-hidden">
+                <!-- Inner decorative border -->
+                <div class="absolute inset-0 border border-oro-base/20 rounded-[150px] m-2 pointer-events-none"></div>
+                
+                <!-- Icono de sombrero (Máscara) en lugar de font-awesome -->
+                <div class="icono-personalizado icono-sombrero bg-oro-base w-20 h-20 mb-6 opacity-90 relative z-10 mx-auto"></div>
+                
+                <h2 class="font-titulo text-4xl tracking-[0.2em] mb-6 text-oro-claro uppercase relative z-10">
+                    Ubicación
+                </h2>
+                
+                <p class="font-serif text-4xl mb-2 text-oro-claro relative z-10">
+                    Salón Fiarum
+                </p>
+                
+                <p class="font-sans text-xl text-oro-oscuro mb-8 uppercase tracking-widest relative z-10">
+                     4:00 p.m.
+                </p>
+
+                <a href="https://maps.app.goo.gl/f8ZMiTxPCd6EALZe7?g_st=iw" target="_blank" 
+                   class="inline-block relative z-10 border border-oro-base text-oro-claro px-8 py-3 font-sans text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-oro-base hover:text-fondo-base active:scale-95 shadow-lg">
+                    Ver en Mapa
+                </a>
+            </div>
+            
+            <div class="flex items-center w-full mt-14 mb-4 opacity-80 px-2">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+        </section>
+
+        <!-- CÓDIGO DE VESTIMENTA -->
+        <section class="mt-8 px-6 flex flex-col items-center text-center reveal">
+            <h2 class="font-titulo text-4xl tracking-[0.2em] font-semibold mb-6 text-oro-claro uppercase">
+                Código de Vestimenta
+            </h2>
+            
+            <!-- Nuevo ícono de Botas con filtro (Máscara) -->
+            <div class="icono-personalizado icono-botas bg-oro-base w-28 h-28 mb-4 mx-auto drop-shadow-md opacity-90"></div>
+            
+            <p class="font-script text-8xl px-4 text-oro-base drop-shadow-sm mt-2">
+                Vaquero
+            </p>
+            <p class="font-sans text-cl text-oro-oscuro mt-6 tracking-widest uppercase">
+                Botas, sombrero y actitud
+            </p>
+
+            <div class="flex items-center w-full mt-12 mb-4 opacity-80">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+        </section>
+
+        <!-- MESA DE REGALOS / LLUVIA DE SOBRES -->
+        <section class="mt-8 px-4 flex flex-col items-center text-center reveal">
+            <i class="fa-solid fa-envelope-open-text text-6xl text-oro-base mb-5 opacity-90"></i>
+            
+            <h2 class="font-titulo text-4xl tracking-[0.2em] font-semibold mb-6 text-oro-claro uppercase">
+                Lluvia de Sobres
+            </h2>
+            
+            <p class="font-serif text-2xl font-light leading-relaxed text-oro-oscuro max-w-[280px]">
+                Tu presencia es el mejor regalo, pero si deseas tener un detalle conmigo, habrá un buzón el día del evento.
+            </p>
+        </section>
+
+        <!-- REGLAS: NO NIÑOS -->
+        <section class="mt-16 px-4 flex flex-col items-center text-center reveal">
+            <div class="relative w-full border border-oro-borde/40 bg-fondo-caja p-2 shadow-lg">
+                <!-- Esquinas decorativas -->
+                <div class="esquina-dec esquina-tl"></div>
+                <div class="esquina-dec esquina-tr"></div>
+                <div class="esquina-dec esquina-bl"></div>
+                <div class="esquina-dec esquina-br"></div>
+
+                <h3 class="font-titulo text-4xl font-bold text-oro-claro uppercase mb-4">
+                    Nota Importante
+                </h3>
+                <p class="font-serif text-xl text-oro-oscuro leading-relaxed">
+                    Agradecemos profundamente su comprensión para mantener esta noche <br>
+                    <span class="text-oro-claro font-bold tracking-widest block mt-3 text-2xl uppercase">Estrictamente sin niños</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- DESPEDIDA -->
+        <section class="mt-20 px-8 flex flex-col items-center text-center reveal w-full">
+            <div class="flex items-center w-3/4 mx-auto mb-8 opacity-90">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+
+            <h2 class="font-titulo text-5xl text-oro-claro font-bold leading-relaxed uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                ¡Te espero para<br>pasarla increíble!
+            </h2>
+            
+            <div class="flex items-center w-3/4 mx-auto mt-8 opacity-90">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN FINAL (FONDO 100svh + DECORACIÓN) -->
+        <section class="relative w-full h-[100svh] mt-16 flex flex-col items-center justify-end overflow-hidden">
+            <!-- Fondo completo -->
+            <img src="https://i.imgur.com/Isg32mM.jpeg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de cierre">
+            
+            <!-- Decoración Final Anclada Abajo -->
+            <img src="https://i.imgur.com/KXXfw2O.png" class="relative w-full h-auto z-20 pointer-events-none" alt="Decoración Inferior">
+        </section>
+
+    </main>
+
+    <script>
+        // Lógica de Audio calcada de la invitación de XV
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        const audioBtn = document.getElementById("audio-btn");
+        let isPlaying = false;
+        
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
+                isPlaying = false;
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Función Principal para abrir sobre y mostrar contenido
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'flex';
+            
+            // Iniciar animaciones de revelado al scroll
+            initObserver();
+            
+            // Iniciar Música
+            playAudio(); 
+            audioBtn.classList.remove('hidden'); // Mostrar el botón
+
+            // Animar sobre
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        function initObserver() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Opcional: observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(el => observer.observe(el));
+        }
+    </script>
+</body>
+</html>
