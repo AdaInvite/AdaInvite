@@ -296,7 +296,6 @@
                     
                     <h1 class="text-7xl font-script text-vintage-rose mb-2">Cansu Suré</h1>
                    
-                   <!-- MODIFICACIÓN: Mostrar número de invitados en el recuadro corregido -->
                    <div id="seccion-pases-inicio" class="w-full max-w-xs mx-auto hidden mb-8 reveal">
                         <div class="bg-white/60 rounded-[20px] backdrop-blur-sm border border-white py-1 shadow-sm text-center transition-all">
                             <p class="text-[10px] uppercase text-vintage-text/80 font-light mb-1">Invitación especial para</p>
@@ -344,7 +343,6 @@
                     <div id="historia-scroll" class="flex overflow-x-auto snap-x snap-mandatory gap-6 w-full max-w-[450px] px-6 pb-8 pt-4" style="scrollbar-width: none;">
                         <div class="snap-center shrink-0 w-full bg-white p-4 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-vintage-border/50 flex flex-col items-center">
                             <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Karla_Paola_Tapia_Enriquez_1788306078865%2Fhistoria_foto_1_Tarjeta01.jpeg?alt=media&token=bb93a3a0-1bbf-404e-87d2-f7c446eaab91" class="w-full h-80 object-cover rounded-2xl mb-5 shadow-sm" alt="Historia 1">
-                            <!-- MODIFICACIÓN: Texto tarjeta 1 -->
                             <p class="text-sm leading-relaxed text-vintage-text px-3 font-light italic">"Mi pequeña historia comenzó mucho antes de mi primer llanto… inició con un sueño, una espera llena de amor y muchas ilusiones."</p>
                         </div>
                         <div class="snap-center shrink-0 w-full bg-white p-4 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-vintage-border/50 flex flex-col items-center">
@@ -494,7 +492,6 @@ mano de Dios y quiero compartir esta alegría contigo."
                                 </div>
                             </div>
                         </div>
-                        <!-- MODIFICACIÓN: Actualización del itinerario según el PDF -->
                         <div class="timeline-item">
                             <div class="timeline-dot"></div>
                             <div class="timeline-content">
@@ -568,7 +565,6 @@ mano de Dios y quiero compartir esta alegría contigo."
                     <h2 class="text-6xl items-center justify-center font-script text-vintage-rose px-20 mb-6 text-center">Mesa de Regalos</h2>
                     
                     <div class="relative z-30 flex flex-col items-left justify-left text-center pl-8 pr-16 max-w-[320px]">
-                        <!-- MODIFICACIÓN: Frase de mesa de regalos actualizada -->
                         <p class="text-sm uppercase font-bold text-vintage-text/90">
                             "Tu presencia es nuestro mejor regalo, si deseas consentirme, habrá un espacio designado para tu detalle"
                         </p>
@@ -642,7 +638,6 @@ mano de Dios y quiero compartir esta alegría contigo."
             <section class="relative min-h-[60svh] flex flex-col justify-center items-center bg-white-section w-full">
                 <img src="https://i.imgur.com/nvVJshz.png" class="lace-divider" alt="Lace Border">
                 <div class="reveal relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-12 w-full min-h-[60svh] justify-center">
-                    <!-- MODIFICACIÓN: Eliminado el formulario de buscar pase, reemplazado por la frase solicitada -->
                     <p class="text-sm uppercase font-light leading-loose text-vintage-text max-w-[320px] mx-auto">
                         "La celebración ha sido preparada especialmente para nuestros invitados, el acceso será exclusivamente para los invitados cuyos nombres aparecen en la lista. <br>Los boletos serán únicamente los designados, por lo que no habrá boletos adicionales. Agradecemos su comprensión."
                     </p>
@@ -935,12 +930,10 @@ mano de Dios y quiero compartir esta alegría contigo."
         if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
         if (inputKids) inputKids.addEventListener('input', validarPasesEnTiempoReal);
 
-        // MODIFICACIÓN: Leer parámetros URL y actualizar recuadro inicial con adultos/niños
+        // Leer parámetros URL y actualizar recuadro inicial con adultos/niños
         const params = new URLSearchParams(window.location.search);
         const nombreUrl = params.get('n');      
         const pasesUrl = params.get('pases'); // Este sigue siendo el total de control
-        // Se asume que vendrán parámetros separados para adultos y niños en la url, ej ?n=Muestra&pases=4&adultos=2&ninos=2
-        // Si no vienen, se hace un fallback mostrando el total o un guión.
         const adultosUrl = params.get('adultos'); 
         const ninosUrl = params.get('ninos');
 
@@ -957,10 +950,10 @@ mano de Dios y quiero compartir esta alegría contigo."
                 nombreInvitado.textContent = nombreUrl;   
                 
                 if(adultosUrl) pasesAdultosSpan.textContent = adultosUrl;
-                else pasesAdultosSpan.textContent = pasesUrl; // Si no hay param adultos, ponemos el total en adultos por defecto para que no quede vacio
+                else pasesAdultosSpan.textContent = pasesUrl;
 
                 if(ninosUrl) pasesNinosSpan.textContent = ninosUrl;
-                else pasesNinosSpan.textContent = "0"; // Si no hay param niños, ponemos 0
+                else pasesNinosSpan.textContent = "0"; 
             }
 
             const formName = document.getElementById('rsvpName');
@@ -976,15 +969,41 @@ mano de Dios y quiero compartir esta alegría contigo."
                 getDocs(q).then(querySnapshot => {
                     if (!querySnapshot.empty) {
                         const form = document.getElementById('rsvpForm');
+                        const docData = querySnapshot.docs[0].data();
+                        
                         if(form) {
                             document.getElementById('rsvpTitleText').classList.add('hidden');
                             document.getElementById('rsvpInstructions')?.classList.add('hidden');
+                            
+                            // Mostrar pase porque ya estaban confirmados
                             form.innerHTML = `
-                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-4 relative z-20">
+                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-4 relative z-20 mb-4">
                                     <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Asistencia Confirmada!</p>
-                                    <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación.</p>
+                                    <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación. Aquí tienes tu pase.</p>
                                 </div>
+                                <div id="tarjetaPaseDigitalCarga" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-visible mx-auto mb-4">
+                                    <p class="text-xs uppercase font-sans text-vintage-text font-light tracking-widest mb-2 mt-4 relative z-10">Pase de Acceso</p>
+                                    <h4 class="font-script text-4xl text-vintage-rose mb-6 leading-tight relative z-10">${docData.nombre}</h4>
+                                    <div class="block text-center bg-white/60 rounded-xl border border-white mb-6 w-full relative z-10 mx-auto py-4">
+                                        <p class="text-xs font-sans uppercase text-vintage-text font-light tracking-widest m-0 mb-1">Pases Confirmados</p>
+                                        <div class="flex justify-center gap-4 mt-2">
+                                            <span class="text-[10px] font-bold uppercase text-vintage-text/80">Adultos: <span class="text-vintage-gold text-sm">${docData.adultos}</span></span>
+                                            <span class="text-[10px] font-bold uppercase text-vintage-text/80">Niños: <span class="text-vintage-gold text-sm">${docData.ninos}</span></span>
+                                        </div>
+                                    </div>
+                                    <p class="text-[9px] uppercase font-sans text-vintage-text/60 font-light tracking-widest relative z-10">Folio: ${docData.folio}</p>
+                                    <p class="text-[9px] uppercase font-sans text-vintage-text/50 font-light tracking-widest mt-1 mb-4 relative z-10">Muestra esta tarjeta en recepción</p>
+                                </div>
+                                <button id="btnDescargarImagenCarga" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2">
+                                    Descargar Pase
+                                </button>
                             `;
+                            
+                            setTimeout(() => {
+                                document.getElementById('btnDescargarImagenCarga').addEventListener('click', () => {
+                                    convertirTarjetaEnImagen('tarjetaPaseDigitalCarga', 'btnDescargarImagenCarga');
+                                });
+                            }, 100);
                         }
                     }
                 }).catch(err => {
@@ -1027,21 +1046,43 @@ mano de Dios y quiero compartir esta alegría contigo."
                         const querySnapshot = await getDocs(q);
 
                         if (!querySnapshot.empty) {
+                            const docData = querySnapshot.docs[0].data();
                             document.getElementById('rsvpTitleText').classList.add('hidden');
+                            
                             form.innerHTML = `
-                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-6 relative z-20">
+                                <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-6 relative z-20 mb-4">
                                     <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Asistencia Confirmada!</p>
-                                    <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación en el sistema.</p>
+                                    <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase">Ya hemos recibido tu confirmación en el sistema. Aquí tienes tu pase.</p>
                                 </div>
+                                <div id="tarjetaPaseDigitalRecuperado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-visible mx-auto mb-4">
+                                    <p class="text-xs uppercase font-sans text-vintage-text font-light tracking-widest mb-2 mt-4 relative z-10">Pase de Acceso</p>
+                                    <h4 class="font-script text-4xl text-vintage-rose mb-6 leading-tight relative z-10">${docData.nombre}</h4>
+                                    <div class="block text-center bg-white/60 rounded-xl border border-white mb-6 w-full relative z-10 mx-auto py-4">
+                                        <p class="text-xs font-sans uppercase text-vintage-text font-light tracking-widest m-0 mb-1">Pases Confirmados</p>
+                                        <div class="flex justify-center gap-4 mt-2">
+                                            <span class="text-[10px] font-bold uppercase text-vintage-text/80">Adultos: <span class="text-vintage-gold text-sm">${docData.adultos}</span></span>
+                                            <span class="text-[10px] font-bold uppercase text-vintage-text/80">Niños: <span class="text-vintage-gold text-sm">${docData.ninos}</span></span>
+                                        </div>
+                                    </div>
+                                    <p class="text-[9px] uppercase font-sans text-vintage-text/60 font-light tracking-widest relative z-10">Folio: ${docData.folio}</p>
+                                    <p class="text-[9px] uppercase font-sans text-vintage-text/50 font-light tracking-widest mt-1 mb-4 relative z-10">Muestra esta tarjeta en recepción</p>
+                                </div>
+                                <button id="btnDescargarImagenRecuperado" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2">
+                                    Descargar Pase
+                                </button>
                             `;
                             form.style.display = 'block';
                             loader.classList.add('hidden');
                             loader.classList.remove('flex');
+                            
+                            document.getElementById('btnDescargarImagenRecuperado').addEventListener('click', () => {
+                                convertirTarjetaEnImagen('tarjetaPaseDigitalRecuperado', 'btnDescargarImagenRecuperado');
+                            });
                             return;
                         }
                     }
 
-                    textLoader.innerText = "Registrando confirmación...";
+                    textLoader.innerText = "Generando pase...";
                     const folio = "BAUT-CAN-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
                     if (db) {
@@ -1070,15 +1111,37 @@ mano de Dios y quiero compartir esta alegría contigo."
                     resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-20 mx-auto"; 
                     
                     resultDiv.innerHTML = `
-                         <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm mt-4 w-full relative z-20">
-                                    <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Gracias por confirmar!</p>
-                                    <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase mb-4">Te esperamos para celebrar juntos.</p>
-                                    <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-sans font-semibold py-3 px-6 uppercase text-[10px] rounded-full shadow-md flex items-center justify-center gap-2 w-full tracking-widest hover:bg-[#1DA851] transition-all">
-                                        Avisar por WhatsApp
-                                    </a>
+                        <div class="bg-white/80 p-6 rounded-[20px] text-center border border-white shadow-sm w-full relative z-20 mb-4">
+                            <p class="text-vintage-rose font-light text-lg mb-2 font-sans uppercase tracking-widest">¡Gracias por confirmar!</p>
+                            <p class="text-vintage-text text-[10px] font-sans font-light tracking-wider uppercase mb-1">Te esperamos para celebrar juntos.</p>
+                        </div>
+                        <div id="tarjetaPaseDigitalGenerado" data-generado="false" class="relative w-full max-w-sm bg-[#FAEAED] border border-white rounded-[20px] p-8 shadow-sm text-center overflow-visible mx-auto mb-4">
+                            <p class="text-xs uppercase text-vintage-text font-light mb-2 mt-4 relative z-10">Pase de Acceso</p>
+                            <h4 class="font-script text-4xl text-vintage-rose mb-6 leading-tight relative z-10">${name}</h4>
+                            <div class="block text-center bg-white/60 rounded-xl border border-white mb-6 w-full relative z-10 mx-auto py-4">
+                                <p class="text-xs uppercase text-vintage-text font-light m-0 mb-1">Pases Confirmados</p>
+                                <div class="flex justify-center gap-4 mt-2">
+                                    <span class="text-[10px] font-bold uppercase text-vintage-text/80">Adultos: <span class="text-vintage-gold text-sm">${numAdultos}</span></span>
+                                    <span class="text-[10px] font-bold uppercase text-vintage-text/80">Niños: <span class="text-vintage-gold text-sm">${numNinos}</span></span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] uppercase text-vintage-text/60 font-light relative z-10">Folio: ${folio}</p>
+                            <p class="text-[9px] uppercase text-vintage-text/50 font-light mt-1 mb-4 relative z-10">Muestra esta tarjeta en recepción</p>
+                        </div>
+                        <div class="flex flex-col gap-3 w-full mt-2">
+                            <button id="btnDescargarImagenRSVP" type="button" class="btn-vintage btn-solid w-full flex items-center justify-center gap-2">
+                                Descargar Pase
+                            </button>
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-sans font-semibold py-3 px-6 uppercase text-[10px] rounded-full shadow-md flex items-center justify-center gap-2 w-full tracking-widest hover:bg-[#1DA851] transition-all">
+                                Avisar por WhatsApp
+                            </a>
                         </div>
                     `;
                     seccionRsvp.appendChild(resultDiv);
+
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        convertirTarjetaEnImagen('tarjetaPaseDigitalGenerado', 'btnDescargarImagenRSVP');
+                    });
 
                 } catch(error) {
                     console.error("Error al guardar:", error);
