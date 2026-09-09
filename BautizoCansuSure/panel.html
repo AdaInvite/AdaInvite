@@ -74,8 +74,14 @@
                     <div>
                         <input type="text" id="inputFamilia" placeholder="Nombre (Ej. Familia Perez)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
                     </div>
-                    <div>
-                        <input type="tel" id="inputPases" placeholder="Cantidad de Pases Totales (Ej. 4)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                    <!-- MODIFICACIÓN: Separado en Adultos y Niños -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <input type="tel" id="inputAdultos" placeholder="Adultos (Ej. 2)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                        </div>
+                        <div>
+                            <input type="tel" id="inputNinos" placeholder="Niños (Ej. 0)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                        </div>
                     </div>
                     <button onclick="generarLink()" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95">
                         Generar Enlace
@@ -224,26 +230,32 @@
             }, 300);
         }
 
-        // --- LÓGICA DEL GENERADOR DE PASES ---
+        // --- LÓGICA DEL GENERADOR DE PASES MODIFICADO ---
         const URL_BASE_INVITACION = "https://adainvite.com/BautizoCansuSure/";
         let textoCompleto = "";
 
         async function generarLink() {
             const familia = document.getElementById('inputFamilia').value.trim();
-            const pases = document.getElementById('inputPases').value.trim();
+            const adultosStr = document.getElementById('inputAdultos').value.trim();
+            const ninosStr = document.getElementById('inputNinos').value.trim();
             
-            if(!familia || !pases) {
+            const adultos = parseInt(adultosStr) || 0;
+            const ninos = parseInt(ninosStr) || 0;
+            const totalPases = adultos + ninos;
+            
+            if(!familia || totalPases === 0) {
                 await showModal({ 
                     type: 'warning', 
                     title: 'Faltan datos', 
-                    message: 'Por favor, llena el nombre del invitado/familia y la cantidad de pases totales.' 
+                    message: 'Por favor, llena el nombre del invitado y asigna al menos un pase.' 
                 });
                 return;
             }
             
-            const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}&pases=${pases}`;
-            textoCompleto = `${linkFinal}
-¡Hola! Se acerca mi gran día y me haría muchísima ilusión que me acompañaras a celebrar mi bautizo.\n\nTe comparto el enlace con todos los detalles de la celebración. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
+            // Creación de URL con los 4 parámetros: n, pases (total), adultos, ninos
+            const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}&pases=${totalPases}&adultos=${adultos}&ninos=${ninos}`;
+            
+            textoCompleto = `${linkFinal}\n¡Hola! Se acerca mi gran día y me haría muchísima ilusión que me acompañaras a celebrar mi bautizo.\n\nTe comparto el enlace con todos los detalles de la celebración. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
             
             document.getElementById('linkGenerado').innerText = textoCompleto;
             document.getElementById('resultadoContainer').classList.remove('hidden');
@@ -390,7 +402,7 @@
                     alergiasHtml = `
                         <div class="flex items-start gap-1.5 mt-2 bg-orange-50 text-orange-600 rounded-md px-2 py-1.5 w-fit">
                             <i data-lucide="alert-circle" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"></i>
-                            <span class="text-[10px] font-medium leading-tight">Notas: ${inv.alergias}</span>
+                            <span class="text-[10px] font-medium leading-tight">Alérgenos: ${inv.alergias}</span>
                         </div>
                     `;
                 }
