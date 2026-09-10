@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cumpleaños Alejandro - Sorpresa</title>
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     
     <link rel="apple-touch-icon" href="https://i.imgur.com/iFq0kNN.jpeg">
     
     <meta name="theme-color" content="#090706">
     <meta property="og:title" content="¡Cumpleaños Sorpresa de Alejandro!">
     <meta property="og:description" content="Acompáñanos a celebrar. Sshh... ¡es sorpresa!">
-  <meta property="og:image" content="https://i.imgur.com/gsp26Un.jpeg">
+    <meta property="og:image" content="https://i.imgur.com/gsp26Un.jpeg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,6 +122,7 @@
             mask-image: url('https://i.imgur.com/ov2pWLR.png');
         }
 
+        /* Animaciones de sobre virtual */
         #envelope-wrapper {
             position: fixed; 
             top: 0; 
@@ -161,7 +162,7 @@
             50% { transform: translateY(-10px) rotate(1deg); }
         }
 
-        /* --- CLASES NUEVAS PARA EL AUDIO CALCADAS DE TU INVITACIÓN DE XV --- */
+        /* UI y Música */
         .ui-layer {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 450px; height: 100%;
@@ -187,20 +188,16 @@
 </head>
 <body class="flex justify-center min-h-screen">
     
-    <!-- Audio de fondo (Actualizado con la nueva canción) -->
+    <!-- Audio de fondo -->
     <audio id="bg-music" loop>
         <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FPopurriAlegresRanchero.mp3?alt=media&token=f38fb3b1-a12b-4cd6-b4cf-1cfd62619cbe" type="audio/mpeg">
     </audio>
     
-    <!-- Capa UI con el botón flotante calcado de tu versión -->
+    <!-- Capa UI con el botón flotante -->
     <div class="ui-layer">
         <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
-            <!-- Usamos la foto de Alejandro para que gire como un disco -->
             <img id="audio-icon" src="https://i.imgur.com/gsp26Un.jpeg" class="w-full h-full object-cover rounded-full" alt="Música">
-            
-            <!-- Círculo central para que parezca disco de vinilo -->
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-black rounded-full z-10 flex items-center justify-center shadow-[0_0_2px_rgba(0,0,0,0.8)] border border-black">
-                <!-- Puntito simulando el perno del tocadiscos -->
                 <div class="w-[3px] h-[3px] bg-gray-400 rounded-full opacity-80"></div>
             </div>
         </div>
@@ -226,7 +223,7 @@
     </div>
 
     <!-- Contenedor Principal estilo móvil -->
-    <main id="section-main" style="display: none;" class="w-full max-w-md relative z-10 bg-fondo-base shadow-2xl min-h-screen flex-col">
+    <main id="section-main" style="display: none;" class="w-full max-w-md relative z-10 bg-fondo-base shadow-2xl min-h-screen flex-col pb-0">
         <!-- Decoración Superior -->
         <img src="https://i.imgur.com/lAJhdu6.png" class="w-full h-auto relative z-20" alt="Decoración Superior">
 
@@ -235,7 +232,6 @@
 
         <!-- ENCABEZADO -->
         <header class="px-8 flex flex-col items-center text-center relative z-10">
-            <!-- Icono de sombrero usando la imagen con filtro (máscara) -->
             <div class="icono-personalizado icono-sombrero bg-oro-base w-28 h-28 mb-4 drop-shadow-md"></div>
             
             <h2 class="font-titulo text-5xl font-semibold mb-4 text-oro-claro uppercase">
@@ -268,17 +264,77 @@
             </div>
         </section>
 
+        <!-- CONTADOR Y BOTÓN DE CALENDARIO -->
+        <section class="mt-4 px-6 flex flex-col items-center text-center reveal w-full relative z-30">
+            <h3 class="font-titulo text-3xl tracking-[0.2em] font-semibold mb-8 text-oro-claro uppercase">
+                Faltan solo...
+            </h3>
+            
+            <!-- Bloque Contador -->
+            <div class="flex justify-center items-center gap-1 sm:gap-3 text-oro-base font-titulo w-full">
+                <div class="flex flex-col items-center bg-fondo-caja border border-oro-borde/40 rounded-xl p-2 sm:p-3 w-16 sm:w-20 shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-oro-claro/5 to-transparent pointer-events-none"></div>
+                    <span id="cd-days" class="text-3xl sm:text-4xl text-oro-claro drop-shadow-md relative z-10">00</span>
+                    <span class="text-[9px] sm:text-[10px] font-sans uppercase tracking-widest mt-1 sm:mt-2 text-oro-oscuro relative z-10">Días</span>
+                </div>
+                <span class="text-2xl sm:text-3xl text-oro-oscuro pb-4 animate-pulse">:</span>
+                <div class="flex flex-col items-center bg-fondo-caja border border-oro-borde/40 rounded-xl p-2 sm:p-3 w-16 sm:w-20 shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-oro-claro/5 to-transparent pointer-events-none"></div>
+                    <span id="cd-hours" class="text-3xl sm:text-4xl text-oro-claro drop-shadow-md relative z-10">00</span>
+                    <span class="text-[9px] sm:text-[10px] font-sans uppercase tracking-widest mt-1 sm:mt-2 text-oro-oscuro relative z-10">Hrs</span>
+                </div>
+                <span class="text-2xl sm:text-3xl text-oro-oscuro pb-4 animate-pulse">:</span>
+                <div class="flex flex-col items-center bg-fondo-caja border border-oro-borde/40 rounded-xl p-2 sm:p-3 w-16 sm:w-20 shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-oro-claro/5 to-transparent pointer-events-none"></div>
+                    <span id="cd-minutes" class="text-3xl sm:text-4xl text-oro-claro drop-shadow-md relative z-10">00</span>
+                    <span class="text-[9px] sm:text-[10px] font-sans uppercase tracking-widest mt-1 sm:mt-2 text-oro-oscuro relative z-10">Min</span>
+                </div>
+                <span class="text-2xl sm:text-3xl text-oro-oscuro pb-4 animate-pulse">:</span>
+                <div class="flex flex-col items-center bg-fondo-caja border border-oro-borde/40 rounded-xl p-2 sm:p-3 w-16 sm:w-20 shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-oro-claro/5 to-transparent pointer-events-none"></div>
+                    <span id="cd-seconds" class="text-3xl sm:text-4xl text-oro-claro drop-shadow-md relative z-10">00</span>
+                    <span class="text-[9px] sm:text-[10px] font-sans uppercase tracking-widest mt-1 sm:mt-2 text-oro-oscuro relative z-10">Seg</span>
+                </div>
+            </div>
+
+            <!-- Botón Desplegable de Calendario -->
+            <div class="relative mt-12 w-full flex justify-center z-50">
+                <button onclick="toggleCalendarOptions(event)" class="inline-flex items-center justify-center gap-3 w-64 border border-oro-base text-oro-claro px-6 py-4 font-sans text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-oro-base hover:text-fondo-base active:scale-95 shadow-[0_4px_15px_rgba(0,0,0,0.5)] bg-fondo-caja rounded-full">
+                    <i class="fa-regular fa-calendar-plus text-lg"></i>
+                    Agendar
+                    <i class="fa-solid fa-chevron-down text-[10px] ml-2 transition-transform duration-300" id="cal-chevron"></i>
+                </button>
+                
+                <!-- Opciones Desplegables -->
+                <div id="calendar-options" class="hidden absolute top-full mt-3 w-64 flex-col bg-fondo-caja border border-oro-base/60 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.9)] overflow-hidden transform origin-top transition-all duration-300 z-50">
+                    <a href="#" onclick="addToGoogleCalendar(event)" class="px-6 py-4 text-xs font-sans tracking-widest uppercase text-oro-claro hover:bg-oro-base hover:text-fondo-base border-b border-oro-borde/30 flex items-center justify-between transition-colors">
+                        <span>Google Calendar</span>
+                        <i class="fa-brands fa-google text-lg"></i>
+                    </a>
+                    <a href="#" onclick="addToAppleCalendar(event)" class="px-6 py-4 text-xs font-sans tracking-widest uppercase text-oro-claro hover:bg-oro-base hover:text-fondo-base flex items-center justify-between transition-colors">
+                        <span>Apple / iOS</span>
+                        <i class="fa-brands fa-apple text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Separador -->
+            <div class="flex items-center w-full mt-16 mb-4 opacity-80">
+                <div class="linea-div"></div>
+                <i class="fa-solid fa-star text-3xl mx-4 text-oro-base"></i>
+                <div class="linea-div"></div>
+            </div>
+        </section>
+
         <!-- FESTEJADO Y SORPRESA -->
-        <section class="mt-4 px-4 flex flex-col items-center text-center reveal">
+        <section class="mt-4 px-4 flex flex-col items-center text-center reveal relative z-10">
             <p class="font-script text-5xl mb-4 text-oro-claro leading-snug px-2">
                 Ponte botas y sombrero, acompáñame a celebrar
             </p>
             
-            <!-- Foto del festejado -->
             <div class="relative w-[300px] h-[420px] mx-auto mb-8 rounded-[150px] border border-oro-borde/50 p-2 shadow-2xl">
                 <div class="w-full h-full rounded-[150px] overflow-hidden border border-oro-base/20 relative">
                     <img src="https://i.imgur.com/Lgie3SC.jpeg" alt="Alejandro" class="w-full h-full object-cover object-top">
-                    <!-- Overlay sutil dorado para integrar la foto con los colores del tema -->
                     <div class="absolute inset-0 bg-oro-base/10 mix-blend-overlay pointer-events-none"></div>
                 </div>
             </div>
@@ -293,7 +349,7 @@
                 <div class="linea-div"></div>
             </div>
 
-            <!-- BLOQUE DE SORPRESA DESTACADO -->
+            <!-- BLOQUE DE SORPRESA -->
             <div class="w-full bg-fondo-caja border-y border-oro-borde/40 py-8 mb-6 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                 <p class="text-4xl font-titulo text-oro-claro tracking-[0.3em] font-bold mb-3 drop-shadow-md">
                     S H H . .
@@ -305,12 +361,10 @@
         </section>
 
         <!-- UBICACIÓN -->
-        <section class="mt-12 px-6 flex flex-col items-center text-center reveal w-full">
+        <section class="mt-12 px-6 flex flex-col items-center text-center reveal w-full relative z-10">
             <div class="w-full relative border border-oro-borde/50 rounded-[150px] bg-fondo-caja pt-16 pb-14 px-6 shadow-2xl overflow-hidden">
-                <!-- Inner decorative border -->
                 <div class="absolute inset-0 border border-oro-base/20 rounded-[150px] m-2 pointer-events-none"></div>
                 
-                <!-- Icono de sombrero (Máscara) en lugar de font-awesome -->
                 <div class="icono-personalizado icono-sombrero bg-oro-base w-20 h-20 mb-6 opacity-90 relative z-10 mx-auto"></div>
                 
                 <h2 class="font-titulo text-4xl tracking-[0.2em] mb-6 text-oro-claro uppercase relative z-10">
@@ -326,8 +380,8 @@
                 </p>
 
                 <a href="https://maps.app.goo.gl/f8ZMiTxPCd6EALZe7?g_st=iw" target="_blank" 
-                   class="inline-block relative z-10 border border-oro-base text-oro-claro px-8 py-3 font-sans text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-oro-base hover:text-fondo-base active:scale-95 shadow-lg">
-                    Ver en Mapa
+                   class="inline-block relative z-10 border border-oro-base text-oro-claro px-8 py-3 font-sans text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-oro-base hover:text-fondo-base active:scale-95 shadow-lg rounded-full">
+                    <i class="fa-solid fa-map-location-dot mr-2"></i> Ver en Mapa
                 </a>
             </div>
             
@@ -344,13 +398,12 @@
                 Código de Vestimenta
             </h2>
             
-            <!-- Nuevo ícono de Botas con filtro (Máscara) -->
             <div class="icono-personalizado icono-botas bg-oro-base w-28 h-28 mb-4 mx-auto drop-shadow-md opacity-90"></div>
             
             <p class="font-script text-8xl px-4 text-oro-base drop-shadow-sm mt-2">
                 Vaquero
             </p>
-            <p class="font-sans text-cl text-oro-oscuro mt-6 tracking-widest uppercase">
+            <p class="font-sans text-xl text-oro-oscuro mt-6 tracking-widest uppercase">
                 Botas, sombrero y actitud
             </p>
 
@@ -361,12 +414,9 @@
             </div>
         </section>
 
-      
-
-        <!-- REGLAS: NO NIÑOS (ACTUALIZADO) -->
+        <!-- REGLAS: NO NIÑOS -->
         <section class="mt-16 px-4 flex flex-col items-center text-center reveal">
             <div class="relative w-full border border-oro-borde/40 bg-fondo-caja p-6 shadow-lg">
-                <!-- Esquinas decorativas -->
                 <div class="esquina-dec esquina-tl"></div>
                 <div class="esquina-dec esquina-tr"></div>
                 <div class="esquina-dec esquina-bl"></div>
@@ -389,7 +439,7 @@
             </div>
         </section>
         
-        <!-- NUEVA SECCIÓN DE MENSAJE (DE LA IMAGEN) -->
+        <!-- MENSAJE -->
         <section class="mt-20 px-8 flex flex-col items-center text-center reveal w-full">
             <div class="flex items-center w-3/4 mx-auto mb-8 opacity-90">
                 <div class="linea-div"></div>
@@ -408,8 +458,6 @@
             <p class="font-serif text-3xl text-oro-oscuro leading-relaxed mt-6">
                 Tu compañía hará que<br>este día sea aún<br>más especial.
             </p>
-            
-           
         </section>
 
         <!-- DESPEDIDA -->
@@ -431,19 +479,15 @@
             </div>
         </section>
 
-        <!-- SECCIÓN FINAL (FONDO 100svh + DECORACIÓN) -->
+        <!-- SECCIÓN FINAL -->
         <section class="relative w-full h-[100svh] mt-16 flex flex-col items-center justify-end overflow-hidden">
-            <!-- Fondo completo -->
             <img src="https://i.imgur.com/Isg32mM.jpeg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de cierre">
-            
-            <!-- Decoración Final Anclada Abajo -->
             <img src="https://i.imgur.com/KXXfw2O.png" class="relative w-full h-auto z-20 pointer-events-none" alt="Decoración Inferior">
         </section>
-
     </main>
 
     <script>
-        // Lógica de Audio calcada de la invitación de XV
+        // Lógica de Audio
         const audio = document.getElementById("bg-music");
         const audioIcon = document.getElementById("audio-icon");
         const audioBtn = document.getElementById("audio-btn");
@@ -470,16 +514,116 @@
             isPlaying = !isPlaying;
         }
 
+        // Lógica del Contador
+        function initCountdown() {
+            // Fecha objetivo: 28 Nov 2026 a las 4:00 PM (16:00)
+            const targetDate = new Date("Nov 28, 2026 16:00:00").getTime();
+            
+            const interval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                if (distance < 0) {
+                    clearInterval(interval);
+                    document.getElementById("cd-days").innerText = "00";
+                    document.getElementById("cd-hours").innerText = "00";
+                    document.getElementById("cd-minutes").innerText = "00";
+                    document.getElementById("cd-seconds").innerText = "00";
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById("cd-days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("cd-hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("cd-minutes").innerText = minutes.toString().padStart(2, '0');
+                document.getElementById("cd-seconds").innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        // Lógica de Calendario
+        const eventDetails = {
+            title: "Cumpleaños Sorpresa de Alejandro",
+            description: "¡Acompáñanos a celebrar! Sshh... ¡es sorpresa!",
+            location: "Salón Fiarum",
+            startDate: "20261128T160000",
+            endDate: "20261128T220000" // Asumiendo que termina a las 10 PM
+        };
+
+        function toggleCalendarOptions(event) {
+            event.stopPropagation();
+            const options = document.getElementById('calendar-options');
+            const chevron = document.getElementById('cal-chevron');
+            
+            if (options.classList.contains('hidden')) {
+                options.classList.remove('hidden');
+                options.classList.add('flex');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                options.classList.add('hidden');
+                options.classList.remove('flex');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Cerrar el menú si hacen click fuera de él
+        document.addEventListener('click', function(event) {
+            const options = document.getElementById('calendar-options');
+            const chevron = document.getElementById('cal-chevron');
+            if (options && !options.classList.contains('hidden') && !event.target.closest('#calendar-options')) {
+                options.classList.add('hidden');
+                options.classList.remove('flex');
+                if(chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        function addToGoogleCalendar(e) {
+            e.preventDefault();
+            // Formato correcto para la URL de Google Calendar
+            const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.title)}&dates=${eventDetails.startDate}/${eventDetails.endDate}&details=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
+            window.open(gUrl, '_blank');
+            toggleCalendarOptions({stopPropagation: () => {}}); // Cierra el menú al hacer click
+        }
+
+        function addToAppleCalendar(e) {
+            e.preventDefault();
+            // Formato ICS (compatible con iOS/Apple Calendar)
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${eventDetails.startDate}
+DTEND:${eventDetails.endDate}
+SUMMARY:${eventDetails.title}
+DESCRIPTION:${eventDetails.description}
+LOCATION:${eventDetails.location}
+END:VEVENT
+END:VCALENDAR`;
+
+            // Creación del blob para descargar en el dispositivo
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'Cumpleanos_Alejandro.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toggleCalendarOptions({stopPropagation: () => {}}); // Cierra el menú al hacer click
+        }
+
         // Función Principal para abrir sobre y mostrar contenido
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'flex';
             
-            // Iniciar animaciones de revelado al scroll
+            // Iniciar animaciones y utilidades
             initObserver();
+            initCountdown();
             
             // Iniciar Música
             playAudio(); 
-            audioBtn.classList.remove('hidden'); // Mostrar el botón
+            audioBtn.classList.remove('hidden');
 
             // Animar sobre
             document.getElementById('envelope-wrapper').classList.add('open');
@@ -499,7 +643,6 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Opcional: observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
