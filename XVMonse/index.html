@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XV Monse - Let's Party!</title>
+  <link rel="apple-touch-icon" href="https://i.imgur.com/2Lsax5z.jpeg">
+    
+    <meta name="theme-color" content="#EAF2F8">
+    <meta property="og:title" content="Mis XV • Monse">
+    <meta property="og:description" content="¡Prepárate para celebrar una noche inolvidable!">
+   <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/ZAbxEep.jpeg">
+    
+    <!-- Font Awesome for Calendar Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            light: '#F4F9FD', 
+                            blue: '#D4E6F1',
+                            dark: '#2A4365', 
+                            accent: '#5A8BB2' 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cantata+One&family=MonteCarlo&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-main: 'Cantata One';
+            --font-script: 'MonteCarlo', cursive;
+            --color-dark: #2A4365;
+            --color-accent: #5A8BB2;
+            --bg-fade: #F4F9FD;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-fade);
+            display: flex;
+            justify-content: center;
+            font-family: var(--font-main);
+            color: var(--color-dark);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            position: relative;
+            background-color: transparent;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+        }
+
+        .font-script { font-family: var(--font-script); }
+        .font-main { font-family: var(--font-main); }
+
+        /* Video Background */
+        #video-bg-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: var(--bg-fade);
+        }
+        
+        #video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Degradados para integrar el video con el texto sin usar cuadros */
+        .fade-top {
+            position: absolute; top: 0; left: 0; width: 100%; height: 250px;
+            background: linear-gradient(to bottom, var(--bg-fade) 10%, rgba(244,249,253, 0.7) 60%, transparent 100%);
+            pointer-events: none; z-index: 0;
+        }
+        .fade-bottom {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 250px;
+            background: linear-gradient(to top, var(--bg-fade) 10%, rgba(244,249,253, 0.7) 60%, transparent 100%);
+            pointer-events: none; z-index: 0;
+        }
+        .bg-wash {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(244,249,253,0.85) 0%, rgba(244,249,253,0.3) 100%);
+            pointer-events: none; z-index: 0;
+        }
+        
+        .section-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 50vh;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            z-index: 20;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+        .floating-fast { animation: float 4s ease-in-out infinite; }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.6)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 15px rgba(255,255,255,1)); transform: scale(1.1); }
+        }
+        .glowing { animation: pulse-glow 3s infinite; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Polaroid styling */
+        .polaroid {
+            background: white;
+            padding: 10px 10px 45px 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+            border-radius: 2px;
+        }
+        
+        .tape-blue {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 90px;
+            height: 28px;
+            background-color: rgba(154, 186, 210, 0.8);
+            backdrop-filter: blur(2px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            z-index: 5;
+            border-radius: 1px;
+        }
+
+        /* --- SOBRE --- */
+        #envelope-wrapper {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; height: 100%; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url('https://i.imgur.com/lIyFwPj.jpeg');
+            background-size: cover; background-position: center; transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); }
+        .flap { width: 100%; height: 100%; background-image: url('https://i.imgur.com/lIyFwPj.jpeg'); background-size: cover; background-position: center; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+        
+        .animate-fadeIn { animation: fadeIn 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .timeline-line {
+            position: absolute;
+            left: 10px;
+            top: 20px;
+            bottom: 20px;
+            width: 1px;
+            background: var(--color-dark);
+            opacity: 0.3;
+        }
+
+        .btn-primary {
+            background-color: #89A8C4;
+            color: white;
+            font-family: var(--font-main);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            padding: 16px 36px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(137, 168, 196, 0.4);
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.4);
+            text-align: center;
+        }
+        .btn-primary:active { transform: scale(0.95); }
+
+        #customModal {
+            position: fixed; inset: 0; z-index: 200; display: none;
+            align-items: center; justify-content: center; background: rgba(26, 47, 76, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        #customModal.show { display: flex; animation: modalFadeIn 0.3s; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .trivia-option {
+            display: block; width: 100%; padding: 14px; margin-bottom: 12px;
+            background: rgba(255,255,255,0.9); border: 1px solid var(--color-accent);
+            border-radius: 30px; text-align: center; font-weight: 500; font-size: 1.1rem;
+            cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            color: var(--color-dark);
+        }
+        .trivia-option.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+        .trivia-option.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+        /* Sombreado de texto para legibilidad sin cuadros */
+        .text-glow { text-shadow: 0 2px 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,1); }
+        .text-glow-dark { text-shadow: 0 2px 10px rgba(244,249,253,1), 0 0 20px rgba(244,249,253,1); }
+
+        /* Estilos del Reproductor de Audio Flotante */
+        .ui-layer {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; height: 100%;
+            pointer-events: none; z-index: 90;
+        }
+        .audio-btn {
+            position: absolute; bottom: 20px; right: 20px; width: 45px; height: 45px;
+            background: #2A4365; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(90,139,178,0.6); pointer-events: auto;
+            cursor: pointer; transition: transform 0.3s; 
+            overflow: hidden;
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 6s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Capa UI con el botón flotante de Audio estilo Alejandro -->
+    <div class="ui-layer">
+        <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+            <img id="audio-icon" src="https://i.imgur.com/aFbJCPa.jpeg" alt="Música">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-theme-dark rounded-full z-10 flex items-center justify-center shadow-[0_0_2px_rgba(0,0,0,0.8)]">
+                <div class="w-[4px] h-[4px] bg-theme-light rounded-full opacity-80"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="envelope-wrapper">
+        <div class="envelope-bg"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10 cursor-pointer" onclick="openInvitation()">
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
+            <div class="seal-wrapper">
+                <p class="text-white text-xs mb-2 uppercase font-bold drop-shadow-sm">Toca para abrir</p>
+                <img src="https://i.imgur.com/ToLeWKI.png" class="w-44 floating" alt="Sello">
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        
+        <div id="video-bg-container">
+            <video autoplay loop muted playsinline id="bg-video">
+                <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FDisco.MP4?alt=media&token=ebcf283a-5e57-42df-8782-40986d5e28eb" type="video/mp4">
+            </video>
+        </div>
+
+        <audio id="bg-music" loop>
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FKeshaCMon.mp3?alt=media&token=b8a40b07-e494-480f-b6b8-f4c531cd1899" type="audio/mpeg">
+        </audio>
+
+        <main id="main-content" class="w-full hidden pb-0">
+            
+            <section class="section-wrapper pt-16 min-h-[95vh]">
+                <div class="fade-top"></div>
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute top-0 -right-12 w-44 floating z-10 drop-shadow-xl" alt="Disco">
+                <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-12 left-8 w-16 glowing" alt="Star">
+              
+                <div class="relative z-30 text-center px-8 py-6 w-full">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-24 right-4 w-8 glowing delay-75" alt="Star">
+                    <p class="font-script text-6xl text-theme-dark mb-4 mr-12 rotate-[-5deg] text-glow">Mis</p>
+                    <h1 class="font-main text-9xl font-bold text-theme-accent tracking-wide leading-none text-glow">XV</h1>
+                    <h2 class="font-script text-8xl text-theme-dark mt-4 mb-8 -rotate-3 relative z-30 text-glow">Monse</h2>
+                
+                    <div class="flex items-center justify-center gap-4 text-theme-dark font-main font-bold text-lg uppercase mb-4 text-glow-dark relative z-20">
+                        <span>23</span>
+                        <span class="w-2 h-2 rounded-full bg-theme-accent"></span>
+                        <span>Octubre</span>
+                        <span class="w-2 h-2 rounded-full bg-theme-accent"></span>
+                        <span>2026</span>
+                    </div>
+                </div>
+
+                <div class="relative z-30 w-full max-w-[280px] mx-auto">
+                    <div class="polaroid z-20 relative transform rotate-[2deg]">
+                        <div class="tape-blue"></div>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_portada_inbound6622621733567239199.jpg?alt=media&token=dd402f62-9153-499b-a102-fd6ece3a50a9" class="w-full aspect-[3/4] object-cover rounded-sm" alt="Monse">
+                    </div>
+                    
+                    <img src="https://i.imgur.com/s9xQT3U.png" class="absolute -bottom-8 -right-10 w-32 floating z-30 drop-shadow-xl" alt="Copa Hero">
+                </div>
+                
+                <div class="fade-bottom"></div>
+            </section>
+
+            <section class="section-wrapper pt-12 pb-16 reveal">
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-10 left-8 w-8 glowing" alt="Star">
+                
+                <p class="text-6xl font-script text-theme-dark mb-6 text-glow">Faltan solo...</p>
+                
+                <!-- Contador con Segundero -->
+                <div class="flex justify-center items-center gap-1 sm:gap-2 font-main text-theme-dark relative z-10 w-full px-2">
+                    <div class="flex flex-col items-center w-12 sm:w-14">
+                        <span id="days" class="text-4xl sm:text-5xl font-bold text-glow">00</span>
+                        <span class="font-main text-[9px] uppercase tracking-widest mt-1 font-bold text-glow">Días</span>
+                    </div>
+                    <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                    <div class="flex flex-col items-center w-12 sm:w-14">
+                        <span id="hours" class="text-4xl sm:text-5xl font-bold text-glow">00</span>
+                        <span class="font-main text-[9px] uppercase tracking-widest mt-1 font-bold text-glow">Hrs</span>
+                    </div>
+                    <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                    <div class="flex flex-col items-center w-12 sm:w-14">
+                        <span id="mins" class="text-4xl sm:text-5xl font-bold text-glow">00</span>
+                        <span class="font-main text-[9px] uppercase tracking-widest mt-1 font-bold text-glow">Min</span>
+                    </div>
+                    <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                    <div class="flex flex-col items-center w-12 sm:w-14">
+                        <span id="secs" class="text-4xl sm:text-5xl font-bold text-glow">00</span>
+                        <span class="font-main text-[9px] uppercase tracking-widest mt-1 font-bold text-glow">Seg</span>
+                    </div>
+                </div>
+
+                <!-- Botón de Calendario Desplegable -->
+                <div class="relative mt-12 w-full flex justify-center z-50">
+                    <button onclick="toggleCalendarOptions(event)" class="inline-flex items-center justify-center gap-3 w-64 border-2 border-theme-accent text-theme-accent px-6 py-4 font-main text-xs tracking-widest uppercase transition-all duration-300 hover:bg-theme-accent hover:text-white active:scale-95 shadow-xl bg-white/95 rounded-full font-bold">
+                      Agendar
+                     
+                    </button>
+                    
+                    <!-- Opciones Desplegables del Calendario -->
+                    <div id="calendar-options" class="hidden absolute top-full mt-3 w-64 flex-col bg-white border-2 border-theme-accent/60 rounded-2xl shadow-2xl overflow-hidden transform origin-top transition-all duration-300 z-50">
+                        <a href="#" onclick="addToGoogleCalendar(event)" class="px-6 py-4 text-xs font-main font-bold tracking-widest uppercase text-theme-dark hover:bg-theme-accent hover:text-white border-b border-theme-accent/30 flex items-center justify-between transition-colors">
+                            <span>Google Calendar</span>
+                            <i class="fa-brands fa-google text-lg"></i>
+                        </a>
+                        <a href="#" onclick="addToAppleCalendar(event)" class="px-6 py-4 text-xs font-main font-bold tracking-widest uppercase text-theme-dark hover:bg-theme-accent hover:text-white flex items-center justify-between transition-colors">
+                            <span>Apple / iOS</span>
+                            <i class="fa-brands fa-apple text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <img src="https://i.imgur.com/JE8qIGY.png" class="w-32 mt-10" alt="Moño">
+            </section>
+
+            <section class="w-full relative z-20 flex justify-center py-10 reveal">
+                 <div class="polaroid rotate-[-3deg] floating w-[300px] max-w-[90%]">
+                     <div class="tape-blue"></div>
+                     <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_separador_2_inbound169472217650432543.jpg?alt=media&token=7c646737-6dc2-4407-8fe3-740ffcc4bb78" class="w-full aspect-[9/16] object-cover" alt="Separador">
+                 </div>
+            </section>
+
+            <section class="section-wrapper py-12 reveal">
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-5 right-12 w-12 glowing" alt="Star">
+                
+                <h3 class="font-script text-7xl text-theme-accent mb-10 leading-none text-glow text-center">hello<br><span class="text-theme-dark ml-8">friends!</span></h3>
+                
+                <div class="px-4 max-w-[340px] text-center relative z-10">
+                    <p class="text-base uppercase leading-relaxed text-theme-dark font-bold mb-6 text-glow-dark">
+                        Cumplo quince años y soy muy feliz de vivir esta etapa tan especial y única.
+                    </p>
+                    <p class="text-base uppercase leading-relaxed text-theme-dark font-bold mb-6 text-glow-dark">
+                        Quiero celebrarlo rodeada de las personas que han sido parte de mi historia y deseo que sigan acompañándome en este nuevo camino.
+                    </p>
+                    <p class="text-base uppercase leading-relaxed text-theme-accent font-bold text-glow-dark">
+                        ¡Prepárate para celebrar una noche inolvidable, porque mis XV están a punto de comenzar!
+                    </p>
+                </div>
+            </section>
+
+            <section class="section-wrapper py-8 reveal">
+                <div class="bg-wash"></div>
+                
+                <div class="p-8 max-w-[340px] w-full text-center relative z-10">
+                    <h4 class="font-script text-5xl text-theme-dark mb-4 border-b border-theme-accent/40 pb-4 inline-block text-glow">Mis Padres</h4>
+                    <p class="font-main font-bold uppercase tracking-wider text-sm text-theme-dark text-glow-dark mt-2">David Domínguez Aguilar</p>
+                    <p class="font-main font-bold uppercase tracking-wider text-sm text-theme-dark mt-1 text-glow-dark">Miriam Madrigal Adame</p>
+                    
+                    <h4 class="font-script text-5xl text-theme-dark mt-16 mb-4 border-b border-theme-accent/40 pb-4 inline-block text-glow">Mis Padrinos</h4>
+                    <p class="font-main font-bold uppercase tracking-wider text-sm text-theme-dark text-glow-dark mt-2">Eduardo Mata Medina</p>
+                    <p class="font-main font-bold uppercase tracking-wider text-sm text-theme-dark mt-1 text-glow-dark">Guadalupe Pascacio Narcia</p>
+                </div>
+            </section>
+
+            <section class="section-wrapper py-16 reveal">
+                <div class="bg-wash"></div>
+                
+                <div class="relative w-full max-w-[340px] h-[450px] mx-auto flex items-center justify-center">
+                    
+                    <img src="https://i.imgur.com/fLQyuG8.png" class="absolute -left-8 -top-28 w-56 z-30 floating drop-shadow-2xl" alt="15 Plateado">
+                    
+                    <div class="absolute right-0 top-16 w-72 polaroid rotate-[5deg] z-20">
+                        <div class="tape-blue"></div>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_separador_1_inbound840891364455852488.jpg?alt=media&token=68f87156-8549-4af6-937c-b493daed5bed" class="w-full aspect-[3/4] object-cover" alt="Monse Foto">
+                    </div>
+                    
+                    <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -right-28 -top-16 w-44 floating-fast z-10 drop-shadow-xl" alt="Disco">
+                    <img src="https://i.imgur.com/n44k8hu.png" class="absolute bottom-8 -left-12 w-32 z-40 drop-shadow-xl rotate-[-12deg]" alt="Camara">
+                </div>
+
+                <div class="w-full max-w-[340px] mt-32 space-y-16 relative z-20 text-center">
+                    
+                    <!-- Ceremonia -->
+                    <div class="relative">
+                        <img src="https://i.imgur.com/t9CrY8W.png" class="absolute -top-6 -left-4 w-12 glowing" alt="Star">
+                        <h4 class="font-script text-6xl text-theme-accent mb-2 text-glow">Ceremonia</h4>
+                        <p class="font-main font-bold text-2xl text-theme-dark mb-4 text-glow-dark">7:00 PM</p>
+                        <p class="font-main font-bold text-lg text-theme-dark mb-3 uppercase tracking-wider text-glow-dark">Iglesia San Pedro San Pablo</p>
+                    
+                        <a href="https://maps.app.goo.gl/CUExX4CRzj7RRgTEA?g_st=ac" target="_blank" class="btn-primary w-[80%] mx-auto block">Ver Mapa</a>
+                    </div>
+
+                    <div class="w-[60%] h-[1px] bg-theme-accent/30 mx-auto my-12"></div>
+
+                    <!-- Recepción -->
+                    <div class="relative">
+                        <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -top-12 -right-10 w-24 floating-fast drop-shadow-lg" alt="Disco Mini">
+                        <h4 class="font-script text-6xl text-theme-accent mb-2 text-glow">Recepción</h4>
+                        <p class="font-main font-bold text-2xl text-theme-dark mb-4 text-glow-dark">8:30 PM</p>
+                        <p class="font-main font-bold text-lg text-theme-dark mb-3 uppercase tracking-wider text-glow-dark">Hacienda de Rodríguez</p>
+                     
+                        <a href="https://maps.app.goo.gl/d2AmvDjKG8sv3zPv8?g_st=ac" target="_blank" class="btn-primary w-[80%] mx-auto block">Ver Mapa</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-wrapper py-16 reveal text-center">
+                <div class="bg-wash"></div>
+                
+                <h3 class="font-main text-[2.5rem] text-theme-dark mb-2 font-bold uppercase text-glow-dark">Dresscode</h3>
+                <h4 class="font-script text-6xl text-theme-accent mb-8 text-glow">Formal</h4>
+
+                <img src="https://i.imgur.com/685FDYA.png" class="w-72 mx-auto mb-6 drop-shadow-2xl" alt="Vestimenta Formal">
+
+                <div class="px-4 max-w-[320px] mx-auto relative z-10">
+                    <p class="uppercase text-lg text-theme-dark font-bold leading-relaxed text-glow-dark">
+                        Vestimenta completamente negra.<br>
+                        <span class="text-theme-accent font-bold mt-4 block uppercase tracking-wider text-sm">Sin brillos, lentejuelas ni pedrería.</span>
+                    </p>
+                </div>
+            </section>
+
+            <section class="section-wrapper py-16 reveal">
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-10 left-8 w-12 glowing" alt="Star">
+
+                <h3 class="font-script text-6xl text-theme-dark mb-6 text-center text-glow">Itinerario</h3>
+
+                <div class="relative w-full max-w-[300px] mx-auto text-left z-20">
+                    <div class="timeline-line"></div>
+
+                    <div class="flex items-center mb-6 relative z-10">
+                        <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-theme-accent/50 shrink-0 relative"></div>
+                        <div class="ml-6 flex-1">
+                            <p class="font-main text-sm text-theme-accent font-bold tracking-widest uppercase mb-1 text-glow-dark">7:00 PM</p>
+                            <p class="uppercase text-lg font-bold text-theme-dark text-glow-dark">Ceremonia</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center mb-12 relative z-10">
+                        <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-theme-accent/50 shrink-0"></div>
+                        <div class="ml-6 flex-1">
+                            <p class="font-main text-sm text-theme-accent font-bold tracking-widest uppercase mb-1 text-glow-dark">8:30 PM</p>
+                            <p class="uppercase text-lg font-bold text-theme-dark text-glow-dark">Recepción</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center mb-12 relative z-10">
+                        <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-theme-accent/50 shrink-0"></div>
+                        <div class="ml-6 flex-1">
+                            <p class="font-main text-sm text-theme-accent font-bold tracking-widest uppercase mb-1 text-glow-dark">9:30 PM</p>
+                            <p class="uppercase text-lg font-bold text-theme-dark text-glow-dark">Vals</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center mb-12 relative z-10">
+                        <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-theme-accent/50 shrink-0"></div>
+                        <div class="ml-6 flex-1">
+                            <p class="font-main text-sm text-theme-accent font-bold tracking-widest uppercase mb-1 text-glow-dark">10:00 PM</p>
+                            <p class="uppercase text-lg font-bold text-theme-dark text-glow-dark">Cena</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center relative z-10">
+                        <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-theme-accent/50 shrink-0"></div>
+                        <div class="ml-6 flex-1">
+                            <p class="font-main text-sm text-theme-accent font-bold tracking-widest uppercase mb-1 text-glow-dark">10:40 PM</p>
+                            <p class="uppercase text-lg font-bold text-theme-dark text-glow-dark">Se abre pista</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="w-full relative z-20 flex justify-center py-10 reveal">
+                 <div class="polaroid rotate-[4deg] floating-fast w-[300px] max-w-[90%]">
+                     <div class="tape-blue"></div>
+                     <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_separador_3_inbound5420066758495304908.jpg?alt=media&token=b627c999-263c-44e0-b039-89a292c52eea" class="w-full aspect-[9/16] object-cover" alt="Separador">
+                 </div>
+            </section>
+
+            <section class="section-wrapper py-16 reveal text-center">
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/lpCjOel.png" class="w-28 mx-auto mb-4 drop-shadow-xl" alt="Corona">
+                <h3 class="font-script text-6xl leading-none text-theme-dark mb-4 text-glow-dark">¿Qué tanto me conoces?</h3>
+
+                <div id="trivia-container" class="w-full max-w-[320px] mx-auto relative z-20 font-main min-h-[300px]">
+                    <div class="trivia-step block" data-step="0">
+                        <p class="font-bold text-theme-dark mb-6 text-center uppercase text-lg text-glow-dark">¿Con qué palabra me describirías?</p>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 0, 2)">Tímida</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 1, 2)">Seria</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 2, 2)">Alegre</button>
+                    </div>
+
+                    <div class="trivia-step hidden" data-step="1">
+                        <p class="font-bold text-theme-dark mb-6 text-center text-lg uppercase text-glow-dark">¿Cuál es mi color favorito?</p>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 0, 1)">Azul</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 1, 1)">Morado</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 2, 1)">Rosa</button>
+                    </div>
+
+                    <div class="trivia-step hidden" data-step="2">
+                        <p class="font-bold text-theme-dark mb-6 text-center text-lg uppercase text-glow-dark">¿Qué animal sería?</p>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 0, 0)">Capibara</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 1, 0)">Gato</button>
+                        <button class="trivia-option font-bold" onclick="handleTriviaAnswer(this, 2, 0)">Perro</button>
+                    </div>
+
+                    <div class="trivia-result hidden text-center bg-white/80 p-8 rounded-3xl border border-theme-accent/30 shadow-xl backdrop-blur-sm">
+                        <p class="font-script text-5xl text-theme-accent mb-4 text-glow leading-none">¡Terminaste!</p>
+                        <p class="font-bold text-theme-dark text-2xl mb-4 text-glow-dark border-b border-theme-dark/20 pb-4">Puntaje: <span id="trivia-score" class="text-theme-accent text-3xl">0</span>/3</p>
+                        <p id="trivia-message" class="font-main text-lg text-theme-dark font-bold leading-relaxed"></p>
+                        <button onclick="resetTrivia()" class="mt-6 font-main text-sm font-bold uppercase tracking-widest text-theme-accent border-2 border-theme-accent px-6 py-2 rounded-full hover:bg-theme-accent hover:text-white transition-colors">Volver a intentar</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-wrapper py-16 reveal text-center">
+                <div class="bg-wash"></div>
+                
+                <h3 class="font-main text-[2.5rem] uppercase font-bold text-theme-dark mb-4 text-glow-dark leading-none">Mesa de Regalos</h3>
+                
+                <div class="p-4 max-w-[340px] mx-auto relative z-10">
+                    <p class="font-script text-6xl text-theme-dark mb-4 text-glow">Lluvia de Sobres</p>
+                    <svg class="w-20 h-20 mx-auto text-theme-accent mb-4 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <p class="uppercase text-base text-theme-dark font-bold leading-relaxed text-glow-dark">
+                        Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo, habrá un buzón en la recepción para tu sobre.
+                    </p>
+                </div>
+
+                <div class="relative w-full flex justify-center items-center mt-2">
+                    <img src="https://i.imgur.com/TtB9SkG.png" class="w-56 z-10 rotate-[5deg] drop-shadow-2xl" alt="Cassette">
+                    <img src="https://i.imgur.com/zQEm7DZ.png" class="w-24 absolute -right-16 -bottom-6 floating z-20 drop-shadow-xl" alt="Disco mini">
+                </div>
+
+                <h3 class="font-script text-6xl text-theme-accent mt-16 mb-6 text-glow">Álbum Compartido</h3>
+                <p class="uppercase text-sm text-theme-dark font-bold mb-6 px-6 uppercase tracking-wider text-glow-dark">Ayúdame a capturar los mejores momentos. Escanea o haz clic en el botón.</p>
+                
+                <div class="bg-white p-4 rounded-xl shadow-xl inline-block mb-4 border border-theme-accent/30 relative z-20">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://adainvite.com/XVMonse/recuerdos" alt="QR Album" class="w-40 h-40">
+                </div>
+                <br>
+                <a href="https://adainvite.com/XVMonse/recuerdos" class="btn-primary w-[260px] relative z-20">Ver Galería</a>
+            </section>
+
+            <section class="section-wrapper py-20 reveal text-center">
+                <div class="bg-wash"></div>
+                <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-10 right-10 w-12 glowing" alt="Star">
+                
+                <h3 class="font-script text-6xl text-theme-dark mb-2 text-glow leading-none">Confirma tu</h3>
+                <h3 class="uppercase text-[2.5rem] font-bold text-theme-accent mb-4 leading-none tracking-wide text-glow-dark">Asistencia</h3>
+                
+                <p class="font-main text-sm uppercase text-theme-dark font-bold mb-2 text-glow-dark">Tu confirmación es muy importante para mí.</p>
+                
+                <!-- Ancho del contenedor aumentado de 340px a 400px -->
+                <div class="p-4 w-full max-w-[98%] mx-auto relative z-20">
+                    <p class="font-main text-xs font-bold text-theme-dark mb-4 uppercase bg-white/90 inline-block px-2 py-3 rounded-full shadow-md border border-theme-accent/30">Fecha límite: 08 Oct 2026</p>
+
+                    <form id="rsvpForm" class="text-left bg-white/40 p-2 rounded-3xl border border-theme-accent/20 backdrop-blur-sm" onsubmit="sendRSVP(event)">
+                        
+                        <div class="mb-4 text-center">
+                            <span class="uppercase text-xs font-bold text-white bg-theme-accent px-5 py-2 rounded-full uppercase tracking-widest shadow-md">Solo Adultos</span>
+                        </div>
+
+                        <div class="px-2 mb-4 mt-4">
+                            <label class="block font-main text-xs font-bold uppercase tracking-wider text-theme-dark mb-3 ml-2 text-glow-dark">Nombre:</label>
+                            <input type="text" id="rsvpName" required class="w-full bg-white/90 border-2 border-theme-accent/40 rounded-2xl px-5 py-4 text-xs outline-none focus:ring-2 focus:ring-theme-accent shadow-lg text-theme-dark font-bold placeholder-gray-400" placeholder="Ej. Familia Pérez">
+                        </div>
+                        
+                        <div class="px-2 mb-8">
+                            <label class="block font-main text-xs font-bold uppercase tracking-wider text-theme-dark mb-3 ml-2 text-glow-dark">Asistentes:</label>
+                            <!-- Cambiado de select a input type="number" -->
+                            <input type="number" id="rsvpAdults" required min="1" max="15" class="w-full bg-white/90 border-2 border-theme-accent/40 rounded-2xl px-5 py-4 text-xs outline-none focus:ring-2 focus:ring-theme-accent shadow-lg text-theme-dark font-bold text-center placeholder-gray-400" placeholder="Ej. 2">
+                        </div>
+                        
+                        <div class="text-center px-2">
+                            <button type="submit" class="btn-primary w-full shadow-xl text-xs py-4">Confirmar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="relative min-h-[100vh] flex flex-col items-center justify-center pb-24 overflow-hidden">
+                <div class="bg-wash"></div>
+                <div class="fade-bottom"></div>
+
+                <h3 class="font-script text-[5rem] text-theme-dark mb-16 relative z-30 text-center leading-none text-glow">La fiesta <br>no será igual<br> sin ti</h3>
+
+                <div class="relative w-full max-w-[380px] h-[450px] z-20">
+                    <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -top-6 -left-6 w-24 floating z-30 drop-shadow-xl" alt="Disco">     
+                    <div class="absolute top-10 left-0 w-56 polaroid rotate-[-4deg] floating hover:z-50 transition-transform z-40">
+                        <div class="tape-blue"></div>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_separador_4_inbound75767960991155106.jpg?alt=media&token=4089eb31-d416-4e22-91b2-3ffe53de822f" class="w-full aspect-square object-cover" alt="Pic4">
+                    </div>
+
+                    <div class="absolute bottom-10 right-0 w-56 polaroid rotate-[7deg] floating-fast hover:z-50 transition-transform z-30 opacity-95">
+                        <div class="tape-blue"></div>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Miriam_Madrigal_Adame__1788734041480%2Ffoto_separador_5_inbound1341291221617535378.jpg?alt=media&token=f38fbbf8-743e-4fe8-ba85-6c17d4fa4a7a" class="w-full aspect-[4/5] object-cover" alt="Pic5">
+                    </div>
+
+                    <img src="https://i.imgur.com/Q9Hug5g.png" class="absolute bottom-32 left-4 w-44 drop-shadow-2xl z-50 rotate-[-12deg]" alt="Lentes">
+                </div>
+
+                <div class="relative mt-8 z-30 flex flex-col items-center">
+                    <h3 class="font-script text-[8rem] text-theme-dark mb-2 text-glow rotate-[-5deg] leading-none">See</h3>
+                    <h3 class="font-script text-[8rem] text-theme-accent -mt-12 ml-20 text-glow leading-none">you!</h3>
+                    
+                    <div class="flex items-end justify-center gap-6 mt-8 relative">
+                        <img src="https://i.imgur.com/zQEm7DZ.png" class="w-56 floating z-10 drop-shadow-2xl" alt="Disco">
+                        <img src="https://i.imgur.com/tte1YkX.png" class="w-28 z-20 absolute right-[-50px] bottom-[-15px] floating-fast" alt="Copa Footer">
+                        <img src="https://i.imgur.com/t9CrY8W.png" class="absolute -top-12 -right-12 w-10 glowing" alt="Star">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="customModal">
+        <div class="bg-white/90 rounded-3xl p-8 max-w-[320px] text-center shadow-2xl transform transition-transform scale-95 border-2 border-theme-accent" id="modalContent">
+            <p id="modalText" class="font-main text-xl font-bold text-theme-dark leading-relaxed"></p>
+            <button onclick="closeModal()" class="mt-8 btn-primary w-full">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de Audio actualizada
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        const audioBtn = document.getElementById("audio-btn");
+        let isPlaying = false;
+
+        function openInvitation() {
+            const wrapper = document.getElementById('envelope-wrapper');
+            const mainContent = document.getElementById('main-content');
+            
+            wrapper.classList.add('open');
+
+            setTimeout(() => {
+                wrapper.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                initObserver();
+                
+                // Mostrar botón flotante de audio
+                audioBtn.classList.remove('hidden');
+                
+                audio.play().then(() => {
+                    isPlaying = true;
+                    audioIcon.classList.add('spin-slow');
+                }).catch(err => {
+                    console.log("Autoplay bloqueado por el navegador.");
+                    isPlaying = false;
+                });
+                
+                const vid = document.getElementById('bg-video');
+                if(vid) vid.play().catch(e => console.log(e));
+
+            }, 1800);
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Lógica de Contador (actualizada para soportar segundos)
+        const targetDate = new Date("October 23, 2026 19:00:00").getTime();
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) return;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("mins").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("secs").innerText = seconds.toString().padStart(2, '0');
+        }
+        // Cambiado el intervalo a 1000ms para actualizar los segundos
+        setInterval(updateCountdown, 1000); 
+        updateCountdown();
+
+        // Lógica del Calendario
+        const eventDetails = {
+            title: "XV Monse",
+            description: "¡Prepárate para celebrar una noche inolvidable porque mis XV están a punto de comenzar!",
+            location: "Iglesia San Pedro San Pablo",
+            startDate: "20261023T190000",
+            endDate: "20261024T020000" // Asumiendo que termina a las 2 AM
+        };
+
+        function toggleCalendarOptions(event) {
+            event.stopPropagation();
+            const options = document.getElementById('calendar-options');
+            const chevron = document.getElementById('cal-chevron');
+            
+            if (options.classList.contains('hidden')) {
+                options.classList.remove('hidden');
+                options.classList.add('flex');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                options.classList.add('hidden');
+                options.classList.remove('flex');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const options = document.getElementById('calendar-options');
+            const chevron = document.getElementById('cal-chevron');
+            if (options && !options.classList.contains('hidden') && !event.target.closest('#calendar-options')) {
+                options.classList.add('hidden');
+                options.classList.remove('flex');
+                if(chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        function addToGoogleCalendar(e) {
+            e.preventDefault();
+            const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.title)}&dates=${eventDetails.startDate}/${eventDetails.endDate}&details=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
+            window.open(gUrl, '_blank');
+            toggleCalendarOptions({stopPropagation: () => {}}); 
+        }
+
+        function addToAppleCalendar(e) {
+            e.preventDefault();
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${eventDetails.startDate}
+DTEND:${eventDetails.endDate}
+SUMMARY:${eventDetails.title}
+DESCRIPTION:${eventDetails.description}
+LOCATION:${eventDetails.location}
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'XV_Monse.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toggleCalendarOptions({stopPropagation: () => {}}); 
+        }
+
+        // Lógica Visual General
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // Trivia
+        let currentTriviaStep = 0;
+        let triviaScore = 0;
+
+        function handleTriviaAnswer(button, selectedIndex, correctIndex) {
+            const stepContainer = button.parentElement;
+            const options = stepContainer.querySelectorAll('.trivia-option');
+            
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (selectedIndex === correctIndex) {
+                button.classList.add('correct');
+                triviaScore++;
+            } else {
+                button.classList.add('wrong');
+                options[correctIndex].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                stepContainer.classList.add('hidden');
+                stepContainer.classList.remove('block');
+                
+                currentTriviaStep++;
+                const nextStep = document.querySelector(`.trivia-step[data-step="${currentTriviaStep}"]`);
+                
+                if (nextStep) {
+                    nextStep.classList.remove('hidden');
+                    nextStep.classList.add('block', 'animate-fadeIn');
+                } else {
+                    showTriviaResults();
+                }
+            }, 1200);
+        }
+
+        function showTriviaResults() {
+            const resultContainer = document.querySelector('.trivia-result');
+            const scoreSpan = document.getElementById('trivia-score');
+            const messageP = document.getElementById('trivia-message');
+            
+            resultContainer.classList.remove('hidden');
+            resultContainer.classList.add('block', 'animate-fadeIn');
+            scoreSpan.innerText = triviaScore;
+            
+            if (triviaScore === 3) {
+                messageP.innerText = "¡Vaya, me conoces súper bien!";
+            } else if (triviaScore === 2) {
+                messageP.innerText = "¡Nada mal! Casi perfecto.";
+            } else {
+                messageP.innerText = "Uy... necesitamos platicar más.";
+            }
+        }
+
+        function resetTrivia() {
+            currentTriviaStep = 0;
+            triviaScore = 0;
+            
+            document.querySelector('.trivia-result').classList.add('hidden');
+            document.querySelector('.trivia-result').classList.remove('block');
+            
+            document.querySelectorAll('.trivia-step').forEach((step, index) => {
+                const options = step.querySelectorAll('.trivia-option');
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'wrong');
+                    opt.style.pointerEvents = 'auto';
+                });
+                
+                if(index === 0) {
+                    step.classList.remove('hidden');
+                    step.classList.add('block', 'animate-fadeIn');
+                } else {
+                    step.classList.add('hidden');
+                    step.classList.remove('block');
+                }
+            });
+        }
+
+        function showModal(msg) {
+            document.getElementById('modalText').innerText = msg;
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('show');
+            setTimeout(() => content.classList.remove('scale-95'), 10);
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.remove('show'), 200);
+        }
+
+        function sendRSVP(e) {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const adults = document.getElementById('rsvpAdults').value;
+            
+            if(!name || !adults) {
+                showModal("Por favor completa todos los campos.");
+                return;
+            }
+
+            const phone = "527531543661"; 
+            const message = `¡Hola! Confirmo mi asistencia a los XV años de Monse.%0A%0A*Nombre:* ${name}%0A*Asistentes (Adultos):* ${adults}`;
+            
+            const url = `https://wa.me/${phone}?text=${message}`;
+            
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Redirigiendo...";
+            
+            setTimeout(() => {
+                window.open(url, '_blank');
+                btn.innerHTML = originalText;
+                showModal("¡Gracias! Serás redirigido a WhatsApp para enviar tu confirmación.");
+                e.target.reset();
+            }, 800);
+        }
+    </script>
+</body>
+</html>
