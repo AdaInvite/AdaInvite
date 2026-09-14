@@ -117,9 +117,11 @@
         #envelope-wrapper {
             position: fixed; 
             top: 0; 
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             max-width: 480px; 
-            height: 100vh;
+            height: 100svh;
             z-index: 100;
             display: flex; align-items: center; justify-content: center;
             transition: visibility 1.8s;
@@ -725,14 +727,25 @@
                 "END:VCALENDAR"
             ].join("\n");
 
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'Mis_XV_Diana.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Detección de dispositivos iOS (iPhone, iPad, iPod)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            if (isIOS) {
+                // Ejecución nativa para Safari en iOS
+                const uri = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsContent);
+                window.location.href = uri;
+            } else {
+                // Ejecución estándar mediante Blob para Android y Windows
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Mis_XV_Diana.ics');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url); // Limpia la memoria
+            }
             
             closeCalendarModal();
         }
