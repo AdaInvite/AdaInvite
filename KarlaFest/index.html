@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karla Fest - 30 Cumpleaños</title>
+   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/olRq9Eb.jpeg">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Karla Fest">
+    <meta name="theme-color" content="#E08B9B">
+    <meta property="og:title" content="Karla Fest • 30 Vueltas al sol">
+    <meta property="og:description" content="Una noche para hacer historia. Haz clic para ver los detalles.">
+ <meta property="og:image" content="https://i.imgur.com/uFEX8Z2.jpeg">
+    <meta property="og:type" content="website">
+        
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: {
+                            principal: '#E08B9B', 
+                            fondo: '#F2CDD4' 
+                        },
+                        blanco: {
+                            perla: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Forum&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rosa-principal: #E08B9B;
+            --blanco-perla: #FFFFFF;
+            --font-elegant: 'Marcellus', serif;
+            --font-script: 'MonteCarlo', cursive;
+            --font-numbers: 'Marcellus', serif; 
+        }
+
+        html {
+            background-color: #F2CDD4;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #F2CDD4;
+            font-family: var(--font-elegant);
+            color: #4A4A4A;
+            scroll-behavior: smooth;
+        }
+
+        /* CONTENEDOR MÓVIL */
+        #app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: var(--blanco-perla);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.15);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
+            font-family: var(--font-elegant); 
+        }
+
+        .font-numbers {
+            font-family: var(--font-numbers) !important;
+        }
+
+        body, p, span, input, select { font-weight: 400; }
+        .font-bold, h3, label { font-weight: 700; }
+        .font-script { font-family: var(--font-script) !important; font-weight: 400; }
+
+        .seccion-blanca { 
+            background-color: var(--blanco-perla); 
+            color: #2C2A2A;
+            position: relative;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        
+       .seccion-rosa {
+            position: relative; 
+            overflow: hidden; 
+            z-index: 1; 
+            color: #2C2A2A;
+            width: 100%;
+            margin: 12px 0; 
+            background-color: #E08B9B;
+            background-image: url('https://i.imgur.com/VHMEJyJ.jpeg');
+            background-size: cover;
+            background-position: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+
+        .seccion-separador {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            min-height: 100svh;
+            margin: 12px 0; 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 65%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+        }
+
+        .footer-corte {
+            margin-top: 32px; 
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
+        }
+
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.4); }
+
+        /* UI LAYER (BOTÓN DE MÚSICA EN PC) */
+        .ui-layer {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; height: 100%;
+            pointer-events: none; z-index: 999;
+        }
+
+        /* SOBRE INICIAL (ADAPTADO A CONTENEDOR) */
+        #envelope-wrapper {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; height: 100%; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-color: #ffffff;
+            transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
+        
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(5px 0px 15px rgba(0,0,0,0.15)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-5px 0px 15px rgba(0,0,0,0.15)); }
+        
+        .flap { width: 100%; height: 100%; background-color: #FDFDFD; }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); border-right: 1px solid #eaeaea; }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); border-left: 1px solid #eaeaea; }
+        
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        #section-main { display: none; }
+
+        /* ANIMACIONES Y EFECTOS */
+        .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 0; transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+        .reveal-scale { transform: scale(0.85); }
+        .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active { opacity: 1; transform: translate(0) scale(1); }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        .btn-calendar {
+            border: 1px solid white; padding: 8px 18px; font-size: 12px;
+            letter-spacing: 1px; text-transform: uppercase; transition: all 0.4s ease;
+            display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;
+            color: var(--rosa-principal); font-weight: bold; background: transparent;
+        }
+        .btn-calendar:hover { background: #F2CDD4; color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(224, 139, 155, 0.3); }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .spin-slow { animation: spin 6s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;}
+        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; line-height: 1; transition: color 0.5s ease; }
+        #countdown .time-label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); transition: color 0.5s ease; }
+        
+        .floating-deco { position: absolute; pointer-events: none; z-index: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div id="app-container">
+
+        <audio id="bg-music" loop>
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FRihannaDiamonds.mp3?alt=media&token=f12aca83-04ae-4b22-953c-4b4df475397b" type="audio/mpeg">
+        </audio>
+        
+        <!-- CAPA UI -->
+        <div class="ui-layer">
+            <div id="audio-btn" class="absolute bottom-[20px] right-[20px] w-[60px] h-[60px] bg-transparent flex items-center justify-center pointer-events-auto cursor-pointer transition-transform duration-300 hover:scale-110 hidden" onclick="toggleAudio()">
+                <img id="audio-icon" src="https://i.imgur.com/senXoqF.png" class="w-8 h-8 object-contain" alt="Música">
+            </div>
+        </div>
+
+        <!-- SOBRE BLANCO -->
+        <div id="envelope-wrapper">
+            <div class="envelope-bg"></div>
+            <div id="envelope-container" class="w-full h-full relative z-10">
+                <div class="flap-wrapper flap-left-wrapper">
+                    <div class="flap flap-left"></div>
+                </div>
+                <div class="flap-wrapper flap-right-wrapper">
+                    <div class="flap flap-right"></div>
+                </div>
+                <div class="seal-wrapper" onclick="openEnvelope()">
+                    <div class="text-xs uppercase mb-4 animate-bounce text-gray-500 drop-shadow-md font-bold">Toca para abrir</div>
+                    <img src="https://i.imgur.com/VcSk39Z.png" class="w-[180px]" style="animation: floating 4s infinite ease-in-out" alt="Sello">
+                </div>
+            </div>
+        </div>
+
+        <main id="section-main">
+            
+            <!-- HERO SECTION -->
+            <header class="relative min-h-[100svh] w-full flex flex-col justify-center items-center bg-white overflow-hidden py-16">
+                
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="absolute -top-10 -left-10 w-48 z-10" alt="Esfera Disco">
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="absolute z-10 -top-16 -right-10 w-56" alt="Esfera Disco">
+                
+                <img src="https://i.imgur.com/WgGxKn2.png" class="absolute bottom-0 z-0 left-0 w-3/4 object-cover h-[100%]" alt="Tela Lentejuela">
+                <img src="https://i.imgur.com/mV4fcpP.png" class="absolute bottom-[30%] left-[0%] w-24 z-10" alt="Moño">
+                <img src="https://i.imgur.com/IHWSsqF.png" class="absolute bottom-[5%] right-[1%] w-24 z-10" alt="Copa">
+                
+                <img src="https://i.imgur.com/senXoqF.png" class="absolute top-[30%] left-[5%] w-16 z-20" alt="Estrella Plata">
+                <img src="https://i.imgur.com/XYqX68Z.png" class="absolute top-[20%] right-[15%] w-12 z-20" alt="Estrella Rosa">
+                <img src="https://i.imgur.com/XYqX68Z.png" class="absolute bottom-[35%] right-[10%] w-16 z-20" alt="Estrella Rosa">
+                <img src="https://i.imgur.com/DCi5C2O.png" class="absolute top-[15%] left-[20%] w-14 z-20" alt="Estrella Rosa bajito">
+              
+                <div class="relative z-20 flex flex-col items-center justify-center text-center mt-6">
+                    <img src="https://i.imgur.com/bWXzFgk.png" alt="Happy Birthday" class="w-48 reveal-scale active drop-shadow-sm">
+                    <img src="https://i.imgur.com/gL9hMfY.png" alt="30" class="w-44 mb-8 reveal-scale active delay-100 drop-shadow-md">
+                    <h1 class="text-5xl font-bold text-[#E5B5C5] uppercase mb-2 reveal-scale active delay-200" style="color: #E6A7B8; text-shadow: 2px 2px 4px rgba(0,0,0,0.05);">Karla Fest</h1>
+                    
+                    <!-- SECCIÓN DE PASES EN PORTADA -->
+                    <div id="seccion-pases-inicio" class="w-full max-w-[280px] mx-auto mt-6 hidden reveal-scale active delay-200 relative z-30">
+                        <div class="bg-white/90 backdrop-blur-md border-2 border-rosa-principal/50 rounded-2xl px-5 py-2 shadow-xl text-center">
+                            <p class="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-widest">Invitación especial para</p>
+                            <p id="nombre-invitado-inicio" class="text-4xl font-script text-rosa-principal mb-3 capitalize drop-shadow-sm"></p>
+                            <div class="flex items-center justify-center gap-3 border-t border-gray-200 pt-3 w-[90%] mx-auto">
+                                <span class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Pases totales:</span>
+                                <span id="pases-invitado-inicio" class="font-numbers font-bold text-xl text-rosa-principal"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="absolute bottom-4 w-full flex flex-col items-center reveal-scale active delay-100 text-center z-20">
+                    <p class="text-[10px] uppercase animate-pulse text-gray-400 font-bold tracking-widest">Desliza para ver más</p>
+                </div>
+            </header>
+
+            <!-- SEPARADOR 1 -->
+            <section class="seccion-separador" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Karla_Cecilia_Fabila__1789948552060%2Ffoto_portada_EDB00F49-E30F-454D-96D6-29879DB2744D.png?alt=media&token=68bc1a6d-faa8-4d80-aee7-ac0d1ca9189b');"></section>
+            
+            <!-- 1. BLANCA: FRASE Y FECHA -->
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 text-center seccion-blanca overflow-hidden">
+                
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[10%] -left-[5%] w-24 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/senXoqF.png" class="floating-deco top-[40%] right-[2%] w-12 opacity-70" alt="Estrella">
+                <img src="https://i.imgur.com/DCi5C2O.png" class="floating-deco bottom-[10%] left-[2%] w-16 opacity-80" alt="Estrella Rosa">
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco bottom-[5%] -right-[8%] w-28 opacity-90" alt="Esfera Disco">
+
+                <div class="max-w-3xl mx-auto reveal relative z-10 w-full px-12">
+                    <p class="text-6xl font-script text-rosa-principal mb-16 drop-shadow-sm">
+                        "30 vueltas al sol y una noche para hacer historia"
+                    </p>
+                    
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="text-right border-r-2 border-rosa-principal/30 pr-4">
+                            <span class="block text-xl uppercase tracking-widest text-gray-500">Sábado</span>
+                            <span class="block text-5xl font-bold text-rosa-principal">21</span>
+                        </div>
+                        <div class="text-left pl-2">
+                            <span class="block text-xl text-rosa-principal uppercase tracking-widest font-bold">Noviembre</span>
+                            <span class="block text-5xl font-numbers text-gray-500">2026</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ROSA: CONTADOR Y CALENDARIO -->
+            <section class="min-h-[90svh] flex flex-col justify-center px-8 text-center seccion-rosa overflow-hidden">
+                
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[5%] -left-[6%] w-28 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/senXoqF.png" class="floating-deco bottom-[5%] right-[2%] w-12 opacity-80" alt="Estrella">
+
+                <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
+                    <h3 class="text-5xl font-script text-white text-shadow-light mb-10">Faltan solo...</h3>
+
+                    <div id="countdown" class="flex gap-2 justify-center mb-12">
+                        <div class="flex flex-col items-center bg-white p-3 rounded-2xl shadow-xl border border-gray-100 w-[70px]">
+                            <span id="days" class="time-num text-4xl text-rosa-principal">00</span>
+                            <span class="time-label text-gray-600 text-xs">Días</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white p-3 rounded-2xl shadow-xl border border-gray-100 w-[70px]">
+                            <span id="hours" class="time-num text-4xl text-rosa-principal">00</span>
+                            <span class="time-label text-gray-600 text-xs">Hrs</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white p-3 rounded-2xl shadow-xl border border-gray-100 w-[70px]">
+                            <span id="minutes" class="time-num text-4xl text-rosa-principal">00</span>
+                            <span class="time-label text-gray-600 text-xs">Min</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white p-3 rounded-2xl shadow-xl border border-gray-100 w-[70px]">
+                            <span id="seconds" class="time-num text-4xl text-rosa-principal">00</span>
+                            <span class="time-label text-gray-600 text-xs">Seg</span>
+                        </div>
+                    </div>
+
+                    <div class="reveal-scale delay-200">
+                        <p class="text-sm uppercase mb-6 text-white font-bold text-shadow-light">Reserva la fecha en tu calendario</p>
+                        <div class="flex flex-col justify-center gap-4">
+                            <button onclick="calendarLink('Karla Fest 30', 'Casa de los Fabila', '20261121T200000')" class="btn-calendar bg-white text-rosa-principal w-full hover:scale-105 active:scale-95">
+                                Google Calendar
+                            </button>
+                            <button onclick="downloadICS()" class="btn-calendar bg-transparent border-white text-white hover:bg-white hover:text-rosa-principal w-full hover:scale-105 active:scale-95">
+                                Apple Calendar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEPARADOR 2 -->
+            <section class="seccion-separador" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Karla_Cecilia_Fabila__1789948552060%2Ffoto_separador_1_0E724D10-0EF8-459E-A1E7-9ABEF17B1643.png?alt=media&token=989f3820-a13e-462a-9e55-f842615657e5');"></section>
+
+            <!-- 3. BLANCA: ITINERARIO -->
+            <section class="min-h-[100svh] flex flex-col justify-center py-10 px-4 seccion-blanca relative overflow-hidden">
+                
+                <img src="https://i.imgur.com/XYqX68Z.png" class="floating-deco top-[10%] left-[3%] w-10 opacity-70" alt="Estrella">
+
+                <div class="max-w-4xl mx-auto w-full relative z-10">
+                    <div class="text-center">
+                        <h1 class="text-6xl text-rosa-principal font-script reveal-scale drop-shadow-sm">Itinerario</h1>
+                        <p class="text-sm uppercase text-gray-500 font-bold tracking-widest mt-2">Nuestra noche</p>
+                    </div>
+
+                    <div class="relative w-full mx-auto flex flex-col gap-6 mt-8">
+                        
+                        <div class="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-rosa-principal/40 to-transparent transform -translate-x-1/2 z-0"></div>
+                        
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 flex justify-end reveal-left">
+                                <img src="https://i.imgur.com/I42fGAX.png" alt="Alimentos y Coctelería" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                            <div class="w-1/2 pl-6 text-left reveal-right">
+                                <span class="text-xs text-rosa-principal font-numbers font-bold block drop-shadow-sm">8:00 - 10:00 p.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">Alimentos y Coctelería</h3>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 text-right reveal-left">
+                                <span class="text-xs text-rosa-principal font-numbers font-bold block drop-shadow-sm">9:00 - 11:00 p.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">Cabina de fotos</h3>
+                            </div>
+                            <div class="w-1/2 pl-6 flex justify-start reveal-right">
+                                <img src="https://i.imgur.com/vpWlWBe.png" alt="Cabina de fotos" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 flex justify-end reveal-left">
+                                <img src="https://i.imgur.com/FB4wB4K.png" alt="DJ" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                            <div class="w-1/2 pl-6 text-left reveal-right">
+                                <span class="text-xs text-rosa-principal font-numbers font-bold block drop-shadow-sm">9:00 p.m. - 3:30 a.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">DJ</h3>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 text-right reveal-left">
+                                <span class="text-xs text-rosa-principal font-numbers font-bold block drop-shadow-sm">10:00 - 12:00 a.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">Barra de botana</h3>
+                            </div>
+                            <div class="w-1/2 pl-6 flex justify-start reveal-right">
+                                <img src="https://i.imgur.com/bKcCJD1.png" alt="Barra de botana" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 flex justify-end reveal-left">
+                                <img src="https://i.imgur.com/CYItX6l.png" alt="Barra Libre" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                            <div class="w-1/2 pl-6 text-left reveal-right">
+                                <span class="text-xs text-rosa-principal font-numbers font-bold block drop-shadow-sm">10:00 p.m. - 2:00 a.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">Barra Libre</h3>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-full relative z-10">
+                            <div class="w-1/2 pr-6 text-right reveal-left">
+                                <span class="text-base text-rosa-principal font-numbers font-bold block drop-shadow-sm">3:30 a.m.</span>
+                                <h3 class="text-sm text-gray-800 font-bold mt-1 uppercase tracking-wider">Clave 5-7</h3>
+                            </div>
+                            <div class="w-1/2 pl-6 flex justify-start reveal-right">
+                                <img src="https://i.imgur.com/d4CSsSo.png" alt="Clave 5-7" class="w-20 h-20 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. ROSA: UBICACIÓN -->
+            <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center px-8 seccion-rosa relative overflow-hidden">
+                
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[15%] -right-[8%] w-28 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/XYqX68Z.png" class="floating-deco top-[45%] left-[5%] w-10 opacity-60" alt="Estrella">
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco bottom-[5%] -left-[5%] w-24 opacity-90" alt="Esfera Disco">
+
+                <div class="max-w-4xl mx-auto w-full relative z-10 text-center">
+                 
+                            <h1 class="text-6xl mb-4 font-script text-white text-shadow-light">Ubicación</h1>
+                            <p class="text-lg font-bold text-white tracking-wide uppercase mt-2 text-shadow-light">Casa de los Fabila</p>
+                           
+                            <p class="text-white font-numbers mb-4 font-bold text-2xl mt-4 text-shadow-light">8:00 p.m.</p>
+                      
+                        <div class="w-full relative min-h-[220px] rounded-2xl overflow-hidden border-2 border-white mb-8 shadow-xl bg-white"> 
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d249.3636450214468!2d0!3d0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ce1df1fdb50bcd%3A0x9ec9bd653234145c!2sCasa%20de%20los%20Fabila!5e0!3m2!1ses-419!2smx!4v1790276835756!5m2!1ses-419!2smx" class="absolute top-0 left-0 w-full h-full" style="filter: grayscale(100%) brightness(100%) contrast(110%); border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                               
+                            </iframe>
+                        </div>
+
+                        <a href="https://maps.app.goo.gl/kZ2igRXjycRoiJ866?g_st=ic" target="_blank" class="w-full inline-block bg-white text-rosa-principal font-bold px-8 py-5 text-[12px] tracking-[0.2em] uppercase hover:bg-gray-100 shadow-lg transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-full">Abrir en App de Mapas</a>
+                    </div>
+             
+            </section>
+
+            <!-- SEPARADOR 3 -->
+            <section class="seccion-separador" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Karla_Cecilia_Fabila__1789948552060%2Ffoto_separador_2_CF1D1757-7876-49A3-92BD-DF832C9F86A6.png?alt=media&token=ea885660-3d30-4fe9-b82c-ef4431b012d9');"></section>
+
+            <!-- 5. BLANCA: ÁLBUM COMPARTIDO -->
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-blanca text-center relative overflow-hidden">
+               
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[10%] -left-[8%] w-28 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/senXoqF.png" class="floating-deco top-[40%] right-[3%] w-10" alt="Estrella">
+                <img src="https://i.imgur.com/DCi5C2O.png" class="floating-deco bottom-[15%] left-[2%] w-14" alt="Estrella">
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco bottom-[5%] -right-[5%] w-24 opacity-90" alt="Esfera Disco">
+
+                <div class="max-w-3xl mx-auto reveal relative z-10 w-full px-8">
+                    <h2 class="text-6xl mb-4 font-script text-rosa-principal">Álbum Compartido</h2>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-4 leading-relaxed tracking-widest px-4">
+                        Ayúdame a capturar los mejores momentos.<br>Escanea o haz clic para subir tus fotos y videos.
+                    </p>
+                    <div class="mx-auto bg-white p-4 rounded-[30px] shadow-xl inline-block mb-4 transition-transform duration-300 hover:scale-105 border border-rosa-principal">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://adainvite.com/KarlaFest/recuerdos" alt="Código QR" class="w-40 object-contain">
+                    </div>
+                    <br>
+                    <a href="https://adainvite.com/KarlaFest/recuerdos" target="_blank" class="w-full inline-block bg-rosa-principal text-white px-6 py-3 text-[12px] uppercase font-bold rounded-full hover:bg-pink-600 transition-all active:scale-95 duration-300 shadow-lg tracking-[0.2em]">
+                        Abrir Galería
+                    </a>
+                </div>
+            </section>
+
+            <!-- 6. ROSA: CÓDIGO DE VESTIMENTA -->
+         <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-rosa relative overflow-hidden text-center">
+        
+        <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco absolute top-[15%] -left-[10%] w-32" alt="Esfera Disco">
+        <img src="https://i.imgur.com/DCi5C2O.png" class="floating-deco absolute bottom-[10%] right-[2%] w-16" alt="Estrella">
+
+        <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full">
+            <h2 class="text-5xl mb-6 font-script text-white drop-shadow-md text-shadow-light">Código de Vestimenta</h2>
+            
+            <div class="mt-8">
+                <p class="text-base uppercase tracking-[0.2em] text-rosa-principal bg-white inline-block px-10 py-3 rounded-full shadow-md font-bold mb-8">Juvenil</p>
+                
+                <div class="flex justify-center mb-8">
+                    <img src="https://i.imgur.com/xOYx7A6.png" alt="Vestimenta" class="w-32 h-auto object-contain drop-shadow-md">
+                </div>
+
+                <p class="text-sm uppercase text-white mb-6 font-bold drop-shadow-sm text-shadow-light">Por favor, reserva los siguientes colores para la festejada:</p>
+                
+                <div class="flex flex-col items-center mt-4">
+                    
+                    <div class="flex justify-center -space-x-4">
+                        <div class="w-16 h-16 rounded-full bg-[#000000] shadow-lg border-4 border-white relative z-20 hover:scale-110 transition-transform duration-300"></div>
+                        <div class="w-16 h-16 rounded-full bg-[#FFFFFF] shadow-lg border-4 border-gray-200 relative z-10 hover:scale-110 transition-transform duration-300"></div>
+                    </div>
+
+                    <div class="flex justify-center space-x-8 mt-4">
+                        <span class="text-xs uppercase tracking-widest text-white font-bold drop-shadow-sm">Negro</span>
+                        <span class="text-xs uppercase tracking-widest text-white font-bold drop-shadow-sm">Blanco</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+            <!-- 7. BLANCA: OBSERVACIONES / NOTAS -->
+          <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-blanca text-center relative overflow-hidden">
+        <img src="https://i.imgur.com/WgGxKn2.png" class="absolute top-0 -left-4 w-12 h-full object-cover object-left z-0 opacity-90" alt="Lentejuela Izquierda">
+        <img src="https://i.imgur.com/WgGxKn2.png" class="absolute top-0 -right-4 w-12 h-full object-cover object-left z-0 transform scale-x-[-1] opacity-90" alt="Lentejuela Derecha">
+        
+        <img src="https://i.imgur.com/XYqX68Z.png" class="floating-deco top-[10%] left-[3%] w-12" alt="Estrella">
+        <img src="https://i.imgur.com/senXoqF.png" class="floating-deco bottom-[10%] left-[2%] w-12" alt="Estrella">
+      
+        <div class="max-w-3xl mx-auto reveal relative z-10 w-full px-2">
+            <h1 class="text-6xl mb-6 font-script text-rosa-principal reveal-scale">¡Atención!</h1>
+            
+            <div class="bg-white/95 backdrop-blur p-4 py-8 border border-gray-200 rounded-[40px] shadow-xl flex flex-col gap-6 items-center justify-center relative">
+             
+                <div class="flex flex-col items-center gap-2 relative z-10 w-full">
+                    <img src="https://i.imgur.com/qduYkCI.png" alt="Icono de Regalo" class="w-28 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                    <p class="text-lg text-gray-700 uppercase font-bold text-center">"No olvides tu regalo"</p>
+                </div>
+                
+                <div class="w-full max-w-lg h-[2px] bg-rosa-principal/40 relative z-10"></div>
+                
+                <div class="flex flex-col items-center gap-2 relative z-10 w-full">
+                    <img src="https://i.imgur.com/fF22Gkg.png" alt="Icono de Botella" class="w-28 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300">
+                    <p class="text-lg text-gray-700 uppercase font-bold text-center px-4">
+                        "No olvides tu bebida favorita (para seguirla)"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+            <!-- 8. ROSA: CONFIRMAR ASISTENCIA -->
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-rosa text-center relative overflow-hidden">
+                
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[10%] -left-[6%] w-24 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/DCi5C2O.png" class="floating-deco bottom-[10%] right-[3%] w-14 opacity-80" alt="Estrella">
+
+                <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                    <h2 id="rsvpTitleText" class="text-5xl font-script mb-6 text-white text-shadow-light">Confirmar Asistencia</h2>
+                    <p id="rsvpSubtitleText" class="text-sm uppercase mb-4 text-white font-bold tracking-widest leading-relaxed text-shadow-light">Por favor, confirmar antes del <br> 02 de noviembre de 2026</p>
+                    
+                    <div class="bg-white shadow-2xl p-6 rounded-[30px] transition-all duration-500 w-full mx-auto mt-4">
+                        
+                        <form id="rsvpForm" class="space-y-4 text-center bg-transparent transition-all duration-500">
+                            
+                            <div id="customAlert" class="hidden bg-red-50 border border-red-300 rounded-xl p-3 text-center transition-all duration-300 shadow-sm mb-4">
+                                <p id="customAlertText" class="text-red-500 text-[10px] font-bold tracking-widest uppercase"></p>
+                            </div>
+
+                            <div class="border-b border-gray-200 pb-2 text-left">
+                                <label class="text-sm uppercase text-gray-500 font-bold tracking-widest">Nombre:</label>
+                                <input type="text" id="rsvpName" required placeholder="Tu Nombre Exacto" class="w-full bg-transparent py-3 outline-none text-xl text-gray-800 font-light text-center placeholder-gray-300">
+                            </div>
+                            
+                            <div class="border-b border-gray-200 pb-2 text-left">
+                                <label class="text-sm uppercase text-gray-500 font-bold tracking-widest">Pases a confirmar:</label>
+                                <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="1" class="w-full bg-transparent py-3 outline-none text-xl text-gray-800 font-numbers text-center placeholder-gray-300">
+                            </div>
+                            
+                            <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-rosa-principal text-white font-bold py-5 px-8 uppercase tracking-[0.2em] text-xs hover:bg-pink-600 transition-all hover:scale-105 active:scale-95 shadow-lg duration-300 rounded-full text-center mt-8">
+                                Confirmar Asistencia
+                            </button>
+                        </form>
+
+                        <div id="loadingMessage" class="hidden mt-6 bg-white flex-col items-center justify-center transition-all duration-500">
+                            <div class="w-16 h-16 border-4 border-rosa-principal border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                            <p id="loadingText" class="text-4xl font-script text-rosa-principal mb-2">Procesando...</p>
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Generando tu pase oficial</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. BLANCA: RECUPERAR PASE -->
+            <section class="min-h-[60svh] flex flex-col justify-center px-6 seccion-blanca text-center relative overflow-hidden">
+              
+                <img src="https://i.imgur.com/fdPZl3Y.png" class="floating-deco top-[20%] -right-[6%] w-28 opacity-90" alt="Esfera Disco">
+                <img src="https://i.imgur.com/senXoqF.png" class="floating-deco bottom-[15%] left-[3%] w-12 opacity-60" alt="Estrella">
+
+                <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                    <h2 class="text-6xl font-script mb-8 text-rosa-principal drop-shadow-sm">Recuperar Pase</h2>
+                  
+                    <form id="searchPassForm" class="space-y-8 text-left bg-white/95 backdrop-blur-md p-8 rounded-[40px] border border-gray-200 shadow-xl transition-all duration-500">
+                        <div class="border-b border-rosa-principal/50 pb-2">
+                            <input type="text" id="searchName" required placeholder="Ingresa tu nombre para buscar" class="w-full bg-transparent py-2 outline-none text-lg text-gray-700 font-bold text-center placeholder-gray-400">
+                        </div>
+                        <button type="submit" class="w-full bg-rosa-principal text-white font-bold py-5 uppercase tracking-[0.3em] text-[12px] hover:bg-pink-600 transition-all hover:scale-105 active:scale-95 shadow-md mt-8 duration-300 rounded-full">Buscar Pase</button>
+                    </form>
+
+                    <div id="searchResultMessage" class="hidden mt-10 transition-all duration-500"></div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer-corte min-h-[50svh] flex flex-col justify-center items-center py-20 px-6 text-center relative overflow-hidden z-10" style="background-color: #E08B9B; background-image: url('https://i.imgur.com/VHMEJyJ.jpeg'); background-size: cover; background-position: center;">
+                <p class="text-6xl font-script mb-6 text-white drop-shadow-sm text-shadow-light relative z-10">¡Te espero!</p>
+                <p class="text-[12px] text-white uppercase tracking-[0.5em] font-bold z-10">21 • Noviembre • 2026</p>
+            </footer>
+        </main>
+        
+    </div>
+
+    <!-- SCRIPTS DE UI DE LA INVITACIÓN -->
+    <script>
+        window.maxPasesGlobal = undefined;
+
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            playAudio(); 
+
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('audio-btn').classList.remove('hidden'); 
+            }, 1000);
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+        
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Autoplay bloqueado. El usuario debe tocar el botón de música.");
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        const targetDate = new Date("Nov 21, 2026 20:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
+        function calendarLink(title, loc, date) {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+            window.open(url, '_blank');
+        }
+
+        function downloadICS() {
+            const title = "Karla Fest - 30 Cumpleaños";
+            const location = "Casa de los Fabila, Norte 1, Mx 84, Lt 12, Col. María Isabel, Valle de Chalco";
+            const description = "¡30 vueltas al sol y una noche para hacer historia!";
+            
+            const icsData = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "BEGIN:VEVENT\n" +
+                "DTSTART;TZID=America/Mexico_City:20261121T200000\n" +
+                "DTEND;TZID=America/Mexico_City:20261122T033000\n" +
+                "SUMMARY:" + title + "\n" +
+                "DESCRIPTION:" + description + "\n" +
+                "LOCATION:" + location + "\n" +
+                "END:VEVENT\n" +
+                "END:VCALENDAR";
+
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "KarlaFest.ics";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+
+    <!-- SCRIPT DE FIREBASE (RSVP COMPLETO Y RECUPERACIÓN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // CONFIGURACIÓN DE FIREBASE 
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const dbCollectionName = "confirmaciones_karla_30"; 
+
+        let db;
+        try {
+            if(Object.keys(firebaseConfig).length > 0) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+            }
+        } catch (error) {
+            console.error("Error inicializando Firebase:", error);
+        }
+
+        function mostrarAlerta(mensaje) {
+            const customAlert = document.getElementById('customAlert');
+            const customAlertText = document.getElementById('customAlertText');
+            
+            if(customAlert && customAlertText) {
+                customAlertText.innerText = mensaje;
+                customAlert.classList.remove('hidden');
+                
+                clearTimeout(window.alertTimeout);
+                window.alertTimeout = setTimeout(() => {
+                    customAlert.classList.add('hidden');
+                }, 4500); 
+            }
+        }
+
+        const inputAdults = document.getElementById('rsvpAdults');
+
+        function validarPasesEnTiempoReal(e) {
+            if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal)) {
+                const pases = parseInt(inputAdults.value) || 0;
+                
+                if (pases > window.maxPasesGlobal) {
+                    mostrarAlerta(`Cuentas con un máximo de ${window.maxPasesGlobal} pases en total.`);
+                } else {
+                    const customAlert = document.getElementById('customAlert');
+                    if(customAlert) customAlert.classList.add('hidden');
+                }
+            }
+        }
+        if (inputAdults) inputAdults.addEventListener('input', validarPasesEnTiempoReal);
+
+        // LECTURA DE URL AL CARGAR (?n=Juan&pases=2)
+        const params = new URLSearchParams(window.location.search);
+        const nombreUrl = params.get('n');      
+        const pasesUrl = params.get('pases');    
+
+        if (nombreUrl && pasesUrl) {
+            window.maxPasesGlobal = parseInt(pasesUrl, 10);
+
+            const seccionInicio = document.getElementById('seccion-pases-inicio');
+            const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+            const pasesInvitado = document.getElementById('pases-invitado-inicio');
+
+            if (seccionInicio && nombreInvitado && pasesInvitado) {
+                seccionInicio.classList.remove('hidden');
+                nombreInvitado.textContent = nombreUrl;   
+                pasesInvitado.textContent = pasesUrl;    
+            }
+
+            const formName = document.getElementById('rsvpName');
+            if (formName) {
+                formName.value = nombreUrl;
+                formName.readOnly = true; 
+                formName.classList.add('cursor-not-allowed', 'opacity-70'); 
+            }
+
+            const searchName = document.getElementById('searchName');
+            if (searchName) {
+                searchName.value = nombreUrl;
+            }
+
+            if (db) {
+                const confirmacionesRef = collection(db, dbCollectionName);
+                const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+                getDocs(q).then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        const form = document.getElementById('rsvpForm');
+                        if(form) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            
+                            form.innerHTML = `
+                                <div class="bg-gray-50 border border-gray-200 p-8 rounded-3xl text-center shadow-md">
+                                    <p class="text-rosa-principal font-bold text-2xl mb-2 uppercase tracking-widest font-script">¡Asistencia Confirmada!</p>
+                                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed">Ya hemos recibido tu confirmación. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Error verificando registro:", err);
+                });
+            }
+        }
+
+        // GUARDAR CONFIRMACIÓN (RSVP)
+        const rsvpFormElement = document.getElementById('rsvpForm');
+        if (rsvpFormElement) {
+            rsvpFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('rsvpName').value.trim();
+                const totalPases = parseInt(document.getElementById('rsvpAdults').value) || 0;
+                
+                if (window.maxPasesGlobal !== undefined && !isNaN(window.maxPasesGlobal) && totalPases > window.maxPasesGlobal) {
+                    mostrarAlerta(`Solo tienes asignados ${window.maxPasesGlobal} pases en total.`);
+                    return; 
+                }
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                const textLoader = document.getElementById('loadingText');
+                
+                form.style.display = 'none';
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+
+                try {
+                    if (db) {
+                        textLoader.innerText = "Verificando...";
+                        const confirmacionesRef = collection(db, dbCollectionName);
+                        const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
+                        const querySnapshot = await getDocs(q);
+
+                        if (!querySnapshot.empty) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            form.innerHTML = `
+                                <div class="bg-gray-50 border border-gray-200 p-8 rounded-3xl text-center shadow-md mt-6">
+                                    <p class="text-rosa-principal font-bold text-2xl mb-2 uppercase tracking-widest font-script">¡Ya estás registrado!</p>
+                                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Recupera tu pase en la sección inferior.</p>
+                                </div>
+                            `;
+                            form.style.display = 'block';
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                            return;
+                        }
+                    }
+
+                    textLoader.innerText = "Generando pase...";
+                    const folio = "KF30-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+                    if (db) {
+                        await addDoc(collection(db, dbCollectionName), {
+                            nombre: name,
+                            nombre_lower: name.toLowerCase(),
+                            totalPases: totalPases,
+                            folio: folio,
+                            fecha: serverTimestamp() 
+                        });
+                    }
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                    document.getElementById('rsvpTitleText').classList.add('hidden');
+                    document.getElementById('rsvpSubtitleText').classList.add('hidden');
+
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const numeroWhatsApp = "525534843771"; 
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los 30 años de Karla.%0A%0A Nombre o Familia: ${name}%0A Pases confirmados: ${totalPases}`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${mensajeWa}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                    
+                    resultDiv.innerHTML = `
+                        <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-white border-2 border-rosa-principal/40 rounded-[30px] p-8 shadow-xl text-center overflow-hidden mx-auto">
+                            <div class="absolute top-0 left-0 w-full h-3 bg-rosa-principal"></div>
+                            <img src="https://i.imgur.com/VcSk39Z.png" crossorigin="anonymous" class="w-16 mx-auto mb-4" alt="30">
+                            <p class="text-[9px] uppercase tracking-[0.4em] text-gray-400 font-bold mb-2">Acceso para:</p>
+                            <h4 class="font-script text-4xl text-rosa-principal mb-6 leading-tight capitalize">${name}</h4>
+                            
+                            <div class="inline-block border-t border-b border-rosa-principal/30 py-4 px-10 mb-6 w-full">
+                                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-1">Pases</p>
+                                <p class="font-numbers text-5xl text-rosa-principal font-bold drop-shadow-sm">${totalPases}</p>
+                            </div>
+                            
+                            <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2 font-bold">Folio: ${folio}</p>
+                            <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra este pase en recepción</p>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 w-full max-w-sm mt-8">
+                            <button id="btnDescargarImagenRSVP" class="bg-white text-rosa-principal border-2 border-rosa-principal font-bold py-4 px-8 uppercase text-[10px] hover:bg-rosa-principal hover:text-white transition-all duration-300 rounded-full shadow-md w-full active:scale-95 tracking-widest">
+                                Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-[10px] hover:bg-[#1DA851] transition-all duration-300 rounded-full shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-widest">
+                                Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+
+                    // LOGICA DE DESCARGA
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
+                        const originalText = btnDescargar.innerHTML;
+                        btnDescargar.innerText = "Generando...";
+                        
+                        const clone = tarjeta.cloneNode(true);
+                        clone.style.width = "400px";
+                        clone.style.height = "auto";
+                        clone.style.position = "fixed";
+                        clone.style.top = "-9999px";
+                        clone.style.left = "-9999px";
+                        clone.style.zIndex = "-9999";
+                        document.body.appendChild(clone);
+                        
+                        window.html2canvas(clone, { 
+                            backgroundColor: "#ffffff", 
+                            scale: 3, 
+                            useCORS: true, 
+                            scrollX: 0, 
+                            scrollY: 0 
+                        }).then(canvas => {
+                            document.body.removeChild(clone);
+                            const base64 = canvas.toDataURL('image/png');
+                            
+                            canvas.toBlob(blob => {
+                                const url = window.URL.createObjectURL(blob);
+                                const enlace = document.createElement('a');
+                                enlace.style.display = 'none';
+                                enlace.href = url;
+                                enlace.download = 'Pase_Karla_Fest.png';
+                                document.body.appendChild(enlace);
+                                enlace.click();
+                                document.body.removeChild(enlace);
+                                setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                            }, 'image/png');
+
+                            tarjeta.style.padding = "0";
+                            tarjeta.style.border = "none";
+                            tarjeta.style.background = "transparent";
+                            tarjeta.style.boxShadow = "none";
+                            tarjeta.innerHTML = `
+                                <img src="${base64}" alt="Pase" class="w-full shadow-2xl rounded-2xl" />
+                                <p class="text-[10px] uppercase text-gray-500 font-bold mt-4 drop-shadow-sm text-center px-2 tracking-widest">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                            `;
+
+                            btnDescargar.innerHTML = "¡Descargado!";
+                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+                        }).catch(err => {
+                            if(document.body.contains(clone)) document.body.removeChild(clone);
+                            btnDescargar.innerHTML = originalText;
+                        });
+                    });
+
+                } catch(error) {
+                    mostrarAlerta("Error al conectar. Intenta de nuevo.");
+                    form.style.display = 'block';
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                }
+            });
+        }
+
+        // BUSCADOR / RECUPERAR PASE
+        const searchPassFormElement = document.getElementById('searchPassForm');
+        if (searchPassFormElement) {
+            searchPassFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const searchName = document.getElementById('searchName').value.trim();
+                const resultDiv = document.getElementById('searchResultMessage');
+                const btnSubmit = e.target.querySelector('button[type="submit"]');
+                
+                btnSubmit.innerText = "Buscando...";
+                btnSubmit.disabled = true;
+                resultDiv.classList.add('hidden');
+
+                try {
+                    if(!db) throw new Error("Firebase no inicializado");
+
+                    const confirmacionesRef = collection(db, dbCollectionName);
+                    const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+                    if (!querySnapshot.empty) {
+                        const docData = querySnapshot.docs[0].data();
+                        
+                        resultDiv.innerHTML = `
+                            <div class="mt-4 flex flex-col items-center w-full">
+                                <div id="tarjetaPaseDigitalRecuperado" class="relative w-full max-w-sm bg-white border-2 border-rosa-principal/40 rounded-[30px] p-8 shadow-xl text-center overflow-hidden mx-auto">
+                                    <div class="absolute top-0 left-0 w-full h-3 bg-rosa-principal"></div>
+                                    <img src="https://i.imgur.com/VcSk39Z.png" crossorigin="anonymous" class="w-16 mx-auto mb-4" alt="30">
+                                    <p class="text-[9px] uppercase tracking-[0.4em] text-gray-400 font-bold mb-2">Acceso para:</p>
+                                    <h4 class="font-script text-4xl text-rosa-principal mb-6 leading-tight capitalize">${docData.nombre}</h4>
+                                    
+                                    <div class="inline-block border-t border-b border-rosa-principal/30 py-4 px-10 mb-6 w-full">
+                                        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-1">Pases</p>
+                                        <p class="font-numbers text-5xl text-rosa-principal font-bold drop-shadow-sm">${docData.totalPases}</p>
+                                    </div>
+                                    
+                                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2 font-bold">Folio: ${docData.folio}</p>
+                                    <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra este pase en recepción</p>
+                                </div>
+                                
+                                <button id="btnDescargarPaseBuscado" class="mt-8 bg-white text-rosa-principal border-2 border-rosa-principal font-bold py-4 px-8 uppercase text-[10px] hover:bg-rosa-principal hover:text-white transition-all duration-300 rounded-full shadow-md w-full max-w-sm active:scale-95 tracking-widest">
+                                    Descargar Pase
+                                </button>
+                            </div>
+                        `;
+
+                        // LÓGICA DE DESCARGA
+                        const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
+                        btnDescargarPase.addEventListener('click', () => {
+                            const tarjeta = document.getElementById('tarjetaPaseDigitalRecuperado');
+                            const originalText = btnDescargarPase.innerHTML;
+                            btnDescargarPase.innerText = "Generando...";
+                            
+                            const clone = tarjeta.cloneNode(true);
+                            clone.style.width = "400px";
+                            clone.style.height = "auto";
+                            clone.style.position = "fixed";
+                            clone.style.top = "-9999px";
+                            clone.style.left = "-9999px";
+                            clone.style.zIndex = "-9999";
+                            document.body.appendChild(clone);
+                            
+                            window.html2canvas(clone, { 
+                                backgroundColor: "#ffffff", 
+                                scale: 3, 
+                                useCORS: true, 
+                                scrollX: 0, 
+                                scrollY: 0 
+                            }).then(canvas => {
+                                document.body.removeChild(clone);
+                                const base64 = canvas.toDataURL('image/png');
+                                
+                                canvas.toBlob(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const enlace = document.createElement('a');
+                                    enlace.style.display = 'none';
+                                    enlace.href = url;
+                                    enlace.download = 'Pase_Karla_Fest.png';
+                                    document.body.appendChild(enlace);
+                                    enlace.click();
+                                    document.body.removeChild(enlace);
+                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                                }, 'image/png');
+
+                                tarjeta.style.padding = "0";
+                                tarjeta.style.border = "none";
+                                tarjeta.style.background = "transparent";
+                                tarjeta.style.boxShadow = "none";
+                                tarjeta.innerHTML = `
+                                    <img src="${base64}" alt="Pase" class="w-full shadow-2xl rounded-2xl" />
+                                    <p class="text-[10px] uppercase text-gray-600 font-bold mt-4 text-center px-2 tracking-widest">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                                `;
+
+                                btnDescargarPase.innerHTML = "¡Descargado!";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
+                            }).catch(error => {
+                                if(document.body.contains(clone)) document.body.removeChild(clone);
+                                btnDescargarPase.innerHTML = "Error al descargar";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                            });
+                        });
+
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="bg-white border-2 border-gray-200 p-8 rounded-3xl shadow-md w-full text-center">
+                                <p class="text-gray-700 font-bold mb-2 uppercase tracking-widest">Registro no encontrado</p>
+                                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed">Escribe el nombre exactamente igual a como confirmaste tu asistencia.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `
+                            <div class="bg-red-50 border-2 border-red-200 p-8 rounded-3xl shadow-md w-full text-center">
+                                <p class="text-red-500 font-bold mb-2 uppercase tracking-widest">Error de conexión</p>
+                            </div>
+                        `;
+                } finally {
+                    btnSubmit.innerText = "Buscar Pase";
+                    btnSubmit.disabled = false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
