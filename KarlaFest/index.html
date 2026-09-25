@@ -134,7 +134,7 @@
 
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.4); }
 
-        /* UI LAYER (BOTÓN DE MÚSICA EN PC) */
+        /* UI LAYER */
         .ui-layer {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 450px; height: 100%;
@@ -191,6 +191,7 @@
             letter-spacing: 1px; text-transform: uppercase; transition: all 0.4s ease;
             display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;
             color: var(--rosa-principal); font-weight: bold; background: transparent;
+            cursor: pointer;
         }
         .btn-calendar:hover { background: #F2CDD4; color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(224, 139, 155, 0.3); }
 
@@ -269,7 +270,7 @@
                 <!-- SECCIÓN INFERIOR -->
                 <div class="absolute bottom-6 w-full flex flex-col items-center justify-center gap-6 z-30">
                     
-                    <!-- SECCIÓN DE NOMBRE (Solo lee parámetro ?n=Nombre) -->
+                    <!-- SECCIÓN DE NOMBRE -->
                     <div id="seccion-pases-inicio" class="w-full max-w-[260px] mx-auto hidden reveal-scale active delay-200 relative">
                         <div class="bg-rosa-principal backdrop-blur-md border-2 border-rosa-principal rounded-2xl px-4 py-3 shadow-xl text-center">
                             <p class="text-[10px] uppercase text-white font-bold mb-1 tracking-widest">Invitación especial para</p>
@@ -340,7 +341,8 @@
                     <div class="reveal-scale delay-200">
                         <p class="text-sm uppercase mb-6 text-white font-bold text-shadow-light">Reserva la fecha en tu calendario</p>
                         <div class="flex flex-col justify-center gap-4">
-                            <button onclick="calendarLink('Karla Fest 30', 'Casa de los Fabila', '20261121T200000')" class="btn-calendar bg-white text-rosa-principal w-full hover:scale-105 active:scale-95">
+                            <!-- LOS BOTONES AHORA USAN LAS NUEVAS FUNCIONES -->
+                            <button onclick="openGoogleCalendar()" class="btn-calendar bg-white text-rosa-principal w-full hover:scale-105 active:scale-95">
                                 Google Calendar
                             </button>
                             <button onclick="downloadICS()" class="btn-calendar bg-transparent border-white text-white hover:bg-white hover:text-rosa-principal w-full hover:scale-105 active:scale-95">
@@ -566,7 +568,6 @@
             }
         });
 
-        // APERTURA DE SOBRE Y MÚSICA
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             initObserver();
@@ -637,26 +638,46 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // GOOGLE CALENDAR
-        function calendarLink(title, loc, date) {
-            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&location=${encodeURIComponent(loc)}`;
+        /* ----------------------------------------------------
+           SISTEMA DE CALENDARIOS MEJORADO
+           ---------------------------------------------------- */
+           
+        // GOOGLE CALENDAR (Mejorado con formato UTC para asegurar la hora exacta en cualquier país)
+        function openGoogleCalendar() {
+            const title = encodeURIComponent("Karla Fest - 30 Cumpleaños");
+            const location = encodeURIComponent("Casa de los Fabila");
+            const details = encodeURIComponent("¡30 vueltas al sol y una noche para hacer historia!");
+            
+            // Convertimos la hora de México (UTC-6) a formato Z (UTC)
+            // 21 Nov 2026 20:00 (Mex) = 22 Nov 2026 02:00 (UTC)
+            // 22 Nov 2026 03:30 (Mex) = 22 Nov 2026 09:30 (UTC)
+            const dates = "20261122T020000Z/20261122T093000Z";
+            
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
             window.open(url, '_blank');
         }
 
-        // APPLE CALENDAR SOLUCIONADO PARA IOS Y NAVEGADORES
+        // APPLE CALENDAR / OUTLOOK (Solucionado para iPhone)
         function downloadICS() {
             const title = "Karla Fest - 30 Cumpleaños";
-            const location = "Casa de los Fabila, Norte 1, Mx 84, Lt 12, Col. María Isabel, Valle de Chalco";
+            const location = "Casa de los Fabila";
             const description = "¡30 vueltas al sol y una noche para hacer historia!";
             
-            // Archivo ICS generado con saltos de línea correctos (CRLF)
+            // Requisito Absoluto de Apple: Identificador único y estampa de tiempo
+            const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            
+            // Archivo ICS generado con el estándar estricto (RFC 5545) y tiempos en UTC
             const icsData = [
                 "BEGIN:VCALENDAR",
                 "VERSION:2.0",
                 "PRODID:-//AdaInvite//KarlaFest//ES",
+                "CALSCALE:GREGORIAN",
+                "METHOD:PUBLISH",
                 "BEGIN:VEVENT",
-                "DTSTART;TZID=America/Mexico_City:20261121T200000",
-                "DTEND;TZID=America/Mexico_City:20261122T033000",
+                "UID:karlafest-" + dtstamp + "@adainvite.com",
+                "DTSTAMP:" + dtstamp,
+                "DTSTART:20261122T020000Z", // 21 Nov 20:00 hrs Mex
+                "DTEND:20261122T093000Z",   // 22 Nov 03:30 hrs Mex
                 "SUMMARY:" + title,
                 "DESCRIPTION:" + description,
                 "LOCATION:" + location,
@@ -664,23 +685,29 @@
                 "END:VCALENDAR"
             ].join("\r\n");
 
-            // Detectar si es dispositivo iOS (iPhone, iPad)
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
             
+            // Detección de iOS (iPhone, iPad)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
             if (isIOS) {
-                // En iOS forzamos la lectura como URI de datos para que abra la app nativa de calendario sin descargar archivos rotos (.html)
-                window.location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsData);
+                // En iOS leemos el archivo como una ruta Base64 para que el navegador lance la app Calendario
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    window.location.href = e.target.result;
+                };
+                reader.readAsDataURL(blob);
             } else {
-                // Comportamiento regular para Android/PC
-                const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+                // Descarga regular para Android, Windows, Mac
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
+                a.style.display = 'none';
                 a.href = url;
                 a.download = "KarlaFest.ics";
                 document.body.appendChild(a);
                 a.click();
-                window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
+                setTimeout(() => window.URL.revokeObjectURL(url), 100);
             }
         }
     </script>
