@@ -341,7 +341,7 @@
                     <div class="reveal-scale delay-200">
                         <p class="text-sm uppercase mb-6 text-white font-bold text-shadow-light">Reserva la fecha en tu calendario</p>
                         <div class="flex flex-col justify-center gap-4">
-                            <!-- LOS BOTONES AHORA USAN LAS NUEVAS FUNCIONES -->
+                            <!-- BOTONES DEL CALENDARIO -->
                             <button onclick="openGoogleCalendar()" class="btn-calendar bg-white text-rosa-principal w-full hover:scale-105 active:scale-95">
                                 Google Calendar
                             </button>
@@ -642,31 +642,23 @@
            SISTEMA DE CALENDARIOS MEJORADO
            ---------------------------------------------------- */
            
-        // GOOGLE CALENDAR (Mejorado con formato UTC para asegurar la hora exacta en cualquier país)
         function openGoogleCalendar() {
             const title = encodeURIComponent("Karla Fest - 30 Cumpleaños");
             const location = encodeURIComponent("Casa de los Fabila");
             const details = encodeURIComponent("¡30 vueltas al sol y una noche para hacer historia!");
             
-            // Convertimos la hora de México (UTC-6) a formato Z (UTC)
-            // 21 Nov 2026 20:00 (Mex) = 22 Nov 2026 02:00 (UTC)
-            // 22 Nov 2026 03:30 (Mex) = 22 Nov 2026 09:30 (UTC)
             const dates = "20261122T020000Z/20261122T093000Z";
-            
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
             window.open(url, '_blank');
         }
 
-        // APPLE CALENDAR / OUTLOOK (Solucionado para iPhone)
         function downloadICS() {
             const title = "Karla Fest - 30 Cumpleaños";
             const location = "Casa de los Fabila";
             const description = "¡30 vueltas al sol y una noche para hacer historia!";
             
-            // Requisito Absoluto de Apple: Identificador único y estampa de tiempo
             const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
             
-            // Archivo ICS generado con el estándar estricto (RFC 5545) y tiempos en UTC
             const icsData = [
                 "BEGIN:VCALENDAR",
                 "VERSION:2.0",
@@ -676,8 +668,8 @@
                 "BEGIN:VEVENT",
                 "UID:karlafest-" + dtstamp + "@adainvite.com",
                 "DTSTAMP:" + dtstamp,
-                "DTSTART:20261122T020000Z", // 21 Nov 20:00 hrs Mex
-                "DTEND:20261122T093000Z",   // 22 Nov 03:30 hrs Mex
+                "DTSTART:20261122T020000Z", 
+                "DTEND:20261122T093000Z",   
                 "SUMMARY:" + title,
                 "DESCRIPTION:" + description,
                 "LOCATION:" + location,
@@ -687,18 +679,14 @@
 
             const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
             
-            // Detección de iOS (iPhone, iPad)
+            // Detección de iOS (iPhone, iPad, iPod)
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
             if (isIOS) {
-                // En iOS leemos el archivo como una ruta Base64 para que el navegador lance la app Calendario
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    window.location.href = e.target.result;
-                };
-                reader.readAsDataURL(blob);
+                // Forzamos a Safari a abrir la URL del Blob directamente para disparar la vista previa nativa de Apple
+                const url = window.URL.createObjectURL(blob);
+                window.location.assign(url);
             } else {
-                // Descarga regular para Android, Windows, Mac
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
