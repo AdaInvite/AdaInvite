@@ -10,10 +10,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="60 Patricia">
+    <!-- Evitar que iOS Safari formatee números como teléfonos (Causa de bloques blancos) -->
+    <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#F7A3A1">
     <meta property="og:title" content="Cumpleaños 60 • Patricia">
-    <meta property="og:description" content="Mágicos 60’s. Acompáñame a celebrar.">
-  <meta property="og:image" content="https://i.imgur.com/l7S7EAF.jpeg">
+    <meta property="og:description" content="Mágicos 60’s. Acompáñame a celebrar, da clic para ver los detalles.">
+  <meta property="og:image" content="https://i.imgur.com/XpPs9XN.jpeg">
     <meta property="og:type" content="website">
         
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,7 +24,7 @@
             theme: {
                 extend: {
                     colors: {
-                        rosa: '#CE666E',
+                        rosa: '#CC8280',
                         rosaclaro: '#F4C2C2',
                         dorado: '#D4AF37',
                         cafe: '#754B55',
@@ -41,7 +43,7 @@
     
     <style>
         :root {
-            --rosa: #CE666E;
+            --rosa: #CC8280;
             --rosaclaro: #F4C2C2;
             --blanco-perla: #FDFBF9;
             --font-elegant: 'Forum', serif;
@@ -75,18 +77,17 @@
         .font-bold, h3, label { font-weight: 600; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; text-transform: none !important; }
 
-        /* DORADO MÁS LEGIBLE Y SOMBRA SUTIL */
+        /* DORADO MÁS LEGIBLE */
         .text-dorado-real {
             background: linear-gradient(135deg, #D0963C 0%, #D6B061 30%, #A66E1D 50%, #D6B061 75%, #BB7615 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.15)); 
         }
 
         /* FONDOS ALTERNADOS */
         .seccion-clara { 
-            background-image: url('https://i.imgur.com/ivsy5Rp.jpeg');
+            background-image: url('https://i.imgur.com/8qJos3l.jpeg'); /* Textura del sobre */
             background-size: cover;
             background-position: center;
             color: #2C2A2A;
@@ -111,7 +112,7 @@
             top: 0; left: 0; right: 0; bottom: 0; 
             z-index: -1; 
             background-image: url('https://i.imgur.com/cUx5XZC.gif'); 
-            background-color: #CE666E;
+            background-color: #CC8280;
             background-blend-mode: soft-light; 
             background-size: cover;
             background-position: center;
@@ -130,7 +131,6 @@
             z-index: 10; pointer-events: none;
         }
 
-        .text-shadow-xl { text-shadow: 0px 4px 15px rgba(0,0,0,0.5); }
         .filtro-blanco { filter: brightness(0) invert(1); }
 
         /* SOBRE INICIAL */
@@ -148,8 +148,8 @@
         }
 
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.15)); isolation: isolate; }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.15)); isolation: isolate; }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); isolation: isolate; }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); isolation: isolate; }
 
         .flap { 
             width: 100%; height: 100%; 
@@ -187,28 +187,25 @@
             50% { transform: translateY(-12px) rotate(5deg); }
         }
         
-        /* Animación de la mariposa controlable */
         .mariposa-animada { 
             animation: flutter 3s infinite ease-in-out; 
-            animation-play-state: paused; /* Pausada por defecto */
-        }
-
-        .separador-img {
-            width: 90%;
-            max-width: 450px;
-            height: 100svh;
-            object-fit: cover;
-            border-radius: 20px;
-            border: 4px solid var(--rosa);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            margin: 0 auto;
-            position: relative;
-            z-index: 20;
+            animation-play-state: paused; 
         }
 
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
-        #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 300; line-height: 1; transition: color 0.5s ease; }
-        #countdown .time-label { font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; font-family: var(--font-elegant); transition: color 0.5s ease; }
+        
+        /* FIX BUG SAFARI: Se fuerza renderización de hardware para evitar los bloques blancos */
+        #countdown span.time-num { 
+            font-family: var(--font-numbers) !important; 
+            font-weight: 300; 
+            line-height: 1; 
+            display: block;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        #countdown .time-label { font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 10px; font-family: var(--font-elegant); }
     </style>
 </head>
 <body>
@@ -224,7 +221,7 @@
             <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left"></div></div>
             <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-base uppercase mb-4 animate-bounce text-white font-bold drop-shadow-md">Toca para abrir</div>
+                <div class="text-base uppercase mb-4 animate-bounce text-white font-bold">Toca para abrir</div>
                 <!-- Sello -->
                 <img src="https://i.imgur.com/7QX7WbM.png" class="w-[180px]" style="animation: floating 5s infinite ease-in-out" alt="Sello">
             </div>
@@ -238,46 +235,40 @@
 
     <main id="section-main">
         
-        <!-- 1. HERO (Fondo Claro) -->
+        <!-- 1. HERO (Fondo Claro Textura Sobre) -->
         <header class="min-h-[100svh] flex flex-col justify-center py-10 px-4 text-center relative seccion-clara">  
             <!-- Marco Interno Fino Dorado -->
             <div class="absolute inset-2 border-[1px] border-[#D4AF37] rounded-sm pointer-events-none z-0 opacity-70"></div>
 
-            <!-- Flores en las 4 esquinas -->
-            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -top-5 -left-4 w-80 z-10 transform scale-y-[-1] pointer-events-none" alt="Flores Esquina">
-            <img src="https://i.imgur.com/MPP6qRX.png" class="absolute -top-2 -right-2 w-36 z-10 transform rotate-180 pointer-events-none" alt="Flores Esquina">
-            <img src="https://i.imgur.com/MPP6qRX.png" class="absolute bottom-0 -left-2 w-28 z-10 pointer-events-none" alt="Flores Esquina">
-            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -bottom-5 -right-4 w-80 z-10 pointer-events-none transform scale-x-[-1]" alt="Flores Esquina">
+            <!-- Flores en las 4 esquinas con opacidad 80 -->
+            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -top-5 -left-4 w-80 z-10 transform scale-y-[-1] pointer-events-none opacity-80" alt="Flores Esquina">
+            <img src="https://i.imgur.com/MPP6qRX.png" class="absolute -top-2 -right-2 w-36 z-10 transform rotate-180 pointer-events-none opacity-80" alt="Flores Esquina">
+            <img src="https://i.imgur.com/MPP6qRX.png" class="absolute bottom-0 -left-2 w-28 z-10 pointer-events-none opacity-80" alt="Flores Esquina">
+            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -bottom-5 -right-4 w-80 z-10 pointer-events-none transform scale-x-[-1] opacity-80" alt="Flores Esquina">
             
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center text-center mt-6">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
                     
-                    <h2 class="text-3xl md:text-4xl font-elegant text-dorado-real mb-2 tracking-widest uppercase">Mis</h2>
+                    <h2 class="text-6xl md:text-7xl font-script text-dorado-real mb-2">Mis</h2>
                     
-                    <h1 class="text-7xl font-script text-rosa mb-0 leading-none drop-shadow-sm" style="margin-top: -15px;">Mágicos</h1>
+                    <h1 class="text-7xl font-script text-rosa mb-0 leading-none" style="margin-top: -15px;">Mágicos</h1>
                     
-                    <!-- 60 en fuente elegante con dorado oscuro y sombra -->
+                    <!-- 60 en fuente elegante con dorado oscuro -->
                     <h1 class="text-[8rem] font-bold text-dorado-real mb-4 leading-none" style="margin-top: -15px;">60</h1>
-                    
-                
                     
                     <p class="text-base font-elegant text-cafe px-8 md:px-12 mb-4 leading-relaxed font-bold uppercase tracking-wide">
                         Porque algunas experiencias<br>no se explican...<br>
-                        <span class="font-script text-[2.5rem] md:text-5xl lowercase text-rosa font-normal block mt-2 drop-shadow-sm">simplemente se viven.</span>
+                        <span class="font-script text-[2.5rem] md:text-5xl lowercase text-rosa font-normal block mt-2">simplemente se viven.</span>
                     </p>
-                    
-                
                     
                     <!-- Fecha formato Imagen -->
                     <div class="flex items-center justify-center w-full px-6 mb-6 text-cafe">
                         <div class="text-right uppercase text-sm font-bold tracking-widest leading-tight w-1/3 pr-3">Domingo</div>
                         <div class="h-10 w-px bg-cafe/40"></div>
-                        <span class="text-6xl leading-none text-rosa font-numbers px-4 drop-shadow-sm">15</span>
+                        <span class="text-6xl leading-none text-rosa font-numbers px-4">15</span>
                         <div class="h-10 w-px bg-cafe/40"></div>
                         <div class="text-left uppercase text-sm font-bold tracking-widest leading-tight w-1/3 pl-3">De Noviembre<br>2026</div>
                     </div>
-                    
-                  
                 </div>
             </div>
             
@@ -288,53 +279,46 @@
             </div>
         </header>
 
-        <!-- 2. SEPARADOR 1 (Fondo Rosa) -->
-        <div class="min-h-[100svh] flex justify-center items-center reveal-scale py-10 seccion-rosa">
+        <!-- 2. COUNTDOWN (Fondo Rosa) -->
+        <section class="min-h-[80svh] flex flex-col justify-center px-12 text-center relative seccion-rosa">
             <div class="difuminado-top"></div>
             <div class="difuminado-bottom"></div>
-            <img src="https://i.imgur.com/ulYoXre.jpeg" class="separador-img border-white/60 border-[5px]" alt="Separador 1 - Patricia">
-        </div>
-
-        <!-- 3. COUNTDOWN (Fondo Claro) -->
-        <section class="min-h-[80svh] flex flex-col justify-center px-12 text-center relative seccion-clara overflow-hidden">
-            <!-- Flores Laterales -->
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 z-0 pointer-events-none" alt="Flores Laterales">
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 z-0 pointer-events-none transform scale-x-[-1]" alt="Flores Laterales">
 
             <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full">
-                <h3 class="text-6xl md:text-7xl font-script text-dorado-real mb-8">Faltan solo...</h3>
+                <h3 class="text-6xl md:text-7xl font-script text-white mb-8">Faltan solo...</h3>
 
+                <!-- Contador optimizado para Safari (sin sombras y con hardware acceleration) -->
                 <div id="countdown" class="flex gap-3 md:gap-8 justify-center px-2">
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/70 border border-rosa/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="days" class="time-num text-3xl md:text-4xl text-rosa font-bold drop-shadow-sm">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border border-white/60 flex items-center justify-center mb-4 rounded-xl isolate" style="-webkit-transform: translateZ(0); transform: translateZ(0);">
+                            <span id="days" class="time-num text-3xl md:text-4xl text-white font-bold">00</span>
                         </div>
-                        <span class="time-label text-cafe font-bold">Días</span>
+                        <span class="time-label text-white font-bold">Días</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/70 border border-rosa/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="hours" class="time-num text-3xl md:text-4xl text-rosa font-bold drop-shadow-sm">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border border-white/60 flex items-center justify-center mb-4 rounded-xl isolate" style="-webkit-transform: translateZ(0); transform: translateZ(0);">
+                            <span id="hours" class="time-num text-3xl md:text-4xl text-white font-bold">00</span>
                         </div>
-                        <span class="time-label text-cafe font-bold">Horas</span>
+                        <span class="time-label text-white font-bold">Horas</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/70 border border-rosa/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="minutes" class="time-num text-3xl md:text-4xl text-rosa font-bold drop-shadow-sm">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border border-white/60 flex items-center justify-center mb-4 rounded-xl isolate" style="-webkit-transform: translateZ(0); transform: translateZ(0);">
+                            <span id="minutes" class="time-num text-3xl md:text-4xl text-white font-bold">00</span>
                         </div>
-                        <span class="time-label text-cafe font-bold">Min</span>
+                        <span class="time-label text-white font-bold">Min</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 bg-white/70 border border-rosa/30 shadow-lg flex items-center justify-center mb-4 rounded-xl">
-                            <span id="seconds" class="time-num text-3xl md:text-4xl text-rosa font-bold drop-shadow-sm">00</span>
+                        <div class="w-16 h-16 md:w-24 md:h-24 bg-transparent border border-white/60 flex items-center justify-center mb-4 rounded-xl isolate" style="-webkit-transform: translateZ(0); transform: translateZ(0);">
+                            <span id="seconds" class="time-num text-3xl md:text-4xl text-white font-bold">00</span>
                         </div>
-                        <span class="time-label text-cafe font-bold">Seg</span>
+                        <span class="time-label text-white font-bold">Seg</span>
                     </div>
                 </div>
 
                 <div class="reveal-scale delay-200 mt-12">
-                    <p class="text-sm md:text-base uppercase mb-6 text-cafe font-bold tracking-widest">Reserva el momento <br> en tu calendario</p>
+                    <p class="text-sm md:text-base uppercase mb-6 text-white font-bold tracking-widest">Reserva el momento <br> en tu calendario</p>
                     <div class="flex justify-center">
-                        <button onclick="calendarLink('60 Años - Patricia', 'Salón ByM', '20261115T170000')" class="bg-rosa text-white px-10 py-4 text-sm uppercase font-bold hover:bg-transparent hover:text-rosa border border-rosa transition-all duration-300 shadow-md rounded-full tracking-wider">
+                        <button onclick="calendarLink('60 Años - Patricia', 'Salón ByM', '20261115T170000')" class="bg-white text-rosa px-10 py-4 text-sm uppercase font-bold hover:bg-transparent hover:text-white border border-white transition-all duration-300 shadow-md rounded-full tracking-wider">
                             Agregar al calendario
                         </button>
                     </div>
@@ -342,18 +326,11 @@
             </div>
         </section>
 
-        <!-- 4. SEPARADOR 2 (Fondo Rosa) -->
-        <div class="min-h-[100svh] flex justify-center items-center reveal-scale py-10 seccion-rosa">
-            <div class="difuminado-top"></div>
-            <div class="difuminado-bottom"></div>
-            <img src="https://i.imgur.com/BSSrUl8.jpeg" class="separador-img border-white/60 border-[5px]" alt="Separador 2 - Patricia">
-        </div>
-
-        <!-- 5. RECEPCIÓN (Fondo Claro - SIN CUADRO) -->
-        <section id="recepcion" class="min-h-[100svh] flex flex-col justify-center px-5 py-10 seccion-clara relative">
-             <!-- Flores Laterales -->
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 z-20 pointer-events-none" alt="Flores Laterales">
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 z-0 pointer-events-none transform scale-x-[-1]" alt="Flores Laterales">
+        <!-- 3. RECEPCIÓN (Fondo Claro Textura Sobre) -->
+        <section id="recepcion" class="min-h-[100svh] flex flex-col justify-center px-5 py-10 seccion-clara relative overflow-hidden">
+             <!-- Flores Laterales con opacidad 80 y tamaño más grande (w-16 md:w-20) -->
+            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 md:w-20 z-20 pointer-events-none opacity-80" alt="Flores Laterales">
+            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 md:w-20 z-0 pointer-events-none transform scale-x-[-1] opacity-80" alt="Flores Laterales">
             
             <div class="max-w-3xl mx-auto relative z-10 w-full">
                 <!-- Recepción Contenido -->
@@ -361,10 +338,9 @@
                     <div class="text-center">
                      
                         <h1 class="text-6xl mb-4 font-script text-dorado-real reveal-scale">Ubicación</h1>
-                        <p class="font-bold text-3xl text-rosa uppercase drop-shadow-sm">Salón ByM</p>
+                        <p class="font-bold text-3xl text-rosa uppercase">Salón ByM</p>
                       
-                    
-                        <p class="font-bold mb-4 mt-4 text-2xl text-cafe drop-shadow-sm">5:00 p.m.</p>
+                        <p class="font-bold mb-4 mt-4 text-2xl text-cafe">5:00 p.m.</p>
                     </div>
                     
                     <div class="flex-grow w-full relative min-h-[300px] rounded-xl overflow-hidden border-2 border-dorado/40 mb-8 shadow-xl bg-white">
@@ -380,51 +356,43 @@
             </div>
         </section>
         
-        <!-- 6. CÓDIGO DE VESTIMENTA (Fondo Rosa) -->
+        <!-- 4. CÓDIGO DE VESTIMENTA (Fondo Rosa) -->
         <section class="py-24 px-6 text-center relative seccion-rosa overflow-hidden">
             <div class="difuminado-top"></div>
             <div class="difuminado-bottom"></div>
 
             <div class="max-w-4xl mx-auto reveal-scale relative z-10">
                 <img src="https://i.imgur.com/uXYiF04.png" class="w-28 h-28 mx-auto mb-6 filtro-blanco" alt="Icono Vestimenta">
-                <h2 class="text-5xl md:text-6xl font-script text-white py-2 mb-4 text-shadow-xl">Código de Vestimenta</h2>
+                <h2 class="text-5xl md:text-6xl font-script text-white py-2 mb-4">Código de Vestimenta</h2>
                 <p class="text-xl font-bold uppercase tracking-widest text-rosa bg-white px-6 py-3 rounded-full inline-block mt-4 shadow-xl">Opcional Vaquera</p>
             </div>
         </section>
 
-        <!-- 7. LLUVIA DE SOBRES (Fondo Claro - SECCIÓN INDEPENDIENTE) -->
-        <section class="min-h-[60svh] flex flex-col justify-center py-10 px-6 text-center relative seccion-clara">
-           <!-- Flores Laterales -->
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 z-20 pointer-events-none" alt="Flores Laterales">
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 z-20 pointer-events-none transform scale-x-[-1]" alt="Flores Laterales">
+        <!-- 5. LLUVIA DE SOBRES (Fondo Claro Textura Sobre) -->
+        <section class="min-h-[90svh] flex flex-col justify-center py-10 px-6 text-center relative seccion-clara overflow-hidden">
+           <!-- Flores Laterales con opacidad 80 y tamaño más grande (w-16 md:w-20) -->
+            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 md:w-20 z-20 pointer-events-none opacity-80" alt="Flores Laterales">
+            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 md:w-20 z-20 pointer-events-none transform scale-x-[-1] opacity-80" alt="Flores Laterales">
             
             <div class="max-w-2xl mx-auto reveal relative z-10 bg-white/80 p-8 md:p-12 rounded-2xl shadow-xl border border-dorado/20 backdrop-blur-sm">
-                <svg class="w-16 h-16 mx-auto mb-4 text-rosa drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-                <h3 class="text-5xl font-script text-dorado-real mb-6">Lluvia de Sobres</h3>
+                <!-- Ícono de sobre -->
+                <img src="https://i.imgur.com/7daBvma.png" class="w-20 mx-auto mb-4 object-contain" alt="Lluvia de Sobres">
+                
+                <h3 class="text-5xl py-2 font-script text-dorado-real mb-6">Lluvia de Sobres</h3>
                 <p class="text-lg text-cafe font-bold leading-relaxed">
                     El mejor regalo es tu presencia, pero si deseas tener un detalle conmigo, habrá un buzón para lluvia de sobres en el evento.
                 </p>
             </div>
         </section>
 
-        <!-- 8. SEPARADOR 3 (Fondo Rosa) -->
-        <div class="min-h-[100svh] flex justify-center items-center reveal-scale py-10 seccion-rosa">
+        <!-- 6. RSVP WHATSAPP (Fondo Rosa) -->
+        <section class="min-h-[100svh] flex flex-col justify-center px-6 py-16 seccion-rosa text-center relative overflow-hidden">
             <div class="difuminado-top"></div>
             <div class="difuminado-bottom"></div>
-            <img src="https://i.imgur.com/7l9R4YD.jpeg" class="separador-img border-white/60 border-[5px]" alt="Separador 3 - Patricia">
-        </div>
-
-        <!-- 9. RSVP WHATSAPP (Fondo Claro) -->
-        <section class="min-h-[100svh] flex flex-col justify-center px-6 py-10 seccion-clara text-center relative overflow-hidden">
-           <!-- Flores Laterales -->
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute top-0 left-0 w-16 z-0 pointer-events-none" alt="Flores Laterales">
-            <img src="https://i.imgur.com/O2O17fK.png" class="absolute bottom-0 right-0 w-16 z-20 pointer-events-none transform scale-x-[-1]" alt="Flores Laterales">
             
             <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl md:text-6xl font-script mb-6 drop-shadow-md px-6 text-dorado-real">Confirmar Asistencia</h2>
-                <p class="text-base uppercase mb-8 font-bold text-rosa drop-shadow-sm tracking-wider">Por favor, confirmar asistencia</p>
+                <h2 class="text-6xl font-script mb-6 px-6 text-white">Confirmar Asistencia</h2>
+                <p class="text-base uppercase mb-8 font-bold text-white tracking-wider">Por favor, confirmar asistencia</p>
                 
                <form id="rsvpFormWhatsApp" class="w-[90%] mx-auto space-y-6 text-left bg-white/90 p-8 rounded-2xl backdrop-blur-sm shadow-xl transition-all duration-500 mb-4 border border-dorado/20">
                     
@@ -446,13 +414,14 @@
             </div>
         </section>
 
-        <!-- 10. FOOTER (Fondo Rosa) -->
-        <footer class="min-h-[50svh] flex flex-col justify-center py-10 px-10 text-center relative z-10 seccion-rosa">
-            <div class="difuminado-top"></div>
-          
-
-            <p class="text-[4rem] font-script mb-2 text-white relative z-10 text-shadow-xl">¡No faltes!</p>
-            <p class="text-sm md:text-base text-white uppercase mt-4 font-bold font-numbers relative z-10 tracking-widest drop-shadow-md">15 • Noviembre • 2026</p>
+        <!-- 7. FOOTER (Fondo Claro Textura Sobre) -->
+        <footer class="min-h-[50svh] flex flex-col justify-center py-10 px-10 text-center relative z-10 seccion-clara overflow-hidden">
+            <!-- Flores grandes en las esquinas inferiores con opacidad 80 -->
+            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -bottom-5 -left-4 w-64 md:w-80 z-0 pointer-events-none opacity-80" alt="Flores Footer">
+            <img src="https://i.imgur.com/msQfEUj.png" class="absolute -bottom-5 -right-4 w-64 md:w-80 z-0 pointer-events-none opacity-80 transform scale-x-[-1]" alt="Flores Footer">
+            
+            <p class="text-[4rem] font-script mb-2 text-rosa relative z-10">¡No faltes!</p>
+            <p class="text-sm md:text-base text-cafe uppercase mt-4 font-bold font-numbers relative z-10 tracking-widest">15 • Noviembre • 2026</p>
         </footer>
     </main>
 
