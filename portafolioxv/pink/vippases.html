@@ -849,6 +849,37 @@
     </div> <!-- FIN APP CONTAINER -->
 
     <script>
+        // Variable global para almacenar el límite de pases
+        let maxPasesPermitidos = 0; 
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Captura los parámetros de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const nombre = urlParams.get('nombre');
+            const pases = urlParams.get('pases');
+
+            if (nombre && pases) {
+                // Mostrar la tarjeta especial en el inicio
+                document.getElementById('nombre-invitado-inicio').textContent = nombre;
+                document.getElementById('pases-invitado-inicio').textContent = pases;
+                document.getElementById('seccion-pases-inicio').classList.remove('hidden');
+
+                // Configurar el límite y autocompletar el formulario
+                maxPasesPermitidos = parseInt(pases, 10);
+                
+                const rsvpName = document.getElementById('rsvpName');
+                if (rsvpName) {
+                    rsvpName.value = nombre;
+                    rsvpName.readOnly = true; 
+                    rsvpName.classList.add('opacity-70'); 
+                }
+                
+                // Colocar un límite máximo inicial en las flechitas de los inputs numéricos
+                document.getElementById('rsvpAdults').setAttribute('max', maxPasesPermitidos);
+                document.getElementById('rsvpKids').setAttribute('max', maxPasesPermitidos);
+            }
+        });
+
         function openEnvelope() {
             const envWrapper = document.getElementById('envelope-wrapper');
             envWrapper.classList.add('open');
@@ -895,7 +926,6 @@
         const targetDate = new Date("September 19, 2027 15:00:00").getTime();
         
         function updateCountdown() {
-            // FIX: Validamos que exista el elemento HTML antes de proceder, si no está se cancela la función previniendo errores críticos.
             const daysEl = document.getElementById("days");
             if (!daysEl) return; 
 
@@ -1118,6 +1148,18 @@
             const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
             const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
             const totalPases = numAdultos + numNinos;
+            
+            // --- NUEVA VALIDACIÓN DE LÍMITE DE PASES ---
+            if (maxPasesPermitidos > 0 && totalPases > maxPasesPermitidos) {
+                alert(`¡Lo sentimos! Tienes un límite de ${maxPasesPermitidos} pases asignados. Estás intentando confirmar ${totalPases}. Por favor, ajusta la cantidad.`);
+                return; 
+            }
+
+            if (totalPases === 0) {
+                alert('Por favor, ingresa al menos 1 pase para confirmar.');
+                return;
+            }
+            // -------------------------------------------
             
             const form = document.getElementById('rsvpForm');
             const loader = document.getElementById('loadingMessage');
