@@ -547,19 +547,42 @@
                 <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_Fausto_Alfonso_Flores_de_la_Rosa_1791094901426%2Ffoto_separador_3_173634.jpg?alt=media&token=10e3fcc3-7899-4949-9d4c-ace4b9791c84" class="separador-img" alt="Separador 4">
             </div>
 
-            <!-- LLUVIA DE SOBRES -->
-            <section class="min-h-[80svh] flex flex-col justify-center px-6 bg-intercalado text-center relative overflow-hidden">
+            <!-- TRIVIA INTERACTIVA (Reemplazo de Lluvia de Sobres) -->
+            <section class="min-h-[100svh] flex flex-col justify-center py-16 px-6 bg-intercalado relative text-center overflow-hidden">
                 <img src="https://i.imgur.com/vhIj49i.png" class="absolute top-0 right-0 w-28 z-0 pointer-events-none transform rotate-180 filtro-blanco" alt="deco">
                 <img src="https://i.imgur.com/vhIj49i.png" class="absolute bottom-0 left-0 w-28 z-0 pointer-events-none filtro-blanco" alt="deco">
                 
-                <div class="max-w-5xl mx-auto reveal relative z-10 w-full flex flex-col justify-center">
-                    <h1 class="text-6xl mb-6 text-white font-script reveal-scale text-shadow-light">Lluvia de Sobres</h1>
-                    <p class="text-sm uppercase mb-6 text-white/80 font-bold max-w-sm mx-auto">El mejor regalo es tu presencia, pero si deseas tener un detalle conmigo, habrá un buzón en el salón para la lluvia de sobres.</p>
-                    
-                    <div class="flex justify-center w-full mt-4 reveal-scale delay-100">
-                        <svg class="w-24 h-24 text-white opacity-90 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
+                <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-center h-full">
+                    <h2 class="text-5xl mb-4 font-script text-white text-shadow-light">¿Cuánto me conoces?</h2>
+                    <p class="text-sm uppercase mb-6 text-white/80 font-bold max-w-sm mx-auto">Juega esta pequeña trivia y descubre tu puntaje al final.</p>
+        
+                    <div id="trivia-container" class="glass-card w-full max-w-md mx-auto p-4 shadow-2xl relative">
+                        <!-- Pantalla de inicio de trivia -->
+                        <div id="trivia-start">
+                            <button onclick="startTrivia()" class="w-full bg-white text-terracota font-bold py-4 px-8 uppercase text-[12px] hover:bg-transparent hover:text-white border border-white transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl mt-4">
+                                Comenzar Trivia
+                            </button>
+                        </div>
+        
+                        <!-- Pantalla de preguntas -->
+                        <div id="trivia-question-container" class="hidden">
+                            <p id="trivia-progress" class="text-[10px] uppercase tracking-widest font-bold text-white/60 mb-2">Pregunta 1 de 3</p>
+                            <h3 id="trivia-question" class="text-xl font-bold text-white mb-6"></h3>
+                            <div id="trivia-options" class="flex flex-col gap-3">
+                                <!-- Opciones generadas por JS -->
+                            </div>
+                        </div>
+        
+                        <!-- Pantalla de resultados -->
+                        <div id="trivia-result" class="hidden">
+                            <h3 class="text-4xl font-script text-white mb-2">¡Terminaste!</h3>
+                            <p class="text-xs uppercase text-white/80 font-bold mb-4">Tu puntaje es:</p>
+                            <p id="trivia-score" class="font-numbers text-6xl text-white font-bold mb-4 drop-shadow-lg">0/3</p>
+                            <p id="trivia-message" class="text-sm font-bold text-white mb-8"></p>
+                            <button onclick="resetTrivia()" class="w-full bg-transparent text-white border border-white font-bold py-3 px-8 uppercase text-[11px] hover:bg-white hover:text-terracota transition-all duration-300 rounded-xl">
+                                Volver a jugar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -573,7 +596,7 @@
                     <form id="rsvpForm" class="w-[90%] max-w-[420px] mx-auto space-y-6 text-left transition-all duration-500 mb-6">            
                         <div id="customAlert" class="hidden mb-2 bg-black/40 backdrop-blur-md border border-red-500/50 rounded-xl p-3 text-center transition-all duration-300 shadow-xl">
                             <div class="flex items-center justify-center gap-2 mb-1">
-                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <p id="customAlertTitle" class="text-red-500 font-bold text-xs uppercase tracking-widest">Aviso</p>
                             </div>
                             <p id="customAlertText" class="text-white text-xs">Mensaje aquí</p>
@@ -635,6 +658,93 @@
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
             }, 1800);
+        }
+
+        // LÓGICA DE LA TRIVIA
+        const triviaData = [
+            {
+                question: "¿Cuál es mi película favorita?",
+                options: [
+                    { text: "A dos metros de ti", isCorrect: false },
+                    { text: "Culpa tuya", isCorrect: true },
+                    { text: "Titanic", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué me hace reír fácilmente?",
+                options: [
+                    { text: "Los chistes", isCorrect: false },
+                    { text: "Mi hermano", isCorrect: true },
+                    { text: "Los memes", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Prefiero películas o series?",
+                options: [
+                    { text: "Series", isCorrect: false },
+                    { text: "Documentales", isCorrect: false },
+                    { text: "Películas", isCorrect: true }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startTrivia() {
+            document.getElementById('trivia-start').classList.add('hidden');
+            document.getElementById('trivia-question-container').classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionData = triviaData[currentQuestionIndex];
+            document.getElementById('trivia-progress').innerText = `Pregunta ${currentQuestionIndex + 1} de ${triviaData.length}`;
+            document.getElementById('trivia-question').innerText = questionData.question;
+            
+            const optionsContainer = document.getElementById('trivia-options');
+            optionsContainer.innerHTML = '';
+            
+            questionData.options.forEach((option) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full bg-transparent text-white border border-white/50 font-bold py-3 px-4 text-xs uppercase hover:bg-white hover:text-terracota transition-all duration-300 rounded-xl text-center active:scale-95 shadow-sm";
+                btn.innerText = option.text;
+                btn.onclick = () => handleAnswer(option.isCorrect);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(isCorrect) {
+            if (isCorrect) score++;
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < triviaData.length) {
+                showQuestion();
+            } else {
+                showTriviaResults();
+            }
+        }
+
+        function showTriviaResults() {
+            document.getElementById('trivia-question-container').classList.add('hidden');
+            document.getElementById('trivia-result').classList.remove('hidden');
+            
+            document.getElementById('trivia-score').innerText = `${score}/${triviaData.length}`;
+            
+            let message = "";
+            if (score === 3) message = "¡Wow! Me conoces a la perfección ✨";
+            else if (score === 2) message = "¡Muy bien! Casi atinas a todas 💖";
+            else if (score === 1) message = "Adivinaste una, nada mal 😉";
+            else message = "¡Uy! Necesitamos platicar más 😅";
+            
+            document.getElementById('trivia-message').innerText = message;
+        }
+
+        function resetTrivia() {
+            document.getElementById('trivia-result').classList.add('hidden');
+            startTrivia();
         }
 
         // AUDIO
