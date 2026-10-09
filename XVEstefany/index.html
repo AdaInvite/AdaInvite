@@ -880,8 +880,16 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
             setTimeout(() => window.URL.revokeObjectURL(url), 100);
         }
 
-        // BLOQUEO DE TECLADO E INSPECTOR
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
+        // BLOQUEO DE TECLADO E INSPECTOR (Permitiendo guardar imágenes)
+        document.addEventListener('contextmenu', function(e) { 
+            // Si el usuario está tocando una imagen, permitimos que salga el menú
+            if (e.target.tagName === 'IMG') {
+                return true; 
+            }
+            // Para el resto de la página, lo bloqueamos
+            e.preventDefault(); 
+        }, false);
+        
         document.onkeydown = function(e) {
             if (e.keyCode == 123) return false; 
             if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
@@ -976,6 +984,15 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                 document.body.removeChild(clone);
                 const base64 = canvas.toDataURL('image/png');
                 
+                // --- FORZAR DESCARGA AUTOMÁTICA ---
+                const linkDescarga = document.createElement('a');
+                linkDescarga.href = base64;
+                linkDescarga.download = 'Pase_XV_Estefany.png';
+                document.body.appendChild(linkDescarga);
+                linkDescarga.click();
+                document.body.removeChild(linkDescarga);
+                // ----------------------------------
+                
                 tarjeta.dataset.generado = "true";
                 tarjeta.style.padding = "0";
                 tarjeta.style.border = "none";
@@ -985,7 +1002,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                 tarjeta.innerHTML = `
                     <div class="flex flex-col items-center w-full mx-auto animate-pulse-once">
                         <div class="bg-black/90 text-white border border-white/30 text-[11px] uppercase tracking-widest font-bold py-3 px-4 rounded-xl text-center shadow-xl backdrop-blur-md mb-4 w-full">
-                            ✨ Mantén presionada la imagen para descargarla ✨
+                            ✨ Si no se descargó solo, mantén presionada la imagen ✨
                         </div>
                         <img src="${base64}" alt="Pase" class="w-full h-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] rounded-[30px] border border-white/30" style="pointer-events: auto; user-select: none; -webkit-touch-callout: default;"/>
                     </div>
