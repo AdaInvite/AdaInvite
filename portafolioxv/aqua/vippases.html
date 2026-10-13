@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV AQUA</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
@@ -9,10 +9,11 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="XV AQUA">
-    <meta name="theme-color" content="#8496B0">
-    <meta property="og:title" content="Mis XV Años Suelen Camila">
+    <!-- Color azul plumbago -->
+    <meta name="theme-color" content="#465B73">
+    <meta property="og:title" content="Mis XV • Suelen Camila">
     <meta property="og:description" content="Me encantaría celebrar este día especial contigo. Haz clic para ver los detalles.">
-      <meta property="og:image" content="https://i.imgur.com/GvYcjDM.png">
+    <meta property="og:image" content="https://i.imgur.com/oWcY9Zn.jpeg">
         
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -21,7 +22,7 @@
                 extend: {
                     colors: {
                         azul: {
-                            principal: '#8496B0'
+                            principal: '#8496B0' /* Azul Plumbago */
                         },
                         blanco: {
                             perla: '#F0EFEA'
@@ -35,27 +36,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cardo&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --azul-principal: #8496B0;
             --blanco-perla: #F0EFEA;
-            --font-elegant: 'Lora', serif;
+            --font-elegant: 'Cardo', serif;
             --font-script: 'Great Vibes', cursive;
-            --font-numbers: 'Cinzel', serif; 
+            --font-numbers: 'Cardo', serif; 
         }
 
+        /* CLASES DE TEXTURA DE PAPEL */
+        .textura-papel {
+            background-color: var(--blanco-perla) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png') !important;
+        }
+        .textura-papel-blanco {
+            background-color: var(--blanco-perla) !important; 
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png') !important;
+        }
+        .textura-papel-azul {
+            background-color: var(--azul-principal) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png') !important;
+            color: #ffffff !important;
+        }
+
+        /* CONFIGURACIÓN DEL CONTENEDOR MÓVIL EN PC */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             font-family: var(--font-elegant);
+            background-color: #2C2A2A; /* Fondo oscuro para resaltar el contenedor */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Evita que la ventana completa haga scroll */
+        }
+
+        #mobile-wrapper {
+            width: 100%;
+            max-width: 414px; /* Ancho estándar de móvil grande */
+            height: 100svh;
+            position: relative;
             background-color: var(--blanco-perla);
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.6); /* Sombra elegante */
+        }
+
+        #scroll-area {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
             overflow-x: hidden;
-            color: #8496B0;
             scroll-behavior: smooth;
+            color: var(--azul-principal);
         }
 
         h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
@@ -71,7 +108,6 @@
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
         .seccion-blanca { 
-            background-color: var(--blanco-perla); 
             color: #2C2A2A;
         }
         
@@ -81,13 +117,18 @@
             z-index: 1; 
             color: var(--blanco-perla);
             width: 100%;
-            box-shadow: 0 15px 35px rgba(132, 150, 176, 0.2);
+            border-radius: 40px;
+            margin: 32px 0;
+            box-shadow: 0 15px 35px rgba(70, 91, 115, 0.2);
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
 
         .seccion-azul::before {
             content: "";
             position: absolute;
-          top: -10px; left: -10px; right: -10px; bottom: -10px; 
+            top: -10px; left: -10px; right: -10px; bottom: -10px; 
             z-index: -1; 
             background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.imgur.com/cUx5XZC.gif');
             background-size: cover;
@@ -95,34 +136,61 @@
             filter: blur(6px); 
         }
 
+        .seccion-separador {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            min-height: 100svh;
+            margin: 32px 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+/* Difuminado suave y menos alto */
+-webkit-mask-image: linear-gradient(
+  to bottom,
+  transparent 0%,
+  black 15%,
+  black 85%,
+  transparent 100%
+);
+mask-image: linear-gradient(
+  to bottom,
+  transparent 0%,
+  black 15%,
+  black 85%,
+  transparent 100%
+);
+        }
+
+        .footer-corte {
+            margin-top: 16px;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
+        }
 
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,1), 0px 0px 5px rgba(0,0,0,1); }
-        .text-shadow-light { text-shadow: 0px 2px 10px rgba(132, 150, 176, 0.5); }
+        .text-shadow-light { text-shadow: 0px 2px 10px rgba(70, 91, 115, 0.5); }
 
-        .filtro-azul {
-            filter: invert(63%) sepia(18%) saturate(553%) hue-rotate(184deg) brightness(89%) contrast(89%);
-        }
-        .filtro-blanco {
-            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-        }
+        .filtro-azul { filter: invert(65%) sepia(23%) saturate(518%) hue-rotate(183deg) brightness(87%) contrast(85%); }
+        .filtro-blanco { filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%); }
 
         /* SOBRE INICIAL */
         #envelope-wrapper {
-            position: fixed; inset: 0; z-index: 100;
+            position: absolute; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
             transition: visibility 1.8s;
         }
         .envelope-bg {
             position: absolute; inset: 0;
-            background-image: url("https://i.imgur.com/arqV06S.jpeg");
+            background-image: url("https://i.imgur.com/OpM9Kgu.jpeg");
             background-size: cover; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; }
         
-        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.3)); }
-        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.3)); }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(0,0,0,0.2)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(0,0,0,0.2)); }
         
-        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/arqV06S.jpeg"); background-size: cover; }
+        .flap { width: 100%; height: 100%; background-image: url("https://i.imgur.com/OpM9Kgu.jpeg"); background-size: cover; }
         .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); background-position: left center; }
         .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); background-position: right center; }
         .seal-wrapper {
@@ -155,22 +223,20 @@
 
         .btn-calendar {
             border: 1px solid var(--azul-principal); padding: 12px 28px; font-size: 11px;
-            letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease;
+            text-transform: uppercase; transition: all 0.4s ease;
             display: inline-flex; align-items: center; gap: 10px; border-radius: 4px;
-            color: var(--azul-principal);
         }
-        .btn-calendar:hover { background: var(--azul-principal); color: var(--blanco-perla); box-shadow: 0 10px 20px rgba(132, 150, 176, 0.3); }
+        .btn-calendar:hover { opacity: 0.9; box-shadow: 0 10px 20px rgba(70, 91, 115, 0.3); }
 
-  .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 24px; padding: 10px 0; scrollbar-width: none; }
+        .chambelanes-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 24px; padding: 28px 0; scrollbar-width: none; }
         .chambelanes-slider::-webkit-scrollbar { display: none; }
         .chambelan-card {
-            flex: 0 0 280px; scroll-snap-align: center; background: var(--blanco-perla);
-            border: 1px solid rgba(132, 150, 176, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.5s ease; border-radius: 8px; overflow: hidden;
+            flex: 0 0 280px; scroll-snap-align: center;
+            border: 1px solid rgba(70, 91, 115, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: transform 0.4s ease, box-shadow 0.4s ease; border-radius: 8px; overflow: hidden;
         }
-        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(132, 150, 176, 0.2); }
+        .chambelan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(70, 91, 115, 0.2); }
 
-         
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(1deg); }
@@ -182,23 +248,29 @@
         /* --- SLIDER HISTORIA --- */
         .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 30px; padding: 40px 20px; scrollbar-width: none; }
         .slider-historia::-webkit-scrollbar { display: none; }
-        .tarjeta-nueva { flex: 0 0 280px; scroll-snap-align: center; position: relative; background: var(--blanco-perla); padding: 12px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-1deg); transition: all 0.4s ease; border: 1px solid rgba(0, 51, 160, 0.15); }
+        .tarjeta-nueva { flex: 0 0 280px; scroll-snap-align: center; position: relative; padding: 12px; box-shadow: 0 15px 15px rgba(0,0,0,0.5); transform: rotate(-1deg); transition: all 0.4s ease; border: 1px solid rgba(70, 91, 115, 0.2); }
         .tarjeta-nueva:nth-child(even) { transform: rotate(1.5deg); }
-        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 20px 40px rgba(0, 51, 160, 0.4); }
-        .img-historia { width: 100%; height: 380px; object-fit: cover; border-radius: 8px; }
-        .info-flotante { margin-top: 12px; background: var(--blanco-perla); padding: 10px; }
+        .tarjeta-nueva:hover { transform: rotate(0deg) scale(1.03); z-index: 20; box-shadow: 0 15px 15px rgba(70, 91, 115, 0.4); }
+        
+        /* Imágenes de Mi Historia (Altura normal) */
+        .img-historia { width: 100%; height: 300px; object-fit: cover; }
+        
+        /* Imágenes de Preview (Más altas) */
+        .img-preview { width: 100%; height: 400px; object-fit: cover; }
+        
+        .info-flotante { margin-top: 12px; padding: 10px; border-radius: 6px; }
+        
         .año-badge {
             position: absolute; top: -15px; right: 15px; background: var(--azul-principal);
             color: white; padding: 6px 18px; border-radius: 20px; font-size: 15px; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); letter-spacing: 1px;
-            font-family: var(--font-numbers); font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-family: var(--font-numbers); font-weight: 500; z-index: 10;
         }
 
         #countdown { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; display: flex; justify-content: center; align-items: center; }
         #countdown span.time-num { font-family: var(--font-numbers) !important; font-weight: 400; line-height: 1; transition: color 0.5s ease; }
-        #countdown .time-label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; font-family: var(--font-elegant); transition: color 0.5s ease; }
+        #countdown .time-label { font-weight: 700; font-size: 10px; text-transform: uppercase; margin-top: 8px; font-family: var(--font-elegant); transition: color 0.5s ease; }
 
-        /* Trivia button styling */
         .btn-trivia { transition: all 0.3s ease; }
         .btn-trivia.correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; }
         .btn-trivia.incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; }
@@ -207,17 +279,19 @@
 </head>
 <body>
 
+<div id="mobile-wrapper" class="textura-papel">
+    
     <audio id="bg-music" loop>
         <source src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/songs/IfOnlyDoveCameron.mp3" type="audio/mpeg">
     </audio>
-    <div id="audio-btn" class="fixed bottom-[30px] right-[20px] w-[40px] h-[40px] bg-transparent text-azul-principal flex items-center justify-center z-[999] cursor-pointer transition-all duration-300 hover:scale-110 hidden" onclick="toggleAudio()">
+
+    <div id="audio-btn" class="absolute bottom-[30px] right-[20px] w-[40px] h-[40px] bg-transparent text-azul-principal flex items-center justify-center z-[999] cursor-pointer transition-all duration-300 hover:scale-110 hidden" onclick="toggleAudio()">
         <img id="audio-icon" src="https://i.imgur.com/Ei73G9F.png" class="w-full h-full filtro-azul object-cover" alt="Música">
     </div>
 
     <div id="envelope-wrapper">
         <div class="envelope-bg filtro-azul"></div>
         <div id="envelope-container" class="w-full h-full relative z-10">
-              
             <div class="flap-wrapper flap-left-wrapper">
                 <div class="flap flap-left filtro-azul"></div>
             </div>
@@ -225,604 +299,568 @@
                 <div class="flap flap-right filtro-azul"></div>
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
-                <div class="text-[11px] tracking-[3px] uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
-                <img src="https://i.imgur.com/mF0ZsJq.png" 
-                     class="w-[140px]" style="animation: floating 6s infinite ease-in-out" alt="Sello">
+                <div class="text-xs uppercase mb-4 animate-bounce text-white drop-shadow-md font-bold">Toca para abrir</div>
+                <img src="https://i.imgur.com/mF0ZsJq.png" class="w-[180px] drop-shadow-xl" style="animation: floating 6s infinite ease-in-out" alt="Sello">
             </div>
         </div>
     </div>
 
-    <main id="section-main">
-        
-        <header class="relative min-h-[100svh] flex flex-col px-8 py-8 md:py-16 md:px-160 box-border"> 
-            <div class="absolute inset-0 bg-cover bg-center filtro-azul z-0 opacity-100" style="background-image: url('https://i.imgur.com/7uC7inm.png');"></div>
-
-            <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center bg-blanco-perla border-[4px] md:border-[6px] border-azul-principal rounded-[150px] md:rounded-[150px] shadow-2xl pt-16 pb-8 px-6">
-                
-                <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
-                    
-                    <svg width="250" height="90" viewBox="0 0 250 90" class="absolute -top-16 md:-top-20 mt-8 mb-6 overflow-visible">
-                        <path id="curve-text" d="M 20,80 Q 125,5 230,80" fill="transparent" />
-                        <text width="250" text-anchor="middle">
-                            <textPath href="#curve-text" startOffset="50%" class="fill-azul-principal font-bold" style="font-family: var(--font-elegant); font-size: 22px; letter-spacing: 0.25em; text-transform: uppercase;">Mis XV</textPath>
-                        </text>
-                    </svg>
-
-                    <img src="https://i.imgur.com/Hv9gZUu.png" alt="Corona" class="w-28 mb-8 relative z-10 drop-shadow-sm">
-                    
-                    <h1 class="text-6xl text-azul-principal font-script mb-14 md:mb-8 relative z-10">Suelen<br>Camila</h1>
-                    
-                    <div class="flex items-center gap-6 md:gap-10 justify-center">
-                        <div class="flex flex-col items-center text-center text-[#2C2A2A]">
-                            <span class="text-sm md:text-xl tracking-[0.4em] uppercase drop-shadow-md">Sábado</span>
-                            <span class="text-[2.5rem] md:text-[7rem] leading-none drop-shadow-md font-numbers text-azul-principal">15</span>
-                        </div>
-                        <div class="w-px h-16 md:h-20 bg-black/30 shadow-sm"></div>
-                        <div class="text-left text-[#2C2A2A]">
-                            <span class="text-2xl md:text-4xl tracking-widest block drop-shadow-md">OCT</span>
-                            <span class="text-lg md:text-2xl tracking-[0.6em] drop-shadow-md font-numbers text-azul-principal">2026</span>
-                        </div>
-                    </div>
-                </div>
-    <div id="seccion-pases-inicio" class="w-full max-w-[220px] mx-auto mb-6 hidden reveal-scale active delay-200 relative z-10">
-            <div class="bg-azul-principal/80 border border-azul-principal/20 rounded-xl px-4 py-3 shadow-md text-center transition-all">
-                <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
-                <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
-                <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/20 pt-1.5 w-[70%] mx-auto">
-                    <span class="text-xs uppercase font-bold text-white">Pases:</span>
-                    <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
-                </div>
-            </div>
-        </div>
-                <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
-                    <p class="text-[8px] tracking-[0.4em] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
-                </div>
-            </div>
-        </header>
-         
-         <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/kCGL9S4.jpeg" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 1">
-        </div>
-        
-        <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
-                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
-            </div>
-            <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-10">
-                <p class="text-xl md:text-2xl italic leading-relaxed font-light mb-16 px-8 md:px-24 lg:px-40">
-                    "Hoy dejo atrás mi niñez para comenzar una nueva etapa llena de sueños e ilusiones."
-                </p>
-                <div class="grid md:grid-cols-2 gap-12 md:gap-16 mt-10">
-                    <div>
-                        <h3 class="text-4xl md:text-[4xl] text-azul-principal font-script mb-6">Mis Padres</h3>
-                        <p class="text-lg md:text-xl">Nombre de la Madre</p>
-                        <p class="text-lg md:text-xl">Nombre del Padre</p>
-                    </div>
-                    <div>
-                        <h3 class="text-4xl md:text-[4xl] text-azul-principal font-script mb-6">Mis Padrinos</h3>
-                        <p class="text-lg md:text-xl">Nombre del Padrino</p>
-                        <p class="text-lg md:text-xl">Nombre de la Madrina</p>
-                    </div>
-                </div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none rotate-180">
-                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
-            </div>
-        </section>
-
-           <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/yAcKUCf.jpeg" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 2">
-        </div>
-         
-  <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca overflow-hidden relative">
-            <div class="max-w-6xl mx-auto w-full reveal relative z-10">
-                <div class="text-center mb-12">
-                    <h2 class="text-5xl font-script text-azul-principal text-shadow-light">Mis Chambelanes</h2>
-                </div>
-                <div class="chambelanes-slider px-2">
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden">
-                            <img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Mateo">
-                        </div>
-                        <div class="p-8 text-center bg-white">
-                            <h4 class="text-2xl text-azul-elegante font-bold">Mateo García</h4>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2 font-bold">Chambelán de Honor</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden">
-                            <img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Santiago">
-                        </div>
-                        <div class="p-8 text-center bg-white">
-                            <h4 class="text-2xl text-azul-elegante font-bold">Santiago Ruíz</h4>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2 font-bold">Chambelán</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden">
-                            <img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Daniel">
-                        </div>
-                        <div class="p-8 text-center bg-white">
-                            <h4 class="text-2xl text-azul-elegante font-bold">Daniel Ortiz</h4>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2 font-bold">Chambelán</p>
-                        </div>
-                    </div>
-                    <div class="chambelan-card">
-                        <div class="h-80 overflow-hidden">
-                            <img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián">
-                        </div>
-                        <div class="p-8 text-center bg-white">
-                            <h4 class="text-2xl text-azul-elegante font-bold">Sebastián Díaz</h4>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-2 font-bold">Chambelán</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-[#2C2A2A]/60 text-[11px] mt-6 uppercase tracking-[0.3em] font-light italic">Desliza para ver más →</p>
-            </div>
-        </section>
-         
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul relative overflow-hidden">
-            <div class="max-w-6xl mx-auto relative z-10 w-full">
-                <div class="text-center mb-8 reveal">
-                    <h2 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Mi Historia</h2>
-                    <p class="text-[11px] uppercase tracking-[0.5em] font-bold opacity-90">Un viaje inolvidable</p>
-                </div>
-
-                <div id="historia-container" class="slider-historia">
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2011</div>
-                        <img src="https://i.imgur.com/ykPH0CF.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis inicios</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Como un suspiro del destino, llegué a este mundo.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2013</div>
-                        <img src="https://i.imgur.com/bSaSs55.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis primeros años</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Entre dulces caricias y tiernas sonrisas.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2015</div>
-                        <img src="https://i.imgur.com/xTIKCvu.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis primeros pasos</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Con ilusión en el corazón comencé a descubrir el mundo.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2017</div>
-                        <img src="https://i.imgur.com/exnBpEP.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mi infancia</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Un jardín de recuerdos lleno de alegría.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2020</div>
-                        <img src="https://i.imgur.com/g3D21Rp.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mi crecimiento</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Poco a poco aprendí a brillar.</p>
-                        </div>
-                    </div>
-
-                    <div class="tarjeta-nueva">
-                        <div class="año-badge font-numbers">2026</div>
-                        <img src="https://i.imgur.com/QdJUNKV.jpeg" class="img-historia">
-                        <div class="info-flotante">
-                            <h4 class="text-xl text-[#2C2A2A] font-bold">Mis XV años</h4>
-                            <p class="text-[12px] text-gray-500 mt-1 leading-tight">Dejo atrás mi niñez para comenzar una nueva etapa.</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-white/80 text-[10px] mt-2 uppercase tracking-[0.4em] font-bold">Arrastra para ver más →</p>
-            </div>
-        </section>
-
-          <section class="min-h-[100svh] flex flex-col justify-center py-32 px-6 text-center relative seccion-blanca overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
-                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
-            </div>
-            <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full py-10">
-                <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-16">Faltan solo...</h3>
-
-                <div id="countdown" class="flex gap-6 md:gap-14 justify-center mb-16">
-                    <div class="flex flex-col items-center">
-                        <span id="days" class="time-num text-4xl md:text-7xl text-azul-principal">00</span>
-                        <span class="time-label text-[#2C2A2A] mt-4 font-bold">Días</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="hours" class="time-num text-4xl md:text-7xl text-azul-principal">00</span>
-                        <span class="time-label text-[#2C2A2A] mt-4 font-bold">Horas</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="minutes" class="time-num text-4xl md:text-7xl text-azul-principal">00</span>
-                        <span class="time-label text-[#2C2A2A] mt-4 font-bold">Min</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span id="seconds" class="time-num text-4xl md:text-7xl text-azul-principal">00</span>
-                        <span class="time-label text-[#2C2A2A] mt-4 font-bold">Seg</span>
-                    </div>
-                </div>
-
-                <div class="reveal-scale delay-200 mt-8">
-                    <p class="text-[11px] uppercase tracking-[0.4em] mb-6 text-[#2C2A2A] font-bold">Reserva el momento en tu calendario</p>
-                    <div class="flex justify-center">
-                        <button onclick="calendarLink('XV - Suelen Camila', 'Nombre de la Iglesia', '20261015T193000')" class="btn-calendar bg-azul-principal text-white border border-azul-principal font-bold rounded-md">
-                            Agregar al calendario
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none rotate-180">
-                <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
-            </div>
-        </section>
-
-             <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/BK9VjpV.jpeg" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 3">
-        </div>
-         
-        <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center py-8 px-6 seccion-azul relative">
-            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 mb-20 relative z-10 w-full px-4">
-                <div class="bg-transparent p-4 md:p-8 reveal flex flex-col h-full rounded-xl">
-                    <div class="text-center mb-8">
-                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
-                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 h-24 md:w-32 md:h-32 filtro-blanco" alt="Ceremonia">
-                        </div>
-                        <h1 class="text-5xl mb-2 font-script drop-shadow-md reveal-scale">Ceremonia</h1>
-                        <p class="text-white italic text-lg">Nombre de la Iglesia / Templo</p>
-                        <p class="text-white font-numbers font-bold text-xl mt-2">7:30 p.m.</p>
-                    </div>
-                   
-                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl">
-                        <iframe 
-                            src="https://maps.google.com/maps?q=Iglesia%20Cristiana%20La%20Senda%20Antigua,%20Enrique%20Rodr%C3%ADguez%20Cano%20308,%20Formando%20Hogar,%2091897%20Veracruz&t=&z=16&ie=UTF8&iwloc=&output=embed" 
-                            class="absolute top-0 left-0 w-full h-full" 
-                            style="filter: grayscale(100%) sepia(30%) hue-rotate(180deg) brightness(95%) contrast(105%); border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-                    <a href="https://maps.app.goo.gl/iCUfUPWp1zb5msB38" target="_blank" class="w-full block text-center bg-white border border-white text-azul-principal font-bold px-8 py-4 text-[12px] tracking-widest uppercase hover:bg-transparent hover:text-white shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Abrir en App de Mapas</a>
-                </div>
-
-                <div class="bg-transparent p-4 md:p-8 reveal flex flex-col h-full rounded-xl">
-                    <div class="text-center mb-8">
-                        <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
-                            <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 md:w-32 md:h-32 filtro-blanco" alt="Recepción">
-                        </div>
-                        <h1 class="text-5xl mb-2 font-script drop-shadow-md reveal-scale">Recepción</h1>
-                        <p class="text-white italic text-lg">Nombre del Salón / Recepción</p>
-                        <p class="text-white font-numbers font-bold text-xl mt-2">9:00 p.m.</p>
-                    </div>
-                    
-                    <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl"> 
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.2511916495!2d-96.1386835!3d19.184227999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85c346b3a3918327%3A0xe682fd4f61788c0e!2sSal%C3%B3n%20de%20Eventos%20Paragui!5e0!3m2!1ses-419!2smx!4v1778080838084!5m2!1ses-419!2smx" 
-                            class="absolute top-0 left-0 w-full h-full" 
-                            style="filter: grayscale(100%) sepia(30%) hue-rotate(180deg) brightness(95%) contrast(105%); border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-
-                    <a href="https://maps.app.goo.gl/NCuC5zTNgDxauTWF7" target="_blank" class="w-full block text-center bg-white border border-white text-azul-principal font-bold px-8 py-4 text-[12px] tracking-widest uppercase hover:bg-transparent hover:text-white shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Abrir en App de Mapas</a>
-                </div>
-            </div>
-        </section>
-
-            <section class="min-h-[100svh] flex flex-col justify-center py-6 px-6 seccion-blanca relative overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal relative z-10 w-full">
-                <div class="text-center mb-2">
-                    <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Itinerario</h1>
-                    <p class="text-[11px] uppercase tracking-[0.5em] text-[#2C2A2A] font-bold">Los momentos que tendremos</p>
-                </div>
-
-                <div class="relative space-y-12">
-                    <div class="timeline-line"></div>
-                    
-                    <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Ceremonia Religiosa</h3><p class="text-gray-500 italic text-sm">Nombre de la Iglesia</p></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
-                            <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
-                        </div>
-                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">7:30 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Ceremonia</h3></div>
-                    </div>
-
-                    <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">9:00 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Recepción</h3></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
-                            <img src="https://i.imgur.com/yvzojba.png" class="w-24 md:w-28 object-contain opacity-80 filtro-azul">
-                        </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Recepción</h3><p class="text-gray-500 italic text-sm">Llegada al salón</p></div>
-                    </div>
-
-                    <div class="flex items-center justify-between relative z-10 reveal-left">
-                        <div class="w-5/12 text-right hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Vals</h3><p class="text-gray-500 italic text-sm">Presentación Oficial</p></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
-                            <img src="https://i.imgur.com/tRNwEAy.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
-                        </div>
-                        <div class="w-5/12 text-left"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">9:30 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Vals</h3></div>
-                    </div>
-
-                    <div class="flex items-center justify-between relative z-10 reveal-right">
-                        <div class="w-5/12 text-right"><span class="text-xl md:text-2xl italic text-azul-principal font-numbers font-bold">10:00 P.M.</span><h3 class="text-xl md:hidden text-[#2C2A2A] font-bold">Cena</h3></div>
-                        <div class="bg-transparent p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200">
-                            <img src="https://i.imgur.com/AIApde9.png" class="w-24 md:w-28 object-contain opacity-90 filtro-azul">
-                        </div>
-                        <div class="w-5/12 text-left hidden md:block"><h3 class="text-2xl md:text-3xl text-[#2C2A2A] font-bold">Cena</h3><p class="text-gray-500 italic text-sm">Banquete Especial</p></div>
-                    </div>
-                    
-                </div>
-            </div>
-        </section>
+    <div id="scroll-area">
+        <main id="section-main">
             
-  <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/gIqwXwU.png" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 6">
-        </div>
-         
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
-                <h2 class="text-5xl mb-6 font-script drop-shadow-lg">Clima del Día</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 font-bold opacity-90">Pronóstico por hora.</p>
-                
-                <div id="weather-container" class="w-full max-w-xl mx-auto">
-                    <p class="text-sm w-full animate-pulse italic drop-shadow-md text-center">Cargando pronóstico...</p>
-                </div>
-            </div>
-        </section>
+            <header class="relative min-h-[100svh] flex flex-col px-8 py-8 box-border"> 
+                <div class="absolute inset-0 bg-cover bg-center filtro-azul z-0 opacity-100" style="background-image: url('https://i.imgur.com/7uC7inm.png');"></div>
 
- <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-blanca relative overflow-hidden relative">
-            <div class="max-w-6xl mx-auto relative z-10 w-full">
-                <div class="text-center reveal">
-                    <h2 class="text-6xl mb-6 font-script text-azul-principal drop-shadow-md reveal-scale">Preview</h2>
-                </div>
-
-                <div class="slider-historia">
-                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/TGaikpm.jpeg" class="img-historia"></div>
-                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/5ebMXnj.jpeg" class="img-historia"></div>
-                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/elvhiSj.jpeg" class="img-historia"></div>
-                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/k3gF7QP.jpeg" class="img-historia"></div>
-                    <div class="tarjeta-nueva"><img src="https://i.imgur.com/kRlyGCE.jpeg" class="img-historia"></div>
-                </div>
-                <p class="text-center text-[#2C2A2A] text-[10px] mt-2 uppercase tracking-[0.4em] font-bold">Arrastra para ver más →</p>
-            </div>
-        </section>
-        
-        
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full">
-                <h1 class="text-5xl mb-4 font-script">Trivia</h1>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
-                
-                <div id="trivia-container" class="bg-white/10 p-6 md:p-10 rounded-3xl shadow-xl border border-white/20 backdrop-blur-sm transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center textura-papel border-[4px] border-azul-principal rounded-[160px] shadow-2xl pt-16 pb-8 px-6">
                     
-                    <div id="trivia-question-container">
-                        <p class="text-[10px] uppercase tracking-widest text-white/70 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-numbers">1</span> de <span id="trivia-total-num" class="font-numbers">3</span></p>
-                        <h3 id="trivia-q-text" class="text-2xl md:text-3xl text-white mb-8 font-bold">Pregunta aquí</h3>
-                        <div id="trivia-options" class="flex flex-col gap-4">
-                        </div>
-                    </div>
+                    <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full flex-grow">
+                        
+                        <svg width="250" height="90" viewBox="0 0 250 90" class="absolute -top-16 mt-8 mb-6 overflow-visible">
+                            <path id="curve-text" d="M 20,80 Q 125,5 230,80" fill="transparent" />
+                            <text width="250" text-anchor="middle">
+                                <textPath href="#curve-text" startOffset="50%" class="fill-azul-principal font-bold" style="font-family: var(--font-elegant); font-size: 18px; text-transform: uppercase;">Mis XV</textPath>
+                            </text>
+                        </svg>
 
-                    <div id="trivia-result" class="hidden">
-                        <h3 class="font-script text-7xl mb-4">¡Terminaste!</h3>
-                        <p class="text-2xl mb-2">Tu puntuación es:</p>
-                        <p class="text-5xl font-bold mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
-                        <p id="trivia-feedback" class="text-sm uppercase tracking-widest opacity-90 mb-8 font-bold"></p>
-                        <button onclick="resetTrivia()" class="bg-transparent text-white border border-white px-8 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-azul-principal transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-          <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/gIqwXwU.png" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 6">
-        </div>
-         
-          <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-blanca relative text-center overflow-hidden">
-            <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
-                
-                <div class="mx-auto mb-8 flex items-center justify-center">
-                    <img src="https://i.imgur.com/ruhzeF1.png" class="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90 filtro-azul" alt="Código de Vestimenta">
-                </div>
-                
-                <h2 class="text-5xl mb-6 font-script text-azul-principal text-shadow-light">Código de Vestimenta</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] text-blanco-perla mb-8 font-bold bg-azul-principal inline-block px-6 py-2 rounded-full shadow-sm">Formal</p>
-                
-                <p class="text-lg md:text-xl italic text-[#2C2A2A] mb-8 leading-relaxed px-4 max-w-2xl mx-auto">
-                    Por favor, evita el color azul y plata, ya que son reservados exclusivamente para la quinceañera.
-                </p>
-                
-                <div class="flex justify-center gap-8 mb-16">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-[#8496B0] border border-gray-300 shadow-md relative"></div>
-                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#2C2A2A] font-bold">Azul</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-[#c0c0c0] border border-gray-300 shadow-md relative"></div>
-                        <span class="text-[10px] uppercase tracking-widest mt-4 text-[#2C2A2A] font-bold">Plata</span>
-                    </div>
-                </div>
-
-                <div class="bg-white p-8 md:p-12 rounded-[40px] shadow-xl border border-gray-200">
-                    <h3 class="text-4xl font-script text-azul-principal mb-2">Style Guide</h3>
-                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-8">Inspiración para tu outfit</p>
-                    
-                                      <div class="w-full flex justify-center overflow-hidden rounded-2xl mb-8">
-                        <a data-pin-do="embedBoard" 
-                           data-pin-board-width="600" 
-                           data-pin-scale-height="400" 
-                           data-pin-scale-width="115" 
-                           href="https://www.pinterest.com/andreafernandez0919/codigo-de-vestimenta-eleganteformal/">
-                        </a>
-                    </div>
-
-                </div>
-                
-            </div>
-        </section>
-
-
-    <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
-            <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full">
-                <svg class="w-16 h-16 mx-auto mb-6 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"></path>
-                </svg>
-                
-                <h1 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Álbum Compartido</h1>
-                
-                <p class="text-sm md:text-lg font-medium tracking-widest mb-10 leading-relaxed text-white/90">
-                    Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Sube tus fotos y videos!
-                </p>
-
-                <div class="mx-auto bg-white p-4 rounded-2xl shadow-lg inline-block mb-10 border border-white/30">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://adainvite.com/portafolioxv/aqua/recuerdos" alt="Código QR" class="w-48 h-48 object-contain">
-                </div>
-                <br>
-                
-                <a href="https://adainvite.com/portafolioxv/aqua/recuerdos" target="_blank" class="inline-block bg-transparent text-white border border-white px-10 py-4 text-[11px] uppercase tracking-widest font-bold hover:bg-white hover:text-azul-principal transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95 duration-300 rounded-md">
-                    Ver Galería
-                </a>
-            </div>
-        </section>
-        
-               <section class="min-h-[80svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
-            <div class="max-w-5xl mx-auto reveal relative z-10 w-full">
-                <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Mesa de Regalos</h1>
-                <p class="text-[11px] uppercase tracking-[0.4em] mb-12 text-[#2C2A2A] drop-shadow-sm font-medium">Tu presencia es mi mayor regalo, pero si deseas hacerme un presente:</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 justify-center w-full">
-                    
-                    <a href="#" class="mx-auto bg-white border border-gray-200 group shadow-md rounded-2xl h-40 w-64 md:w-56 overflow-hidden flex items-center justify-center reveal-left delay-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-elegante/50 duration-500">
-                            <img src="https://i.imgur.com/g95P5f2.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Amazon">
-                        </a>
-
-                        <a href="#" class="mx-auto bg-white border border-gray-200 group shadow-md rounded-2xl h-40 w-64 md:w-56 overflow-hidden flex items-center justify-center reveal-scale delay-200 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-elegante/50 duration-500">
-                            <img src="https://i.imgur.com/bDTx3NN.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Liverpool">
-                        </a>
-
-                    <!-- Transferencia -->
-                    <div class="bg-white p-8 border border-gray-200 group shadow-md rounded-3xl flex flex-col items-center justify-between reveal-scale delay-300 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-principal/50 duration-500">
-                        <div class="flex flex-col items-center w-full">
-                            <svg class="w-14 h-14 mb-4 text-azul-principal group-hover:scale-110 transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                            </svg>
-                            <h3 class="text-xl font-bold text-azul-principal mb-4">Transferencia</h3>
-                            <div class="text-[11px] font-light text-[#2C2A2A] text-left w-full space-y-2 mb-6">
-                                <p><strong class="text-azul-principal">Banco:</strong> Nombre del Banco</p>
-                                <p><strong class="text-azul-principal">Titular:</strong> Nombre del Titular</p>
-                                <p><strong class="text-azul-principal">Cuenta:</strong> <span class="font-numbers">0000000000</span></p>
-                                <p><strong class="text-azul-principal">CLABE:</strong> <span class="font-numbers">000000000000000000</span></p>
+                        <img src="https://i.imgur.com/Hv9gZUu.png" alt="Corona" class="w-32 mb-8 relative z-10 drop-shadow-sm">
+                        
+                        <h1 class="text-6xl text-azul-principal font-script mb-10 relative z-10">Suelen<br>Camila</h1>
+                        
+                        <div class="flex items-center gap-4 justify-center">
+                            <div class="flex flex-col items-center text-center text-[#2C2A2A]">
+                                <span class="text-sm uppercase drop-shadow-md">Sábado</span>
+                                <span class="text-5xl drop-shadow-md font-bold text-azul-principal">15</span>
+                            </div>
+                            <div class="w-px h-16 bg-black/30 shadow-sm"></div>
+                            <div class="text-left text-[#2C2A2A]">
+                                <span class="text-2xl block drop-shadow-md">DIC</span>
+                                <span class="text-2xl drop-shadow-md font-bold text-azul-principal">2026</span>
                             </div>
                         </div>
-                        <button onclick="navigator.clipboard.writeText('000000000000000000'); alert('¡Número CLABE copiado al portapapeles!');" class="w-full inline-block bg-transparent text-azul-principal border border-azul-principal font-bold py-3 px-4 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal hover:text-white transition-all rounded-xl active:scale-95 text-center">Copiar CLABE</button>
                     </div>
 
-                </div>
-                
-                <!-- Cintillo opcional de lluvia de sobres -->
-                <div class="mt-8 bg-white p-6 border border-gray-200 shadow-sm rounded-2xl inline-flex flex-col md:flex-row items-center justify-center gap-4 reveal-scale delay-300 w-full max-w-xl mx-auto">
-                    <svg class="w-8 h-8 text-azul-principal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                    <p class="text-[12px] font-light text-[#2C2A2A] text-center md:text-left">También contaremos con un <strong class="text-azul-principal">buzón para sobres</strong> en la entrada de la recepción.</p>
-                </div>
-                
-            </div>
-        </section>
+                    <div id="seccion-pases-inicio" class="w-full max-w-[220px] mx-auto mb-6 hidden reveal-scale active delay-200 relative z-10">
+                        <div class="textura-papel-azul border border-azul-principal rounded-xl px-4 py-3 shadow-md text-center transition-all">
+                            <p class="text-xs uppercase text-white font-bold mb-1">Invitación especial para</p>
+                            <p id="nombre-invitado-inicio" class="text-2xl font-script text-white mb-1 capitalize"></p>
+                            <div class="flex items-center justify-center gap-2 mt-1 border-t border-white/20 pt-1.5 w-[70%] mx-auto">
+                                <span class="text-xs uppercase font-bold text-white">Pases:</span>
+                                <span id="pases-invitado-inicio" class="font-numbers font-bold text-base text-white"></span>
+                            </div>
+                        </div>
+                    </div>
 
-               <div class="min-h-[100svh] w-full bg-blanco-perla flex justify-center items-center reveal-scale">
-            <img src="https://i.imgur.com/HePOZ9W.png" class="min-h-[100svh] w-full h-auto border-0 shadow-0 object-cover" alt="Separador 6">
-        </div>
-         
-        <section class="min-h-[100svh] flex flex-col justify-center py-20 px-6 seccion-azul text-center relative overflow-hidden">
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl font-script mb-6 drop-shadow-md">Confirmar Asistencia</h2>
-                <p class="text-[11px] uppercase tracking-[0.5em] mb-12 opacity-90 font-bold">Por favor, confirmar antes del <br> 10 de octubre de 2026</p>
-                
-                <div class="bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 w-full mx-auto">
+                    <div class="relative w-full mt-auto flex flex-col items-center reveal-scale active delay-100 text-center">
+                        <p class="text-[9px] uppercase animate-pulse text-[#2C2A2A] font-bold">Desliza para ver más</p>
+                    </div>
+                </div>
+            </header>
+
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/TGaikpm.jpeg');"></section>
+            
+            <section class="seccion-blanca textura-papel min-h-[100svh] flex flex-col justify-center py-12 px-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+                <div class="max-w-4xl mx-auto reveal relative z-10 text-[#2C2A2A] py-16">
+                    <p class="text-xl italic leading-relaxed font-light mb-6 px-4">
+                        "Hay momentos inolvidables que se atesoran para siempre en el corazón; por esa razón, deseo que compartas conmigo este día tan especial."
+                    </p>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <h3 class="text-4xl text-azul-principal font-script mb-4">Con la bendición y amor de mis padres</h3>
+                            <p class="text-lg font-light">Nombre del Padre</p>
+                            <p class="text-lg font-light">Nombre de la Madre</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl text-azul-principal font-script mb-4">Y mis padrinos</h3>
+                            <p class="text-lg font-light">Nombre del Padrino</p>
+                            <p class="text-lg font-light">Nombre de la Madrina</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none rotate-180">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+            </section>
+
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/5ebMXnj.jpeg');"></section>
+             
+            <section class="seccion-blanca textura-papel min-h-[90svh] flex flex-col justify-center px-4 overflow-hidden relative">
+                <div class="max-w-6xl mx-auto w-full reveal relative z-10">
+                    <div class="text-center">
+                        <h2 class="text-5xl font-script text-azul-principal text-shadow-light">Mis Chambelanes</h2>
+                    </div>
+                    <div class="chambelanes-slider px-2">
+                        <div class="chambelan-card textura-papel-blanco">
+                            <div class="h-92 overflow-hidden">
+                                <img src="https://i.imgur.com/w6iRq5M.jpeg" class="w-full h-full object-cover" alt="Mateo">
+                            </div>
+                            <div class="p-4 text-center">
+                                <h4 class="text-2xl text-azul-principal font-bold">Mateo García</h4>
+                                <p class="text-[10px] text-gray-500 uppercase mt-1 font-bold">Chambelán de Honor</p>
+                            </div>
+                        </div>
+                        <div class="chambelan-card textura-papel-blanco">
+                            <div class="h-92 overflow-hidden">
+                                <img src="https://i.imgur.com/lxfUdNQ.jpeg" class="w-full h-full object-cover" alt="Santiago">
+                            </div>
+                            <div class="p-4 text-center">
+                                <h4 class="text-2xl text-azul-principal font-bold">Santiago Ruíz</h4>
+                                <p class="text-[10px] text-gray-500 uppercase mt-1 font-bold">Chambelán</p>
+                            </div>
+                        </div>
+                        <div class="chambelan-card textura-papel-blanco">
+                            <div class="h-92 overflow-hidden">
+                                <img src="https://i.imgur.com/ebWiClu.jpeg" class="w-full h-full object-cover" alt="Daniel">
+                            </div>
+                            <div class="p-4 text-center">
+                                <h4 class="text-2xl text-azul-principal font-bold">Daniel Ortiz</h4>
+                                <p class="text-[10px] text-gray-500 uppercase mt-1 font-bold">Chambelán</p>
+                            </div>
+                        </div>
+                        <div class="chambelan-card textura-papel-blanco">
+                            <div class="h-92 overflow-hidden">
+                                <img src="https://i.imgur.com/q0FDCHV.jpeg" class="w-full h-full object-cover" alt="Sebastián">
+                            </div>
+                            <div class="p-4 text-center">
+                                <h4 class="text-2xl text-azul-principal font-bold">Sebastián Díaz</h4>
+                                <p class="text-[10px] text-gray-500 uppercase mt-1 font-bold">Chambelán</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-[#2C2A2A] text-xs uppercase font-light">Ver más →</p>
+                </div>
+            </section>
+
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-azul relative overflow-hidden">
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="text-center reveal">
+                        <h2 class="text-5xl mb-2 font-script drop-shadow-md reveal-scale">Mi Historia</h2>
+                        <p class="text-xs uppercase font-bold opacity-90">Un viaje inolvidable</p>
+                    </div>
+
+                    <div id="historia-container" class="slider-historia py-8">
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2011</div>
+                            <img src="https://i.imgur.com/ykPH0CF.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Quizá el universo ya sabía todo lo que estaba por comenzar.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2013</div>
+                            <img src="https://i.imgur.com/bSaSs55.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Gracias por los años en los que aprendí a descubrir la vida.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2015</div>
+                            <img src="https://i.imgur.com/xTIKCvu.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Por cada momento que me ayudó a crecer.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2017</div>
+                            <img src="https://i.imgur.com/exnBpEP.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Por cada versión de mí que tuve que conocer.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2020</div>
+                            <img src="https://i.imgur.com/g3D21Rp.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Por llevarme, incluso sin saberlo, hasta este momento.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-nueva textura-papel-blanco">
+                            <div class="año-badge font-numbers">2026</div>
+                            <img src="https://i.imgur.com/QdJUNKV.jpeg" class="img-historia">
+                            <div class="info-flotante textura-papel-blanco text-center flex items-center justify-center min-h-[60px]">
+                                <p class="text-[13px] text-[#2C2A2A] leading-tight font-light">Voy a cumplir 15 y estoy lista para descubrir el resto de mi historia.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-white/80 text-[10px] uppercase font-bold">Ver más →</p>
+                </div>
+            </section>
+
+            <section class="seccion-blanca textura-papel min-h-[90svh] flex flex-col justify-center py-16 px-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+                <div class="max-w-4xl mx-auto text-center reveal-scale relative z-10 w-full py-16">
+                    <h3 class="text-5xl font-script text-azul-principal text-shadow-light mb-8">Faltan solo...</h3>
+
+                    <div id="countdown" class="flex gap-6 justify-center mb-8 w-full">
+                        <div class="flex flex-col items-center">
+                            <span id="days" class="time-num text-5xl text-azul-principal">00</span>
+                            <span class="time-label text-[#2C2A2A] mt-4 font-bold">Días</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span id="hours" class="time-num text-5xl text-azul-principal">00</span>
+                            <span class="time-label text-[#2C2A2A] mt-4 font-bold">Horas</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span id="minutes" class="time-num text-5xl text-azul-principal">00</span>
+                            <span class="time-label text-[#2C2A2A] mt-4 font-bold">Min</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span id="seconds" class="time-num text-5xl text-azul-principal">00</span>
+                            <span class="time-label text-[#2C2A2A] mt-4 font-bold">Seg</span>
+                        </div>
+                    </div>
+
+                    <div class="reveal-scale delay-200 mt-8">
+                        <p class="text-xs uppercase mb-6 text-[#2C2A2A] font-bold">Reserva el momento en tu calendario:</p>
+                        <div class="flex justify-center">
+                            <button onclick="calendarLink('XV - Suelen Camila', 'Nombre de la Iglesia', '20261015T193000')" class="btn-calendar textura-papel-azul border border-azul-principal font-bold rounded-md">
+                                Agregar al calendario
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none rotate-180">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+            </section>
+
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/elvhiSj.jpeg');"></section>
+             
+            <section id="ubicaciones" class="min-h-[100svh] flex flex-col justify-center px-6 py-6 seccion-azul relative">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 gap-6 relative z-10 w-full">
                     
-                                     <form id="rsvpForm" class="space-y-6 text-left bg-transparent transition-all duration-500">
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Nombre Completo</label>
-                            <input type="text" id="rsvpName" required placeholder="Tu Nombre" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                    <div class="bg-transparent p-4 reveal flex flex-col h-full rounded-xl">
+                        <div class="text-center mb-8">
+                            <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
+                                <img src="https://i.imgur.com/lR5CuR5.png" class="w-24 h-24 filtro-blanco" alt="Ceremonia">
+                            </div>
+                            <h1 class="text-5xl mb-2 font-script drop-shadow-md reveal-scale">Ceremonia</h1>
+                            <p class="text-white italic text-lg font-bold">Nombre de la Iglesia / Templo</p>
+                            <p class="text-white font-numbers font-bold text-xl mt-2">7:30 p.m.</p>
                         </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Número de Adultos</label>
-                            <input type="number" id="rsvpAdults" required placeholder="Ej. 2" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                       
+                        <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=Iglesia%20Cristiana%20La%20Senda%20Antigua,%20Enrique%20Rodr%C3%ADguez%20Cano%20308,%20Formando%20Hogar,%2091897%20Veracruz&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                                class="absolute top-0 left-0 w-full h-full" 
+                                style="filter: grayscale(100%) sepia(30%) hue-rotate(180deg) brightness(95%) contrast(105%); border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                         </div>
-                        <div class="border-b border-white/50 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest opacity-90 text-white font-bold">Número de Niños</label>
-                            <input type="number" id="rsvpKids" required placeholder="Ej. 1" class="w-full bg-transparent py-2 outline-none text-xl text-white font-light text-center md:text-left placeholder-white/40">
+                        <a href="https://maps.app.goo.gl/iCUfUPWp1zb5msB38" target="_blank" class="w-full block text-center textura-papel-blanco border border-white text-azul-principal font-bold px-8 py-4 text-[12px] uppercase hover:opacity-90 shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Abrir en App de Mapas</a>
+                    </div>
+
+                    <div class="bg-transparent p-4 reveal flex flex-col h-full rounded-xl">
+                        <div class="text-center mb-8">
+                            <div class="mx-auto mb-4 flex items-center justify-center opacity-90">
+                                <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 filtro-blanco" alt="Recepción">
+                            </div>
+                            <h1 class="text-5xl mb-2 font-script drop-shadow-md reveal-scale">Recepción</h1>
+                            <p class="text-white italic text-lg font-bold">Nombre del Salón / Recepción</p>
+                            <p class="text-white font-numbers font-bold text-xl mt-2">9:00 p.m.</p>
                         </div>
                         
-                        <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-white text-azul-principal font-bold py-5 px-8 uppercase tracking-[0.3em] text-[12px] hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
-                            Confirmar
-                        </button>
-                    </form>
+                        <div class="flex-grow w-full relative min-h-[300px] rounded-lg overflow-hidden border border-white/30 mb-6 shadow-xl"> 
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.2511916495!2d-96.1386835!3d19.184227999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85c346b3a3918327%3A0xe682fd4f61788c0e!2sSal%C3%B3n%20de%20Eventos%20Paragui!5e0!3m2!1ses-419!2smx!4v1778080838084!5m2!1ses-419!2smx" 
+                                class="absolute top-0 left-0 w-full h-full" 
+                                style="filter: grayscale(100%) sepia(30%) hue-rotate(180deg) brightness(95%) contrast(105%); border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
 
-                    <div id="loadingMessage" class="hidden mt-10 bg-white/95 backdrop-blur-md border border-azul-principal/30 p-12 rounded-3xl flex-col items-center justify-center transition-all duration-500">
-                        <div class="w-16 h-16 border-4 border-azul-principal border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
-                        <p class="text-4xl font-script text-azul-principal mb-2">Confirmando...</p>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-[#2C2A2A] opacity-90 font-bold">Preparando los detalles</p>
+                        <a href="https://maps.app.goo.gl/NCuC5zTNgDxauTWF7" target="_blank" class="w-full block text-center textura-papel-blanco border border-white text-azul-principal font-bold px-8 py-4 text-[12px] uppercase hover:opacity-90 shadow-md transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-md">Abrir en App de Mapas</a>
                     </div>
                 </div>
-            </div>
-        </section>
-         
-     <section class="min-h-[80svh] flex flex-col justify-center py-20 px-6 seccion-blanca text-center relative overflow-hidden">
-     
-            <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                <h2 class="text-5xl font-script mb-6 text-azul-principal text-shadow-light">Recuperar Pase</h2>
+            </section>
+
+            <section class="seccion-blanca textura-papel min-h-[100svh] flex flex-col justify-center py-16 px-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+
+                <div class="max-w-4xl mx-auto reveal relative z-10 w-full py-16">
+                    <div class="text-center mb-8">
+                        <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Itinerario</h1>
+                        <p class="text-xs uppercase text-[#2C2A2A] font-bold">Los momentos que tendremos</p>
+                    </div>
+
+                    <div class="relative space-y-8 mt-8">
+                        <div class="timeline-line"></div>
+                        
+                        <!-- ITINERARIO DISEÑO EN MÓVIL PURO (ZIG-ZAG CÉNTRICO) -->
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center relative z-10 reveal-left">
+                            <div></div>
+                            <div class="textura-papel-blanco p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 z-10">
+                                <img src="https://i.imgur.com/yvzojba.png" class="w-16 object-contain opacity-90 filtro-azul">
+                            </div>
+                            <div class="text-left">
+                                <span class="text-lg italic text-azul-principal font-numbers font-bold block">7:30 p.m.</span>
+                                <h3 class="text-lg text-[#2C2A2A] font-bold mt-1">Recepción</h3>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center relative z-10 reveal-right">
+                            <div class="text-right">
+                                <span class="text-lg italic text-azul-principal font-numbers font-bold block">8:15 p.m.</span>
+                                <h3 class="text-lg text-[#2C2A2A] font-bold mt-1">Baile de entrada</h3>
+                            </div>
+                            <div class="textura-papel-blanco p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 z-10">
+                                <img src="https://i.imgur.com/tRNwEAy.png" class="w-16 object-contain opacity-80 filtro-azul">
+                            </div>
+                            <div></div>
+                        </div>
+
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center relative z-10 reveal-left">
+                            <div></div>
+                            <div class="textura-papel-blanco p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 z-10">
+                                <img src="https://i.imgur.com/RjfqaK7.png" class="w-16 object-contain opacity-90 filtro-azul">
+                            </div>
+                            <div class="text-left">
+                                <span class="text-lg italic text-azul-principal font-numbers font-bold block">8:40 p.m.</span>
+                                <h3 class="text-lg text-[#2C2A2A] font-bold mt-1">Brindis</h3>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center relative z-10 reveal-right">
+                            <div class="text-right">
+                                <span class="text-lg italic text-azul-principal font-numbers font-bold block">9:00 p.m.</span>
+                                <h3 class="text-lg text-[#2C2A2A] font-bold mt-1">Cena</h3>
+                            </div>
+                            <div class="textura-papel-blanco p-3 rounded-full border border-azul-principal/20 shadow-md reveal-scale delay-200 z-10">
+                                <img src="https://i.imgur.com/AIApde9.png" class="w-16 object-contain opacity-90 filtro-azul">
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[600px] z-0 pointer-events-none rotate-180">
+                    <img src="https://i.imgur.com/MTE3z9r.png" class="w-full h-auto filtro-azul" alt="decoración">
+                </div>
+            </section>
                 
-                <form id="searchPassForm" class="space-y-12 text-left bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-xl transition-all duration-500">
-                    <div class="border-b border-gray-300 pb-2">
-                        <label class="text-base uppercase text-[#2C2A2A] font-bold">Nombre/Familia</label>
-                        <input type="text" id="searchName" required placeholder="Nombre" class="w-full bg-transparent py-2 outline-none text-base text-[#2C2A2A] font-bold">
-                    </div>
-                    <button type="submit" class="w-full bg-azul-principal text-white font-bold py-5 uppercase tracking-[0.5em] text-[12px] hover:bg-azul-principal/90 transition-all hover:scale-105 active:scale-95 shadow-xl mt-8 duration-300 rounded-xl">Buscar mi Pase</button>
-                </form>
-
-                <div id="searchResultMessage" class="hidden mt-10 transition-all duration-500">
-                    <div class="bg-white border border-gray-200 p-10 rounded-3xl relative overflow-hidden shadow-xl flex flex-col items-center">
-                        <p class="text-[#2C2A2A] font-bold text-lg">Pase no encontrado o funcionalidad en construcción.</p>
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/k3gF7QP.jpeg');"></section>
+             
+            <section class="min-h-[80svh] flex flex-col justify-center px-6 seccion-azul text-center relative overflow-hidden">
+                <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
+                    <h2 class="text-5xl mb-6 font-script drop-shadow-lg">Clima del Día</h2>
+                    <p class="text-xs uppercase mb-12 font-bold opacity-90">Pronóstico por hora.</p>
+                    
+                    <div id="weather-container" class="w-full max-w-xl mx-auto">
+                        <p class="text-sm w-full animate-pulse italic drop-shadow-md text-center">Cargando pronóstico...</p>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-      <footer class="min-h-[60svh] flex flex-col justify-center py-20 px-6 text-center seccion-azul relative z-10">
-            <p class="text-7xl font-script mb-4 text-white drop-shadow-md relative z-10">¡No faltes!</p>
-            <p class="text-[11px] text-white/90 uppercase tracking-[0.5em] mb-10 font-bold font-numbers relative z-10">15 • Octubre • 2026</p>
-       <div class="relative z-10 w-full max-w-3xl mx-auto bg-black/40 backdrop-blur-md border border-[#B19CD9]/30 rounded-3xl p-6 md:p-8 mt-10 shadow-2xl">
-                <img src="https://i.imgur.com/NtRRNkY.png" alt="AdaInvite Logo" class="h-10 md:h-12 mx-auto mb-5 object-contain opacity-90">
-                <p class="text-sm uppercase text-white/80 font-bold mb-6 tracking-widest">Ver otros paquetes</p>
-                <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
-                    <a href="https://adainvite.com/portafolioxv/aqua/basico" class="text-sm md:text-base uppercase font-bold text-[#B19CD9] px-6 py-3 border border-white/40 rounded-xl bg-transparent shadow-sm">Básico</a>
-                    <a href="https://adainvite.com/portafolioxv/aqua/premiumpases" class="text-sm md:text-base uppercase font-bold text-[#B19CD9] px-6 py-3 border border-white/40 rounded-xl bg-transparent shadow-sm">Premium</a>
-                    <span class="text-sm md:text-base uppercase font-bold text-white px-6 py-3 border border-[#B19CD9] rounded-xl bg-[#B19CD9] cursor-default shadow-lg shadow-[#B19CD9]/20">VIP (Actual)</span>
+            <section class="seccion-blanca textura-papel min-h-[90svh] flex flex-col justify-center px-6 relative overflow-hidden">
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="text-center reveal">
+                        <h2 class="text-6xl font-script text-azul-principal drop-shadow-md reveal-scale">Preview</h2>
+                    </div>
+
+                    <div class="slider-historia py-8">
+                        <!-- Usamos img-preview aquí -->
+                        <div class="tarjeta-nueva textura-papel-blanco"><img src="https://i.imgur.com/kCGL9S4.jpeg" class="img-preview"></div>
+                        <div class="tarjeta-nueva textura-papel-blanco"><img src="https://i.imgur.com/yAcKUCf.jpeg" class="img-preview"></div>
+                        <div class="tarjeta-nueva textura-papel-blanco"><img src="https://i.imgur.com/BK9VjpV.jpeg" class="img-preview"></div>
+                        <div class="tarjeta-nueva textura-papel-blanco"><img src="https://i.imgur.com/gIqwXwU.png" class="img-preview"></div>
+                        <div class="tarjeta-nueva textura-papel-blanco"><img src="https://i.imgur.com/HePOZ9W.png" class="img-preview"></div>
+                    </div>
+                    <p class="text-center text-[#2C2A2A] text-xs mt-2 uppercase font-bold">Ver más →</p>
                 </div>
-                <a href="https://wa.me/524492867153?text=Hola,%20quiero%20el%20diseño%20aqua,%20paquete%20vip" target="_blank" class="inline-flex items-center justify-center gap-3 bg-transparent text-white border border-white w-full sm:w-auto px-10 py-4 rounded-xl text-[12px] uppercase font-bold hover:bg-white hover:text-black transition-all hover:-translate-y-1 active:scale-95 shadow-lg">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    Quiero este diseño
-                </a>
-            </div>
-      </footer>
-     
-    </main>
+            </section>
+            
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-azul text-center relative overflow-hidden">
+                <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full">
+                    <h1 class="text-5xl mb-4 font-script">Trivia</h1>
+                    <p class="text-xs uppercase mb-6 opacity-90 font-bold drop-shadow-sm">¿Qué tanto conoces a la quinceañera?</p>
+                    
+                    <div id="trivia-container" class="bg-white/10 p-6 rounded-3xl shadow-xl border border-white/20 backdrop-blur-sm transition-colors duration-500 min-h-[300px] flex flex-col justify-center">
+                        
+                        <div id="trivia-question-container">
+                            <p class="text-xs uppercase text-white/70 mb-4 font-bold">Pregunta <span id="trivia-current-num" class="font-bold">1</span> de <span id="trivia-total-num" class="font-bold">3</span></p>
+                            <h3 id="trivia-q-text" class="text-lg text-white mb-8 font-bold">Pregunta aquí</h3>
+                            <div id="trivia-options" class="flex flex-col gap-2">
+                            </div>
+                        </div>
+
+                        <div id="trivia-result" class="hidden">
+                            <h3 class="font-script text-5xl mb-4">¡Terminaste!</h3>
+                            <p class="text-2xl mb-2">Tu puntuación es:</p>
+                            <p class="text-5xl font-bold mb-8"><span id="trivia-score" class="font-numbers">0</span> / <span id="trivia-total-score" class="font-numbers">3</span></p>
+                            <p id="trivia-feedback" class="text-sm uppercase opacity-90 mb-8 font-bold"></p>
+                            <button onclick="resetTrivia()" class="textura-papel-blanco text-azul-principal border border-white px-8 py-4 text-[11px] uppercase font-bold hover:opacity-90 transition-all duration-300 rounded-md active:scale-95">Jugar de nuevo</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/kRlyGCE.jpeg');"></section>
+             
+            <section class="seccion-blanca textura-papel min-h-[100svh] flex flex-col justify-center px-6 relative text-center overflow-hidden">
+                <div class="max-w-4xl mx-auto reveal-scale relative z-10 w-full">
+                    
+                    <div class="mx-auto mb-8 flex items-center justify-center">
+                        <img src="https://i.imgur.com/uXYiF04.png" class="w-28 object-contain filtro-azul" alt="Código de Vestimenta">
+                    </div>
+  
+                    
+                    <h2 class="text-5xl mb-6 font-script text-azul-principal text-shadow-light">Código de Vestimenta</h2>
+                    <p class="text-lg uppercase text-blanco-perla mb-8 font-bold bg-azul-principal inline-block px-6 py-2 rounded-full shadow-sm">Formal</p>
+                    
+                    <p class="text-lg italic text-[#2C2A2A] mb-4 leading-relaxed px-4 max-w-2xl mx-auto">
+                        Por favor, evita vestir con los siguientes colores:
+                    </p>
+                    
+                    <div class="flex justify-center gap-4 mt-4 flex-wrap mb-6">
+                        <div class="flex flex-col items-center">
+                            <div class="flex space-x-[-10px]">
+                                <div class="w-10 h-10 rounded-full bg-[#87CEEB] border border-gray-300 shadow-md relative z-10"></div>
+                                <div class="w-10 h-10 rounded-full bg-[#4A90E2] border border-gray-300 shadow-md relative z-20"></div>
+                                <div class="w-10 h-10 rounded-full bg-[#003366] border border-gray-300 shadow-md relative z-30"></div>
+                            </div>
+                            <span class="text-[10px] uppercase mt-4 text-[#2C2A2A] font-bold text-center">Azul en todas<br>sus tonalidades</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-[40px] py-4 border border-gray-200">
+                        <h3 class="text-4xl font-script text-azul-principal mb-2">Style Guide</h3>
+                        <p class="text-xs uppercase text-gray-400 font-bold mb-4">Inspiración para tu outfit</p>
+                        
+                        <div class="w-full flex justify-center overflow-hidden rounded-2xl mb-8">
+                            <a data-pin-do="embedBoard" 
+                               data-pin-board-width="600" 
+                               data-pin-scale-height="400" 
+                               data-pin-scale-width="115" 
+                               href="https://www.pinterest.com/andreafernandez0919/codigo-de-vestimenta-eleganteformal/">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="min-h-[100svh] flex flex-col justify-center px-6 seccion-azul text-center relative overflow-hidden">
+                <div class="max-w-3xl mx-auto reveal-scale relative z-10 w-full">
+               <img src="https://i.imgur.com/A800esF.png" class="w-28 mx-auto filtro-blanco mb-6" alt="camara">
+                    
+                    <h1 class="text-5xl mb-6 font-script drop-shadow-md reveal-scale">Álbum Compartido</h1>
+                    
+                    <p class="text-xs font-bold mb-6 uppercase text-white/90">
+                        Ayúdame a capturar los mejores momentos de esta noche inolvidable.<br>¡Sube tus fotos y videos!
+                    </p>
+
+                    <div class="mx-auto bg-white p-4 rounded-3xl shadow-xl inline-block mb-10 border-4 border-blanco-perla/20 transition-transform duration-300 hover:scale-105">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://adainvite.com/portafolioxv/aqua/recuerdos" alt="Código QR" class="w-48 h-48 object-contain">
+                    </div>
+                    <br>
+                    
+                    <a href="https://adainvite.com/portafolioxv/aqua/recuerdos" target="_blank" class="w-full inline-block textura-papel-blanco text-azul-principal border border-white px-10 py-4 text-[12px] uppercase font-bold hover:opacity-90 transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95 duration-300 rounded-md">
+                        Ver Galería
+                    </a>
+                </div>
+            </section>
+            
+            <section class="seccion-blanca textura-papel min-h-[100svh] flex flex-col justify-center px-6 text-center relative overflow-hidden">
+                <div class="max-w-5xl mx-auto reveal relative z-10 w-full">
+                    <h1 class="text-5xl mb-6 text-azul-principal font-script reveal-scale text-shadow-light">Mesa de Regalos</h1>
+                    <p class="text-xs font-bold mb-6 uppercase text-[#2C2A2A]">Tu presencia es mi mayor regalo, pero si deseas hacerme un presente:</p>
+                    
+                    <div class="grid grid-cols-1 gap-4 justify-center w-full">
+                        
+                        <a href="#" class="mx-auto bg-white border border-gray-200 group shadow-md rounded-2xl h-40 w-64 overflow-hidden flex items-center justify-center reveal-left delay-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-principal/50 duration-500">
+                                <img src="https://i.imgur.com/g95P5f2.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Amazon">
+                            </a>
+
+                            <a href="#" class="mx-auto bg-white border border-gray-200 group shadow-md rounded-2xl h-40 w-64 overflow-hidden flex items-center justify-center reveal-scale delay-200 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-azul-principal/50 duration-500">
+                                <img src="https://i.imgur.com/bDTx3NN.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Liverpool">
+                            </a>
+
+                        
+                    <div class="bg-white p-4 border border-gray-200 shadow-sm rounded-2xl inline-flex flex-col items-center justify-center gap-4 reveal-scale delay-300 w-full max-w-xl mx-auto">
+                        <svg class="w-8 h-8 text-azul-principal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <p class="text-xs uppercase font-light text-[#2C2A2A] text-center">También contaremos con un <strong class="text-azul-principal">buzón para sobres</strong> en la entrada de la recepción.</p>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- NUEVO ÚLTIMO SEPARADOR -->
+            <section class="seccion-separador" style="background-image: url('https://i.imgur.com/bShl8ZI.jpeg');"></section>
+             
+            <section class="seccion-azul min-h-[90svh] flex flex-col justify-center px-6 text-center relative overflow-hidden">
+                <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
+                    <h2 id="rsvpTitleText" class="text-5xl font-script mb-4 text-white text-shadow-light">Confirmar Asistencia</h2>
+                    
+                    <p id="rsvpSubtitleText" class="text-xs font-bold mb-6 uppercase text-white">Por favor, confirmar antes del <br> 10 de diciembre de 2026</p>
+                    
+                    <div class="bg-transparent border border-azul-principal shadow-xl p-8 rounded-3xl transition-all duration-500 w-full mx-auto">
+                        
+                        <form id="rsvpForm" class="space-y-6 text-left mb-8 bg-transparent transition-all duration-500">
+                            <div class="border-b border-gray-300 pb-2">
+                                <label class="text-xs uppercase opacity-90 text-white font-bold">Nombre:</label>
+                                <input type="text" id="rsvpName" required placeholder="Tu Nombre Exacto" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center placeholder-gray-400">
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="border-b border-gray-300 pb-2 w-1/2">
+                                    <label class="text-xs uppercase opacity-90 text-white font-bold">Adultos</label>
+                                    <input type="number" id="rsvpAdults" required placeholder="Ej. 2" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center placeholder-gray-400">
+                                </div>
+                                <div class="border-b border-gray-300 pb-2 w-1/2">
+                                    <label class="text-xs uppercase opacity-90 text-white font-bold">Niños</label>
+                                    <input type="number" id="rsvpKids" required placeholder="Ej. 1" class="w-full bg-transparent py-2 outline-none text-xl text-[#2C2A2A] font-light text-center placeholder-gray-400">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" id="btnSubmitRSVP" class="w-full inline-block bg-transparent border border-azul-principal text-white font-bold py-5 px-8 uppercase text-[12px] hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-xl duration-300 rounded-xl text-center mt-6">
+                                Confirmar
+                            </button>
+                        </form>
+
+                        <div id="loadingMessage" class="hidden mt-10 textura-papel-blanco opacity-95 flex-col items-center justify-center transition-all duration-500">
+                            <div class="w-16 h-16 border-4 border-azul-principal border-t-transparent rounded-full animate-spin mb-6 mx-auto"></div>
+                            <p class="text-4xl font-script text-azul-principal mb-2">Confirmando...</p>
+                            <p class="text-[11px] uppercase text-[#2C2A2A] opacity-90 font-bold">Preparando los detalles</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+             
+            <!-- FOOTER ACTUALIZADO CON LA IMAGEN NUEVA -->
+            <footer class="footer-corte min-h-[100svh] flex flex-col justify-center px-6 text-center relative overflow-hidden z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/Q7iKJXL.jpeg');">
+                <div class="absolute inset-0 bg-black/40 z-0"></div>
+                
+                <p class="text-7xl font-script mb-4 text-white drop-shadow-lg relative z-10">¡No faltes!</p>
+                <p class="text-xs text-white uppercase mb-4 font-bold drop-shadow-md relative z-10">15 • Diciembre • 2026</p>
+                
+                <div class="relative z-10 w-full max-w-sm mx-auto">
+                    <a href="https://wa.me/524492867153?text=Hola,%20quiero%20el%20dise%C3%B1o%20Aqua" target="_blank" class="inline-flex items-center justify-center gap-3 bg-white text-azul-principal w-full px-10 py-5 rounded-xl text-[12px] uppercase font-bold hover:bg-transparent hover:text-white hover:border-white border-2 border-transparent transition-all hover:-translate-y-1 active:scale-95 shadow-2xl">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Quiero este diseño
+                    </a>
+                </div>
+            </footer>
+         
+        </main>
+    </div> <!-- FIN DE SCROLL AREA -->
+</div> <!-- FIN DE MOBILE WRAPPER -->
 
     <script>
         function openEnvelope() {
@@ -848,47 +886,36 @@
         const audioBtn = document.getElementById("audio-btn");
         const audioIcon = document.getElementById("audio-icon");
         let isPlaying = false;
-// Variable global para los bloqueos de asistencia
-let maxPasesGlobal = undefined;
+        let maxPasesGlobal = undefined;
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Leer los parámetros de la URL
-    const params = new URLSearchParams(window.location.search);
-    const nombreUrl = params.get('n');       // Lee: ?n=Juan
-    const pasesUrl = params.get('pases');    // Lee: &pases=2
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const nombreUrl = params.get('n');       
+            const pasesUrl = params.get('pases');    
 
-    if (nombreUrl && pasesUrl) {
-        // Asignar el límite para que funcione tu validación de RSVP
-        maxPasesGlobal = parseInt(pasesUrl, 10);
+            if (nombreUrl && pasesUrl) {
+                maxPasesGlobal = parseInt(pasesUrl, 10);
 
-        // Mostrar la bienvenida personalizada en la portada
-        const seccionInicio = document.getElementById('seccion-pases-inicio');
-        const nombreInvitado = document.getElementById('nombre-invitado-inicio');
-        const pasesInvitado = document.getElementById('pases-invitado-inicio');
+                const seccionInicio = document.getElementById('seccion-pases-inicio');
+                const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+                const pasesInvitado = document.getElementById('pases-invitado-inicio');
 
-        if (seccionInicio && nombreInvitado && pasesInvitado) {
-            seccionInicio.classList.remove('hidden'); // Hace visible la tarjeta
-            nombreInvitado.textContent = nombreUrl;   // Escribe el nombre
-            pasesInvitado.textContent = pasesUrl;     // Escribe los pases
-        }
+                if (seccionInicio && nombreInvitado && pasesInvitado) {
+                    seccionInicio.classList.remove('hidden'); 
+                    nombreInvitado.textContent = nombreUrl;   
+                    pasesInvitado.textContent = pasesUrl;     
+                }
 
-        // 1. Autocompletar y BLOQUEAR el nombre en "Confirmar Asistencia"
-        const formName = document.getElementById('rsvpName');
-        if (formName) {
-            formName.value = nombreUrl;
-            formName.readOnly = true; // Impide que el usuario lo modifique
-            formName.classList.add('cursor-not-allowed', 'opacity-60'); // Indicador visual de bloqueado
-        }
+                const formName = document.getElementById('rsvpName');
+                if (formName) {
+                    formName.value = nombreUrl;
+                    formName.readOnly = true; 
+                    formName.classList.add('cursor-not-allowed', 'opacity-60'); 
+                }
 
-        // 2. Autocompletar y BLOQUEAR el nombre en "Recuperar Pase"
-        const searchName = document.getElementById('searchName');
-        if (searchName) {
-            searchName.value = nombreUrl;
-            searchName.readOnly = true; // Impide que el usuario lo modifique
-            searchName.classList.add('cursor-not-allowed', 'opacity-60'); // Indicador visual de bloqueado
-        }
-    }
-});
+            }
+        });
+
         function playAudio() {
             audio.play().then(() => {
                 isPlaying = true;
@@ -909,7 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
             isPlaying = !isPlaying;
         }
 
-        const targetDate = new Date("Oct 15, 2026 19:30:00").getTime();
+        const targetDate = new Date("Dec 15, 2026 19:30:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = targetDate - now;
@@ -934,7 +961,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         entry.target.classList.add('active');
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.1, root: document.getElementById('scroll-area') });
             
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
@@ -944,7 +971,6 @@ document.addEventListener("DOMContentLoaded", () => {
             window.open(url, '_blank');
         }
         
-        // SCROLL AUTOMÁTICO - SLIDERS
         const sliders = document.querySelectorAll('.slider-historia');
         let scrollIntervals = [];
 
@@ -975,15 +1001,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         detenerCualquierInteraccion();
                     }
                 });
-            }, { threshold: 0.5 });
+            }, { threshold: 0.5, root: document.getElementById('scroll-area') });
             observer.observe(slider);
         });
 
-        // ==========================================
-        // API DEL CLIMA
-        // ==========================================
         async function fetchWeather() {
-            // Coordenadas de ejemplo
             const lat = 19.1125; 
             const lon = -96.0912; 
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
@@ -998,114 +1020,96 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
        function getWeatherIcon(code) {
-    const baseClass = "w-12 h-12 mx-auto mb-4 text-white transition-colors duration-500";
-    
-    // Sol / Despejado (Lucide Sun)
+            const baseClass = "w-12 h-12 mx-auto mb-4 text-white transition-colors duration-500";
             if (code === 0) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
-            
-            // Nubes / Niebla (Lucide Cloud)
             if (code >= 1 && code <= 48) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`;
-            
-            // Lluvia / Llovizna (Lucide Cloud-Rain) - ¡Reemplazado el ícono de flechas!
             if (code >= 51 && code <= 82) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></svg>`;
-            
-            // Tormenta Eléctrica (Lucide Cloud-Lightning)
             if (code >= 95) return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/></svg>`;
-            
-    return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-}
+            return `<svg class="${baseClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+        }
 
-function getConditionText(code) {
-    if (code === 0) return "Despejado";
-    if (code >= 1 && code <= 3) return "Parcialmente nublado";
-    if (code >= 45 && code <= 48) return "Niebla";
-    if (code >= 51 && code <= 67) return "Llovizna";
-    if (code >= 80 && code <= 82) return "Lluvia";
-    if (code >= 95) return "Tormenta Eléctrica";
-    return "Nublado";
-}
+        function getConditionText(code) {
+            if (code === 0) return "Despejado";
+            if (code >= 1 && code <= 3) return "Parcialmente nublado";
+            if (code >= 45 && code <= 48) return "Niebla";
+            if (code >= 51 && code <= 67) return "Llovizna";
+            if (code >= 80 && code <= 82) return "Lluvia";
+            if (code >= 95) return "Tormenta Eléctrica";
+            return "Nublado";
+        }
 
         function renderWeather(data) {
-    const container = document.getElementById('weather-container');
-    const now = new Date();
-    // Ajustamos 'now' para que busque la hora entera más cercana
-    now.setMinutes(now.getMinutes() - 30); 
+            const container = document.getElementById('weather-container');
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - 30); 
 
-    const todayTemps = data.hourly.temperature_2m.slice(0, 24);
-    const maxTemp = Math.round(Math.max(...todayTemps));
-    const minTemp = Math.round(Math.min(...todayTemps));
+            const todayTemps = data.hourly.temperature_2m.slice(0, 24);
+            const maxTemp = Math.round(Math.max(...todayTemps));
+            const minTemp = Math.round(Math.min(...todayTemps));
 
-    let hourlyHTML = '';
-    let hoursShown = 0;
-    let currentTemp = 0;
-    let currentCode = 0;
+            let hourlyHTML = '';
+            let hoursShown = 0;
+            let currentTemp = 0;
+            let currentCode = 0;
 
-    for (let i = 0; i < data.hourly.time.length; i++) {
-        const forecastDate = new Date(data.hourly.time[i]);
-        
-        if (forecastDate >= now && hoursShown < 6) {
-            const temp = Math.round(data.hourly.temperature_2m[i]);
-            const weatherCode = data.hourly.weathercode[i];
-            
-            if (hoursShown === 0) {
-                currentTemp = temp;
-                currentCode = weatherCode;
+            for (let i = 0; i < data.hourly.time.length; i++) {
+                const forecastDate = new Date(data.hourly.time[i]);
+                if (forecastDate >= now && hoursShown < 6) {
+                    const temp = Math.round(data.hourly.temperature_2m[i]);
+                    const weatherCode = data.hourly.weathercode[i];
+                    if (hoursShown === 0) {
+                        currentTemp = temp;
+                        currentCode = weatherCode;
+                    }
+
+                    let hour = forecastDate.getHours();
+                    const ampm = hour >= 12 ? 'p.m.' : 'a.m.';
+                    hour = hour % 12 || 12;
+                    const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
+
+                    let iconSVG = getWeatherIcon(weatherCode);
+                    iconSVG = iconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-6 h-6 mx-auto my-2');
+
+                    hourlyHTML += `
+                        <div class="flex flex-col items-center justify-center flex-1">
+                            <span class="text-[10px] font-medium opacity-90 text-white">${hourStr}</span>
+                            ${iconSVG}
+                            <span class="text-sm font-bold font-numbers text-white">${temp}°</span>
+                        </div>
+                    `;
+                    hoursShown++;
+                }
             }
 
-            let hour = forecastDate.getHours();
-            const ampm = hour >= 12 ? 'p.m.' : 'a.m.';
-            hour = hour % 12 || 12;
-            const hourStr = hoursShown === 0 ? 'Ahora' : `${hour} ${ampm}`;
+            let conditionText = getConditionText(currentCode);
+            if (currentTemp > 32 && currentCode >= 95 && currentCode <= 96) conditionText = "Caluroso / Posible Lluvia";
 
-            let iconSVG = getWeatherIcon(weatherCode);
-            iconSVG = iconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-6 h-6 md:w-8 md:h-8 mx-auto my-2');
+            let mainIconSVG = getWeatherIcon(currentCode);
+            mainIconSVG = mainIconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-8 h-8 ml-auto mb-2');
 
-            hourlyHTML += `
-                <div class="flex flex-col items-center justify-center flex-1">
-                    <span class="text-[10px] md:text-sm font-medium opacity-90">${hourStr}</span>
-                    ${iconSVG}
-                    <span class="text-sm md:text-lg font-bold font-numbers">${temp}°</span>
+            container.innerHTML = `
+                <div class="bg-white/10 backdrop-blur-md rounded-[30px] p-6 text-white text-left shadow-xl border border-white/20 mx-auto font-sans w-full">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <h3 class="text-xl font-bold flex items-center gap-1">
+                                Ciudad, Estado
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                            </h3>
+                            <div class="text-[60px] font-light leading-none mt-1 font-numbers">${currentTemp}°</div>
+                        </div>
+                        <div class="text-right flex flex-col items-end pt-1">
+                            ${mainIconSVG}
+                            <p class="text-sm font-medium">${conditionText}</p>
+                            <p class="text-xs opacity-90 mt-1 font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center w-full pt-4 border-t border-white/20">
+                        ${hourlyHTML}
+                    </div>
                 </div>
             `;
-            hoursShown++;
         }
-    }
 
-    // Si hace mucho calor (>32°) y el código es de tormenta ligera, 
-    // lo suavizamos a "Parcialmente nublado" para evitar pánico innecesario.
-    let conditionText = getConditionText(currentCode);
-    if (currentTemp > 32 && currentCode >= 95 && currentCode <= 96) {
-        conditionText = "Caluroso / Posible Lluvia";
-    }
-
-    let mainIconSVG = getWeatherIcon(currentCode);
-    mainIconSVG = mainIconSVG.replace('w-12 h-12 mx-auto mb-4', 'w-8 h-8 md:w-10 md:h-10 ml-auto mb-2');
-
-    container.innerHTML = `
-        <div class="bg-white/10 backdrop-blur-md rounded-[30px] p-6 md:p-8 text-white text-left shadow-xl border border-white/20 mx-auto font-sans w-full">
-            <div class="flex justify-between items-start mb-8">
-                <div>
-                    <h3 class="text-xl md:text-2xl font-bold flex items-center gap-1">
-                        Ciudad, Estado
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
-                    </h3>
-                    <div class="text-[60px] md:text-[80px] font-light leading-none mt-1 font-numbers">${currentTemp}°</div>
-                </div>
-                <div class="text-right flex flex-col items-end pt-1">
-                    ${mainIconSVG}
-                    <p class="text-sm md:text-base font-medium">${conditionText}</p>
-                    <p class="text-xs md:text-sm opacity-90 mt-1 tracking-widest font-numbers">Máx.: ${maxTemp}° Mín.: ${minTemp}°</p>
-                </div>
-            </div>
-            <div class="flex justify-between items-center w-full pt-4 border-t border-white/20">
-                ${hourlyHTML}
-            </div>
-        </div>
-    `;
-}
-        // ==========================================
-        // LÓGICA DE LA TRIVIA
-        // ==========================================
         const triviaData = [
             {
                 question: "¿Qué me gusta hacer en mi tiempo libre?",
@@ -1140,7 +1144,7 @@ function getConditionText(code) {
             triviaData[currentQuestion].options.forEach((opt, index) => {
                 const btn = document.createElement("button");
                 btn.innerText = opt;
-                btn.className = "btn-trivia w-full text-left px-6 py-5 rounded-2xl border-2 border-white/40 text-white font-bold bg-transparent hover:bg-white hover:text-azul-principal text-sm tracking-wide";
+                btn.className = "btn-trivia w-full text-left px-6 py-5 rounded-2xl border-2 border-white/40 text-white font-bold bg-transparent hover:bg-white hover:text-azul-principal text-sm";
                 btn.onclick = () => checkAnswer(index, btn);
                 optionsContainer.appendChild(btn);
             });
@@ -1195,206 +1199,90 @@ function getConditionText(code) {
             loadQuestion();
         }
 
-        // ==========================================
-// CONEXIÓN A GOOGLE SHEETS Y GENERACIÓN DE PASE
-// ==========================================
-const SCRIPT_URL = "TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI";
-
-document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('rsvpName').value.trim();
-    const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
-    const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
-    const totalPases = numAdultos + numNinos;
-    
-    // Validación por si se pasan del límite de la URL
-    if (typeof maxPasesGlobal !== 'undefined' && totalPases > maxPasesGlobal) {
-        alert(`Solo tienes asignados ${maxPasesGlobal} pases en total.`);
-        return;
-    }
-    
-    const form = document.getElementById('rsvpForm');
-    const loader = document.getElementById('loadingMessage');
-    
-    form.style.display = 'none';
-    loader.classList.remove('hidden');
-    loader.classList.add('flex');
-
-    try {
-        // Se envía el 'totalPases' como 'pax' para que la hoja de Google lo reconozca
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'rsvp', nombre: name, pax: totalPases }),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-        });
-
-        loader.classList.add('hidden');
-        loader.classList.remove('flex');
-
-        const seccionRsvp = document.getElementById('rsvpForm').parentElement;
-        const folio = "XV-DEMO-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-        const numeroWhatsApp = "520000000000"; // Número de la festejada
-        const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
-        const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
-
-        const resultDiv = document.createElement('div');
-        resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10"; 
-        resultDiv.innerHTML = `
-            <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm bg-white border-2 border-azul-principal rounded-3xl p-8 shadow-lg text-center overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-3 bg-azul-principal"></div>
-                <img src="https://i.imgur.com/Hv9gZUu.png" crossorigin="anonymous" class="w-20 mx-auto mb-4" alt="Corona">
-                <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pase Oficial</p>
-                <h4 class="font-script text-4xl md:text-5xl text-azul-principal mb-6 leading-tight capitalize">${name}</h4>
-                
-                <div class="inline-block border-t border-b border-azul-principal/40 py-4 px-10 mb-6 w-full">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Confirmados</p>
-                    <p class="font-numbers text-5xl md:text-6xl text-azul-principal font-bold drop-shadow-sm">${totalPases}</p>
-                </div>
-                
-                <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2">Folio: ${folio}</p>
-                <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
-            </div>
+        document.getElementById('rsvpForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const numAdultos = parseInt(document.getElementById('rsvpAdults').value) || 0;
+            const numNinos = parseInt(document.getElementById('rsvpKids').value) || 0;
+            const totalPases = numAdultos + numNinos;
             
-            <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
-                <button id="btnDescargarImagenRSVP" class="bg-azul-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
-                    Descargar Pase
-                </button>
-                
-                <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
-                    Avisar por WhatsApp
-                </a>
-            </div>
-        `;
-        seccionRsvp.appendChild(resultDiv);
-
-        document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
-            const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
-            const originalText = document.getElementById('btnDescargarImagenRSVP').innerHTML;
-            document.getElementById('btnDescargarImagenRSVP').innerText = "Generando...";
+            if (typeof maxPasesGlobal !== 'undefined' && totalPases > maxPasesGlobal) {
+                alert(`Solo tienes asignados ${maxPasesGlobal} pases en total.`);
+                return;
+            }
             
-            html2canvas(tarjeta, { backgroundColor: "#ffffff", scale: 3, useCORS: true }).then(canvas => {
-                const enlace = document.createElement('a');
-                enlace.download = 'Pase_XV_Demo.png';
-                enlace.href = canvas.toDataURL('image/png');
-                enlace.click();
-                document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
-            }).catch(err => {
-                console.error("Error", err);
-                document.getElementById('btnDescargarImagenRSVP').innerHTML = originalText;
-            });
-        });
+            const form = document.getElementById('rsvpForm');
+            const loader = document.getElementById('loadingMessage');
+            
+            form.style.display = 'none';
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
 
-    } catch(error) {
-        console.error("Error al guardar:", error);
-        alert("Hubo un problema al conectar. Serás redirigido a WhatsApp para confirmar manualmente.");
-        const numeroWhatsApp = "520000000000";
-        const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
-        window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
-    }
-});
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
 
-// ==========================================
-// LÓGICA DE CONSULTAR / RECUPERAR PASE
-// ==========================================
-document.getElementById('searchPassForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('searchName').value.trim();
-    const resultDiv = document.getElementById('searchResultMessage');
-    const btnSubmit = e.target.querySelector('button[type="submit"]');
-    
-    btnSubmit.innerText = "Buscando...";
-    btnSubmit.disabled = true;
-    resultDiv.classList.add('hidden');
+                const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                const folio = "XV-DEMO-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                const numeroWhatsApp = "520000000000"; 
+                const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años. Soy ${name} y asistiremos ${numAdultos} adultos y ${numNinos} niños.`;
+                const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`;
 
-    try {
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'consultar', nombre: name }),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-        });
-        
-        const res = await response.json();
-        
-        resultDiv.classList.remove('hidden');
-        resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
-
-        if (res.status === 'aprobado') {
-            const folio = "XV-DEMO-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-            resultDiv.innerHTML = `
-                <div id="contenedorPaseCompleto" class="mt-4 flex flex-col items-center w-full">
-                    
-                    <div id="tarjetaPaseDigital" class="relative w-full max-w-sm bg-white border-2 border-azul-principal rounded-3xl p-8 shadow-lg text-center overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-3 bg-azul-principal"></div>
+                const resultDiv = document.createElement('div');
+                resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                resultDiv.innerHTML = `
+                    <div id="tarjetaPaseDigitalGenerado" class="relative w-full max-w-sm textura-papel-blanco border-2 border-azul-principal rounded-2xl p-8 shadow-2xl text-center overflow-hidden mx-auto">
+                        <div class="absolute top-0 left-0 w-full h-3 bg-azul-principal pointer-events-none"></div>
                         
-                        <img src="https://i.imgur.com/xu9ym4s.png" crossorigin="anonymous" class="w-20 mx-auto mb-4 opacity-80 filtro-azul" alt="Corona">
+                        <img src="https://i.imgur.com/Hv9gZUu.png" crossorigin="anonymous" class="w-20 mx-auto mb-4" alt="Corona">
+                        <p class="text-[9px] uppercase text-gray-500 font-bold mb-2 relative z-10">Acceso para:</p>
                         
-                        <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-2">Pase Oficial</p>
-                        <h4 class="font-script text-4xl md:text-5xl text-azul-principal mb-6 leading-tight capitalize">${name}</h4>
+                        <h4 class="font-script text-4xl text-azul-principal mb-6 leading-tight capitalize relative z-10">${name}</h4>
                         
-                        <div class="inline-block border-t border-b border-azul-principal/40 py-4 px-10 mb-6">
-                            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Pases Asignados</p>
-                            <p class="font-numbers text-5xl md:text-6xl text-azul-principal font-bold drop-shadow-sm">${res.pases}</p>
+                        <div class="block text-center textura-papel-azul rounded-2xl shadow-lg border-2 border-white mb-6 w-full relative z-10 mx-auto py-4">
+                            <p class="text-[10px] uppercase text-white font-bold m-0 mb-1">Pases Confirmados</p>
+                            <p class="font-numbers text-6xl text-white font-bold drop-shadow-sm mb-6 leading-none">${totalPases}</p>
                         </div>
                         
-                        <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-numbers mb-2">Folio: ${folio}</p>
-                        <p class="text-[8px] uppercase tracking-[0.2em] text-gray-400">Muestra esta tarjeta en recepción</p>
+                        <p class="text-[9px] uppercase text-gray-400 font-numbers mb-2 relative z-10">Folio: ${folio}</p>
+                        <p class="text-[8px] uppercase text-gray-400 font-bold relative z-10">Muestra esta tarjeta en recepción</p>
                     </div>
                     
-                    <button id="btnDescargarPase" class="mt-6 bg-azul-principal text-white font-bold py-3 px-8 uppercase tracking-[0.2em] text-[10px] hover:bg-azul-principal/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full md:w-auto mx-auto active:scale-95">
-                        Descargar Pase
-                    </button>
-                </div>
-            `;
+                    <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
+                        <button id="btnDescargarImagenRSVP" class="textura-papel-azul border border-azul-principal text-white font-bold py-4 px-8 uppercase text-xs hover:opacity-90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                            Descargar Pase
+                        </button>
+                        
+                        <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95">
+                            Avisar por WhatsApp
+                        </a>
+                    </div>
+                `;
+                seccionRsvp.appendChild(resultDiv);
 
-            const btnDescargarPase = document.getElementById('btnDescargarPase');
-            btnDescargarPase.addEventListener('click', () => {
-                const tarjeta = document.getElementById('tarjetaPaseDigital');
-                const originalText = btnDescargarPase.innerHTML;
-                btnDescargarPase.innerText = "Generando imagen...";
-                
-                html2canvas(tarjeta, {
-                    backgroundColor: "#ffffff", 
-                    scale: 3, 
-                    useCORS: true  
-                }).then(canvas => {
-                    const enlace = document.createElement('a');
-                    enlace.download = 'Pase_XV_Demo.png';
-                    enlace.href = canvas.toDataURL('image/png');
-                    enlace.click();
-                    btnDescargarPase.innerHTML = originalText;
-                }).catch(error => {
-                    console.error("Error al generar la imagen: ", error);
-                    btnDescargarPase.innerHTML = "Error al descargar";
-                    setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                    const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                    const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
+                    const originalText = btnDescargar.innerHTML;
+                    btnDescargar.innerText = "Generando...";
+                    
+                    html2canvas(tarjeta, { backgroundColor: "#F0EFEA", scale: 3, useCORS: true }).then(canvas => {
+                        const enlace = document.createElement('a');
+                        enlace.download = 'Pase_XV_Demo.png';
+                        enlace.href = canvas.toDataURL('image/png');
+                        enlace.click();
+                        btnDescargar.innerHTML = originalText;
+                    }).catch(err => {
+                        console.error("Error", err);
+                        btnDescargar.innerHTML = originalText;
+                    });
                 });
-            });
+            }, 1500); 
+        });
 
-        } else if (res.status === 'pendiente') {
-            resultDiv.innerHTML = `
-                <div class="bg-white border border-gray-200 shadow-md p-8 rounded-3xl text-center">
-                    <p class="text-[#2C2A2A] font-bold mb-2">¡Tenemos tu registro!</p>
-                    <p class="text-gray-500 text-sm">Pero el anfitrión aún no ha validado tu pase final. Vuelve a consultar más tarde.</p>
-                </div>
-            `;
-        } else {
-            resultDiv.innerHTML = `
-                <div class="bg-white border border-gray-200 shadow-md p-8 rounded-3xl text-center">
-                    <p class="text-[#2C2A2A] font-bold mb-2">Reserva no encontrada.</p>
-                    <p class="text-gray-500 text-sm">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
-                </div>
-            `;
-        }
-    } catch (error) {
-        console.error("Error al buscar:", error);
-        alert("Error de conexión al buscar el pase.");
-    } finally {
-        btnSubmit.innerText = "Buscar mi Pase";
-        btnSubmit.disabled = false;
-    }
-});
 
     </script>
-<script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+    <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
 
     <script>
       document.addEventListener('contextmenu', function(e) { e.preventDefault(); }, false);
