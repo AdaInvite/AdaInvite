@@ -864,18 +864,16 @@
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             initObserver();
-            playAudio(); 
             
             const bgVideo = document.getElementById('bg-video');
             if (bgVideo) {
                 bgVideo.play().catch(e => console.log("Video autoplay bloqueado", e));
             }
 
-            // Desbloqueo de audio del video de amenización en el toque inicial del sobre
+            // Pre-desbloqueamos el video de amenización en MUTE para no interrumpir la canción de fondo
             const amenizacionVideo = document.getElementById('amenizacion-video');
             if (amenizacionVideo) {
-                amenizacionVideo.muted = false;
-                amenizacionVideo.volume = 1.0;
+                amenizacionVideo.muted = true;
                 amenizacionVideo.play().then(() => {
                     amenizacionVideo.pause();
                     amenizacionVideo.currentTime = 0;
@@ -885,6 +883,9 @@
                     initAmenizacionVideoObserver();
                 });
             }
+
+            // Iniciamos la canción de fondo inmediatamente con el clic del sello
+            playAudio();
 
             document.getElementById('envelope-wrapper').classList.add('open');
 
