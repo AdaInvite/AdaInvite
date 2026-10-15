@@ -545,8 +545,18 @@
                         <h2 class="text-5xl font-script mb-2 text-white text-shadow-light reveal-scale">Amenización</h2>
                         
                         <div class="slider-horizontal slider-auto w-full px-6 reveal-scale">
-                            <div class="tarjeta-nueva" style="flex: 0 0 280px; padding: 10px;">
-                                <video id="amenizacion-video" src="https://i.imgur.com/0V0nS7o.mp4" loop playsinline class="w-full h-[400px] rounded-[16px] border border-white/20 shadow-lg object-cover"></video>
+                            <div class="tarjeta-nueva relative" style="flex: 0 0 280px; padding: 10px;">
+                                <video id="amenizacion-video" src="https://i.imgur.com/0V0nS7o.mp4" loop playsinline preload="auto" class="w-full h-[400px] rounded-[16px] border border-white/20 shadow-lg object-cover"></video>
+                                
+                                <button onclick="toggleVideoAudio()" id="btn-mute-video" class="absolute bottom-5 right-5 bg-black/70 border border-beige/50 text-beige p-2.5 rounded-full shadow-lg z-20 focus:outline-none">
+                                    <svg id="video-sound-on" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                    </svg>
+                                    <svg id="video-sound-off" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+                                    </svg>
+                                </button>
                             </div>
                             <div class="tarjeta-nueva" style="flex: 0 0 280px; padding: 10px;">
                                 <img src="https://i.imgur.com/wKVVvLu.jpeg" alt="Invitado Especial" class="w-full h-[400px] rounded-[16px] border border-white/20 shadow-lg object-cover">
@@ -854,12 +864,26 @@
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             initObserver();
-            initAmenizacionVideoObserver();
             playAudio(); 
             
             const bgVideo = document.getElementById('bg-video');
             if (bgVideo) {
                 bgVideo.play().catch(e => console.log("Video autoplay bloqueado", e));
+            }
+
+            // Desbloqueo de audio del video de amenización en el toque inicial del sobre
+            const amenizacionVideo = document.getElementById('amenizacion-video');
+            if (amenizacionVideo) {
+                amenizacionVideo.muted = false;
+                amenizacionVideo.volume = 1.0;
+                amenizacionVideo.play().then(() => {
+                    amenizacionVideo.pause();
+                    amenizacionVideo.currentTime = 0;
+                    initAmenizacionVideoObserver();
+                }).catch(e => {
+                    console.log("Pre-desbloqueo de video:", e);
+                    initAmenizacionVideoObserver();
+                });
             }
 
             document.getElementById('envelope-wrapper').classList.add('open');
@@ -905,6 +929,37 @@
             isPlaying = !isPlaying;
         }
 
+        function updateVideoSoundIcons(isMuted) {
+            const soundOn = document.getElementById('video-sound-on');
+            const soundOff = document.getElementById('video-sound-off');
+            if (!soundOn || !soundOff) return;
+            if (isMuted) {
+                soundOn.classList.add('hidden');
+                soundOff.classList.remove('hidden');
+            } else {
+                soundOn.classList.remove('hidden');
+                soundOff.classList.add('hidden');
+            }
+        }
+
+        function toggleVideoAudio() {
+            const amenizacionVideo = document.getElementById('amenizacion-video');
+            if (!amenizacionVideo) return;
+            amenizacionVideo.muted = !amenizacionVideo.muted;
+            if (!amenizacionVideo.muted) {
+                amenizacionVideo.volume = 1.0;
+                amenizacionVideo.play();
+                if (isPlaying) {
+                    wasBgMusicPlayingBeforeVideo = true;
+                    audio.pause();
+                    isPlaying = false;
+                    document.getElementById("icon-play")?.classList.remove('hidden');
+                    document.getElementById("icon-pause")?.classList.add('hidden');
+                }
+            }
+            updateVideoSoundIcons(amenizacionVideo.muted);
+        }
+
         // Observer para reproducir el video de amenización con audio al llegar a la sección
         function initAmenizacionVideoObserver() {
             const amenizacionVideo = document.getElementById('amenizacion-video');
@@ -927,10 +982,16 @@
                                 pauseIcon.classList.add('hidden');
                             }
                         }
+
                         amenizacionVideo.muted = false;
-                        amenizacionVideo.play().catch(err => {
+                        amenizacionVideo.volume = 1.0;
+
+                        amenizacionVideo.play().then(() => {
+                            updateVideoSoundIcons(false);
+                        }).catch(err => {
                             console.log("Reproducción con audio bloqueada, reproduciendo en silencio:", err);
                             amenizacionVideo.muted = true;
+                            updateVideoSoundIcons(true);
                             amenizacionVideo.play();
                         });
                     } else {
@@ -1465,7 +1526,7 @@ END:VCALENDAR`;
             });
         }
 
-                const searchPassFormElement = document.getElementById('searchPassForm');
+        const searchPassFormElement = document.getElementById('searchPassForm');
         if (searchPassFormElement) {
             searchPassFormElement.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1592,7 +1653,6 @@ END:VCALENDAR`;
                 }
             });
         }
-
     </script>
 </body>
 </html>
