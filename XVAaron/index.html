@@ -152,8 +152,7 @@
             filter: brightness(0) saturate(100%);
         }
         .icono-rojo {
-        filter: brightness(0) saturate(100%) invert(15%) sepia(90%) saturate(4000%) hue-rotate(325deg) brightness(25%) contrast(105%);
-
+            filter: brightness(0) saturate(100%) invert(15%) sepia(90%) saturate(4000%) hue-rotate(325deg) brightness(25%) contrast(105%);
         }
 
         /* --- SOBRE --- */
@@ -310,9 +309,10 @@
                     
                     <!-- SECCIÓN PASES INICIALES -->
                     <div id="seccion-pases-inicio" class="w-full max-w-xs mx-auto hidden mt-4 reveal-scale delay-200">
-                        <div class="bg-rosa-elegante/80 rounded-xl backdrop-blur-md border border-white/20 py-2 sombra-caja text-center transition-all">
+                        <div class="bg-rosa-elegante/80 rounded-xl backdrop-blur-md border border-white/20 py-2.5 px-4 sombra-caja text-center transition-all">
                             <p class="text-[10px] uppercase text-white/90 font-medium mb-1 tracking-widest">Invitación especial para</p>
                             <p id="nombre-invitado-inicio" class="text-base font-bold text-white mb-1 uppercase tracking-widest"></p>
+                            <p id="cantidad-pases-inicio" class="text-xs font-bold text-white/95 uppercase tracking-widest border-t border-white/20 pt-1 mt-1 hidden"></p>
                         </div>
                     </div>
                 </div>
@@ -539,13 +539,11 @@
                             <h1 class="text-6xl text-white text-center mb-2 font-script drop-shadow-md">Ubicación</h1>
                             <p class="text-white text-center font-bold text-lg mb-4 uppercase">Las Huertas Eventos</p>
                             
-                            <!-- AQUÍ VA LA FOTO DE RECEPCIÓN (Reemplaza el src con tu enlace) -->
+                            <!-- FOTO DE RECEPCIÓN -->
                             <div class="w-full mb-5 overflow-hidden rounded-xl border border-white/30 sombra-caja">
                                 <img src="https://i.imgur.com/AlmeXTJ.jpeg" alt="Las Huertas Eventos" class="w-full h-56 object-cover">
                             </div>
                         
-                        
-                            
                             <div class="w-full px-2 pb-2">
                                 <a href="https://maps.app.goo.gl/4bJfVnD1bxTrtEzj8" target="_blank" class="w-full block text-center bg-white border border-white text-rosa-elegante serif font-bold px-8 py-3.5 text-xs uppercase hover:bg-transparent hover:text-white sombra-caja transition-all rounded-xl active:scale-95 tracking-widest">Abrir en Maps</a>
                             </div>
@@ -700,15 +698,20 @@
                 <img src="https://i.imgur.com/4yHtghh.png" class="absolute bottom-[1vh] left-[-10px] w-[160px] z-20 pointer-events-none sombra-decoracion" alt="">
 
                 <div class="max-w-2xl mx-auto reveal-scale relative z-10 w-full flex flex-col justify-start"> 
-                    <h2 id="rsvpTitleText" class="text-6xl font-script mb-6 text-rosa-elegante drop-shadow-sm">Confirmar Asistencia</h2>
-                    <p id="rsvpSubtitleText" class="text-sm mb-6 text-[#2C2A2A] font-bold uppercase tracking-widest">Fecha límite: 30 de Octubre de 2026</p>
+                    <h2 id="rsvpTitleText" class="text-6xl font-script mb-4 text-rosa-elegante drop-shadow-sm">Confirmar Asistencia</h2>
+                    <p id="rsvpSubtitleText" class="text-sm mb-3 text-[#2C2A2A] font-bold uppercase tracking-widest">Fecha límite: 30 de Octubre de 2026</p>
+                    
+                    <!-- Aviso dinámico de pases asignados -->
+                    <div id="info-pases-rsvp" class="hidden mb-4">
+                        <span id="texto-pases-rsvp" class="inline-block bg-rosa-elegante text-white text-xs font-bold uppercase px-4 py-1.5 rounded-full sombra-caja tracking-widest"></span>
+                    </div>
                     
                     <div class="bg-[#FCF9F9] border border-rosa-elegante/40 sombra-caja p-4 rounded-3xl transition-all duration-500 w-full mx-auto relative z-20">
                         
                         <form id="rsvpForm" class="space-y-4 text-left pb-8 bg-transparent transition-all duration-500">
                             
                             <div id="customAlert" class="hidden bg-white border border-red-400 rounded-xl p-3 text-center transition-all duration-300 sombra-caja">
-                                <p id="customAlertText" class="text-red-500 text-sm font-bold tracking-widest uppercase"></p>
+                                <p id="customAlertText" class="text-red-500 text-xs font-bold tracking-widest uppercase"></p>
                             </div>
 
                             <div class="border-b border-rosa-elegante/50 pb-2">
@@ -861,7 +864,7 @@
         });
     </script>
     
-    <!-- LÓGICA FIREBASE Y VALIDACIONES DE PASES -->
+    <!-- LÓGICA FIREBASE Y VALIDACIONES DE PASES ASIGNADOS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -909,20 +912,46 @@
         }
 
         // ==========================================
-        // LECTURA DE URL AL CARGAR LA PÁGINA
+        // LECTURA DE URL AL CARGAR LA PÁGINA (NOMBRE Y PASES ASIGNADOS)
         // ==========================================
         const params = new URLSearchParams(window.location.search);
-        const nombreUrl = params.get('n');      
+        const nombreUrl = params.get('n');
+        const pasesParam = params.get('p') || params.get('pases');
+        const pasesAsignadosMax = pasesParam ? parseInt(pasesParam, 10) : null;
 
-        if (nombreUrl) {
+        if (nombreUrl || (pasesAsignadosMax && !isNaN(pasesAsignadosMax))) {
             const seccionInicio = document.getElementById('seccion-pases-inicio');
             const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+            const cantidadPasesInicio = document.getElementById('cantidad-pases-inicio');
 
-            if (seccionInicio && nombreInvitado) {
+            if (seccionInicio) {
                 seccionInicio.classList.remove('hidden');
-                nombreInvitado.textContent = nombreUrl;   
+                if (nombreUrl && nombreInvitado) {
+                    nombreInvitado.textContent = nombreUrl;
+                }
+                if (pasesAsignadosMax && !isNaN(pasesAsignadosMax) && cantidadPasesInicio) {
+                    cantidadPasesInicio.textContent = `Pases asignados: ${pasesAsignadosMax}`;
+                    cantidadPasesInicio.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Mostrar etiqueta de pases asignados en el formulario RSVP y limitar inputs
+        if (pasesAsignadosMax && !isNaN(pasesAsignadosMax)) {
+            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+            const textoPasesRsvp = document.getElementById('texto-pases-rsvp');
+            if (infoPasesRsvp && textoPasesRsvp) {
+                textoPasesRsvp.textContent = `Tienes ${pasesAsignadosMax} ${pasesAsignadosMax === 1 ? 'pase asignado' : 'pases asignados'}`;
+                infoPasesRsvp.classList.remove('hidden');
             }
 
+            const inputAdults = document.getElementById('rsvpAdults');
+            const inputNinos = document.getElementById('rsvpNinos');
+            if (inputAdults) inputAdults.max = pasesAsignadosMax;
+            if (inputNinos) inputNinos.max = pasesAsignadosMax;
+        }
+
+        if (nombreUrl) {
             const formName = document.getElementById('rsvpName');
             if (formName) {
                 formName.value = nombreUrl;
@@ -946,6 +975,8 @@
                         if(form) {
                             document.getElementById('rsvpTitleText').classList.add('hidden');
                             document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                            if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
                             
                             form.innerHTML = `
                                 <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center sombra-caja mt-6">
@@ -962,7 +993,7 @@
         }
 
         // ==========================================
-        // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
+        // GUARDAR RSVP (CONFIRMAR ASISTENCIA CON VALIDACIÓN DE PASES)
         // ==========================================
         const rsvpFormElement = document.getElementById('rsvpForm');
         if (rsvpFormElement) {
@@ -973,6 +1004,18 @@
                 const numAdultos = parseInt(document.getElementById('rsvpAdults')?.value) || 0;
                 const numNinos = parseInt(document.getElementById('rsvpNinos')?.value) || 0;
                 const totalPases = numAdultos + numNinos;
+
+                // 1. Validar que confirmen al menos 1 asistente
+                if (totalPases <= 0) {
+                    mostrarAlerta("Debes confirmar al menos 1 asistente.");
+                    return;
+                }
+
+                // 2. Validar que la suma (Adultos + Niños) NO supere los pases asignados
+                if (pasesAsignadosMax && !isNaN(pasesAsignadosMax) && totalPases > pasesAsignadosMax) {
+                    mostrarAlerta(`Solo tienes ${pasesAsignadosMax} ${pasesAsignadosMax === 1 ? 'pase asignado' : 'pases asignados'}. La suma de adultos (${numAdultos}) y niños (${numNinos}) no puede superar ese límite.`);
+                    return;
+                }
                 
                 const form = document.getElementById('rsvpForm');
                 const loader = document.getElementById('loadingMessage');
@@ -994,6 +1037,9 @@
                         if (!querySnapshot.empty) {
                             document.getElementById('rsvpTitleText').classList.add('hidden');
                             document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                            if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
+
                             form.innerHTML = `
                                 <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center sombra-caja mt-6">
                                     <p class="text-rosa-elegante font-bold text-xl mb-2 drop-shadow-sm uppercase tracking-widest">¡Asistencia Confirmada!</p>
@@ -1017,6 +1063,8 @@
                             adultos: numAdultos,
                             ninos: numNinos,
                             totalPases: totalPases,
+                            totalSolicitado: totalPases,
+                            pasesAsignados: pasesAsignadosMax || totalPases,
                             folio: folio,
                             fecha: serverTimestamp() 
                         });
@@ -1026,6 +1074,8 @@
                     loader.classList.remove('flex');
                     document.getElementById('rsvpTitleText').classList.add('hidden');
                     document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                    const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                    if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
 
                     const seccionRsvp = document.getElementById('rsvpForm').parentElement;
                     const numeroWhatsApp = "528116633188"; 
@@ -1043,8 +1093,6 @@
                             <!-- Decoraciones florales iguales a Padres -->
                             <img src="https://i.imgur.com/4yHtghh.png" crossorigin="anonymous" class="absolute top-4 right-0 w-32 pointer-events-none sombra-decoracion" alt="Floral">
                             <img src="https://i.imgur.com/4yHtghh.png" crossorigin="anonymous" class="absolute bottom-4 left-0 w-32 pointer-events-none sombra-decoracion" alt="Floral">
-                            
-                         
                             
                             <p class="text-sm uppercase text-rosa-elegante font-bold tracking-widest mt-6 relative z-10">Acceso para:</p>
                             
@@ -1180,9 +1228,6 @@
                                     <!-- Decoraciones florales iguales a Padres -->
                                     <img src="https://i.imgur.com/4yHtghh.png" crossorigin="anonymous" class="absolute top-4 right-0 w-32 pointer-events-none sombra-decoracion" alt="Floral">
                                     <img src="https://i.imgur.com/4yHtghh.png" crossorigin="anonymous" class="absolute bottom-4 left-0 w-32 pointer-events-none sombra-decoracion" alt="Floral">
-                                    
-                                   
-                                    
                                     
                                     <p class="text-sm uppercase text-rosa-elegante font-bold tracking-widest mt-6 relative z-10">Acceso para:</p>
                                     
