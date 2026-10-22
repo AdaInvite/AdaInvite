@@ -1,0 +1,1396 @@
+Ahora crea el de Angela <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XV Angela</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_portada_IMG_2044.jpeg?alt=media&token=a42afd89-89a7-4413-813e-cfa1c604fb90">
+    
+    <meta name="theme-color" content="#FDF4F7">
+    <meta property="og:title" content="Mis XV • Angela">
+    <meta property="og:description" content="¡Prepárate para celebrar una noche inolvidable!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_portada_IMG_2044.jpeg?alt=media&token=a42afd89-89a7-4413-813e-cfa1c604fb90">
+    
+    <!-- Font Awesome for Calendar Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Librería para descargar la imagen del pase -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            light: '#FDF4F7', 
+                            pink: '#F8D7E3',
+                            dark: '#702446', 
+                            accent: '#C86D8E' 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cantata+One&family=Luxurious+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-main: 'Cantata One', serif;
+            --font-script: 'Luxurious Script', cursive;
+            --color-dark: #702446;
+            --color-accent: #C86D8E;
+            --bg-fade: #FDF4F7;
+        }
+
+        /* CONFIGURACIÓN CONTENEDOR TIPO MÓVIL PARA PC/MÓVIL */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c1420;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-main);
+            color: var(--color-dark);
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #app-wrapper {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            background-color: transparent;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        #scroll-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        #scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .font-script { font-family: var(--font-script); }
+        .font-main { font-family: var(--font-main); }
+        .font-numbers { font-family: var(--font-main) !important; }
+
+        /* VIDEO DE FONDO FIJO CON TINTE ROSA */
+        .video-background-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; pointer-events: none; 
+            background-color: var(--bg-fade);
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            filter: hue-rotate(135deg) saturate(1.15);
+        }
+        .video-overlay { position: absolute; inset: 0; background-color: rgba(253, 244, 247, 0.22); z-index: 2; }
+        
+        /* FILTROS ROSAS PARA TODAS LAS DECORACIONES */
+        .pink-tint {
+            filter: hue-rotate(135deg) saturate(1.3) drop-shadow(0 10px 15px rgba(112, 36, 70, 0.22)) !important;
+        }
+        .pink-glitter {
+            filter: sepia(0.35) hue-rotate(295deg) saturate(2.2) brightness(1.05) drop-shadow(0 10px 15px rgba(112, 36, 70, 0.25)) !important;
+        }
+
+        #section-main { display: none; position: relative; z-index: 10; padding-bottom: 2rem;}
+
+        .section-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 20px;
+            z-index: 20;
+        }
+
+        /* Animations con filtro rosa incluido */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+        .floating-fast { animation: float 4s ease-in-out infinite; }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: sepia(0.35) hue-rotate(295deg) saturate(2) drop-shadow(0 0 5px rgba(255,182,193,0.7)); transform: scale(1); }
+            50% { filter: sepia(0.35) hue-rotate(295deg) saturate(2.5) drop-shadow(0 0 15px rgba(255,182,193,1)); transform: scale(1.1); }
+        }
+        .glowing { animation: pulse-glow 3s infinite; }
+
+        @keyframes star-spin-pulse {
+            0% { 
+                transform: scale(0.8) rotate(0deg); 
+                opacity: 0.75; 
+                filter: sepia(0.4) hue-rotate(295deg) saturate(2.5) drop-shadow(0 0 5px rgba(232, 153, 181, 0.6)); 
+            }
+            50% { 
+                transform: scale(1.2) rotate(180deg); 
+                opacity: 1; 
+                filter: sepia(0.4) hue-rotate(295deg) saturate(3) drop-shadow(0 0 18px rgba(232, 153, 181, 1)); 
+            }
+            100% { 
+                transform: scale(0.8) rotate(360deg); 
+                opacity: 0.75; 
+                filter: sepia(0.4) hue-rotate(295deg) saturate(2.5) drop-shadow(0 0 5px rgba(232, 153, 181, 0.6)); 
+            }
+        }
+        .star-anim { animation: star-spin-pulse 3.5s infinite ease-in-out; }
+        .star-anim-fast { animation: star-spin-pulse 2.5s infinite ease-in-out reverse; }
+
+        /* Efectos de aparición con rebote */
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(40px) scale(0.9); 
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        /* --- SOBRE (Con ajuste a tonos rosas) --- */
+        #envelope-wrapper {
+            position: absolute; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+            background-color: transparent;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-image: url('https://i.imgur.com/lIyFwPj.jpeg');
+            background-size: cover; background-position: center; transition: opacity 1.2s ease-in-out; z-index: 1;
+            filter: hue-rotate(135deg) saturate(1.15);
+        }
+        
+        #envelope-container { 
+            position: absolute !important; inset: 0 !important; z-index: 10; overflow: hidden; 
+        }
+        
+        .flap-wrapper { 
+            position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); will-change: transform; 
+        }
+        .flap-left-wrapper { 
+            left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(112, 36, 70, 0.5)); isolation: isolate; 
+        }
+        .flap-right-wrapper { 
+            right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(112, 36, 70, 0.5)); isolation: isolate; 
+        }
+        
+        .flap { 
+            width: 100%; height: 100%; 
+            background-image: url('https://i.imgur.com/lIyFwPj.jpeg'); 
+            background-size: cover; background-position: center; 
+        }
+        
+        .flap-left { 
+            -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+            clip-path: polygon(0 0, 100% 50%, 0 100%); 
+            background-position: left center; 
+            filter: hue-rotate(135deg) saturate(1.15) brightness(0.90); 
+        }
+        .flap-right { 
+            -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            clip-path: polygon(100% 0, 0 50%, 100% 100%); 
+            background-position: right center; 
+            filter: hue-rotate(135deg) saturate(1.15) brightness(0.95); 
+        }
+        
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 200px;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-200%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(200%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+        
+        .animate-fadeIn { animation: fadeIn 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Elementos UI y utilidades */
+        .timeline-line {
+            position: absolute; left: 7px; top: 20px; bottom: 20px; width: 2px; background: var(--color-accent); opacity: 0.4;
+        }
+
+        .btn-primary {
+            background-color: #D484A3; color: white; font-family: var(--font-main); font-weight: 700; text-transform: uppercase;
+            font-size: 0.85rem; letter-spacing: 0.15em; padding: 16px 36px; border-radius: 30px; box-shadow: 0 8px 20px rgba(200, 109, 142, 0.4);
+            transition: all 0.3s ease; display: inline-block; border: 1px solid rgba(255,255,255,0.5); text-align: center; cursor: pointer;
+        }
+        .btn-primary:hover { background-color: #C86D8E; }
+        .btn-primary:active { transform: scale(0.95); }
+
+        #customModal {
+            position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; 
+            background: rgba(112, 36, 70, 0.8); backdrop-filter: blur(5px);
+        }
+        #customModal.show { display: flex; animation: modalFadeIn 0.3s; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Polaroid */
+        .polaroid { background: white; padding: 10px 10px 45px 10px; box-shadow: 0 15px 25px rgba(112, 36, 70, 0.15); position: relative; border-radius: 2px; }
+        .tape-pink { position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 90px; height: 28px; background-color: rgba(232, 162, 188, 0.85); backdrop-filter: blur(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.15); z-index: 5; border-radius: 1px; }
+
+        /* Slider Mi Historia */
+        .slider-historia { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 24px; padding: 45px 25px; scrollbar-width: none; width: 100%; }
+        .slider-historia::-webkit-scrollbar { display: none; }
+        .tarjeta-polaroid {
+            flex: 0 0 280px; scroll-snap-align: center; position: relative;
+            background: #FFFFFF; padding: 12px 12px 45px 12px; 
+            box-shadow: 0 15px 25px rgba(112, 36, 70, 0.18);
+            transform: rotate(-2deg); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 2px;
+        }
+        .tarjeta-polaroid:nth-child(even) { transform: rotate(2deg) translateY(6px); }
+        .tarjeta-polaroid:hover { transform: scale(1.03) rotate(0deg); z-index: 20; }
+        .img-polaroid { width: 100%; height: 340px; object-fit: cover; border: 1px solid rgba(200, 109, 142, 0.15); border-radius: 2px; }
+
+        .text-glow { text-shadow: 0 2px 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,1); }
+        .text-glow-dark { text-shadow: 0 2px 10px rgba(253,244,247,1), 0 0 20px rgba(253,244,247,1); }
+        .sombra-caja { filter: drop-shadow(0 10px 25px rgba(112, 36, 70, 0.18)); }
+        .sombra-decoracion { filter: drop-shadow(3px 4px 2px rgba(112, 36, 70, 0.3)); }
+
+        /* Estilos del Reproductor de Audio Flotante en el app-wrapper */
+        .audio-btn {
+            position: absolute; bottom: 10px; right: 10px; width: 35px; height: 35px;
+            background: #702446; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(200, 109, 142, 0.6); pointer-events: auto;
+            cursor: pointer; transition: transform 0.3s; z-index: 90;
+            overflow: hidden;
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .spin-slow { animation: spin 7s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FCalvinHarrisRihannaThisIsWhatYouCameFor.mp3?alt=media&token=8fd0f5ee-4161-45db-9bea-dea794a2d514" type="audio/mpeg">
+    </audio>
+
+    <!-- WRAPPER PARA LIMITAR A TAMAÑO MÓVIL EN PC -->
+    <div id="app-wrapper">
+        
+        <!-- Botón de Audio Flotante -->
+        <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
+            <img id="audio-icon" src="https://i.imgur.com/YIFY1JL.jpeg" alt="Música">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-theme-dark rounded-full z-10 flex items-center justify-center shadow-[0_0_2px_rgba(0,0,0,0.8)]">
+                <div class="w-[4px] h-[4px] bg-theme-light rounded-full opacity-80"></div>
+            </div>
+        </div>
+
+        <!-- VIDEO DE FONDO FIJO -->
+        <div class="video-background-container">
+            <div class="video-overlay"></div>
+            <video autoplay loop muted playsinline id="bg-video">
+                <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FDisco.MP4?alt=media&token=ebcf283a-5e57-42df-8782-40986d5e28eb" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- SOBRE -->
+        <div id="envelope-wrapper">
+            <div id="envelope-container" onclick="openEnvelope()">
+                <div class="envelope-bg"></div>
+                
+                <div class="flap-wrapper flap-left-wrapper">
+                    <div class="flap flap-left"></div>
+                </div>
+                
+                <div class="flap-wrapper flap-right-wrapper">
+                    <div class="flap flap-right"></div>
+                </div>
+                
+                <div class="seal-wrapper text-center">
+                    <p class="text-white text-sm uppercase mb-2 font-bold tracking-wider drop-shadow-md w-full">Toca para abrir</p>
+                    <img src="https://i.imgur.com/AyLFwW2.png" class="w-44 floating mx-auto" alt="Sello">
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR SCROLLABLE (CONTENIDO DE LA INVITACIÓN) -->
+        <div id="scroll-container">
+            <main id="section-main">
+                
+                <!-- HERO / PORTADA -->
+                <section class="section-wrapper pt-12 min-h-[95vh]">
+                    <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute top-0 -right-12 w-44 floating z-10 pink-glitter" alt="Disco">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-12 left-8 w-16 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-1/4 right-8 w-10 star-anim-fast" alt="Star">
+                  
+                    <div class="relative z-30 text-center px-4 py-4 w-full mt-6">
+                        <p class="font-script text-6xl text-theme-dark mb-4 mr-12 rotate-[-5deg] text-glow reveal">Mis</p>
+                        <h1 class="font-main text-8xl font-bold text-theme-accent tracking-wide leading-none text-glow reveal delay-100">XV</h1>
+                        <h2 class="font-script text-8xl text-theme-dark mt-4 mb-6 -rotate-3 relative z-30 text-glow reveal delay-200">Angela</h2>
+                    
+                        <div class="flex items-center justify-center gap-4 text-theme-dark font-main font-bold text-lg mb-4 text-glow-dark relative z-20 reveal delay-300">
+                            <span>12</span>
+                            <span class="w-2 h-2 rounded-full bg-theme-accent"></span>
+                            <span>Diciembre</span>
+                            <span class="w-2 h-2 rounded-full bg-theme-accent"></span>
+                            <span>2026</span>
+                        </div>
+
+                        <!-- SECCIÓN PASES INICIALES -->
+                        <div id="seccion-pases-inicio" class="w-full max-w-xs mx-auto hidden mt-4 mb-4 reveal delay-300">
+                            <div class="bg-white/85 rounded-2xl backdrop-blur-md border-2 border-theme-accent/50 py-3 px-4 sombra-caja text-center transition-all">
+                                <p class="text-xs text-theme-accent font-bold mb-1 tracking-wider">Invitación especial para</p>
+                                <p id="nombre-invitado-inicio" class="text-4xl font-script text-theme-dark mb-1 tracking-wide"></p>
+                                <p id="cantidad-pases-inicio" class="text-xs font-bold text-theme-dark tracking-wider border-t border-theme-accent/30 pt-1.5 mt-1 hidden"></p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="relative z-30 w-full max-w-[280px] mx-auto reveal delay-400">
+                        <div class="polaroid z-20 relative transform rotate-[2deg]">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_portada_IMG_2044.jpeg?alt=media&token=a42afd89-89a7-4413-813e-cfa1c604fb90" class="w-full aspect-[3/4] object-cover rounded-sm" alt="Angela Sánchez">
+                        </div>
+                        <img src="https://i.imgur.com/s9xQT3U.png" class="absolute -bottom-8 -right-10 w-32 floating z-30 pink-tint" alt="Copa Hero">
+                    </div>
+                </section>
+
+                <!-- CONTADOR Y CALENDARIO FUNCIONAL -->
+                <section class="section-wrapper pt-12 pb-16">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-10 left-8 w-8 star-anim-fast" alt="Star">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute bottom-20 right-6 w-12 star-anim" alt="Star">
+                    
+                    <p class="text-7xl font-script text-theme-dark mb-12 text-glow reveal">Faltan solo...</p>
+                    
+                    <div class="flex justify-center items-center gap-3 font-main text-theme-dark relative z-10 w-full px-2 reveal delay-100">
+                        <div class="flex flex-col items-center w-12 sm:w-14">
+                            <span id="days" class="text-5xl sm:text-5xl font-bold text-glow">00</span>
+                            <span class="font-main text-[11px] tracking-wider mt-1 font-bold text-glow">Días</span>
+                        </div>
+                        <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                        <div class="flex flex-col items-center w-12 sm:w-14">
+                            <span id="hours" class="text-5xl sm:text-5xl font-bold text-glow">00</span>
+                            <span class="font-main text-[11px] tracking-wider mt-1 font-bold text-glow">Hrs</span>
+                        </div>
+                        <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                        <div class="flex flex-col items-center w-12 sm:w-14">
+                            <span id="mins" class="text-5xl font-bold text-glow">00</span>
+                            <span class="font-main text-[11px] tracking-wider mt-1 font-bold text-glow">Min</span>
+                        </div>
+                        <span class="text-3xl sm:text-4xl font-bold mb-4 opacity-40 text-glow">:</span>
+                        <div class="flex flex-col items-center w-12 sm:w-14">
+                            <span id="secs" class="text-5xl font-bold text-glow">00</span>
+                            <span class="font-main text-[11px] tracking-wider mt-1 font-bold text-glow">Seg</span>
+                        </div>
+                    </div>
+    
+                    <!-- BOTÓN DESPLEGABLE DE CALENDARIO CORREGIDO -->
+                    <div class="relative mt-12 w-full max-w-[270px] mx-auto flex flex-col items-center z-50 reveal delay-200">
+                        <button type="button" onclick="toggleCalendarMenu()" class="inline-flex items-center justify-center gap-3 w-full border-2 border-theme-accent text-white px-4 py-4 font-main text-xs tracking-widest uppercase transition-all duration-300 shadow-xl bg-theme-accent rounded-full font-bold cursor-pointer">
+                            Agregar al calendario
+                        </button>
+                        
+                        <div id="calendar-dropdown" class="hidden flex-col gap-2 mt-3 w-full bg-white/95 backdrop-blur-md p-3 rounded-2xl border-2 border-theme-accent/50 shadow-2xl transition-all duration-300 z-50">
+                            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=XV+Angela+S%C3%A1nchez&dates=20261212T190000/20261213T020000&details=%C2%A1Prep%C3%A1rate+para+celebrar+una+noche+inolvidable+en+mis+XV+a%C3%B1os!&location=Templo+de+Bel%C3%A9n+%2F+Sal%C3%B3n+El+Arrollo" target="_blank" rel="noopener noreferrer" class="w-full bg-theme-accent text-white px-5 py-3.5 rounded-xl text-xs font-bold hover:bg-theme-dark transition-all flex items-center justify-between tracking-wider shadow-sm">
+                                <span>Google Calendar</span>
+                                <i class="fa-brands fa-google text-base"></i>
+                            </a>
+                            <button type="button" onclick="descargarCalendarioApple()" class="w-full bg-theme-light text-theme-dark px-5 py-3.5 rounded-xl text-xs font-bold hover:bg-theme-pink border border-theme-accent/40 transition-all flex items-center justify-between tracking-wider cursor-pointer shadow-sm">
+                                <span>Apple / iOS</span>
+                                <i class="fa-brands fa-apple text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <img src="https://i.imgur.com/JE8qIGY.png" class="w-32 mt-10 reveal delay-300 pink-tint" alt="Moño">
+                </section>
+
+                <!-- SEPARADOR 1 -->
+                <section class="w-full relative z-20 flex justify-center py-10 reveal">
+                     <div class="polaroid rotate-[-3deg] floating w-[300px] max-w-[90%]">
+                         <div class="tape-pink"></div>
+                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_separador_1_IMG_2050.jpeg?alt=media&token=1a61d948-7f19-43eb-b83e-6abd4a174b63" class="w-full aspect-[9/16] object-cover" alt="Separador 1">
+                     </div>
+                </section>
+    
+                <!-- FRASE DE BIENVENIDA -->
+               <section class="section-wrapper pt-12 pb-4" style="min-height: auto;">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-5 right-2 w-12 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-10 left-2 w-8 star-anim-fast" alt="Star">
+                    
+                    <div class="px-4 max-w-[340px] text-center relative z-10">
+                        <p class="text-lg leading-relaxed text-theme-dark font-bold text-glow-dark reveal delay-100">
+                            "Llena de magia, esperanza y nuevos desafíos, y quiero celebrarla rodeada de las personas que han sido parte de mi historia y que deseo sigan acompañándome en este nuevo camino."
+                        </p>
+                    </div>
+                </section>
+    
+                <!-- PADRES Y PADRINOS -->
+              <section class="section-wrapper pb-12 pt-4" style="min-height: auto;">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-1/2 right-6 w-10 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute bottom-1/4 left-6 w-6 star-anim-fast" alt="Star">
+    
+                    <div class="p-8 max-w-[360px] w-full text-center relative z-10">
+                        <h4 class="font-script text-6xl text-theme-accent mb-4 border-b border-theme-accent/40 pb-4 inline-block text-glow reveal">Mis padres</h4>
+                        <p class="font-main font-bold tracking-wide text-base text-theme-dark text-glow-dark mt-2 reveal delay-100">Julio César Sánchez Muñoz</p>
+                        <h4 class="font-script text-4xl text-theme-accent mb-2 mt-1 inline-block text-glow reveal">y</h4>
+                        <p class="font-main font-bold tracking-wide text-base text-theme-dark text-glow-dark reveal delay-100">Alejandra Marlem Gutiérrez Sánchez</p>
+                        
+                        <h4 class="font-script text-6xl text-theme-accent mt-16 mb-4 border-b border-theme-accent/40 pb-4 inline-block text-glow reveal delay-200">Mis padrinos</h4>
+                        <p class="font-main font-bold tracking-wide text-base text-theme-dark text-glow-dark mt-2 reveal delay-300">Viridiana Muñoz Zaragoza</p>
+                        <h4 class="font-script text-4xl text-theme-accent mb-2 mt-1 inline-block text-glow reveal">y</h4>
+                        <p class="font-main font-bold tracking-wide text-base text-theme-dark text-glow-dark reveal delay-300">Hélder de Amorim Correia Pinho</p>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN MI HISTORIA (6 TARJETAS) -->
+                <section class="section-wrapper py-4">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-4 left-6 w-10 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-4 right-6 w-8 star-anim-fast" alt="Star">
+
+                    <div class="text-center mb-2 reveal">
+                        <h3 class="font-script text-6xl text-theme-dark mb-1 text-glow">Mi Historia</h3>
+                        <p class="font-main text-base font-bold text-theme-accent tracking-wider text-glow-dark">Un viaje inolvidable</p>
+                    </div>
+
+                    <div class="slider-historia reveal delay-100">
+                        <!-- Tarjeta 1 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_1_IMG_2065.jpeg?alt=media&token=10c2ca69-c81e-4b85-9e1e-8e125ee72454" class="img-polaroid" alt="Historia 1">
+                        </div>
+                        <!-- Tarjeta 2 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_2_IMG_2057.jpeg?alt=media&token=14fbabae-b624-427b-bce1-56c39b202af2" class="img-polaroid" alt="Historia 2">
+                        </div>
+                        <!-- Tarjeta 3 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_3_IMG_2053.jpeg?alt=media&token=9fe19b36-248f-4594-93c7-113390a2394b" class="img-polaroid" alt="Historia 3">
+                        </div>
+                        <!-- Tarjeta 4 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_4_IMG_2060.jpeg?alt=media&token=120fc412-2c73-426f-a78d-708f50af755f" class="img-polaroid" alt="Historia 4">
+                        </div>
+                        <!-- Tarjeta 5 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_5_IMG_2067.jpeg?alt=media&token=b6550570-869e-40ae-9808-92bd97a5b3e4" class="img-polaroid" alt="Historia 5">
+                        </div>
+                        <!-- Tarjeta 6 -->
+                        <div class="tarjeta-polaroid">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Fhistoria_foto_6_IMG_2059.jpeg?alt=media&token=5de607dc-bed8-4bbf-8ca2-01a4cf17a5c1" class="img-polaroid" alt="Historia 6">
+                        </div>
+                    </div>
+                    <p class="text-center text-theme-dark/70 text-xs font-bold tracking-wider pb-20 text-glow-dark">Desliza para ver más →</p>
+                </section>
+
+                <!-- SEPARADOR 2 Y UBICACIONES -->
+                <section class="section-wrapper py-16">
+                    <div class="relative w-full max-w-[340px] h-[450px] mx-auto flex items-center justify-center reveal">
+                        <img src="https://i.imgur.com/fLQyuG8.png" class="absolute -left-8 -top-28 w-56 z-30 floating pink-glitter" alt="15 Rosa">
+                        <div class="absolute right-0 top-16 w-72 polaroid rotate-[5deg] z-20">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_separador_2_IMG_2047.jpeg?alt=media&token=2aeeb2eb-1131-4263-b6a7-e2bd1088b6ea" class="w-full aspect-[3/4] object-cover" alt="Angela Foto">
+                        </div>
+                        <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -right-28 -top-16 w-44 floating-fast z-10 pink-glitter" alt="Disco">
+                        <img src="https://i.imgur.com/n44k8hu.png" class="absolute bottom-8 -left-12 w-32 z-40 rotate-[-12deg] pink-tint" alt="Camara">
+                    </div>
+
+                    <div class="w-full max-w-[340px] mt-32 space-y-16 relative z-20 text-center mx-auto">
+                        
+                        <!-- SECCIÓN CEREMONIA -->
+                        <div class="relative reveal">
+                            <img src="https://i.imgur.com/t9CrY8W.png" class="absolute -top-6 -left-4 w-12 star-anim" alt="Star">
+                            <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-1/2 right-0 w-8 star-anim-fast" alt="Star">
+                            
+                            <h4 class="font-script text-6xl text-theme-accent mb-2 text-glow">Ceremonia</h4>
+                            
+                            <!-- Imagen de la Ceremonia -->
+                            <img src="https://i.imgur.com/ETN77N1.jpeg" class="w-full h-56 object-cover rounded-xl shadow-lg my-4 border-2 border-white" alt="Templo de Belén">
+                            
+                            <p class="font-main font-bold text-2xl text-theme-dark mb-2 text-glow-dark">19:00 hrs</p>
+                            <p class="font-main font-bold text-lg text-theme-dark mb-3 tracking-wide text-glow-dark">Templo de Belén</p>
+                            <a href="https://maps.app.goo.gl/T647zU89YPzgN9Aj8?g_st=ic" target="_blank" class="btn-primary w-[80%] mx-auto block mt-6">Ver Mapa</a>
+                        </div>
+
+                        <div class="w-[60%] h-[1px] bg-theme-accent/30 mx-auto my-12 reveal"></div>
+
+                        <!-- SECCIÓN RECEPCIÓN -->
+                        <div class="relative reveal delay-200">
+                            <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -top-12 -right-10 w-24 floating-fast pink-glitter" alt="Disco Mini">
+                            <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-20 -left-6 w-10 star-anim" alt="Star">
+                            
+                            <h4 class="font-script text-6xl text-theme-accent mb-2 text-glow">Recepción</h4>
+                            
+                            <!-- Imagen de la Recepción -->
+                            <img src="https://i.imgur.com/SL7ichm.jpeg" class="w-full h-56 object-cover rounded-xl shadow-lg my-4 border-2 border-white" alt="Salón El Arrollo">
+                            
+                            <p class="font-main font-bold text-2xl text-theme-dark mb-2 text-glow-dark">20:30 hrs</p>
+                            <p class="font-main font-bold text-lg text-theme-dark mb-3 tracking-wide text-glow-dark">Salón El Arrollo</p>
+                            <a href="https://maps.app.goo.gl/33NWdnYZd176FyE9A?g_st=ic" target="_blank" class="btn-primary w-[80%] mx-auto block mt-6">Ver Mapa</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- DRESSCODE -->
+                <section class="section-wrapper py-16 text-center relative">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-20 right-10 w-12 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-1/4 left-8 w-8 star-anim-fast" alt="Star">
+                    
+                    <!-- Icono de Dress code -->
+                    <img src="https://i.imgur.com/sGzp6lO.png" alt="Icono Dress Code" class="w-36 mx-auto mb-4 reveal">
+                    
+                    <h3 class="font-main text-[2.2rem] text-theme-dark mb-2 font-bold text-glow-dark reveal">DRESS CODE</h3>
+                    <h4 class="font-script text-7xl text-theme-accent mb-8 text-glow reveal delay-100">Formal</h4>
+
+                    <div class="px-5 py-4 max-w-[320px] mx-auto relative z-10 bg-white/75 backdrop-blur-sm rounded-3xl border border-theme-accent/40 sombra-caja reveal delay-200">
+                        <p class="text-sm text-theme-dark font-bold leading-relaxed mb-4">
+                            Color reservado para la Quinceañera:
+                        </p>
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="w-14 h-14 rounded-full border-2 border-white shadow-md mb-2" style="background-color: #E899B5;"></div>
+                            <span class="text-theme-accent font-bold tracking-wider text-sm">Rosa</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ITINERARIO -->
+                <section class="section-wrapper py-16">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-10 left-8 w-12 star-anim-fast" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-40 right-6 w-8 star-anim" alt="Star">
+    
+                    <h3 class="font-script text-6xl text-theme-dark mb-8 text-center text-glow reveal">Itinerario</h3>
+    
+                    <div class="relative w-full max-w-[300px] mx-auto text-left z-20">
+                        <div class="timeline-line reveal delay-100"></div>
+    
+                        <div class="flex items-center mb-10 relative z-10 reveal delay-100">
+                            <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-theme-accent shrink-0 relative"></div>
+                            <div class="ml-6 flex-1">
+                                <p class="font-main text-xs text-theme-accent font-bold tracking-wider mb-1 text-glow-dark">19:00 hrs</p>
+                                <p class="text-lg font-bold text-theme-dark text-glow-dark">Ceremonia religiosa</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-10 relative z-10 reveal delay-200">
+                            <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-theme-accent shrink-0"></div>
+                            <div class="ml-6 flex-1">
+                                <p class="font-main text-xs text-theme-accent font-bold tracking-wider mb-1 text-glow-dark">20:30 hrs</p>
+                                <p class="text-lg font-bold text-theme-dark text-glow-dark">Recepción</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-10 relative z-10 reveal delay-300">
+                            <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-theme-accent shrink-0"></div>
+                            <div class="ml-6 flex-1">
+                                <p class="font-main text-xs text-theme-accent font-bold tracking-wider mb-1 text-glow-dark">21:00 hrs</p>
+                                <p class="text-lg font-bold text-theme-dark text-glow-dark">Cena</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center relative z-10 reveal delay-400">
+                            <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-theme-accent shrink-0"></div>
+                            <div class="ml-6 flex-1">
+                                <p class="font-main text-xs text-theme-accent font-bold tracking-wider mb-1 text-glow-dark">21:50 hrs</p>
+                                <p class="text-lg font-bold text-theme-dark text-glow-dark">Vals y baile sorpresa</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    
+                <!-- SEPARADOR 3 -->
+                <section class="w-full relative z-20 flex justify-center py-10 reveal">
+                     <div class="polaroid rotate-[4deg] floating-fast w-[300px] max-w-[90%]">
+                         <div class="tape-pink"></div>
+                         <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_separador_3_IMG_2049.jpeg?alt=media&token=5f9baba7-47e1-4938-80f8-9745eda347c4" class="w-full aspect-[9/16] object-cover" alt="Separador 3">
+                     </div>
+                </section>
+    
+                <!-- MESA DE REGALOS Y ÁLBUM COMPARTIDO -->
+                <section class="section-wrapper py-16 text-center">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-10 left-6 w-10 star-anim-fast" alt="Star">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-1/2 right-6 w-8 star-anim" alt="Star">
+                    
+                    <h3 class="font-main text-[2.2rem] font-bold text-theme-dark mb-4 text-glow-dark uppercase leading-none reveal">Mesa de Regalos</h3>
+                    
+                    <div class="p-4 max-w-[340px] mx-auto relative z-10 reveal delay-100">
+                        <p class="font-script text-6xl text-theme-dark mb-4 text-glow">Lluvia de Sobres</p>
+                        <svg class="w-20 h-20 mx-auto text-theme-accent mb-4 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <p class="text-base text-theme-dark font-bold leading-relaxed text-glow-dark">
+                            Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo, habrá un buzón en la recepción para tu sobre.
+                        </p>
+                    </div>
+    
+                    <div class="relative w-full flex justify-center items-center mt-2 reveal delay-200">
+                        <img src="https://i.imgur.com/TtB9SkG.png" class="w-56 z-10 rotate-[5deg] pink-tint" alt="Cassette">
+                        <img src="https://i.imgur.com/zQEm7DZ.png" class="w-24 absolute -right-16 -bottom-6 floating z-20 pink-glitter" alt="Disco mini">
+                    </div>
+    
+                    <h3 class="font-script text-6xl text-theme-accent mt-16 mb-4 text-glow reveal delay-300">Álbum Compartido</h3>
+
+                    <img src="https://i.imgur.com/n44k8hu.png" alt="Icono camara" class="w-20 pink-tint mx-auto mb-4 reveal">
+               
+                    <p class="text-base text-theme-dark font-bold mb-4 px-6 leading-relaxed text-glow-dark reveal delay-400">Ayúdame a capturar los mejores momentos.<br> Escanea o haz clic en el botón.</p>
+
+                    <div class="bg-white p-4 rounded-xl shadow-xl inline-block mb-4 border border-theme-accent/30 relative z-20 reveal delay-500">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://adainvite.com/XVAngela/recuerdos" alt="QR Album" class="w-40 h-40">
+                    </div>
+                    <br>
+                    <a href="https://adainvite.com/XVAngela/recuerdos" target="_blank" class="btn-primary w-[260px] relative z-20 reveal delay-500">Ver Galería</a>
+                </section>
+
+                <!-- SECCIÓN RSVP -->
+                <section class="section-wrapper py-16 text-center">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-10 right-10 w-12 star-anim" alt="Star">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute bottom-32 left-8 w-10 star-anim-fast" alt="Star">
+                    
+                    <div class="w-full max-w-[360px] mx-auto relative z-20">
+                        <h3 id="rsvpTitleText" class="font-script text-6xl text-theme-dark mb-2 text-glow leading-none reveal">Confirmar Asistencia</h3>
+                        <p id="rsvpSubtitleText" class="font-main text-sm font-bold text-theme-dark mb-4 bg-white/90 inline-block px-2 py-1 rounded-full shadow-md border border-theme-accent/30 reveal delay-100">
+                            Fecha límite: 30 de noviembre de 2026
+                        </p>
+                        
+                        <!-- Aviso dinámico de pases asignados -->
+                        <div id="info-pases-rsvp" class="hidden mb-4">
+                            <span id="texto-pases-rsvp" class="inline-block bg-theme-accent text-white text-xs font-bold px-4 py-1.5 rounded-full sombra-caja tracking-wider"></span>
+                        </div>
+                        
+                        <div class="bg-white/75 backdrop-blur-md border-2 border-theme-accent/40 sombra-caja p-5 rounded-3xl transition-all duration-500 w-full mx-auto relative z-20 reveal delay-200">
+                            
+                            <form id="rsvpForm" class="space-y-4 text-left pb-4 bg-transparent transition-all duration-500">
+                                
+                                <div id="customAlert" class="hidden bg-white border border-red-400 rounded-xl p-3 text-center transition-all duration-300 sombra-caja">
+                                    <p id="customAlertText" class="text-red-500 text-xs font-bold tracking-wide"></p>
+                                </div>
+
+                                <div class="border-b border-theme-accent/50 pb-2">
+                                    <label class="block text-xs text-theme-dark font-bold mb-1 text-center">Nombre o Familia:</label>
+                                    <input type="text" id="rsvpName" required placeholder="Ingresa tu nombre exacto" class="w-full bg-transparent py-2 outline-none text-base text-theme-dark font-bold text-center placeholder-gray-400">
+                                </div>
+                                
+                                <div class="border-b border-theme-accent/50 pb-2 mt-4">
+                                    <label class="block text-xs text-theme-dark font-bold mb-1 text-center">Adultos:</label>
+                                    <input type="number" id="rsvpAdults" required placeholder="Ej. 2" min="1" class="w-full bg-transparent py-2 outline-none text-lg text-theme-dark font-bold text-center placeholder-gray-400">
+                                </div>
+
+                                <div class="border-b border-theme-accent/50 pb-2 mt-4">
+                                    <label class="block text-xs text-theme-dark font-bold mb-1 text-center">Niños:</label>
+                                    <input type="number" id="rsvpNinos" placeholder="Ej. 0" min="0" class="w-full bg-transparent py-2 outline-none text-lg text-theme-dark font-bold text-center placeholder-gray-400">
+                                </div>
+                                
+                                <div class="text-center pt-4">
+                                    <button type="submit" id="btnSubmitRSVP" class="btn-primary w-full shadow-xl text-xs py-4">
+                                        Enviar Confirmación
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div id="loadingMessage" class="hidden mt-6 bg-transparent flex-col items-center justify-center transition-all duration-500">
+                                <div class="w-12 h-12 border-4 border-theme-accent border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                                <p id="loadingText" class="text-lg font-bold text-theme-dark mb-2 tracking-wide">Procesando...</p>
+                                <p class="text-xs text-theme-dark opacity-90">Generando tu pase especial</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN RECUPERAR PASE -->
+                <section class="section-wrapper py-12 text-center">
+                    <div class="w-full max-w-[360px] mx-auto reveal relative z-20"> 
+                        <h3 class="font-script text-6xl mb-4 text-theme-dark text-glow">Recuperar Pase</h3>
+
+                        <form id="searchPassForm" class="space-y-6 text-left bg-white/75 backdrop-blur-md border-2 border-theme-accent/40 p-6 rounded-3xl transition-all duration-500 sombra-caja">
+                            <div class="border-b border-theme-accent/50 pb-2">
+                                <input type="text" id="searchName" required placeholder="Nombre con el que confirmaste" class="w-full bg-transparent py-2 outline-none text-sm text-theme-dark text-center font-bold placeholder-theme-dark/50">
+                            </div>
+                            <button type="submit" class="btn-primary w-full py-4 text-xs">Buscar</button>
+                        </form>
+
+                        <div id="searchResultMessage" class="hidden mt-4 transition-all duration-500">
+                            <div class="bg-white/80 backdrop-blur-md border border-theme-accent/50 p-6 rounded-3xl relative overflow-hidden sombra-caja flex flex-col items-center z-10 w-full">
+                                <p class="text-theme-dark font-bold text-sm tracking-wide animate-pulse">Buscando pase...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    
+                <!-- DESPEDIDA Y SEPARADOR 4 -->
+                <section class="relative min-h-[95vh] flex flex-col items-center justify-center pb-24 overflow-hidden">
+                    <img src="https://i.imgur.com/t9CrY8W.png" class="absolute top-1/4 left-10 w-12 star-anim-fast" alt="Star">
+                    <img src="https://i.imgur.com/xFHJjxF.png" class="absolute bottom-1/4 right-10 w-10 star-anim" alt="Star">
+    
+                    <h3 class="font-script text-[5rem] text-theme-dark mb-12 relative z-30 text-center leading-none text-glow reveal">La fiesta <br>no será igual<br> sin ti</h3>
+    
+                    <div class="relative w-full max-w-[340px] flex justify-center items-center py-6 z-20 reveal delay-200">
+                        <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -top-4 left-2 w-24 floating z-30 pink-glitter" alt="Disco">     
+                        <div class="w-64 polaroid rotate-[-3deg] floating z-30">
+                            <div class="tape-pink"></div>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_separador_4_IMG_2048.jpeg?alt=media&token=36e9e70d-d694-4be0-976d-0c43ce342557" class="w-full aspect-[4/5] object-cover" alt="Separador 4">
+                        </div>
+                        <img src="https://i.imgur.com/Q9Hug5g.png" class="absolute -bottom-2 left-4 w-40 z-40 rotate-[-12deg] pink-tint" alt="Lentes">
+                    </div>
+    
+                    <div class="relative mt-8 z-30 flex flex-col items-center reveal delay-400">
+                        <h3 class="font-script text-[9rem] text-theme-dark mb-2 text-glow rotate-[-5deg] leading-none">See</h3>
+                        <h3 class="font-script text-[8rem] text-theme-accent -mt-12 ml-20 text-glow leading-none">you!</h3>
+                        
+                        <div class="flex items-end justify-center gap-6 mt-8 relative">
+                            <img src="https://i.imgur.com/zQEm7DZ.png" class="w-56 floating z-10 pink-glitter" alt="Disco">
+                            <img src="https://i.imgur.com/tte1YkX.png" class="w-28 z-20 absolute right-[-50px] bottom-[-15px] floating-fast pink-tint" alt="Copa Footer">
+                            <img src="https://i.imgur.com/t9CrY8W.png" class="absolute -top-12 -right-12 w-10 star-anim" alt="Star">
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div> <!-- Fin scroll-container -->
+    </div> <!-- Fin app-wrapper -->
+
+    <div id="customModal">
+        <div class="bg-white/95 rounded-3xl p-8 max-w-[320px] text-center shadow-2xl transform transition-transform scale-95 border-2 border-theme-accent" id="modalContent">
+            <p id="modalText" class="font-main text-xl font-bold text-theme-dark leading-relaxed"></p>
+            <button onclick="closeModal()" class="mt-8 btn-primary w-full">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script>
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            
+            const audioBtn = document.getElementById("audio-btn");
+            if(audioBtn) audioBtn.classList.remove('hidden');
+            
+            playAudio();
+            
+            const bgVideo = document.getElementById('bg-video');
+            if (bgVideo) bgVideo.play().catch(e => console.log("Video autoplay bloqueado", e));
+
+            document.getElementById('envelope-wrapper').classList.add('open');
+
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper').style.display = 'none';
+            }, 1800);
+        }
+
+        // Lógica de Audio
+        const audio = document.getElementById("bg-music");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                if(audioIcon) audioIcon.classList.add('spin-slow');
+            }).catch(error => {
+                console.log("Audio autoplay bloqueado.");
+                isPlaying = false;
+            });
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                if(audioIcon) audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                if(audioIcon) audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Lógica de Contador (12 de Diciembre de 2026 a las 19:00)
+        const targetDate = new Date("December 12, 2026 19:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("mins").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("secs").innerText = seconds.toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000); 
+        updateCountdown();
+
+        // ==========================================
+        // LÓGICA FUNCIONAL DEL CALENDARIO (ESTILO AARÓN)
+        // ==========================================
+        function toggleCalendarMenu() {
+            const dropdown = document.getElementById('calendar-dropdown');
+            const arrow = document.getElementById('calendar-arrow');
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                dropdown.classList.add('flex');
+                if (arrow) arrow.classList.add('rotate-180');
+            } else {
+                dropdown.classList.add('hidden');
+                dropdown.classList.remove('flex');
+                if (arrow) arrow.classList.remove('rotate-180');
+            }
+        }
+
+        function descargarCalendarioApple() {
+            const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:XV Angela Sánchez
+DTSTART:20261212T190000
+DTEND:20261213T020000
+DESCRIPTION:¡Prepárate para celebrar una noche inolvidable en mis XV años!
+LOCATION:Templo de Belén / Salón El Arrollo
+END:VEVENT
+END:VCALENDAR`.replace(/\n/g, "\r\n");
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'XV_Angela_Sanchez.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => window.URL.revokeObjectURL(url), 100);
+        }
+
+        // Observer Visual (Escuchando en scroll-container)
+        function initObserver() {
+            const scrollContainer = document.getElementById('scroll-container');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.15, root: scrollContainer });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        const sliders = document.querySelectorAll('.slider-historia');
+        sliders.forEach(slider => {
+            slider.addEventListener('touchstart', () => {}, {passive: true});
+        });
+
+        function showModal(msg) {
+            document.getElementById('modalText').innerText = msg;
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('show');
+            setTimeout(() => content.classList.remove('scale-95'), 10);
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.remove('show'), 200);
+        }
+    </script>
+
+    <!-- LÓGICA FIREBASE Y SISTEMA DE PASES MINIMALISTA Y ELEGANTE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const dbCollectionName = "confirmaciones_angela_sanchez_xv";
+
+        let db;
+        try {
+            if(Object.keys(firebaseConfig).length > 0) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+            }
+        } catch (error) {
+            console.error("Error inicializando Firebase:", error);
+        }
+
+        // ==========================================
+        // PLANTILLA DE PASE DIGITAL MINIMALISTA Y FORMAL
+        // ==========================================
+        function construirHTMLPaseMinimalista(idElemento, nombre, totalPases, adultos, ninos, folio) {
+            return `
+                <div id="${idElemento}" class="relative w-full max-w-sm bg-[#FFFDFD] border border-[#C86D8E]/40 rounded-2xl p-8 sombra-caja text-center overflow-hidden mx-auto">
+                    <!-- Marco interior fino minimalista -->
+                    <div class="absolute inset-3 border border-[#702446]/15 rounded-xl pointer-events-none"></div>
+
+                    <div class="relative z-10 flex flex-col items-center">
+                        <p class="font-main text-[10px] uppercase text-[#C86D8E] font-bold tracking-[0.3em] mb-1">Mis XV</p>
+                        <h3 class="font-script text-5xl text-[#702446] leading-none mb-2">Angela</h3>
+                       
+                        <div class="w-12 h-[1px] bg-[#C86D8E]/40 my-5"></div>
+
+                        <p class="text-[10px] text-[#702446]/70 font-bold tracking-wider mb-1.5">Pase de acceso para</p>
+                        <h4 class="font-main text-lg font-bold text-[#702446] tracking-wide px-2 mb-6 leading-snug">${nombre}</h4>
+
+                        <!-- Bloque minimalista de pases -->
+                        <div class="w-full bg-[#702446] rounded-xl py-5 px-4 mb-5 shadow-sm">
+                            <p class="text-[10px] text-[#F8D7E3] font-bold tracking-wider mb-1">Total de pases</p>
+                            <p class="font-numbers text-5xl text-white font-bold leading-none my-2">${totalPases}</p>
+                            <p class="text-xs text-[#F8D7E3]/90 font-bold tracking-wide mt-2">
+                                Adultos: ${adultos} &nbsp;·&nbsp; Niños: ${ninos}
+                            </p>
+                        </div>
+
+                        <p class="text-[10px] text-[#702446]/70 font-bold tracking-wider">Folio: ${folio}</p>
+                        <p class="text-[10px] text-[#702446]/55 font-bold mt-1">Presenta este pase en recepción</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // SISTEMA DE ALERTAS PERSONALIZADAS
+        // ==========================================
+        function mostrarAlerta(mensaje) {
+            const customAlert = document.getElementById('customAlert');
+            const customAlertText = document.getElementById('customAlertText');
+            
+            if(customAlert && customAlertText) {
+                customAlertText.innerText = mensaje;
+                customAlert.classList.remove('hidden');
+                
+                customAlert.classList.add('scale-105');
+                setTimeout(() => customAlert.classList.remove('scale-105'), 200);
+                
+                clearTimeout(window.alertTimeout);
+                window.alertTimeout = setTimeout(() => {
+                    customAlert.classList.add('hidden');
+                }, 4500); 
+            }
+        }
+
+        // ==========================================
+        // LECTURA DE URL AL CARGAR LA PÁGINA (NOMBRE Y PASES ASIGNADOS)
+        // ==========================================
+        const params = new URLSearchParams(window.location.search);
+        const nombreUrl = params.get('n');
+        const pasesParam = params.get('p') || params.get('pases');
+        const pasesAsignadosMax = pasesParam ? parseInt(pasesParam, 10) : null;
+
+        if (nombreUrl || (pasesAsignadosMax && !isNaN(pasesAsignadosMax))) {
+            const seccionInicio = document.getElementById('seccion-pases-inicio');
+            const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+            const cantidadPasesInicio = document.getElementById('cantidad-pases-inicio');
+
+            if (seccionInicio) {
+                seccionInicio.classList.remove('hidden');
+                if (nombreUrl && nombreInvitado) {
+                    nombreInvitado.textContent = nombreUrl;
+                }
+                if (pasesAsignadosMax && !isNaN(pasesAsignadosMax) && cantidadPasesInicio) {
+                    cantidadPasesInicio.textContent = `Pases asignados: ${pasesAsignadosMax}`;
+                    cantidadPasesInicio.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Mostrar etiqueta de pases asignados en el formulario RSVP y limitar inputs
+        if (pasesAsignadosMax && !isNaN(pasesAsignadosMax)) {
+            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+            const textoPasesRsvp = document.getElementById('texto-pases-rsvp');
+            if (infoPasesRsvp && textoPasesRsvp) {
+                textoPasesRsvp.textContent = `Tienes ${pasesAsignadosMax} ${pasesAsignadosMax === 1 ? 'pase asignado' : 'pases asignados'}`;
+                infoPasesRsvp.classList.remove('hidden');
+            }
+
+            const inputAdults = document.getElementById('rsvpAdults');
+            const inputNinos = document.getElementById('rsvpNinos');
+            if (inputAdults) inputAdults.max = pasesAsignadosMax;
+            if (inputNinos) inputNinos.max = pasesAsignadosMax;
+        }
+
+        if (nombreUrl) {
+            const formName = document.getElementById('rsvpName');
+            if (formName) {
+                formName.value = nombreUrl;
+                formName.readOnly = true; 
+                formName.classList.add('cursor-not-allowed', 'opacity-60'); 
+            }
+
+            const searchName = document.getElementById('searchName');
+            if (searchName) {
+                searchName.value = nombreUrl;
+                searchName.readOnly = true; 
+                searchName.classList.add('cursor-not-allowed', 'opacity-60'); 
+            }
+
+            if (db) {
+                const confirmacionesRef = collection(db, dbCollectionName);
+                const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+                getDocs(q).then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        const form = document.getElementById('rsvpForm');
+                        if(form) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                            if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
+                            
+                            form.innerHTML = `
+                                <div class="bg-white border border-theme-accent/40 p-6 rounded-2xl text-center sombra-caja mt-2">
+                                    <p class="text-theme-accent font-bold text-lg mb-2 drop-shadow-sm">¡Asistencia confirmada!</p>
+                                    <p class="text-theme-dark text-xs font-bold drop-shadow-sm leading-relaxed">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Error verificando registro previo en Firebase:", err);
+                });
+            }
+        }
+
+        // ==========================================
+        // GUARDAR RSVP (CONFIRMAR ASISTENCIA CON VALIDACIÓN DE PASES)
+        // ==========================================
+        const rsvpFormElement = document.getElementById('rsvpForm');
+        if (rsvpFormElement) {
+            rsvpFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('rsvpName').value.trim();
+                const numAdultos = parseInt(document.getElementById('rsvpAdults')?.value) || 0;
+                const numNinos = parseInt(document.getElementById('rsvpNinos')?.value) || 0;
+                const totalPases = numAdultos + numNinos;
+
+                // 1. Validar que confirmen al menos 1 asistente
+                if (totalPases <= 0) {
+                    mostrarAlerta("Debes confirmar al menos 1 asistente.");
+                    return;
+                }
+
+                // 2. Validar que la suma (Adultos + Niños) NO supere los pases asignados
+                if (pasesAsignadosMax && !isNaN(pasesAsignadosMax) && totalPases > pasesAsignadosMax) {
+                    mostrarAlerta(`Solo tienes ${pasesAsignadosMax} ${pasesAsignadosMax === 1 ? 'pase asignado' : 'pases asignados'}. La suma de adultos (${numAdultos}) y niños (${numNinos}) no puede superar ese límite.`);
+                    return;
+                }
+                
+                const form = document.getElementById('rsvpForm');
+                const loader = document.getElementById('loadingMessage');
+                const textLoader = document.getElementById('loadingText');
+                
+                form.style.display = 'none';
+                
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+
+                try {
+                    if (db) {
+                        textLoader.innerText = "Verificando...";
+                        
+                        const confirmacionesRef = collection(db, dbCollectionName);
+                        const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
+                        const querySnapshot = await getDocs(q);
+
+                        if (!querySnapshot.empty) {
+                            document.getElementById('rsvpTitleText').classList.add('hidden');
+                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                            const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                            if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
+
+                            form.innerHTML = `
+                                <div class="bg-white border border-theme-accent/40 p-6 rounded-2xl text-center sombra-caja mt-2">
+                                    <p class="text-theme-accent font-bold text-lg mb-2 drop-shadow-sm">¡Asistencia confirmada!</p>
+                                    <p class="text-theme-dark text-xs font-bold drop-shadow-sm leading-relaxed">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                                </div>
+                            `;
+                            form.style.display = 'block';
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                            return;
+                        }
+                    }
+
+                    textLoader.innerText = "Generando pase...";
+                    const folio = "XV-ANGELA-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+                    if (db) {
+                        await addDoc(collection(db, dbCollectionName), {
+                            nombre: name,
+                            nombre_lower: name.toLowerCase(),
+                            adultos: numAdultos,
+                            ninos: numNinos,
+                            totalPases: totalPases,
+                            totalSolicitado: totalPases,
+                            pasesAsignados: pasesAsignadosMax || totalPases,
+                            folio: folio,
+                            fecha: serverTimestamp() 
+                        });
+                    }
+
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                    document.getElementById('rsvpTitleText').classList.add('hidden');
+                    document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                    const infoPasesRsvp = document.getElementById('info-pases-rsvp');
+                    if (infoPasesRsvp) infoPasesRsvp.classList.add('hidden');
+
+                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                    const numeroWhatsApp = "524774944976"; 
+                    const mensajeWa = `¡Hola! Confirmo mi asistencia a los XV años de Angela Sánchez.%0A%0A Nombre o Familia: ${name}%0A Adultos confirmados: ${numAdultos}%0A Niños confirmados: ${numNinos}%0A Total de pases: ${totalPases}`;
+                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${mensajeWa}`;
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = "mt-2 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                    
+                    resultDiv.innerHTML = `
+                        ${construirHTMLPaseMinimalista('tarjetaPaseDigitalGenerado', name, totalPases, numAdultos, numNinos, folio)}
+                        
+                        <div class="flex flex-col gap-3 w-full max-w-sm mt-6">
+                            <button id="btnDescargarImagenRSVP" class="bg-[#702446] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#C86D8E] transition-all duration-300 rounded-full sombra-caja flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider border border-white/40">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar Pase
+                            </button>
+                            
+                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#1DA851] transition-all duration-300 rounded-full sombra-caja flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
+                                Avisar por WhatsApp
+                            </a>
+                        </div>
+                    `;
+                    seccionRsvp.appendChild(resultDiv);
+
+                    // ====================================================
+                    // LÓGICA DE DESCARGA SEGURA
+                    // ====================================================
+                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                        const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
+                        const originalText = btnDescargar.innerHTML;
+                        btnDescargar.innerText = "Generando...";
+                        
+                        const clone = tarjeta.cloneNode(true);
+                        clone.style.width = "380px";
+                        clone.style.height = "auto";
+                        clone.style.position = "fixed";
+                        clone.style.top = "-9999px";
+                        clone.style.left = "-9999px";
+                        clone.style.zIndex = "-9999";
+                        document.body.appendChild(clone);
+                        
+                        window.html2canvas(clone, { 
+                            backgroundColor: "#FFFDFD", 
+                            scale: 3, 
+                            useCORS: true, 
+                            scrollX: 0, 
+                            scrollY: 0 
+                        }).then(canvas => {
+                            document.body.removeChild(clone);
+                            
+                            const base64 = canvas.toDataURL('image/png');
+                            
+                            canvas.toBlob(blob => {
+                                const url = window.URL.createObjectURL(blob);
+                                const enlace = document.createElement('a');
+                                enlace.style.display = 'none';
+                                enlace.href = url;
+                                enlace.download = 'Pase_XV_Angela.png';
+                                document.body.appendChild(enlace);
+                                enlace.click();
+                                document.body.removeChild(enlace);
+                                setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                            }, 'image/png');
+
+                            tarjeta.style.padding = "0";
+                            tarjeta.style.border = "none";
+                            tarjeta.style.background = "transparent";
+                            tarjeta.style.boxShadow = "none";
+                            tarjeta.innerHTML = `
+                                <img src="${base64}" alt="Pase" class="w-full sombra-caja rounded-2xl" />
+                                <p class="text-[11px] text-theme-dark font-bold mt-4 drop-shadow-sm text-center px-2 leading-relaxed">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                            `;
+
+                            btnDescargar.innerHTML = "¡Descarga iniciada!";
+                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+
+                        }).catch(err => {
+                            if(document.body.contains(clone)) document.body.removeChild(clone);
+                            console.error("Error", err);
+                            btnDescargar.innerHTML = originalText;
+                        });
+                    });
+
+                } catch(error) {
+                    console.error("Error al guardar:", error);
+                    mostrarAlerta("No pudimos guardar tu pase. Revisa tu internet e intenta de nuevo.");
+                    form.style.display = 'block';
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                }
+            });
+        }
+
+        // ==========================================
+        // BUSCADOR / RECUPERAR PASE
+        // ==========================================
+        const searchPassFormElement = document.getElementById('searchPassForm');
+        if (searchPassFormElement) {
+            searchPassFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const searchName = document.getElementById('searchName').value.trim();
+                const resultDiv = document.getElementById('searchResultMessage');
+                const btnSubmit = e.target.querySelector('button[type="submit"]');
+                
+                btnSubmit.innerText = "Buscando...";
+                btnSubmit.disabled = true;
+                resultDiv.classList.add('hidden');
+
+                try {
+                    if(!db) throw new Error("Firebase no inicializado");
+
+                    const confirmacionesRef = collection(db, dbCollectionName);
+                    const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+                    if (!querySnapshot.empty) {
+                        const docData = querySnapshot.docs[0].data();
+                        const adultos = docData.adultos !== undefined ? docData.adultos : docData.totalPases;
+                        const ninos = docData.ninos !== undefined ? docData.ninos : 0;
+                        
+                        resultDiv.innerHTML = `
+                            <div class="mt-4 flex flex-col items-center w-full">
+                                ${construirHTMLPaseMinimalista('tarjetaPaseDigital', docData.nombre, docData.totalPases, adultos, ninos, docData.folio)}
+                                
+                                <button id="btnDescargarPaseBuscado" class="mt-6 bg-[#702446] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#C86D8E] transition-all duration-300 rounded-full sombra-caja flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider z-10 border border-white/40">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    Descargar Pase
+                                </button>
+                            </div>
+                        `;
+
+                        // ====================================================
+                        // LÓGICA DE DESCARGA SEGURA 
+                        // ====================================================
+                        const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
+                        btnDescargarPase.addEventListener('click', () => {
+                            const tarjeta = document.getElementById('tarjetaPaseDigital');
+                            const originalText = btnDescargarPase.innerHTML;
+                            btnDescargarPase.innerText = "Generando imagen...";
+                            
+                            const clone = tarjeta.cloneNode(true);
+                            clone.style.width = "380px";
+                            clone.style.height = "auto";
+                            clone.style.position = "fixed";
+                            clone.style.top = "-9999px";
+                            clone.style.left = "-9999px";
+                            clone.style.zIndex = "-9999";
+                            document.body.appendChild(clone);
+                            
+                            window.html2canvas(clone, { 
+                                backgroundColor: "#FFFDFD", 
+                                scale: 3, 
+                                useCORS: true, 
+                                scrollX: 0, 
+                                scrollY: 0 
+                            }).then(canvas => {
+                                document.body.removeChild(clone);
+
+                                const base64 = canvas.toDataURL('image/png');
+                                
+                                canvas.toBlob(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const enlace = document.createElement('a');
+                                    enlace.style.display = 'none';
+                                    enlace.href = url;
+                                    enlace.download = 'Pase_XV_Angela.png';
+                                    document.body.appendChild(enlace);
+                                    enlace.click();
+                                    document.body.removeChild(enlace);
+                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                                }, 'image/png');
+
+                                tarjeta.style.padding = "0";
+                                tarjeta.style.border = "none";
+                                tarjeta.style.background = "transparent";
+                                tarjeta.style.boxShadow = "none";
+                                tarjeta.innerHTML = `
+                                    <img src="${base64}" alt="Pase" class="w-full sombra-caja rounded-2xl" />
+                                    <p class="text-[11px] text-theme-dark font-bold mt-4 text-center px-2 leading-relaxed drop-shadow-sm">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
+                                `;
+
+                                btnDescargarPase.innerHTML = "¡Descarga iniciada!";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
+
+                            }).catch(error => {
+                                if(document.body.contains(clone)) document.body.removeChild(clone);
+                                console.error("Error al generar la imagen: ", error);
+                                btnDescargarPase.innerHTML = "Error al descargar";
+                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
+                            });
+                        });
+
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="bg-white/85 backdrop-blur-md border-2 border-theme-accent/50 p-8 rounded-3xl sombra-caja z-10 w-full text-center">
+                                <p class="text-theme-dark font-bold mb-2">Reserva no encontrada</p>
+                                <p class="text-theme-dark/80 text-xs font-bold leading-relaxed">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error("Error al buscar:", error);
+                    resultDiv.innerHTML = `
+                            <div class="bg-white/85 backdrop-blur-md border-2 border-red-400 p-8 rounded-3xl sombra-caja z-10 w-full text-center">
+                                <p class="text-red-500 font-bold mb-2">Error de conexión</p>
+                                <p class="text-theme-dark/80 text-xs font-bold leading-relaxed">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
+                            </div>
+                        `;
+                } finally {
+                    btnSubmit.innerText = "Buscar";
+                    btnSubmit.disabled = false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
