@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>XV Angela - Muro de Recuerdos</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <link rel="apple-touch-icon" href="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_portada_IMG_2044.jpeg?alt=media&token=a42afd89-89a7-4413-813e-cfa1c604fb90">
+    
+    <meta name="theme-color" content="#FDF4F7">
+    <meta property="og:title" content="Mis XV • Angela - Muro de Recuerdos">
+    <meta property="og:description" content="¡Prepárate para celebrar una noche inolvidable! Comparte tus fotos y videos aquí.">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Premium_%C3%81ngela_Xiromy_S%C3%A1nchez_Guti%C3%A9rrez__1792351419322%2Ffoto_portada_IMG_2044.jpeg?alt=media&token=a42afd89-89a7-4413-813e-cfa1c604fb90">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            light: '#FDF4F7', 
+                            pink: '#F8D7E3',
+                            dark: '#702446', 
+                            accent: '#C86D8E' 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cantata+One&family=Luxurious+Script&display=swap" rel="stylesheet">
+    
+    <!-- LIBRERÍAS DE CONVERSIÓN Y COMPRESIÓN -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
+
+    <style>
+        :root {
+            --font-main: 'Cantata One', serif;
+            --font-script: 'Luxurious Script', cursive;
+            --color-dark: #702446;
+            --color-accent: #C86D8E;
+            --bg-fade: #FDF4F7;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-main);
+            color: var(--color-dark);
+            scroll-behavior: smooth;
+            background-color: var(--bg-fade);
+        }
+
+        h1, h2, h3, p, label, button, input, select, textarea, span { 
+            font-family: var(--font-main); 
+        }
+
+        .font-script, .font-script * { 
+            font-family: var(--font-script) !important; 
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+
+        /* VIDEO DE FONDO FIJO CON TINTE ROSA */
+        .video-background-container {
+            position: fixed; inset: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; 
+            background-color: var(--bg-fade);
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            filter: hue-rotate(135deg) saturate(1.15);
+        }
+        .video-overlay { position: absolute; inset: 0; background-color: rgba(253, 244, 247, 0.28); z-index: 1; }
+
+        /* FILTROS Y ANIMACIONES DE DECORACIÓN */
+        .pink-tint {
+            filter: hue-rotate(135deg) saturate(1.3) drop-shadow(0 10px 15px rgba(112, 36, 70, 0.22)) !important;
+        }
+        .pink-glitter {
+            filter: sepia(0.35) hue-rotate(295deg) saturate(2.2) brightness(1.05) drop-shadow(0 10px 15px rgba(112, 36, 70, 0.25)) !important;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+        .floating-fast { animation: float 4s ease-in-out infinite; }
+
+        @keyframes star-spin-pulse {
+            0% { transform: scale(0.8) rotate(0deg); opacity: 0.75; filter: sepia(0.4) hue-rotate(295deg) saturate(2.5) drop-shadow(0 0 5px rgba(232, 153, 181, 0.6)); }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; filter: sepia(0.4) hue-rotate(295deg) saturate(3) drop-shadow(0 0 18px rgba(232, 153, 181, 1)); }
+            100% { transform: scale(0.8) rotate(360deg); opacity: 0.75; filter: sepia(0.4) hue-rotate(295deg) saturate(2.5) drop-shadow(0 0 5px rgba(232, 153, 181, 0.6)); }
+        }
+        .star-anim { animation: star-spin-pulse 3.5s infinite ease-in-out; }
+        .star-anim-fast { animation: star-spin-pulse 2.5s infinite ease-in-out reverse; }
+
+        .text-glow { text-shadow: 0 2px 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,1); }
+        .text-glow-dark { text-shadow: 0 2px 10px rgba(253,244,247,1), 0 0 20px rgba(253,244,247,1); }
+        .sombra-caja { box-shadow: 0 15px 30px rgba(112, 36, 70, 0.16); }
+
+        /* Cinta adhesiva rosa para Polaroids */
+        .tape-pink { 
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); 
+            width: 85px; height: 24px; background-color: rgba(232, 162, 188, 0.85); 
+            backdrop-filter: blur(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.12); z-index: 30; border-radius: 1px; 
+        }
+
+        .btn-primary {
+            background-color: #D484A3; color: white; font-family: var(--font-main); font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.15em; border-radius: 30px; box-shadow: 0 8px 20px rgba(200, 109, 142, 0.4);
+            transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.6); text-align: center; cursor: pointer;
+        }
+        .btn-primary:hover { background-color: #C86D8E; }
+        .btn-primary:active { transform: scale(0.95); }
+
+        .btn-blanco { 
+            background-color: #FFFFFF; color: var(--color-dark); border: 1px solid rgba(200, 109, 142, 0.4); 
+            border-radius: 30px; transition: all 0.3s ease;
+        }
+        .btn-blanco:hover { background-color: #F8D7E3; }
+
+        .input-elegante {
+            background-color: #FFFFFF !important; 
+            border: 1.5px solid rgba(200, 109, 142, 0.4) !important; 
+            color: var(--color-dark) !important;
+            border-radius: 1rem; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .input-elegante:focus { border-color: var(--color-dark) !important; outline: none; box-shadow: 0 0 12px rgba(200, 109, 142, 0.25); }
+        .input-elegante::placeholder { color: rgba(112, 36, 70, 0.45); font-family: var(--font-main); }
+
+        /* Estilos Pestañas Modal */
+        .tab-btn {
+            color: rgba(112, 36, 70, 0.45);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: var(--color-dark);
+            border-bottom: 2px solid var(--color-accent);
+            font-weight: bold;
+        }
+
+        #uploadModal { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #uploadModal.hidden { opacity: 0; visibility: hidden; display: flex !important; pointer-events: none; }
+        
+        #previewContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px; width: 100%; max-height: 220px; overflow-y: auto; padding: 10px;
+        }
+        
+        #processingOverlay {
+            position: absolute; inset: 0;
+            background: rgba(253, 244, 247, 0.92); backdrop-filter: blur(4px);
+            z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 1rem; transition: opacity 0.3s;
+        }
+        #processingOverlay.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #toastMessage { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .toast-visible { opacity: 1 !important; transform: translate(-50%, 0) !important; pointer-events: auto !important; }
+        
+        .tarjeta-recuerdo { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .tarjeta-recuerdo:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(112, 36, 70, 0.25); z-index: 10; }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- FONDO FIJO PARALLAX CON VIDEO Y DECORACIONES DISCO -->
+    <div class="video-background-container">
+        <div class="video-overlay"></div>
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FDisco.MP4?alt=media&token=ebcf283a-5e57-42df-8782-40986d5e28eb" type="video/mp4">
+        </video>
+        
+        <!-- Decoraciones fijas en las esquinas -->
+        <img src="https://i.imgur.com/zQEm7DZ.png" class="absolute -top-6 -right-10 w-40 md:w-56 floating z-10 pink-glitter opacity-90" alt="Disco">
+        <img src="https://i.imgur.com/xFHJjxF.png" class="absolute top-16 left-6 w-12 md:w-16 star-anim z-10" alt="Star">
+        <img src="https://i.imgur.com/t9CrY8W.png" class="absolute bottom-24 right-8 w-10 md:w-12 star-anim-fast z-10" alt="Star">
+        <img src="https://i.imgur.com/n44k8hu.png" class="absolute -bottom-4 -left-6 w-28 md:w-36 z-10 rotate-[-12deg] pink-tint opacity-85" alt="Cámara">
+    </div>
+
+    <!-- Toast de Notificaciones -->
+    <div id="toastMessage" class="fixed top-8 left-1/2 transform -translate-x-1/2 -translate-y-16 opacity-0 pointer-events-none px-8 py-4 rounded-full shadow-xl z-[9999] text-xs uppercase font-bold tracking-[0.15em] text-center min-w-[300px] border-2 border-theme-accent bg-white text-theme-dark">
+        Mensaje aquí
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DESLIZABLE -->
+    <div class="w-full min-h-screen flex flex-col relative z-10">
+
+        <!-- HEADER ELEGANTE -->
+        <header class="w-full pt-14 pb-6 px-4 md:px-6 flex flex-col items-center text-center relative z-10">
+            <p class="text-xs uppercase tracking-[0.3em] text-theme-dark font-bold mb-2 text-glow-dark border-b-2 border-theme-accent/50 pb-2 inline-block">
+                Álbum Compartido
+            </p>
+            
+            <div class="relative my-2">
+                <h1 class="text-7xl md:text-8xl lg:text-[8.5rem] font-script text-theme-accent drop-shadow-md leading-none py-2 px-4 max-w-4xl mx-auto text-glow -rotate-2">
+                    Angela
+                </h1>
+            </div>
+
+            <p class="text-xs text-theme-dark tracking-wider leading-relaxed max-w-xl mx-auto mb-8 px-4 font-bold text-glow-dark">
+                ¡Prepárate para recordar una noche inolvidable!<br>Ayúdame a capturar los mejores momentos subiendo tus fotos y videos.
+            </p>
+
+            <button id="openModalBtn" class="btn-primary py-2 px-6 text-xs tracking-[0.2em] hover:scale-105 duration-300">
+                Añadir Recuerdo
+            </button>
+        </header>
+
+        <!-- SECCIÓN DE GALERÍA -->
+        <main class="w-full flex-grow max-w-[1400px] mx-auto px-4 md:px-8 pb-20 relative z-10">
+            
+            <!-- CONTROLES DE VISTA -->
+            <div class="w-full flex justify-center border-t border-theme-accent/30 pt-6 mb-4 gap-2">
+                <div class="bg-white/80 backdrop-blur-md border border-theme-accent/40 rounded-full p-1 flex shadow-sm w-fit">
+                    <button id="btn1Col" class="px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] bg-theme-accent text-white rounded-full transition-all shadow-md">Amplia</button>
+                    <button id="btn2Col" class="px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-theme-dark hover:text-theme-accent bg-transparent rounded-full transition-all">Cuadrícula</button>
+                </div>
+            </div>
+            
+            <!-- CONTENEDOR MASONRY (Muro) -->
+            <div id="muro" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10 mt-8">
+                <!-- Tarjetas generadas dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE SUBIDA CON PESTAÑAS -->
+    <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-[#702446]/60 backdrop-blur-md hidden w-full h-full">
+        <div class="relative bg-white/95 border-2 border-theme-accent rounded-[2rem] w-full max-w-lg p-6 md:p-10 sombra-caja flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden hide-scrollbar">
+
+            <button id="closeModalBtnIcon" class="absolute top-4 right-4 md:top-6 md:right-6 text-theme-dark/60 hover:text-theme-dark transition-colors z-20 bg-theme-light rounded-full p-2 border border-theme-accent/30 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- TABS -->
+            <div class="flex w-full border-b border-theme-accent/30 mb-8 mt-10 md:mt-4 relative z-10">
+                <button id="tabFotosBtn" class="flex-1 pb-4 text-xs uppercase tracking-[0.15em] tab-btn active font-bold">Subir Archivo</button>
+                <button id="tabMensajeBtn" class="flex-1 pb-4 text-xs uppercase tracking-[0.15em] tab-btn font-bold">Dejar Mensaje</button>
+            </div>
+
+            <!-- CONTENIDO PESTAÑA 1: FOTOS/VIDEOS -->
+            <div id="formFotos" class="w-full flex flex-col gap-6 text-left relative z-10 transition-all duration-300">
+                <div>
+                    <label class="text-theme-dark text-[10px] font-bold tracking-[0.15em] uppercase mb-2 block pl-2">Familia / Nombre</label>
+                    <input type="text" id="nombreInputFoto" placeholder="Ej: Familia Sánchez" class="input-elegante py-4 px-5 w-full text-center shadow-sm font-bold">
+                </div>
+                
+                <!-- CAMPO: MOMENTO DEL EVENTO -->
+                <div>
+                    <label class="text-theme-dark text-[10px] font-bold tracking-[0.15em] uppercase mb-2 block pl-2">Momento del evento</label>
+                    <select id="folderSelect" class="input-elegante py-4 px-5 w-full cursor-pointer text-center shadow-sm appearance-none font-bold">
+                        <option value="" disabled selected class="text-gray-400">Selecciona el momento...</option>
+                        <option value="Ceremonia Religiosa">Ceremonia Religiosa</option>
+                        <option value="Recepción">Recepción</option>
+                        <option value="Vals y Baile Sorpresa">Vals y Baile Sorpresa</option>
+                        <option value="La Fiesta">La Fiesta</option>
+                        <option value="Con Angela">Con Angela</option>
+                    </select>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="text-theme-dark text-[10px] font-bold tracking-[0.15em] uppercase mb-2 block pl-2">Tus Archivos</label>
+                    <div id="dropZone" class="relative border-2 border-dashed border-theme-accent bg-theme-light/60 rounded-2xl p-8 text-center transition-all hover:bg-theme-pink/40 cursor-pointer overflow-hidden group shadow-sm">
+                        
+                        <div id="processingOverlay" class="hidden">
+                            <div class="w-8 h-8 border-4 border-theme-accent border-t-transparent rounded-full animate-spin mb-3 mx-auto"></div>
+                            <p class="text-theme-dark text-[9px] font-bold uppercase tracking-[0.2em] text-center px-2">Optimizando calidad...<br>No cierres esta ventana</p>
+                        </div>
+
+                        <input type="file" id="archivoInput" accept="image/jpeg, image/png, video/mp4, video/mov, image/heic, image/heif" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        
+                        <svg class="w-10 h-10 mx-auto text-theme-accent group-hover:text-theme-dark transition-colors mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-theme-dark text-xs font-bold uppercase tracking-[0.15em]">Toca aquí para buscar</p>
+                        <p class="text-theme-dark/60 text-[9px] tracking-widest mt-2 uppercase font-bold">(Videos máximo 30s / 20MB)</p>
+                    </div>
+
+                    <div id="previsualizacion" class="w-full relative hidden mt-4 border border-theme-accent/40 rounded-2xl bg-white shadow-inner overflow-hidden">
+                        <p class="text-[9px] text-theme-dark text-center py-3 uppercase font-bold border-b border-theme-accent/20 tracking-[0.2em]">Archivos listos:</p>
+                        <div id="previewContainer" class="bg-theme-light/40"></div>
+                        <button id="removePreviewBtn" class="w-full py-4 text-[10px] text-red-600 bg-red-50 uppercase font-bold hover:bg-red-100 transition-colors tracking-widest border-t border-red-100">Limpiar selección</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO PESTAÑA 2: MENSAJE -->
+            <div id="formMensaje" class="w-full flex flex-col gap-6 text-left relative z-10 hidden transition-all duration-300">
+                <div>
+                    <label class="text-theme-dark text-[10px] font-bold tracking-[0.15em] uppercase mb-2 block pl-2">Familia / Nombre</label>
+                    <input type="text" id="nombreInputMensaje" placeholder="Ej: Familia Gutiérrez" class="input-elegante py-4 px-5 w-full text-center shadow-sm font-bold">
+                </div>
+
+                <div>
+                    <label class="text-theme-dark text-[10px] font-bold tracking-[0.15em] uppercase mb-2 block pl-2">Tu Mensaje Especial</label>
+                    <textarea id="textoMensaje" rows="6" maxlength="250" placeholder="Escribe aquí tus mejores deseos para Angela..." class="input-elegante py-5 px-5 w-full leading-relaxed resize-none text-center shadow-sm font-bold" style="text-transform: none;"></textarea>
+                    <p class="text-right text-[10px] text-theme-dark/60 mt-2 uppercase tracking-widest font-bold"><span id="charCount">0</span>/250</p>
+                </div>
+            </div>
+
+            <!-- BOTONES COMPARTIDOS -->
+            <div class="flex gap-4 mt-8 relative z-10">
+                <button id="btnCancelar" class="flex-1 btn-blanco font-bold py-4 text-[10px] tracking-[0.15em] uppercase shadow-sm">Cancelar</button>
+                <button id="btnSubir" class="flex-[1.5] btn-primary py-4 text-[10px] tracking-[0.15em] uppercase shadow-lg">Subir Archivo</button>
+            </div>
+            
+            <p id="estadoCarga" class="text-[10px] uppercase tracking-widest font-bold mt-6 text-theme-dark border border-theme-accent p-4 rounded-2xl hidden text-center w-full relative z-10 shadow-sm bg-theme-light"></p>
+        </div>
+    </div>
+
+    <!-- FIREBASE Y LÓGICA CORE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        // CREDENCIALES (XV Angela)
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // GESTIÓN DE LIKES LOCALSTORAGE
+        let likedPosts = JSON.parse(localStorage.getItem('liked_posts_angela')) || [];
+
+        // TOAST NOTIFICATIONS
+        window.showToast = function(msg, isError = true) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = msg;
+            if(isError) {
+                toast.classList.add('border-red-500', 'text-white', 'bg-red-600');
+                toast.classList.remove('border-theme-accent', 'bg-white', 'text-theme-dark');
+            } else {
+                toast.classList.remove('border-red-500', 'text-white', 'bg-red-600');
+                toast.classList.add('border-theme-accent', 'bg-white', 'text-theme-dark');
+            }
+            toast.classList.add('toast-visible');
+            setTimeout(() => { toast.classList.remove('toast-visible'); }, 3500);
+        };
+
+        // LÓGICA DE PESTAÑAS (TABS)
+        const tabFotosBtn = document.getElementById('tabFotosBtn');
+        const tabMensajeBtn = document.getElementById('tabMensajeBtn');
+        const formFotos = document.getElementById('formFotos');
+        const formMensaje = document.getElementById('formMensaje');
+        let currentTab = 'fotos'; 
+
+        tabFotosBtn.addEventListener('click', () => {
+            currentTab = 'fotos';
+            tabFotosBtn.classList.add('active');
+            tabMensajeBtn.classList.remove('active');
+            formFotos.classList.remove('hidden');
+            formMensaje.classList.add('hidden');
+            document.getElementById('btnSubir').innerText = 'Subir Archivo';
+        });
+
+        tabMensajeBtn.addEventListener('click', () => {
+            currentTab = 'mensaje';
+            tabMensajeBtn.classList.add('active');
+            tabFotosBtn.classList.remove('active');
+            formMensaje.classList.remove('hidden');
+            formFotos.classList.add('hidden');
+            document.getElementById('btnSubir').innerText = 'Publicar Mensaje';
+        });
+
+        const textoMensaje = document.getElementById('textoMensaje');
+        const charCount = document.getElementById('charCount');
+        textoMensaje.addEventListener('input', function() {
+            charCount.innerText = this.value.length;
+        });
+
+        // MODAL LÓGICA
+        const modal = document.getElementById('uploadModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeModalBtnIcon = document.getElementById('closeModalBtnIcon');
+        const btnCancelar = document.getElementById('btnCancelar');
+
+        openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+        closeModalBtnIcon.addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+        btnCancelar.addEventListener('click', () => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; });
+
+        // ARCHIVOS LÓGICA (CON COMPRESIÓN)
+        const archivoInput = document.getElementById('archivoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previsualizacion = document.getElementById('previsualizacion');
+        const dropZone = document.getElementById('dropZone');
+        const processingOverlay = document.getElementById('processingOverlay');
+        const btnSubir = document.getElementById("btnSubir");
+        const estadoCarga = document.getElementById('estadoCarga');
+
+        function getVideoDuration(file) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+                video.src = URL.createObjectURL(file);
+            });
+        }
+
+        archivoInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            processingOverlay.classList.remove('hidden');
+            previewContainer.innerHTML = "";
+            
+            const archivosProcesados = new DataTransfer();
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                const fileName = file.name.toLowerCase();
+
+                if (file.type.includes("video")) {
+                    const duration = await getVideoDuration(file);
+                    if (duration > 30) {
+                        window.showToast(`El video dura más de 30s y no se subirá.`, true);
+                        continue; 
+                    }
+                    const videoSizeMB = file.size / 1024 / 1024;
+                    if (videoSizeMB > 20) {
+                        window.showToast(`El video es muy pesado (${videoSizeMB.toFixed(1)}MB). Máx 20MB.`, true);
+                        continue;
+                    }
+                } 
+                else if (file.type.includes("image")) {
+                    try {
+                        if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic') {
+                            const conversionPromise = heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+                            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout HEIC")), 15000));
+                            const convertedBlob = await Promise.race([conversionPromise, timeoutPromise]);
+                            const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                            file = new File([finalBlob], file.name.replace(/\.heic|\.heif/i, ".jpg"), { type: "image/jpeg" });
+                        }
+
+                        const options = { maxSizeMB: 0.9, maxWidthOrHeight: 1920, useWebWorker: true };
+                        const compressedBlob = await imageCompression(file, options);
+                        file = new File([compressedBlob], file.name, { type: compressedBlob.type });
+                    } catch (err) {
+                        console.warn(`Error optimizando ${file.name}:`, err);
+                    }
+                }
+
+                archivosProcesados.items.add(file);
+                
+                const url = URL.createObjectURL(file);
+                const thumb = document.createElement('div');
+                thumb.className = "relative h-24 bg-white rounded-lg overflow-hidden shadow-sm border border-theme-accent/30";
+                
+                if (file.type.includes("image")) {
+                    thumb.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+                } else {
+                    thumb.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/40"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg></div>`;
+                }
+                previewContainer.appendChild(thumb);
+            }
+
+            archivoInput.files = archivosProcesados.files;
+            processingOverlay.classList.add('hidden');
+
+            if (archivoInput.files.length > 0) {
+                dropZone.classList.add('hidden');
+                previsualizacion.classList.remove('hidden');
+            } else {
+                archivoInput.value = ""; 
+                dropZone.classList.remove('hidden');
+                previsualizacion.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('removePreviewBtn').addEventListener('click', () => {
+            archivoInput.value = "";
+            previsualizacion.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+        });
+
+        // LÓGICA UNIFICADA DE SUBIDA (FOTOS O MENSAJES)
+        btnSubir.addEventListener("click", async () => {
+            btnSubir.disabled = true;
+
+            if (currentTab === 'fotos') {
+                const archivos = Array.from(archivoInput.files);
+                const nombre = document.getElementById("nombreInputFoto").value.trim();
+                const momento = document.getElementById("folderSelect").value;
+
+                if (archivos.length === 0 || !nombre || !momento) {
+                    window.showToast("POR FAVOR, INGRESA TU NOMBRE Y SELECCIONA MOMENTO/ARCHIVOS.", true);
+                    btnSubir.disabled = false;
+                    return;
+                }
+
+                estadoCarga.classList.remove('hidden');
+
+                for (let i = 0; i < archivos.length; i++) {
+                    const file = archivos[i];
+                    const total = archivos.length;
+                    
+                    await new Promise((resolve, reject) => {
+                        const storageRef = ref(storage, 'xv_angela/' + Date.now() + "_" + file.name);
+                        const uploadTask = uploadBytesResumable(storageRef, file);
+
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                btnSubir.innerText = `[${i+1}/${total}] ${progress}%`;
+                            },
+                            (error) => { reject(error); },
+                            async () => {
+                                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                                await addDoc(collection(db, "muro_xvangela"), {
+                                    nombre: nombre, 
+                                    momento: momento, 
+                                    url_multimedia: url, 
+                                    likes: 0,
+                                    tipo: file.type.includes("video") ? "video" : "imagen",
+                                    fecha: new Date()
+                                });
+                                resolve();
+                            }
+                        );
+                    });
+                }
+                estadoCarga.innerText = "¡MOMENTOS GUARDADOS CON ÉXITO!";
+                
+            } else if (currentTab === 'mensaje') {
+                const nombre = document.getElementById("nombreInputMensaje").value.trim();
+                const texto = document.getElementById("textoMensaje").value.trim();
+
+                if (!nombre || !texto) {
+                    window.showToast("POR FAVOR, INGRESA TU NOMBRE Y TU MENSAJE.", true);
+                    btnSubir.disabled = false;
+                    return;
+                }
+
+                estadoCarga.classList.remove('hidden');
+                btnSubir.innerText = "Publicando...";
+
+                try {
+                    await addDoc(collection(db, "muro_xvangela"), {
+                        nombre: nombre, 
+                        texto: texto, 
+                        likes: 0,
+                        tipo: "mensaje",
+                        fecha: new Date()
+                    });
+                    estadoCarga.innerText = "¡MENSAJE PUBLICADO CON ÉXITO!";
+                } catch (error) {
+                    window.showToast("Hubo un error al publicar el mensaje.", true);
+                    btnSubir.disabled = false;
+                    estadoCarga.classList.add('hidden');
+                    return;
+                }
+            }
+
+            setTimeout(() => location.reload(), 1500);
+        });
+
+        // VISTAS DEL GRID
+        const btn1Col = document.getElementById('btn1Col');
+        const btn2Col = document.getElementById('btn2Col');
+        const muro = document.getElementById('muro');
+
+        btn1Col.addEventListener('click', () => {
+            btn1Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] bg-theme-accent text-white rounded-full transition-all shadow-md";
+            btn2Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-theme-dark hover:text-theme-accent bg-transparent rounded-full transition-all";
+            muro.className = "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 w-full pb-10 mt-8";
+        });
+        btn2Col.addEventListener('click', () => {
+            btn2Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] bg-theme-accent text-white rounded-full transition-all shadow-md";
+            btn1Col.className = "px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-theme-dark hover:text-theme-accent bg-transparent rounded-full transition-all";
+            muro.className = "columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 w-full pb-10 mt-8";
+        });
+
+        // RENDERIZAR MURO MIXTO (FOTOS Y MENSAJES)
+        let isFirstLoad = true;
+        const q = query(collection(db, "muro_xvangela"), orderBy("fecha", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty && muro.innerHTML.trim() === "") {
+                muro.innerHTML = `
+                    <div id="emptyMessage" class="col-span-full py-20 text-center break-inside-avoid flex flex-col items-center justify-center">
+                        <svg class="w-16 h-16 text-theme-dark/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <p class="text-theme-dark font-bold text-sm md:text-base uppercase tracking-[0.2em] text-glow-dark">Aún no hay recuerdos</p>
+                        <p class="text-theme-dark/80 italic text-xs mt-2 uppercase tracking-widest font-bold text-glow-dark">¡Sé el primero en compartir un momento!</p>
+                    </div>`;
+                return;
+            }
+
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (emptyMessage) emptyMessage.remove();
+
+            snapshot.docChanges().forEach((change) => {
+                const datos = change.doc.data();
+                const id = change.doc.id;
+
+                if (change.type === "added") {
+                    const userLiked = likedPosts.includes(id);
+                    const heartColorClass = userLiked ? 'text-theme-accent fill-current' : 'text-gray-300';
+                    const divTarjeta = document.createElement('div');
+                    divTarjeta.id = `tarjeta-${id}`;
+                    
+                    // RENDERIZADO SI ES UN MENSAJE (Sin comillas)
+                    if (datos.tipo === "mensaje") {
+                        divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-8 bg-white/95 backdrop-blur-sm border-2 border-theme-accent/40 rounded-2xl flex flex-col overflow-hidden relative z-20 sombra-caja min-h-[100px] justify-between p-4 group";
+                        
+                        divTarjeta.innerHTML = `
+                            <div class="relative z-10 w-full flex flex-col flex-grow justify-between">
+                                <p class="text-base md:text-lg text-theme-dark leading-relaxed text-center px-3 relative z-10 font-bold mb-2 mt-1" style="text-transform: none;">${datos.texto}</p>
+                                
+                                <div class="flex items-center justify-between w-full border-t border-theme-accent/20 pt-1 mt-auto relative z-10">
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-xs uppercase tracking-wider font-bold text-theme-dark">${datos.nombre}</span>
+                                        <span class="text-[9px] uppercase text-theme-accent tracking-widest font-bold mt-1">Firma de invitado</span>
+                                    </div>
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200 bg-theme-light px-3 py-1.5 rounded-full border border-theme-accent/20">
+                                        <svg id="heart-icon-${id}" class="w-4 h-4 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-xs text-theme-dark">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } 
+                    // RENDERIZADO SI ES IMAGEN O VIDEO (POLAROID STYLE CON CINTA ROSA)
+                    else {
+                        const media = datos.tipo === "video" 
+                            ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-gray-100 cursor-pointer object-cover"></video>` 
+                            : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover" loading="lazy">`;
+
+                        const tagMomento = datos.momento ? `<span class="absolute top-0 right-0 bg-theme-accent backdrop-blur-md text-white text-[9px] font-bold px-3 py-1.5 rounded-none shadow border border-white/30 uppercase z-10">${datos.momento}</span>` : '';
+
+                        const safeNombre = (datos.nombre || 'invitado').replace(/[^a-zA-Z0-9_-]/g, '_');
+
+                        // Tarjeta Polaroid sin bordes redondeados y con la cinta rosa arriba
+                        divTarjeta.className = "tarjeta-recuerdo break-inside-avoid mb-8 mt-3 bg-white border border-theme-accent/20 rounded-none flex flex-col relative z-20 sombra-caja p-3 pb-6 group";
+                        
+                        divTarjeta.innerHTML = `
+                            <div class="tape-pink"></div>
+                            <div class="relative w-full mb-5 rounded-none overflow-hidden border border-theme-accent/15">
+                                ${tagMomento}
+                                ${media}
+                            </div>
+                            <div class="flex items-center justify-between px-2 bg-transparent">
+                                <div class="flex items-center gap-3 flex-1 overflow-hidden">
+                                    <h4 class="text-theme-dark font-bold uppercase text-[11px] tracking-[0.15em] truncate flex-1">${datos.nombre}</h4>
+                                </div>
+                                <div class="flex items-center gap-3 pl-3 border-l border-theme-accent/20 ml-2">
+                                    <button onclick="descargarArchivo('${datos.url_multimedia}', '${safeNombre}', '${datos.tipo}')" title="Descargar recuerdo" class="text-theme-dark/70 hover:text-theme-accent transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200 p-1">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    </button>
+                                    <button onclick="darLike('${id}')" class="flex items-center gap-1.5 transition-transform focus:outline-none hover:scale-110 active:scale-95 duration-200">
+                                        <svg id="heart-icon-${id}" class="w-5 h-5 ${heartColorClass} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        <span id="contador-likes-${id}" class="font-bold text-xs text-theme-dark">${datos.likes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (isFirstLoad) {
+                        muro.appendChild(divTarjeta);
+                    } else {
+                        muro.insertBefore(divTarjeta, muro.firstChild);
+                    }
+                }
+
+                if (change.type === "modified") {
+                    const contadorLikes = document.getElementById(`contador-likes-${id}`);
+                    if (contadorLikes) contadorLikes.innerText = datos.likes;
+                }
+
+                if (change.type === "removed") {
+                    const tarjetaRemover = document.getElementById(`tarjeta-${id}`);
+                    if (tarjetaRemover) tarjetaRemover.remove();
+                }
+            });
+
+            isFirstLoad = false;
+        });
+
+        // LIKES
+        window.darLike = async function(id) {
+            if (likedPosts.includes(id)) {
+                window.showToast("YA DISTE ME GUSTA", false);
+                return;
+            }
+
+            const heartIcon = document.getElementById(`heart-icon-${id}`);
+            const contadorText = document.getElementById(`contador-likes-${id}`);
+            
+            if (heartIcon) {
+                heartIcon.classList.remove('text-gray-300', 'fill-none');
+                heartIcon.classList.add('text-theme-accent', 'fill-current');
+            }
+            if (contadorText) {
+                contadorText.innerText = (parseInt(contadorText.innerText) || 0) + 1;
+            }
+
+            likedPosts.push(id);
+            localStorage.setItem('liked_posts_angela', JSON.stringify(likedPosts));
+
+            try {
+                await updateDoc(doc(db, "muro_xvangela", id), { likes: increment(1) });
+            } catch (error) {
+                console.error("Error al dar like:", error);
+                window.showToast("ERROR AL CONECTAR.", true);
+            }
+        };
+
+        window.activarVideo = function(id) {
+            const videoElement = document.getElementById(`vid-${id}`);
+            if (videoElement) {
+                videoElement.muted = false;
+                videoElement.controls = true;
+                videoElement.classList.remove('cursor-pointer');
+            }
+        };
+
+        // DESCARGAR ARCHIVO (FOTOS Y VIDEOS)
+        window.descargarArchivo = async function(url, nombreAutor, tipo) {
+            window.showToast("PREPARANDO DESCARGA...", false);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("CORS o error de red");
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                const ext = tipo === 'video' ? 'mp4' : 'jpg';
+                a.download = `XV_Angela_${nombreAutor}_${Date.now()}.${ext}`;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.warn("Descarga directa bloqueada por CORS, abriendo archivo:", error);
+                window.open(url, '_blank');
+            }
+        };
+    </script>
+</body>
+</html>
