@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Shower | Julieta</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/AsQCWBD.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/UITIzIN.jpeg">
+        
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Baby Shower Julieta">
+    <meta name="theme-color" content="#FFF8F6">
+    <meta property="og:title" content="Baby Shower | Julieta">
+    <meta property="og:description" content="Acompáñanos a celebrar la dulce espera de nuestra princesa Julieta.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/52YXbdq.jpeg">
+        
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        creamBg: '#FFF8F6',
+                        cardPink: '#FDECEF',
+                        borderPink: '#F5DCE0',
+                        roseAccent: '#E298A4',
+                        roseDark: '#C97A87',
+                        brownText: '#685048',
+                        brownLight: '#8C736B',
+                        goldStar: '#F6DCA6'
+                    },
+                    fontFamily: {
+                        serif: ['"Forum"', 'serif'],
+                        sans: ['"Forum"', 'sans-serif'], 
+                        script: ['"MonteCarlo"', 'cursive'] 
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Librerías -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Importar Pinyon Script y Forum -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=MonteCarlo&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100%;
+            background-color: #FFF8F6; 
+            font-family: 'Forum', serif;
+            color: #685048;
+            scroll-behavior: smooth;
+        }
+
+        /* CLASE MAESTRA DE TEXTURA */
+        .textura-ruido {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.12'/%3E%3C/svg%3E") !important;
+            background-repeat: repeat !important;
+            background-size: 200px 200px !important;
+        }
+
+        /* DIFUMINADO SUPERIOR E INFERIOR PARA FOTOS SEPARADORAS */
+        .foto-difuminada {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+        }
+
+        /* TARJETAS ESTILO IMAGEN DE REFERENCIA */
+        .caja-seccion {
+            background-color: rgba(255, 252, 251, 0.92);
+            border: 1.5px solid #F5DCE0;
+            border-radius: 1.5rem;
+            padding: 2.25rem 1.5rem;
+            margin: 1.5rem 1.25rem;
+            box-shadow: 0 10px 25px -8px rgba(226, 152, 164, 0.15);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* SOBRE INICIAL */
+        #envelope-wrapper {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: visibility 1.8s;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0;
+            background-color: #FFF3F5;
+            transition: opacity 1.2s ease-in-out; z-index: 1;
+        }
+        .flap-wrapper { position: absolute; top: 0; width: 50%; height: 100%; transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1); }
+        .flap-left-wrapper { left: 0; z-index: 6; filter: drop-shadow(15px 0px 25px rgba(104,80,72,0.12)); }
+        .flap-right-wrapper { right: 0; z-index: 5; filter: drop-shadow(-10px 0px 25px rgba(104,80,72,0.12)); }
+        .flap { 
+            width: 100%; height: 100%; 
+            background-color: #FFF3F5;
+        }
+        .flap-left { clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .flap-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+        .seal-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #envelope-wrapper.open .envelope-bg { opacity: 0; }
+        #envelope-wrapper.open .flap-left-wrapper { transform: translateX(-800%); }
+        #envelope-wrapper.open .flap-right-wrapper { transform: translateX(89%); }
+        #envelope-wrapper.open .seal-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
+
+        /* CONTENEDOR PRINCIPAL */
+        #section-main { display: none; }
+        .invitation-container {
+            width: 100%; max-width: 480px; margin: 0 auto;
+            position: relative; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(104, 80, 72, 0.25);
+            min-height: 100vh;
+            background-color: #FFF8F6;
+        }
+
+        .paper-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            background-color: #FFF8F6;
+        }
+
+        .content-layer { position: relative; z-index: 10; }
+        .fade-in-section {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible { opacity: 1; transform: none; }
+        
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: floating 4s infinite ease-in-out;
+        }
+
+        /* LISTÓN DEL HERO */
+        .liston-hero {
+            background-image: url('https://i.imgur.com/aj47Pg9.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 14px 48px 20px 48px;
+            display: inline-block;
+        }
+
+        /* FONDO DE PADRES */
+        .padres-bg {
+            background-image: url('https://i.imgur.com/NqxmiMC.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 210px;
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem 1rem 4.5rem;
+            margin: 0 auto;
+        }
+
+        /* CAJAS DE CUENTA REGRESIVA */
+        .countdown-box {
+            background-color: #FDECEF;
+            border: 1px solid #F5DCE0;
+            border-radius: 0.85rem;
+            width: 68px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(226, 152, 164, 0.12);
+        }
+
+        input[type="text"], button {
+            font-family: 'Forum', serif;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- REPRODUCTOR DE AUDIO -->
+    <audio id="bg-music" loop>
+        <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Fsongs%2FCamiloEvalunaMontanerIndigo.mp3?alt=media&token=7717f2de-dcc0-4fe5-816d-dcb0ab6ceeba" type="audio/mpeg">
+    </audio>
+
+    <!-- SOBRE INICIAL -->
+    <div id="envelope-wrapper">
+        <div class="envelope-bg textura-ruido"></div>
+        <div id="envelope-container" class="w-full h-full relative z-10">
+            <div class="flap-wrapper flap-left-wrapper"><div class="flap flap-left border-r border-roseAccent/20 textura-ruido"></div></div>
+            <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right border-l border-roseAccent/20 textura-ruido"></div></div>
+            <div class="seal-wrapper" onclick="openEnvelope()">
+                <div class="text-sm uppercase mb-3 animate-bounce text-brownText font-bold drop-shadow-sm tracking-widest text-center font-serif">Toca para abrir</div>
+                <img src="https://i.imgur.com/Aex5VVt.png" class="w-[155px] animate-float drop-shadow-md" alt="Sello Conejitas">
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main id="section-main" class="invitation-container">
+        
+        <!-- FONDO DE PAPEL -->
+        <div class="paper-bg textura-ruido"></div>
+
+        <div class="content-layer">
+            
+            <!-- BOTÓN DE MÚSICA -->
+            <div id="audio-btn" class="fixed bottom-[10px] right-[10px] w-[46px] h-[46px] flex items-center justify-center z-[50] cursor-pointer transition-all duration-500 hidden" onclick="toggleAudio()">
+                <img id="audio-icon" src="https://i.imgur.com/5ZWMWQn.png" class="w-7 h-7 object-cover opacity-80" alt="Música">
+            </div>
+
+            <!-- 1. PORTADA / HERO -->
+            <section class="relative flex flex-col items-center text-center overflow-hidden fade-in-section">
+                
+                <!-- Decoración superior cuadros vichy y moño -->
+                <img src="https://i.imgur.com/yoPUvKW.png" class="w-full object-cover -top-4 relative z-10" alt="Decoración Superior">
+
+                <!-- Elementos flotantes: Estrella fugaz y nubes -->
+                <img src="https://i.imgur.com/9WfT3uJ.png" class="w-24 absolute top-28 left-6 z-10 animate-float" alt="Estrella Fugaz">
+                <img src="https://i.imgur.com/2jbzc9j.png" class="w-36 absolute top-36 -right-4 z-10 opacity-95" alt="Nube Derecha">
+                <img src="https://i.imgur.com/2jbzc9j.png" class="w-28 absolute top-64 -left-8 z-10 opacity-90" alt="Nube Izquierda">
+
+                <!-- Título Principal -->
+                <div class="relative z-20 mt-12 mb-2 px-4 flex flex-col items-center">
+                    <h1 class="font-serif text-7xl text-brownText tracking-normal leading-none">Baby</h1>
+                    <span class="font-script text-8xl text-roseAccent -mt-2 leading-none drop-shadow-sm">Shower</span>
+                    
+                    <div class="liston-hero -mt-2">
+                        <p class="font-serif text-xl text-brownText tracking-wider font-bold">de Julieta</p>
+                    </div>
+                </div>
+
+                <!-- Estrellas decorativas alrededor de las conejitas -->
+                <img src="https://i.imgur.com/AsQCWBD.png" class="w-10 absolute top-[48%] left-7 z-20 animate-float" alt="Estrella">
+                <img src="https://i.imgur.com/AsQCWBD.png" class="w-11 absolute top-[54%] right-10 z-20 animate-float" style="animation-delay: 1.5s;" alt="Estrella">
+
+                <!-- Ilustración Conejitas Hero -->
+                <div class="relative w-full flex flex-col items-center mt-2">
+                    <img src="https://i.imgur.com/fbRgeKb.png" class="w-[88%] max-w-[380px] object-contain relative z-10 drop-shadow-sm" alt="Conejitas Hero">
+                    <!-- Papel rasgado inferior del Hero -->
+                    <img src="https://i.imgur.com/r0GJFU2.png" class="w-full object-cover relative z-20 -mt-12" alt="Rasgado Hero">
+                </div>
+            </section>
+
+            <!-- 2. FRASE DE BIENVENIDA -->
+       <section class="pt-4 pb-6 px-6 text-center flex flex-col items-center relative fade-in-section">
+    <!-- Se usó -mx-6 y w-[calc(100%+3rem)] para contrarrestar el px-6 del contenedor -->
+    <img src="https://i.imgur.com/IjbXrvp.png" class="-mx-6 w-[calc(100%+3rem)] max-w-none object-cover -top-4 relative z-10" alt="Decoración Bienvenida">
+
+
+                <div class="max-w-[330px] mx-auto relative z-10">
+                    <h2 class="font-bold text-3xl text-brownText mb-3 leading-snug">
+                        ¡Hola familia y amigos!
+                    </h2>
+                    
+                    <!-- Divisor delicado estilo moño/línea -->
+                    <div class="flex items-center justify-center gap-2 my-3 text-roseAccent">
+                        <span class="w-12 h-[1px] bg-roseAccent/60"></span>
+                        <span class="text-lg">୨ৎ</span>
+                        <span class="w-12 h-[1px] bg-roseAccent/60"></span>
+                    </div>
+
+                    <p class="font-serif text-lg leading-relaxed text-brownLight">
+                        Nuestra princesa está por llegar y nos encantaría que nos acompañaras a celebrar esta dulce espera y compartir la ilusión de conocer a quien ya ocupa un lugar inmenso en nuestros corazones 💕
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3. FOTO DE PORTADA (UBICADA DONDE IBA EL PRIMER SEPARADOR, ANCHO COMPLETO Y DIFUMINADA) -->
+            <section class="w-full py-2 fade-in-section relative">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Marian_Villanueva__1792475427545%2Ffoto_portada_IMG_0595.jpeg?alt=media&token=0aafbeb0-ad17-4b4c-9611-09025f6a1677" alt="Foto Portada" class="w-full h-[440px] object-cover foto-difuminada">
+            </section>
+
+            <!-- 4. SECCIÓN DE PADRES -->
+            <section class="px-6 text-center flex flex-col items-center relative fade-in-section">
+                <div class="relative w-full flex justify-center items-center">
+                   
+                    
+                    <div class="padres-bg relative z-10">
+                        <h3 class="font-bold text-2xl text-brownText/40 tracking-wide mb-1">Papás</h3>
+                        <div class="w-24 h-[1px] bg-roseAccent/40 mb-2"></div>
+                        <p class="font-serif text-2xl text-brownText font-bold leading-snug">
+                            Luis Enrique y Marian
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. FECHA Y CUENTA REGRESIVA -->
+            <section class="py-8 px-8 text-center flex flex-col items-center relative fade-in-section">
+                <img src="https://i.imgur.com/2jbzc9j.png" class="w-24 absolute top-36 -left-8 opacity-90" alt="Nube">
+                <img src="https://i.imgur.com/AsQCWBD.png" class="w-8 absolute top-6 right-6 animate-float" alt="Estrella">
+
+                <!-- Fecha destacada -->
+                <div class="mb-12 relative z-10">
+                    <p class="font-bold text-2xl tracking-[0.1em] text-roseDark mb-6 font-bold">Acompáñanos este</p>
+                    <div class="flex items-center justify-center gap-3 text-brownText">
+                        <span class="font-serif text-4xl font-bold text-roseAccent">09</span>
+                        <span class="text-2xl text-borderPink">|</span>
+                        <span class="font-bold text-2xl tracking-widest">Noviembre</span>
+                        <span class="text-2xl text-borderPink">|</span>
+                        <span class="font-bold text-3xl text-brownLight">2026</span>
+                    </div>
+                </div>
+
+                <!-- Contador estilo imagen de referencia -->
+                <p class="font-bold text-2xl tracking-[0.1em] text-roseAccent font-bold mb-4">Faltan solo...</p>
+                
+                <div class="flex justify-center gap-3 text-center mb-8 relative z-10">
+                    <div class="flex flex-col items-center">
+                        <div class="countdown-box textura-ruido">
+                            <span id="days" class="text-3xl font-bold text-brownText">00</span>
+                        </div>
+                        <span class="font-serif text-[11px] tracking-widest mt-2 text-brownLight font-bold">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="countdown-box textura-ruido">
+                            <span id="hours" class="text-3xl font-bold text-brownText">00</span>
+                        </div>
+                        <span class="font-serif text-[11px] tracking-widest mt-2 text-brownLight font-bold">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="countdown-box textura-ruido">
+                            <span id="minutes" class="text-3xl font-bold text-brownText">00</span>
+                        </div>
+                        <span class="font-serif text-[11px] tracking-widest mt-2 text-brownLight font-bold">Minutos</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="countdown-box textura-ruido">
+                            <span id="seconds" class="text-3xl font-bold text-brownText">00</span>
+                        </div>
+                        <span class="font-serif text-[11px] tracking-widest mt-2 text-brownLight font-bold">Segundos</span>
+                    </div>
+                </div>
+
+                <!-- Botón Calendario -->
+                <div class="flex flex-col gap-3 w-full relative z-20">
+                    <button onclick="document.getElementById('cal-modal').classList.toggle('hidden')" class="bg-white border border-roseAccent/60 text-brownText font-serif text-sm tracking-widest py-3 px-6 rounded-full hover:bg-cardPink transition-colors flex items-center justify-center gap-2 mx-auto w-full max-w-[240px] font-bold shadow-sm">
+                        <i data-lucide="calendar-heart" class="w-4 h-4 text-roseAccent"></i> Agendar Fecha
+                    </button>
+                </div>
+
+                <!-- Popup Opciones de Calendario -->
+                <div id="cal-modal" class="hidden mt-3 bg-white border border-borderPink rounded-2xl p-4 shadow-xl text-left z-50 w-64 mx-auto">
+                    <p class="text-xs font-bold text-brownText mb-3 uppercase text-center font-serif">Selecciona tu calendario</p>
+                    <button onclick="openGoogleCal()" class="w-full text-left px-4 py-2 text-sm text-brownText hover:bg-cardPink/50 border-b border-borderPink/50 font-serif">Google Calendar</button>
+                    <button onclick="openOutlookWeb()" class="w-full text-left px-4 py-2 text-sm text-brownText hover:bg-cardPink/50 border-b border-borderPink/50 font-serif">Outlook Web</button>
+                    <button onclick="downloadICS()" class="w-full text-left px-4 py-2 text-sm text-brownText hover:bg-cardPink/50 font-serif">Apple Calendar</button>
+                    <button onclick="document.getElementById('cal-modal').classList.add('hidden')" class="w-full text-center mt-2 text-xs text-roseDark py-1 font-serif font-bold">Cerrar</button>
+                </div>
+            </section>
+
+            <!-- SEPARADOR FOTO 1 (REGRESADO A SU POSICIÓN ORIGINAL, ANCHO COMPLETO Y DIFUMINADO) -->
+            <section class="w-full py-2 fade-in-section">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Marian_Villanueva__1792475427545%2Ffoto_separador_1_IMG_1548.jpeg?alt=media&token=d000f6db-e5ab-44ce-982d-d28be0d6c841" alt="Separador 1" class="w-full h-[420px] object-cover foto-difuminada">
+            </section>
+
+            <!-- 6. LUGAR DEL EVENTO -->
+            <section class="caja-seccion textura-ruido fade-in-section">
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    <i data-lucide="map-pin" class="w-6 h-6 text-roseAccent"></i>
+                    <h3 class="font-bold text-3xl text-roseAccent font-bold">Ubicación</h3>
+                </div>
+                
+                <p class="font-serif font-bold text-2xl text-brownText mb-1">Salón campestre</p>
+                <p class="font-serif text-base tracking-wider text-brownLight uppercase mb-5 font-bold">
+                    Horario: 6:00 PM
+                </p>
+                
+                <div class="rounded-2xl overflow-hidden shadow-md mb-6 w-full max-w-[310px] border-2 border-white">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Marian_Villanueva__1792475427545%2Ffoto_separador_3_IMG_1550.jpeg?alt=media&token=f14a9ec6-d94d-4795-a780-c3078945b41b" alt="Salón campestre" class="w-full h-[210px] object-cover">
+                </div>
+
+                <a href="https://maps.app.goo.gl/xT8gXWtDVv5YNBqY8?g_st=iw" target="_blank" class="bg-roseAccent text-white font-serif text-sm tracking-wider py-3 px-8 rounded-full inline-flex items-center justify-center gap-2 hover:bg-roseDark transition-colors shadow-md mx-auto font-bold">
+                  Ver ubicación 
+                </a>
+            </section>
+
+            <!-- 7. CÓDIGO DE VESTIMENTA -->
+            <section class="caja-seccion textura-ruido fade-in-section overflow-visible">
+                <div class="flex items-center justify-center gap-2 mb-3">
+                   
+                    <h3 class="font-bold text-3xl text-roseAccent font-bold">Código de vestimenta</h3>
+                </div>
+
+                <div class="flex flex-col items-center w-full relative">
+                    <img src="https://i.imgur.com/qrIk4LC.png" class="w-28 object-contain mb-3 drop-shadow-sm" alt="Conejita Vestimenta">
+                    
+                    <p class="font-bold text-2xl uppercase tracking-widest text-brownText mb-2">
+                        Tonos pasteles
+                    </p>
+                    <p class="font-serif text-sm text-brownLight mb-5 max-w-[260px]">
+                        Agradecemos que asistas con tu estilo personal, preferiblemente en tonos pastel.
+                    </p>
+
+                    <!-- Paleta de inspiración en tonos pastel -->
+                    <div class="flex justify-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-[#F5E6D8] border border-white shadow-sm"></span>
+                        <span class="w-8 h-8 rounded-full bg-[#FAD9D2] border border-white shadow-sm"></span>
+                        <span class="w-8 h-8 rounded-full bg-[#F7C9D1] border border-white shadow-sm"></span>
+                        <span class="w-8 h-8 rounded-full bg-[#D3E4CD] border border-white shadow-sm"></span>
+                        <span class="w-8 h-8 rounded-full bg-[#DCD6F7] border border-white shadow-sm"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. SUGERENCIA DE REGALO -->
+            <section class="caja-seccion textura-ruido fade-in-section">
+                <img src="https://i.imgur.com/AsQCWBD.png" class="w-8 absolute -top-3 right-5 animate-float" alt="Estrella">
+                
+                <div class="flex items-center justify-center gap-2 mb-4">
+                   
+                    <h3 class="font-bold text-3xl text-roseAccent font-bold">Sugerencia de regalo</h3>
+                </div>
+
+              
+                <p class="font-serif text-base text-brownText leading-relaxed max-w-[290px] mx-auto">
+                    El mejor regalo es compartir este momento contigo. Si deseas obsequiarnos algo, preferimos <b>apoyo en efectivo</b> para elegir lo que nuestra bebé necesite.
+                </p>
+            </section>
+
+            <!-- SEPARADOR FOTO 2 (ANCHO COMPLETO Y DIFUMINADA) -->
+            <section class="w-full py-2 fade-in-section">
+                <img src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/Basico_Marian_Villanueva__1792475427545%2Ffoto_separador_2_IMG_0757.jpeg?alt=media&token=5afe517c-3705-4d3f-8f97-fe54079e4bfa" alt="Separador 2" class="w-full h-[420px] object-cover foto-difuminada">
+            </section>
+
+            <!-- 9. CONFIRMAR ASISTENCIA (RSVP) -->
+            <section class="caja-seccion textura-ruido fade-in-section">
+                <img src="https://i.imgur.com/AsQCWBD.png" class="w-9 absolute top-3 right-4 animate-float" alt="Estrella">
+
+                <div class="w-full max-w-[320px] mx-auto text-center relative z-20">
+                    <div class="flex items-center justify-center gap-2 mb-3">
+                       
+                        <h3 class="font-serif text-3xl text-roseAccent font-bold">Confirmar asistencia</h3>
+                    </div>
+
+                    <p class="font-bold text-base leading-relaxed text-brownLight mb-3">
+                        Esperamos contar con tu presencia. Favor de confirmar antes del <b class="text-brownText">3 de noviembre de 2026</b>.
+                    </p>
+
+                    <!-- Nota de Confirmación Personal y No Niños -->
+                    <div class="bg-cardPink/80 border border-borderPink rounded-xl py-2.5 px-4 mb-6">
+                        <p class="font-serif text-sm uppercase tracking-wider text-roseDark font-bold">
+                            Confirmación personal (1 persona)
+                        </p>
+                        <p class="font-serif text-base text-brownText font-bold mt-0.5">
+                             No se admitirán niños 
+                        </p>
+                    </div>
+                    
+                    <form id="rsvpForm" class="flex flex-col gap-4 text-left w-full">
+                        <div>
+                            <label class="text-xs tracking-wider text-brownText font-bold font-serif mb-1.5 block">Tu nombre *</label>
+                            <input type="text" id="rsvpName" required placeholder="Escribe tu nombre completo" class="w-full bg-white border border-borderPink rounded-xl py-3 px-4 outline-none text-base font-serif text-brownText focus:border-roseAccent transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="text-xs tracking-wider text-brownText font-bold font-serif mb-1.5 block">¿Nos acompañarás? *</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-2 bg-white border border-borderPink rounded-xl py-2.5 px-4 cursor-pointer hover:bg-cardPink/40 transition-colors">
+                                    <input type="radio" name="asistencia" value="Sí asistiré" checked class="accent-roseAccent">
+                                    <span class="text-sm font-serif text-brownText">Sí asistiré</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-white border border-borderPink rounded-xl py-2.5 px-4 cursor-pointer hover:bg-cardPink/40 transition-colors">
+                                    <input type="radio" name="asistencia" value="No podré asistir" class="accent-roseAccent">
+                                    <span class="text-sm font-serif text-brownText">No podré</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="bg-roseAccent text-white font-serif text-sm tracking-widest uppercase py-3.5 px-6 rounded-full hover:bg-roseDark transition-colors shadow-md w-full font-bold mt-2 flex items-center justify-center gap-2">
+                           Confirmar
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 10. FOOTER INFERIOR -->
+            <footer class="text-center pt-16  relative z-20 flex flex-col items-center fade-in-section">
+                <p class="font-script text-6xl text-roseAccent mb-4">¡Te esperamos!</p>
+                <p class="font-bold text-base tracking-widest text-brownLight mb-6">Luis Enrique, Marian & Julieta</p>
+                <img src="https://i.imgur.com/pYJMyKt.png" class="w-full object-cover" alt="Footer Inferior">
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Audio
+        const audio = document.getElementById("bg-music");
+        const audioBtn = document.getElementById("audio-btn");
+        const audioIcon = document.getElementById("audio-icon");
+        let isPlaying = false;
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                audioIcon.classList.add('spin-slow');
+            }).catch(e => console.log("Autoplay bloqueado"));
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.classList.remove('spin-slow');
+            } else {
+                audio.play();
+                audioIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function openEnvelope() {
+            document.getElementById('section-main').style.display = 'block';
+            initObserver();
+            playAudio();
+            document.getElementById('envelope-wrapper').classList.add('open');
+            setTimeout(() => { document.getElementById('audio-btn').classList.remove('hidden'); }, 1000);
+            setTimeout(() => { document.getElementById('envelope-wrapper').style.display = 'none'; }, 1800);
+        }
+
+        // Cuenta Regresiva: 9 de noviembre de 2026 a las 18:00 hrs
+        const targetDate = new Date("Nov 09, 2026 18:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) return;
+            document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Animaciones al hacer scroll
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.12 });
+            document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+        }
+
+        // Calendario scripts (9 de Noviembre 2026, 18:00 hrs)
+        function downloadICS() {
+            const icsData = [
+                "BEGIN:VCALENDAR",
+                "VERSION:2.0",
+                "PRODID:-//Apple Inc.//Mac OS X 10.15.7//EN",
+                "CALSCALE:GREGORIAN",
+                "BEGIN:VEVENT",
+                "SUMMARY:Baby Shower de Julieta",
+                "DTSTART:20261110T000000Z",
+                "DTEND:20261110T040000Z",
+                "LOCATION:Salón campestre",
+                "DESCRIPTION:¡Acompáñanos a celebrar la dulce espera de nuestra princesa Julieta!",
+                "STATUS:CONFIRMED",
+                "END:VEVENT",
+                "END:VCALENDAR"
+            ].join("\r\n");
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            
+            if (isIOS) {
+                const url = window.URL.createObjectURL(blob);
+                window.location.href = url;
+            } else {
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.setAttribute('download', 'baby_shower_julieta.ics');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            document.getElementById('cal-modal').classList.add('hidden');
+        }
+
+        function openGoogleCal() {
+            window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=Baby+Shower+de+Julieta&dates=20261110T000000Z/20261110T040000Z&location=Sal%C3%B3n+campestre&details=%C2%A1Acomp%C3%A1%C3%B1anos+a+celebrar+la+dulce+espera+de+nuestra+princesa+Julieta!', '_blank');
+            document.getElementById('cal-modal').classList.add('hidden');
+        }
+
+        function openOutlookWeb() {
+            const url = 'https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&subject=Baby%20Shower%20de%20Julieta&startdt=2026-11-09T18:00:00-06:00&enddt=2026-11-09T22:00:00-06:00&location=Sal%C3%B3n+campestre&body=%C2%A1Acomp%C3%A1%C3%B1anos%20a%20celebrar%20la%20dulce%20espera%20de%20nuestra%20princesa%20Julieta!';
+            window.open(url, '_blank');
+            document.getElementById('cal-modal').classList.add('hidden');
+        }
+
+        // Confirmación directa por WhatsApp (personal de 1 persona, solo nombre)
+        const rsvpForm = document.getElementById('rsvpForm');
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nombre = document.getElementById('rsvpName').value.trim();
+                const asistencia = document.querySelector('input[name="asistencia"]:checked').value;
+                const telefono = "526242131366";
+
+                let mensaje = "";
+                if (asistencia === "Sí asistiré") {
+                    mensaje = `¡Hola Luis Enrique y Marian! 💕 Confirmo mi asistencia personal (1 persona) al Baby Shower de Julieta. Mi nombre es: *${nombre}*. ¡Muchas gracias!`;
+                } else {
+                    mensaje = `¡Hola Luis Enrique y Marian! 💕 Les escribe *${nombre}*. Lamentablemente no podré acompañarlos al Baby Shower de Julieta, pero les envío un fuerte abrazo.`;
+                }
+
+                window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
+            });
+        }
+    </script>
+</body>
+</html>
