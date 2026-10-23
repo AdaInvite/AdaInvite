@@ -765,6 +765,32 @@
         });
 
         // ==========================================
+        // VIDEOS: SONIDO AL TOCAR + PAUSA FUERA DE PANTALLA
+        // ==========================================
+        window.activarVideo = function(id) {
+            const v = document.getElementById(`vid-${id}`);
+            if (!v) return;
+            if (v.controls && !v.muted) return; // ya activo: deja usar los controles
+            document.querySelectorAll('video[id^="vid-"]').forEach(o => {
+                if (o !== v) {
+                    o.muted = true; o.controls = false;
+                    o.parentElement.querySelector('.badge-sonido')?.classList.remove('hidden');
+                }
+            });
+            v.muted = false; v.volume = 1; v.controls = true;
+            v.parentElement.querySelector('.badge-sonido')?.classList.add('hidden');
+            v.play().catch(() => {
+                v.muted = true; v.play();
+                window.showToast("USA EL BOTÓN DE VOLUMEN DEL VIDEO", true);
+            });
+        };
+
+        const ioVideos = new IntersectionObserver(es => es.forEach(e => {
+            if (e.isIntersecting) { e.target.play().catch(() => {}); }
+            else { e.target.pause(); }
+        }), { threshold: 0.25 });
+
+        // ==========================================
         // RENDERIZAR MURO MIXTO (FOTOS Y MENSAJES)
         // ==========================================
         let isFirstLoad = true;
@@ -832,8 +858,9 @@
                     } 
                     // RENDERIZADO SI ES IMAGEN O VIDEO (POLAROID STYLE CON CINTA ROSA)
                     else {
-                        const media = datos.tipo === "video" 
-                            ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline onclick="activarVideo('${id}')" class="w-full h-auto bg-gray-100 cursor-pointer object-cover"></video>` 
+                        const media = datos.tipo === "video"
+                            ? `<video id="vid-${id}" src="${datos.url_multimedia}" autoplay muted loop playsinline preload="metadata" onclick="activarVideo('${id}')" class="w-full h-auto bg-gray-100 cursor-pointer object-cover"></video>
+                               <div class="badge-sonido absolute bottom-2 right-2 z-20 pointer-events-none bg-white/90 text-theme-dark text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow">🔇 Toca para sonido</div>`
                             : `<img src="${datos.url_multimedia}" class="w-full h-auto object-cover" loading="lazy">`;
 
                         const tagMomento = datos.momento ? `<span class="absolute top-0 right-0 bg-theme-accent backdrop-blur-md text-white text-[9px] font-bold px-3 py-1.5 rounded-none shadow border border-white/30 uppercase z-10">${datos.momento}</span>` : '';
@@ -873,6 +900,8 @@
                     } else {
                         muro.insertBefore(divTarjeta, muro.firstChild);
                     }
+
+                    divTarjeta.querySelectorAll('video').forEach(v => ioVideos.observe(v));
                 }
 
                 if (change.type === "modified") {
@@ -919,147 +948,111 @@
             }
         };
 
-        window.activarVideo = function(id) {
-            const videoElement = document.getElementById(`vid-${id}`);
-            if (videoElement) {
-                videoElement.muted = false;
-                videoElement.controls = true;
-                videoElement.classList.remove('cursor-pointer');
-            }
-        };
-
         // ==========================================
         // DESCARGAS (INDIVIDUAL Y ÁLBUM ZIP)
+        // Requiere CORS configurado en el bucket de Firebase Storage
         // ==========================================
-        async function obtenerBlobSinCors(url, tipo) {
-            if (tipo !== 'video') {
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function obtenerBlob(url, intentos = 3) {
+            let ultimo;
+            for (let i = 0; i < intentos; i++) {
                 try {
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                        img.src = url + (url.includes('?') ? '&' : '?') + 'cachebust=' + Date.now();
-                    });
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.naturalWidth;
-                    canvas.height = img.naturalHeight;
-                    canvas.getContext('2d').drawImage(img, 0, 0);
-                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
-                    if (blob) return blob;
-                } catch (e) {
-                    console.warn("Pasando a proxy para imagen...");
-                }
+                    const r = await fetch(url, { mode: 'cors', cache: 'no-store' });
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return await r.blob();
+                } catch (e) { ultimo = e; await sleep(600 * (i + 1)); }
             }
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error("Error descargando desde proxy");
-            return await response.blob();
+            throw ultimo;
+        }
+
+        function extDe(blob, tipo, url) {
+            const t = (blob.type || '').toLowerCase();
+            if (t.includes('quicktime')) return 'mov';
+            if (t.includes('mp4')) return 'mp4';
+            if (t.includes('png')) return 'png';
+            if (t.includes('webp')) return 'webp';
+            if (t.includes('jpeg') || t.includes('jpg')) return 'jpg';
+            const m = decodeURIComponent(url.split('?')[0]).match(/\.([a-z0-9]{3,4})$/i);
+            return m ? m[1].toLowerCase() : (tipo === 'video' ? 'mp4' : 'jpg');
+        }
+
+        async function guardarBlob(blob, filename) {
+            const file = new File([blob], filename, { type: blob.type });
+            const esIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (esIOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try { await navigator.share({ files: [file], title: filename }); return; }
+                catch (e) { if (e.name === 'AbortError') return; }
+            }
+            const u = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = u; a.download = filename; a.style.display = 'none';
+            document.body.appendChild(a); a.click();
+            setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 60000);
         }
 
         // DESCARGAR ARCHIVO INDIVIDUAL
         window.descargarArchivo = async function(url, nombreAutor, tipo) {
             window.showToast("DESCARGANDO ARCHIVO...", false);
-            const ext = tipo === 'video' ? 'mp4' : 'jpg';
-            const filename = `XV_Angela_${nombreAutor}_${Date.now()}.${ext}`;
-
             try {
-                const blob = await obtenerBlobSinCors(url, tipo);
-
-                if (navigator.canShare && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                    const file = new File([blob], filename, { type: blob.type });
-                    if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: filename });
-                        return;
-                    }
-                }
-
-                const blobUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    window.URL.revokeObjectURL(blobUrl);
-                    document.body.removeChild(a);
-                }, 300);
-            } catch (error) {
-                console.error("No se pudo forzar la descarga:", error);
-                window.showToast("MANTÉN PRESIONADO EL ARCHIVO PARA GUARDARLO", true);
-                setTimeout(() => window.open(url, '_blank'), 1500);
+                const blob = await obtenerBlob(url);
+                await guardarBlob(blob, `XV_Angela_${nombreAutor}_${Date.now()}.${extDe(blob, tipo, url)}`);
+            } catch (e) {
+                console.error(e);
+                window.showToast("NO SE PUDO DESCARGAR. ABRIENDO ARCHIVO...", true);
+                setTimeout(() => window.open(url, '_blank'), 1200);
             }
         };
 
-        // DESCARGAR TODO EL ÁLBUM EN UN ARCHIVO ZIP ORGANIZADO POR CARPETAS
+        // DESCARGAR ÁLBUM EN ZIP (dividido en partes de ~350MB para no reventar la memoria)
         window.descargarTodoZip = async function() {
             if (!isAdmin) return;
-            if (archivosMuro.length === 0) {
-                window.showToast("AÚN NO HAY FOTOS O VIDEOS PARA DESCARGAR.", true);
-                return;
-            }
+            if (!archivosMuro.length) { window.showToast("AÚN NO HAY ARCHIVOS PARA DESCARGAR.", true); return; }
 
-            const btnZip = document.getElementById('downloadZipHeaderBtn');
-            const zipBtnText = document.getElementById('zipBtnText');
-            btnZip.disabled = true;
-            btnZip.classList.add('opacity-60', 'cursor-not-allowed');
+            const btn = document.getElementById('downloadZipHeaderBtn');
+            const txt = document.getElementById('zipBtnText');
+            btn.disabled = true; btn.classList.add('opacity-60', 'cursor-not-allowed');
 
-            const zip = new JSZip();
-            let completados = 0;
-            const total = archivosMuro.length;
+            const MAX = 350 * 1024 * 1024;
+            const lista = [...archivosMuro], total = lista.length;
+            let zip = new JSZip(), bytes = 0, parte = 1, ok = 0;
+            const fallidos = [];
+
+            const cerrarParte = async () => {
+                if (!Object.keys(zip.files).length) return;
+                txt.innerText = `Creando ZIP ${parte}...`;
+                const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE', streamFiles: true });
+                await guardarBlob(blob, `Recuerdos_XV_Angela_parte${parte}.zip`);
+                parte++; zip = new JSZip(); bytes = 0;
+                await sleep(800);
+            };
 
             window.showToast(`PREPARANDO ${total} ARCHIVOS... NO CIERRES LA PÁGINA`, false);
 
-            for (let i = 0; i < total; i++) {
-                const item = archivosMuro[i];
-                zipBtnText.innerText = `Descargando (${i + 1}/${total})...`;
-
-                try {
-                    const blob = await obtenerBlobSinCors(item.url, item.tipo);
-                    const ext = item.tipo === 'video' ? 'mp4' : 'jpg';
-                    const carpetaMomento = item.momento.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]/g, '').trim() || 'General';
-                    const autorLimpio = item.nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]/g, '_');
-                    
-                    const nombreArchivo = `${carpetaMomento}/${autorLimpio}_${i + 1}.${ext}`;
-                    zip.file(nombreArchivo, blob);
-                    completados++;
-                } catch (err) {
-                    console.warn(`No se pudo incluir el archivo ${i + 1} en el ZIP:`, err);
-                }
-            }
-
-            if (completados === 0) {
-                window.showToast("ERROR AL EMPAQUETAR LOS ARCHIVOS.", true);
-                zipBtnText.innerText = "Descargar Álbum (ZIP)";
-                btnZip.disabled = false;
-                btnZip.classList.remove('opacity-60', 'cursor-not-allowed');
-                return;
-            }
-
-            zipBtnText.innerText = "Creando ZIP...";
             try {
-                const zipBlob = await zip.generateAsync({ type: "blob" });
-                const zipUrl = window.URL.createObjectURL(zipBlob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = zipUrl;
-                a.download = `Recuerdos_XV_Angela_${Date.now()}.zip`;
-                document.body.appendChild(a);
-                a.click();
-
-                setTimeout(() => {
-                    window.URL.revokeObjectURL(zipUrl);
-                    document.body.removeChild(a);
-                }, 500);
-
-                window.showToast(`¡ÁLBUM DESCARGADO (${completados} ARCHIVOS)!`, false);
-            } catch (err) {
-                window.showToast("ERROR AL GENERAR EL ARCHIVO ZIP.", true);
+                for (let i = 0; i < total; i++) {
+                    const it = lista[i];
+                    txt.innerText = `Descargando (${i + 1}/${total})...`;
+                    try {
+                        const blob = await obtenerBlob(it.url);
+                        const carpeta = (it.momento || 'General').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]/g, '').trim() || 'General';
+                        const autor = (it.nombre || 'Invitado').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]/g, '_');
+                        zip.file(`${carpeta}/${autor}_${i + 1}.${extDe(blob, it.tipo, it.url)}`, blob, { binary: true });
+                        bytes += blob.size; ok++;
+                        if (bytes >= MAX) await cerrarParte();
+                    } catch (e) { console.warn('Falló', it.url, e); fallidos.push(i + 1); }
+                }
+                if (ok === 0) throw new Error('Ningún archivo se pudo leer (revisa CORS)');
+                await cerrarParte();
+                window.showToast(fallidos.length
+                    ? `LISTO: ${ok} OK, ${fallidos.length} FALLARON`
+                    : `¡ÁLBUM DESCARGADO (${ok} ARCHIVOS)!`, fallidos.length > 0);
+            } catch (e) {
+                console.error(e);
+                window.showToast("ERROR AL GENERAR EL ZIP. REVISA LA CONFIGURACIÓN CORS.", true);
             } finally {
-                zipBtnText.innerText = "Descargar Álbum (ZIP)";
-                btnZip.disabled = false;
-                btnZip.classList.remove('opacity-60', 'cursor-not-allowed');
+                txt.innerText = "Descargar Álbum (ZIP)";
+                btn.disabled = false; btn.classList.remove('opacity-60', 'cursor-not-allowed');
             }
         };
     </script>
