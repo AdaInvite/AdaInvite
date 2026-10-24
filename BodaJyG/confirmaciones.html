@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Confirmaciones | Janette & Guillermo</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <meta name="theme-color" content="#2C2A2A">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Librería SheetJS para exportar a Excel (.xlsx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --beige-principal: #C8A97E;
+            --beige-claro: #E6D5B8;
+            --blanco-hueso: #FAF9F6;
+            --texto-oscuro: #2C2A2A;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1c1a19;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--texto-oscuro);
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Contenedor móvil centrado igual que la invitación */
+        #app-wrapper {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            background-color: var(--blanco-hueso);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding-bottom: 30px;
+        }
+        #scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .font-script { font-family: 'Pinyon Script', cursive; }
+        .font-serif-custom { font-family: 'Inria Serif', serif; }
+    </style>
+</head>
+<body>
+
+    <div id="app-wrapper">
+
+        <!-- ENCABEZADO FIJO -->
+        <header class="bg-[#2C2A2A] text-white pt-5 pb-4 px-4 shadow-md border-b-2 border-[#C8A97E] shrink-0 z-20">
+            <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] uppercase mb-4 tracking-[0.25em] text-[#C8A97E] font-bold">Confirmaciones</span>
+                <span class="inline-flex items-center gap-1.5 text-[10px] text-green-400 font-semibold">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> En vivo
+                </span>
+            </div>
+            <h1 class="font-script text-4xl text-white leading-none text-center my-1">Janette & Guillermo</h1>
+        </header>
+
+        <!-- CONTENIDO SCROLLABLE -->
+        <div id="scroll-container" class="px-4 pt-4">
+
+            <!-- TARJETAS DE RESUMEN (2x2 COMPACTO) -->
+            <div class="grid grid-cols-2 gap-2.5 mb-4">
+                <div class="bg-[#E6D5B8]/60 p-3.5 rounded-xl border border-[#C8A97E] text-center shadow-sm">
+                    <p class="text-[10px] uppercase tracking-wider text-[#2C2A2A] font-bold">Total Invitados</p>
+                    <p id="statTotal" class="text-3xl font-bold font-serif-custom text-[#2C2A2A] leading-tight mt-0.5">0</p>
+                    <p class="text-[10px] text-[#2C2A2A]/70 font-medium">Pases confirmados</p>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-[#E6D5B8] text-center shadow-sm">
+                    <p class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Registros</p>
+                    <p id="statRegistros" class="text-3xl font-bold font-serif-custom text-[#2C2A2A] leading-tight mt-0.5">0</p>
+                    <p class="text-[10px] text-gray-400">Familias / Grupos</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-[#E6D5B8] flex items-center justify-between px-4 shadow-sm">
+                    <span class="text-[11px] uppercase tracking-wider text-gray-500 font-bold">Adultos</span>
+                    <span id="statAdultos" class="text-2xl font-bold font-serif-custom text-[#2C2A2A]">0</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-[#E6D5B8] flex items-center justify-between px-4 shadow-sm">
+                    <span class="text-[11px] uppercase tracking-wider text-gray-500 font-bold">Niños</span>
+                    <span id="statNinos" class="text-2xl font-bold font-serif-custom text-[#2C2A2A]">0</span>
+                </div>
+            </div>
+
+            <!-- BUSCADOR + BOTÓN DE EXCEL SUTIL -->
+            <div class="flex items-center gap-2 mb-4">
+                <div class="relative flex-1">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Buscar invitado..." class="w-full pl-9 pr-3 py-2.5 bg-white border border-[#E6D5B8] rounded-xl text-xs font-medium shadow-sm focus:outline-none focus:border-[#C8A97E]">
+                </div>
+                <button id="btnExportExcel" title="Descargar lista en Excel" class="shrink-0 bg-white hover:bg-[#FAF9F6] active:scale-95 text-[#2C2A2A] border border-[#E6D5B8] px-3.5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer">
+                    <svg class="w-4 h-4 text-[#C8A97E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Excel
+                </button>
+            </div>
+
+            <!-- LISTA DE TARJETAS DE INVITADOS -->
+            <div id="cardsContainer" class="space-y-3">
+                <div class="bg-white p-8 rounded-xl border border-[#E6D5B8] text-center text-gray-400 text-xs italic">
+                    Cargando confirmaciones...
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MODAL PARA EDITAR REGISTRO -->
+        <div id="editModal" class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div class="bg-white w-full rounded-2xl border border-[#E6D5B8] shadow-2xl p-5 animate-fadeIn">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-[#2C2A2A]">Editar Confirmación</h3>
+                    <button type="button" onclick="cerrarModalEditar()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="editId">
+                    
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-wider text-gray-500 font-bold mb-1">Nombre del Invitado</label>
+                        <input type="text" id="editNombre" required class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E6D5B8] rounded-xl text-sm font-semibold text-[#2C2A2A] focus:outline-none focus:border-[#C8A97E]">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-gray-500 font-bold mb-1">Adultos</label>
+                            <input type="number" id="editAdultos" min="0" required class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E6D5B8] rounded-xl text-sm font-semibold text-[#2C2A2A] text-center focus:outline-none focus:border-[#C8A97E]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-gray-500 font-bold mb-1">Niños</label>
+                            <input type="number" id="editNinos" min="0" required class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E6D5B8] rounded-xl text-sm font-semibold text-[#2C2A2A] text-center focus:outline-none focus:border-[#C8A97E]">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2">
+                        <button type="button" onclick="cerrarModalEditar()" class="flex-1 py-3 rounded-xl border border-gray-200 text-xs font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 transition-colors">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btnGuardarEdicion" class="flex-1 py-3 rounded-xl bg-[#2C2A2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-black transition-colors shadow-sm">
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FIREBASE Y LÓGICA DEL PANEL -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+            projectId: "invitaciones-xv-e28d5",
+            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+            messagingSenderId: "531033690105",
+            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+        };
+
+        const dbCollectionName = "confirmaciones_janette_y_guillermo_boda";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let listaConfirmaciones = [];
+
+        const cardsContainer = document.getElementById('cardsContainer');
+        const searchInput = document.getElementById('searchInput');
+        const btnExportExcel = document.getElementById('btnExportExcel');
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+
+        function formatearFecha(timestamp) {
+            if (!timestamp || !timestamp.toDate) return "Hace un momento";
+            const date = timestamp.toDate();
+            return date.toLocaleDateString('es-MX', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function renderizarDatos(filtro = "") {
+            const datosFiltrados = listaConfirmaciones.filter(item =>
+                item.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+
+            // Actualizar contadores globales
+            let sumaAdultos = 0;
+            let sumaNinos = 0;
+            let sumaTotal = 0;
+
+            listaConfirmaciones.forEach(item => {
+                sumaAdultos += Number(item.adultos) || 0;
+                sumaNinos += Number(item.ninos) || 0;
+                sumaTotal += Number(item.totalPases) || 0;
+            });
+
+            document.getElementById('statRegistros').innerText = listaConfirmaciones.length;
+            document.getElementById('statAdultos').innerText = sumaAdultos;
+            document.getElementById('statNinos').innerText = sumaNinos;
+            document.getElementById('statTotal').innerText = sumaTotal;
+
+            if (datosFiltrados.length === 0) {
+                cardsContainer.innerHTML = `
+                    <div class="bg-white p-8 rounded-xl border border-[#E6D5B8] text-center text-gray-400 text-xs">
+                        No se encontraron confirmaciones registradas.
+                    </div>
+                `;
+                return;
+            }
+
+            cardsContainer.innerHTML = datosFiltrados.map((item, index) => `
+                <div class="bg-white p-4 rounded-xl border border-[#E6D5B8] shadow-sm flex flex-col gap-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="text-[10px] font-bold text-[#C8A97E] uppercase tracking-wider">#${index + 1} • ${item.fechaFormateada}</span>
+                            <h3 class="text-sm font-bold text-[#2C2A2A] leading-snug mt-0.5">${item.nombre}</h3>
+                        </div>
+                        <span class="bg-[#2C2A2A] text-white font-bold px-3 py-1 rounded-full text-xs shrink-0">
+                            ${item.totalPases} ${item.totalPases === 1 ? 'pase' : 'pases'}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2.5 border-t border-gray-100 text-xs">
+                        <div class="flex items-center gap-4 text-gray-600 font-medium">
+                            <span>Adultos: <strong class="text-[#2C2A2A]">${item.adultos}</strong></span>
+                            <span>Niños: <strong class="text-[#2C2A2A]">${item.ninos}</strong></span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="abrirModalEditar('${item.id}')" class="text-[#2C2A2A] hover:bg-[#FAF9F6] text-[11px] font-bold uppercase tracking-wider py-1 px-2.5 rounded border border-gray-200 transition-colors">
+                                Editar
+                            </button>
+                            <button onclick="eliminarRegistro('${item.id}', '${item.nombre.replace(/'/g, "\\'")}')" class="text-red-500 active:text-red-700 text-[11px] font-bold uppercase tracking-wider py-1 px-2 rounded hover:bg-red-50 transition-colors">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Escuchar cambios en tiempo real desde Firestore
+        const q = query(collection(db, dbCollectionName), orderBy("fecha", "desc"));
+        onSnapshot(q, (snapshot) => {
+            listaConfirmaciones = snapshot.docs.map(docSnap => {
+                const data = docSnap.data();
+                const adultos = Number(data.adultos) || 0;
+                const ninos = Number(data.ninos) || 0;
+                return {
+                    id: docSnap.id,
+                    nombre: data.nombre || "Sin nombre",
+                    adultos: adultos,
+                    ninos: ninos,
+                    totalPases: data.totalPases !== undefined ? Number(data.totalPases) : (adultos + ninos),
+                    fechaFormateada: formatearFecha(data.fecha)
+                };
+            });
+            renderizarDatos(searchInput.value);
+        }, (error) => {
+            console.error("Error al obtener confirmaciones:", error);
+            cardsContainer.innerHTML = `
+                <div class="bg-white p-6 rounded-xl border border-red-300 text-center text-red-500 text-xs font-semibold">
+                    Error al conectar con la base de datos de Firebase.
+                </div>
+            `;
+        });
+
+        // Buscador instantáneo
+        searchInput.addEventListener('input', (e) => {
+            renderizarDatos(e.target.value);
+        });
+
+        // Abrir modal de edición
+        window.abrirModalEditar = (id) => {
+            const registro = listaConfirmaciones.find(item => item.id === id);
+            if (!registro) return;
+
+            document.getElementById('editId').value = registro.id;
+            document.getElementById('editNombre').value = registro.nombre;
+            document.getElementById('editAdultos').value = registro.adultos;
+            document.getElementById('editNinos').value = registro.ninos;
+
+            editModal.classList.remove('hidden');
+        };
+
+        // Cerrar modal de edición
+        window.cerrarModalEditar = () => {
+            editModal.classList.add('hidden');
+        };
+
+        // Guardar cambios en Firebase
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const nuevoNombre = document.getElementById('editNombre').value.trim();
+            const nuevosAdultos = parseInt(document.getElementById('editAdultos').value, 10) || 0;
+            const nuevosNinos = parseInt(document.getElementById('editNinos').value, 10) || 0;
+            const nuevoTotal = nuevosAdultos + nuevosNinos;
+
+            const btnGuardar = document.getElementById('btnGuardarEdicion');
+            const textoOriginal = btnGuardar.innerText;
+            btnGuardar.innerText = "Guardando...";
+            btnGuardar.disabled = true;
+
+            try {
+                const docRef = doc(db, dbCollectionName, id);
+                await updateDoc(docRef, {
+                    nombre: nuevoNombre,
+                    nombre_lower: nuevoNombre.toLowerCase(),
+                    adultos: nuevosAdultos,
+                    ninos: nuevosNinos,
+                    totalPases: nuevoTotal
+                });
+                cerrarModalEditar();
+            } catch (error) {
+                console.error("Error al actualizar:", error);
+                alert("No se pudieron guardar los cambios.");
+            } finally {
+                btnGuardar.innerText = textoOriginal;
+                btnGuardar.disabled = false;
+            }
+        });
+
+        // Eliminar registro
+        window.eliminarRegistro = async (id, nombre) => {
+            if (confirm(`¿Eliminar la confirmación de "${nombre}"?`)) {
+                try {
+                    await deleteDoc(doc(db, dbCollectionName, id));
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                    alert("No se pudo eliminar el registro.");
+                }
+            }
+        };
+
+        // Exportar a Excel (.xlsx)
+        btnExportExcel.addEventListener('click', () => {
+            if (listaConfirmaciones.length === 0) {
+                alert("Todavía no hay confirmaciones para exportar.");
+                return;
+            }
+
+            const datosExcel = listaConfirmaciones.map((item, index) => ({
+                "#": index + 1,
+                "Nombre del Invitado": item.nombre,
+                "Adultos": item.adultos,
+                "Niños": item.ninos,
+                "Total de Pases": item.totalPases,
+                "Fecha de Confirmación": item.fechaFormateada
+            }));
+
+            const totalAdultos = listaConfirmaciones.reduce((acc, cur) => acc + cur.adultos, 0);
+            const totalNinos = listaConfirmaciones.reduce((acc, cur) => acc + cur.ninos, 0);
+            const granTotal = listaConfirmaciones.reduce((acc, cur) => acc + cur.totalPases, 0);
+
+            datosExcel.push({
+                "#": "",
+                "Nombre del Invitado": "TOTAL GENERAL",
+                "Adultos": totalAdultos,
+                "Niños": totalNinos,
+                "Total de Pases": granTotal,
+                "Fecha de Confirmación": ""
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(datosExcel);
+            worksheet['!cols'] = [
+                { wch: 5 },
+                { wch: 32 },
+                { wch: 10 },
+                { wch: 10 },
+                { wch: 15 },
+                { wch: 22 }
+            ];
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Confirmaciones Boda");
+            XLSX.writeFile(workbook, "Confirmaciones_Boda_Janette_y_Guillermo.xlsx");
+        });
+    </script>
+</body>
+</html>
