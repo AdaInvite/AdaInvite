@@ -869,28 +869,49 @@
         appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
     };
 
-    const dbCollectionName = "confirmaciones_krista_xv";
+        const dbCollectionName = "confirmaciones_krista_xv";
     const rawFotoPase = "https://i.imgur.com/e7ijW3Y.jpeg";
     let fotoPaseSrc = rawFotoPase;
 
-    // Convertir imagen directamente a Base64 usando Image + Canvas (sin depender de proxies externos)
+    // Pre-procesar y recortar la foto en ALTA DEFINICIÓN (4x) con proporción exacta de la columna (144.4 x 215)
     function precargarFotoPase() {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => {
             try {
+                // Lienzo HD (4 veces el tamaño de la columna izquierda: 144.4px * 4 = 578px, 215px * 4 = 860px)
+                const targetW = 578;
+                const targetH = 860;
                 const canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+                canvas.width = targetW;
+                canvas.height = targetH;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                fotoPaseSrc = canvas.toDataURL('image/jpeg', 0.92);
+
+                // Algoritmo matemático de "object-fit: cover" centrado para no deformar la foto
+                const imgRatio = img.naturalWidth / img.naturalHeight;
+                const targetRatio = targetW / targetH;
+                let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
+
+                if (imgRatio > targetRatio) {
+                    sWidth = img.naturalHeight * targetRatio;
+                    sx = (img.naturalWidth - sWidth) / 2;
+                } else {
+                    sHeight = img.naturalWidth / targetRatio;
+                    sy = (img.naturalHeight - sHeight) / 2;
+                }
+
+                // Suavizado de máxima calidad
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetW, targetH);
+
+                // Exportar en PNG sin pérdida de calidad
+                fotoPaseSrc = canvas.toDataURL('image/png');
             } catch (e) {
                 console.warn("Usando URL directa para el pase:", e);
             }
         };
-        // El parámetro ?v=pase evita conflicto de caché CORS con la imagen del header
-        img.src = rawFotoPase + "?v=pase";
+        img.src = rawFotoPase + "?v=pase_hd";
     }
     precargarFotoPase();
 
@@ -905,13 +926,14 @@
     }
 
     // ==========================================
-    // PLANTILLA HTML DEL PASE MINIMALISTA (SIN LÍNEA PUNTEADA Y CON FOTO EN BACKGROUND)
+    // PLANTILLA HTML DEL PASE MINIMALISTA (FOTO HD EN ETIQUETA IMG PRE-RECORTADA)
     // ==========================================
     function construirPaseMinimalistaHTML(idContenedor, nombre, adultos, ninos, totalPases, folio) {
         return `
             <div id="${idContenedor}" class="minimal-ticket text-left">
-                <!-- Columna Izquierda: Foto limpia de Krista Aidé como background-image para compatibilidad total -->
-                <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E8DEE1; background-image: url('${fotoPaseSrc}'); background-size: cover; background-position: center;">
+                <!-- Columna Izquierda: Foto HD pre-recortada a medida exacta -->
+                <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E8DEE1;">
+                    <img src="${fotoPaseSrc}" style="width: 100%; height: 100%; display: block;" alt="Krista Aidé">
                     <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 55%);"></div>
                     <div style="position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;">
                         <p style="font-size: 8px; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin: 0 0 2px 0;">MIS XV</p>
@@ -953,6 +975,7 @@
             </div>
         `;
     }
+
 
     // ==========================================
     // SISTEMA DE ALERTAS PERSONALIZADAS
