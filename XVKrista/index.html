@@ -230,22 +230,23 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
-        /* --- ESTILOS TICKET MINIMALISTA SIN MUESCAS Y COMPATIBLE CON HTML2CANVAS --- */
-        .minimal-ticket {
-            position: relative;
-            background-color: #FCF9F9;
-            border: 2px solid #CC9494;
-            border-radius: 14px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            width: 380px;
-            max-width: 100%;
-            height: 215px;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-            margin: 0 auto;
-            box-sizing: border-box;
-        }
+ 
+.minimal-ticket {
+    position: relative;
+    background-color: #FCF9F9;
+    border: 2px solid #CC9494;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 380px;
+    max-width: 100%;
+    height: 215px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
         .ticket-divider-min {
             position: absolute;
             top: 10px;
@@ -854,346 +855,456 @@
         });
     </script>
     
-    <!-- LÓGICA FIREBASE Y VALIDACIONES DE PASES -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
-            authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
-            projectId: "invitaciones-xv-e28d5",
-            storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
-            messagingSenderId: "531033690105",
-            appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
-        };
+   <!-- LÓGICA FIREBASE Y VALIDACIONES DE PASES -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyD20VBRnajwjwwS9fhM2x-j-KoBAdoj9wo",
+        authDomain: "invitaciones-xv-e28d5.firebaseapp.com",
+        projectId: "invitaciones-xv-e28d5",
+        storageBucket: "invitaciones-xv-e28d5.firebasestorage.app",
+        messagingSenderId: "531033690105",
+        appId: "1:531033690105:web:2fd2350b2b5fe02a8d7728"
+    };
 
-        const dbCollectionName = "confirmaciones_krista_xv";
-        const rawFotoTicket = "https://i.imgur.com/e7ijW3Y.jpeg";
-        let fotoTicketBase64 = rawFotoTicket;
+    const dbCollectionName = "confirmaciones_krista_xv";
+    const rawFotoPase = "https://i.imgur.com/e7ijW3Y.jpeg";
+    let fotoPaseSrc = rawFotoPase;
 
-        // Pre-cargar imagen en Base64 mediante proxy seguro CORS para que html2canvas SIEMPRE la renderice al descargar
-        async function precargarFotoTicket() {
+    // Convertir imagen directamente a Base64 usando Image + Canvas (sin depender de proxies externos)
+    function precargarFotoPase() {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
             try {
-                const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(rawFotoTicket)}&w=450&output=jpg`;
-                const response = await fetch(proxyUrl);
-                const blob = await response.blob();
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    fotoTicketBase64 = reader.result;
-                };
-                reader.readAsDataURL(blob);
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                fotoPaseSrc = canvas.toDataURL('image/jpeg', 0.92);
             } catch (e) {
-                console.warn("Usando URL directa para el ticket:", e);
+                console.warn("Usando URL directa para el pase:", e);
             }
+        };
+        // El parámetro ?v=pase evita conflicto de caché CORS con la imagen del header
+        img.src = rawFotoPase + "?v=pase";
+    }
+    precargarFotoPase();
+
+    let db;
+    try {
+        if(Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
         }
-        precargarFotoTicket();
+    } catch (error) {
+        console.error("Error inicializando Firebase:", error);
+    }
 
-        let db;
-        try {
-            if(Object.keys(firebaseConfig).length > 0) {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-            }
-        } catch (error) {
-            console.error("Error inicializando Firebase:", error);
-        }
-
-        // ==========================================
-        // PLANTILLA HTML DEL TICKET MINIMALISTA
-        // ==========================================
-        function construirTicketMinimalistaHTML(idContenedor, nombre, adultos, ninos, totalPases, folio) {
-            return `
-                <div id="${idContenedor}" class="minimal-ticket text-left">
-                    <div class="ticket-divider-min"></div>
-
-                    <!-- Columna Izquierda: Foto limpia de Krista Aidé -->
-                    <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E8DEE1;">
-                        <img src="${fotoTicketBase64}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;" alt="Krista Aidé">
-                        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 55%);"></div>
-                        <div style="position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;">
-                            <p style="font-size: 8px; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin: 0 0 2px 0;">MIS XV</p>
-                            <p class="font-script" style="font-size: 23px; color: #FFFFFF; margin: 0; line-height: 1.25; padding-bottom: 2px;">Krista Aidé</p>
-                        </div>
-                    </div>
-
-                    <!-- Columna Derecha: Info Minimalista -->
-                    <div style="width: 62%; height: 100%; padding: 14px 18px 14px 20px; display: flex; flex-direction: column; justify-content: space-between; background-color: #FCF9F9; box-sizing: border-box;">
-                        
-                        <div style="text-align: center; border-bottom: 1px solid rgba(204,148,148,0.3); padding-bottom: 8px;">
-                            <p style="font-size: 9px; text-transform: uppercase; letter-spacing: 2.5px; color: #CC9494; font-weight: 700; margin: 0 0 4px 0;">PASE DE ACCESO</p>
-                            <p style="font-size: 15px; color: #2C2A2A; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; line-height: 1.4; padding-bottom: 2px; word-break: break-word;">${nombre}</p>
-                        </div>
-
-                        <div style="background-color: #CC9494; color: #FFFFFF; border-radius: 10px; padding: 10px 12px 14px 12px; display: flex; align-items: center; justify-content: space-around;">
-                            <div style="text-align: center;">
-                                <p style="font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin: 0 0 4px 0; opacity: 0.95;">TOTAL PASES</p>
-                                <p class="font-numbers" style="font-size: 28px; font-weight: 700; margin: 0; line-height: 1.15; padding-bottom: 2px;">${totalPases}</p>
-                            </div>
-                            <div style="width: 1px; height: 34px; background-color: rgba(255,255,255,0.4);"></div>
-                            <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; line-height: 1.6; text-align: left;">
-                                <p style="margin: 0;">ADULTOS: <span class="font-numbers" style="font-size: 12px;">${adultos}</span></p>
-                                <p style="margin: 0;">NIÑOS: <span class="font-numbers" style="font-size: 12px;">${ninos}</span></p>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(204,148,148,0.3); padding-top: 6px; font-size: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: #2C2A2A;">
-                            <div style="line-height: 1.4;">
-                                <p style="color: #CC9494; margin: 0;">28 • NOV • 2026</p>
-                                <p style="font-size: 7.5px; margin: 0; color: #555;">HACIENDA SAN ELÍAS</p>
-                            </div>
-                            <div style="line-height: 1.4; text-align: right;">
-                                <span style="color: #2C2A2A; font-size: 8.5px; letter-spacing: 1px;">${folio}</span>
-                            </div>
-                        </div>
-
+    // ==========================================
+    // PLANTILLA HTML DEL PASE MINIMALISTA (SIN LÍNEA PUNTEADA Y CON FOTO EN BACKGROUND)
+    // ==========================================
+    function construirPaseMinimalistaHTML(idContenedor, nombre, adultos, ninos, totalPases, folio) {
+        return `
+            <div id="${idContenedor}" class="minimal-ticket text-left">
+                <!-- Columna Izquierda: Foto limpia de Krista Aidé como background-image para compatibilidad total -->
+                <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E8DEE1; background-image: url('${fotoPaseSrc}'); background-size: cover; background-position: center;">
+                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 55%);"></div>
+                    <div style="position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;">
+                        <p style="font-size: 8px; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin: 0 0 2px 0;">MIS XV</p>
+                        <p class="font-script" style="font-size: 23px; color: #FFFFFF; margin: 0; line-height: 1.25; padding-bottom: 2px;">Krista Aidé</p>
                     </div>
                 </div>
-            `;
-        }
 
-        // ==========================================
-        // SISTEMA DE ALERTAS PERSONALIZADAS
-        // ==========================================
-        function mostrarAlerta(mensaje) {
-            const customAlert = document.getElementById('customAlert');
-            const customAlertText = document.getElementById('customAlertText');
+                <!-- Columna Derecha: Info Minimalista -->
+                <div style="width: 62%; height: 100%; padding: 14px 18px 14px 20px; display: flex; flex-direction: column; justify-content: space-between; background-color: #FCF9F9; box-sizing: border-box;">
+                    
+                    <div style="text-align: center; border-bottom: 1px solid rgba(204,148,148,0.3); padding-bottom: 8px;">
+                        <p style="font-size: 9px; text-transform: uppercase; letter-spacing: 2.5px; color: #CC9494; font-weight: 700; margin: 0 0 4px 0;">PASE DE ACCESO</p>
+                        <p style="font-size: 15px; color: #2C2A2A; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; line-height: 1.4; padding-bottom: 2px; word-break: break-word;">${nombre}</p>
+                    </div>
+
+                    <div style="background-color: #CC9494; color: #FFFFFF; border-radius: 10px; padding: 10px 12px 14px 12px; display: flex; align-items: center; justify-content: space-around;">
+                        <div style="text-align: center;">
+                            <p style="font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin: 0 0 4px 0; opacity: 0.95;">TOTAL PASES</p>
+                            <p class="font-numbers" style="font-size: 28px; font-weight: 700; margin: 0; line-height: 1.15; padding-bottom: 2px;">${totalPases}</p>
+                        </div>
+                        <div style="width: 1px; height: 34px; background-color: rgba(255,255,255,0.4);"></div>
+                        <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; line-height: 1.6; text-align: left;">
+                            <p style="margin: 0;">ADULTOS: <span class="font-numbers" style="font-size: 12px;">${adultos}</span></p>
+                            <p style="margin: 0;">NIÑOS: <span class="font-numbers" style="font-size: 12px;">${ninos}</span></p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(204,148,148,0.3); padding-top: 6px; font-size: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: #2C2A2A;">
+                        <div style="line-height: 1.4;">
+                            <p style="color: #CC9494; margin: 0;">28 • NOV • 2026</p>
+                            <p style="font-size: 7.5px; margin: 0; color: #555;">HACIENDA SAN ELÍAS</p>
+                        </div>
+                        <div style="line-height: 1.4; text-align: right;">
+                            <span style="color: #2C2A2A; font-size: 8.5px; letter-spacing: 1px;">${folio}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `;
+    }
+
+    // ==========================================
+    // SISTEMA DE ALERTAS PERSONALIZADAS
+    // ==========================================
+    function mostrarAlerta(mensaje) {
+        const customAlert = document.getElementById('customAlert');
+        const customAlertText = document.getElementById('customAlertText');
+        
+        if(customAlert && customAlertText) {
+            customAlertText.innerText = mensaje;
+            customAlert.classList.remove('hidden');
             
-            if(customAlert && customAlertText) {
-                customAlertText.innerText = mensaje;
-                customAlert.classList.remove('hidden');
-                
-                customAlert.classList.add('scale-105');
-                setTimeout(() => customAlert.classList.remove('scale-105'), 200);
-                
-                clearTimeout(window.alertTimeout);
-                window.alertTimeout = setTimeout(() => {
-                    customAlert.classList.add('hidden');
-                }, 4500); 
+            customAlert.classList.add('scale-105');
+            setTimeout(() => customAlert.classList.remove('scale-105'), 200);
+            
+            clearTimeout(window.alertTimeout);
+            window.alertTimeout = setTimeout(() => {
+                customAlert.classList.add('hidden');
+            }, 4500); 
+        }
+    }
+
+    // ==========================================
+    // LECTURA DE URL AL CARGAR LA PÁGINA (?n=Nombre&p=4)
+    // ==========================================
+    const params = new URLSearchParams(window.location.search);
+    const nombreUrl = params.get('n') || params.get('invitado');
+    const pasesParam = params.get('p') || params.get('pases');
+    const maxPasesAsignados = pasesParam ? parseInt(pasesParam, 10) : null;
+
+    const seccionInicio = document.getElementById('seccion-pases-inicio');
+    const nombreInvitado = document.getElementById('nombre-invitado-inicio');
+    const cantidadPasesInicio = document.getElementById('cantidad-pases-inicio');
+    const rsvpAssignedText = document.getElementById('rsvpAssignedText');
+    const inputAdults = document.getElementById('rsvpAdults');
+    const inputNinos = document.getElementById('rsvpNinos');
+
+    if (nombreUrl || (maxPasesAsignados && !isNaN(maxPasesAsignados))) {
+        if (seccionInicio) seccionInicio.classList.remove('hidden');
+        if (nombreUrl && nombreInvitado) {
+            nombreInvitado.textContent = nombreUrl;
+        }
+        if (maxPasesAsignados && !isNaN(maxPasesAsignados) && maxPasesAsignados > 0) {
+            if (cantidadPasesInicio) {
+                cantidadPasesInicio.textContent = `Pases: ${maxPasesAsignados}`;
+                cantidadPasesInicio.classList.remove('hidden');
+            }
+            if (rsvpAssignedText) {
+                rsvpAssignedText.textContent = `Tienes un máximo de ${maxPasesAsignados} ${maxPasesAsignados === 1 ? 'pase' : 'pases'}`;
+                rsvpAssignedText.classList.remove('hidden');
+            }
+            if (inputAdults) {
+                inputAdults.max = maxPasesAsignados;
+                inputAdults.value = maxPasesAsignados;
+            }
+            if (inputNinos) {
+                inputNinos.max = maxPasesAsignados;
+                inputNinos.value = 0;
             }
         }
+    }
 
-        // ==========================================
-        // LECTURA DE URL AL CARGAR LA PÁGINA (?n=Nombre&p=4)
-        // ==========================================
-        const params = new URLSearchParams(window.location.search);
-        const nombreUrl = params.get('n') || params.get('invitado');
-        const pasesParam = params.get('p') || params.get('pases');
-        const maxPasesAsignados = pasesParam ? parseInt(pasesParam, 10) : null;
+    function validarLimitesInputs(changedInput) {
+        if (!maxPasesAsignados || isNaN(maxPasesAsignados)) return;
+        let a = parseInt(inputAdults.value) || 0;
+        let n = parseInt(inputNinos.value) || 0;
 
-        const seccionInicio = document.getElementById('seccion-pases-inicio');
-        const nombreInvitado = document.getElementById('nombre-invitado-inicio');
-        const cantidadPasesInicio = document.getElementById('cantidad-pases-inicio');
-        const rsvpAssignedText = document.getElementById('rsvpAssignedText');
-        const inputAdults = document.getElementById('rsvpAdults');
-        const inputNinos = document.getElementById('rsvpNinos');
-
-        if (nombreUrl || (maxPasesAsignados && !isNaN(maxPasesAsignados))) {
-            if (seccionInicio) seccionInicio.classList.remove('hidden');
-            if (nombreUrl && nombreInvitado) {
-                nombreInvitado.textContent = nombreUrl;
-            }
-            if (maxPasesAsignados && !isNaN(maxPasesAsignados) && maxPasesAsignados > 0) {
-                if (cantidadPasesInicio) {
-                    cantidadPasesInicio.textContent = `Pases: ${maxPasesAsignados}`;
-                    cantidadPasesInicio.classList.remove('hidden');
-                }
-                if (rsvpAssignedText) {
-                    rsvpAssignedText.textContent = `Tienes un máximo de ${maxPasesAsignados} ${maxPasesAsignados === 1 ? 'pase' : 'pases'}`;
-                    rsvpAssignedText.classList.remove('hidden');
-                }
-                if (inputAdults) {
-                    inputAdults.max = maxPasesAsignados;
-                    inputAdults.value = maxPasesAsignados;
-                }
-                if (inputNinos) {
-                    inputNinos.max = maxPasesAsignados;
-                    inputNinos.value = 0;
-                }
+        if (a + n > maxPasesAsignados) {
+            mostrarAlerta(`Solo tienes ${maxPasesAsignados} pases asignados en total. Puedes confirmar menos, pero no más.`);
+            if (changedInput === inputAdults) {
+                inputAdults.value = Math.max(0, maxPasesAsignados - n);
+            } else {
+                inputNinos.value = Math.max(0, maxPasesAsignados - a);
             }
         }
+    }
 
-        function validarLimitesInputs(changedInput) {
-            if (!maxPasesAsignados || isNaN(maxPasesAsignados)) return;
-            let a = parseInt(inputAdults.value) || 0;
-            let n = parseInt(inputNinos.value) || 0;
+    if (inputAdults && inputNinos) {
+        inputAdults.addEventListener('input', () => validarLimitesInputs(inputAdults));
+        inputNinos.addEventListener('input', () => validarLimitesInputs(inputNinos));
+    }
 
-            if (a + n > maxPasesAsignados) {
-                mostrarAlerta(`Solo tienes ${maxPasesAsignados} pases asignados en total. Puedes confirmar menos, pero no más.`);
-                if (changedInput === inputAdults) {
-                    inputAdults.value = Math.max(0, maxPasesAsignados - n);
-                } else {
-                    inputNinos.value = Math.max(0, maxPasesAsignados - a);
-                }
-            }
+    if (nombreUrl) {
+        const formName = document.getElementById('rsvpName');
+        if (formName) {
+            formName.value = nombreUrl;
+            formName.readOnly = true; 
+            formName.classList.remove('uppercase', 'text-[#2C2A2A]', 'text-lg', 'font-bold');
+            formName.classList.add('font-script', 'text-rosa-elegante', 'text-4xl', 'cursor-not-allowed'); 
         }
 
-        if (inputAdults && inputNinos) {
-            inputAdults.addEventListener('input', () => validarLimitesInputs(inputAdults));
-            inputNinos.addEventListener('input', () => validarLimitesInputs(inputNinos));
+        const searchName = document.getElementById('searchName');
+        if (searchName) {
+            searchName.value = nombreUrl;
+            searchName.readOnly = true; 
+            searchName.classList.remove('uppercase', 'text-lg', 'font-bold');
+            searchName.classList.add('font-script', 'text-white', 'text-4xl', 'drop-shadow-md', 'cursor-not-allowed'); 
         }
 
-                if (nombreUrl) {
-            const formName = document.getElementById('rsvpName');
-            if (formName) {
-                formName.value = nombreUrl;
-                formName.readOnly = true; 
-                formName.classList.remove('uppercase', 'text-[#2C2A2A]', 'text-lg', 'font-bold');
-                formName.classList.add('font-script', 'text-rosa-elegante', 'text-4xl', 'cursor-not-allowed'); 
-            }
-
-            const searchName = document.getElementById('searchName');
-            if (searchName) {
-                searchName.value = nombreUrl;
-                searchName.readOnly = true; 
-                searchName.classList.remove('uppercase', 'text-lg', 'font-bold');
-                searchName.classList.add('font-script', 'text-white', 'text-4xl', 'drop-shadow-md', 'cursor-not-allowed'); 
-            }
-
-
-            if (db) {
-                const confirmacionesRef = collection(db, dbCollectionName);
-                const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
-                getDocs(q).then(querySnapshot => {
-                    if (!querySnapshot.empty) {
-                        const form = document.getElementById('rsvpForm');
-                        if(form) {
-                            document.getElementById('rsvpTitleText').classList.add('hidden');
-                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
-                            const rsvpNoteText = document.getElementById('rsvpNoteText');
-                            if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
-                            if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
-                            
-                            form.innerHTML = `
-                                <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center shadow-xl mt-6">
-                                    <p class="text-rosa-elegante font-bold text-xl mb-2 drop-shadow-sm uppercase tracking-widest">¡Asistencia Confirmada!</p>
-                                    <p class="text-[#2C2A2A] text-xs font-bold drop-shadow-sm uppercase tracking-wider">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
-                                </div>
-                            `;
-                        }
-                    }
-                }).catch(err => {
-                    console.error("Error verificando registro previo en Firebase:", err);
-                });
-            }
-        }
-
-        // ==========================================
-        // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
-        // ==========================================
-        const rsvpFormElement = document.getElementById('rsvpForm');
-        if (rsvpFormElement) {
-            rsvpFormElement.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const name = document.getElementById('rsvpName').value.trim();
-                const numAdultos = parseInt(document.getElementById('rsvpAdults')?.value) || 0;
-                const numNinos = parseInt(document.getElementById('rsvpNinos')?.value) || 0;
-                const totalPases = numAdultos + numNinos;
-
-                if (totalPases <= 0) {
-                    mostrarAlerta("Debes confirmar al menos 1 asistente.");
-                    return;
-                }
-
-                if (maxPasesAsignados && !isNaN(maxPasesAsignados) && totalPases > maxPasesAsignados) {
-                    mostrarAlerta(`No puedes confirmar más de ${maxPasesAsignados} pases asignados.`);
-                    return;
-                }
-                
-                const form = document.getElementById('rsvpForm');
-                const loader = document.getElementById('loadingMessage');
-                const textLoader = document.getElementById('loadingText');
-                const rsvpNoteText = document.getElementById('rsvpNoteText');
-                
-                form.style.display = 'none';
-                
-                loader.classList.remove('hidden');
-                loader.classList.add('flex');
-
-                try {
-                    if (db) {
-                        textLoader.innerText = "Verificando...";
+        if (db) {
+            const confirmacionesRef = collection(db, dbCollectionName);
+            const q = query(confirmacionesRef, where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+            getDocs(q).then(querySnapshot => {
+                if (!querySnapshot.empty) {
+                    const form = document.getElementById('rsvpForm');
+                    if(form) {
+                        document.getElementById('rsvpTitleText').classList.add('hidden');
+                        document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                        const rsvpNoteText = document.getElementById('rsvpNoteText');
+                        if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
+                        if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
                         
-                        const confirmacionesRef = collection(db, dbCollectionName);
-                        const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
-                        const querySnapshot = await getDocs(q);
-
-                        if (!querySnapshot.empty) {
-                            document.getElementById('rsvpTitleText').classList.add('hidden');
-                            document.getElementById('rsvpSubtitleText').classList.add('hidden');
-                            if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
-                            if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
-                            form.innerHTML = `
-                                <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center shadow-xl mt-6">
-                                    <p class="text-rosa-elegante font-bold text-xl mb-2 drop-shadow-sm uppercase tracking-widest">¡Asistencia Confirmada!</p>
-                                    <p class="text-[#2C2A2A] text-xs font-bold drop-shadow-sm uppercase tracking-wider">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
-                                </div>
-                            `;
-                            form.style.display = 'block';
-                            loader.classList.add('hidden');
-                            loader.classList.remove('flex');
-                            return;
-                        }
+                        form.innerHTML = `
+                            <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center shadow-xl mt-6">
+                                <p class="text-rosa-elegante font-bold text-xl mb-2 drop-shadow-sm uppercase tracking-widest">¡Asistencia Confirmada!</p>
+                                <p class="text-[#2C2A2A] text-xs font-bold drop-shadow-sm uppercase tracking-wider">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                            </div>
+                        `;
                     }
+                }
+            }).catch(err => {
+                console.error("Error verificando registro previo en Firebase:", err);
+            });
+        }
+    }
 
-                    textLoader.innerText = "Generando pase...";
-                    const folio = "XV-KRI-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    // ==========================================
+    // GUARDAR RSVP (CONFIRMAR ASISTENCIA)
+    // ==========================================
+    const rsvpFormElement = document.getElementById('rsvpForm');
+    if (rsvpFormElement) {
+        rsvpFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('rsvpName').value.trim();
+            const numAdultos = parseInt(document.getElementById('rsvpAdults')?.value) || 0;
+            const numNinos = parseInt(document.getElementById('rsvpNinos')?.value) || 0;
+            const totalPases = numAdultos + numNinos;
 
-                    if (db) {
-                        await addDoc(collection(db, dbCollectionName), {
-                            nombre: name,
-                            nombre_lower: name.toLowerCase(),
-                            adultos: numAdultos,
-                            ninos: numNinos,
-                            totalPases: totalPases,
-                            pasesAsignados: maxPasesAsignados || totalPases,
-                            folio: folio,
-                            fecha: serverTimestamp() 
-                        });
+            if (totalPases <= 0) {
+                mostrarAlerta("Debes confirmar al menos 1 asistente.");
+                return;
+            }
+
+            if (maxPasesAsignados && !isNaN(maxPasesAsignados) && totalPases > maxPasesAsignados) {
+                mostrarAlerta(`No puedes confirmar más de ${maxPasesAsignados} pases asignados.`);
+                return;
+            }
+            
+            const form = document.getElementById('rsvpForm');
+            const loader = document.getElementById('loadingMessage');
+            const textLoader = document.getElementById('loadingText');
+            const rsvpNoteText = document.getElementById('rsvpNoteText');
+            
+            form.style.display = 'none';
+            
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
+            try {
+                if (db) {
+                    textLoader.innerText = "Verificando...";
+                    
+                    const confirmacionesRef = collection(db, dbCollectionName);
+                    const q = query(confirmacionesRef, where("nombre_lower", "==", name.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+
+                    if (!querySnapshot.empty) {
+                        document.getElementById('rsvpTitleText').classList.add('hidden');
+                        document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                        if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
+                        if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
+                        form.innerHTML = `
+                            <div class="bg-white border border-rosa-elegante/40 p-8 rounded-xl text-center shadow-xl mt-6">
+                                <p class="text-rosa-elegante font-bold text-xl mb-2 drop-shadow-sm uppercase tracking-widest">¡Asistencia Confirmada!</p>
+                                <p class="text-[#2C2A2A] text-xs font-bold drop-shadow-sm uppercase tracking-wider">Ya hemos recibido tu confirmación en el sistema. Ve a la sección de abajo para recuperar tu pase oficial.</p>
+                            </div>
+                        `;
+                        form.style.display = 'block';
+                        loader.classList.add('hidden');
+                        loader.classList.remove('flex');
+                        return;
                     }
+                }
 
-                    loader.classList.add('hidden');
-                    loader.classList.remove('flex');
-                    document.getElementById('rsvpTitleText').classList.add('hidden');
-                    document.getElementById('rsvpSubtitleText').classList.add('hidden');
-                    if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
-                    if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
+                textLoader.innerText = "Generando pase...";
+                const folio = "XV-KRI-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
-                    const seccionRsvp = document.getElementById('rsvpForm').parentElement;
-                    const numeroWhatsApp = "523931008446"; 
-                    const mensajeWa = `¡Hola! Confirmo nuestra asistencia a los XV años de Krista Aidé.%0A%0A🎟️ Familia / Invitado: ${name}%0A👤 Adultos confirmados: ${numAdultos}%0A👧 Niños confirmados: ${numNinos}%0A✨ Total de pases: ${totalPases}%0A🔖 Folio: ${folio}`;
-                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${mensajeWa}`;
+                if (db) {
+                    await addDoc(collection(db, dbCollectionName), {
+                        nombre: name,
+                        nombre_lower: name.toLowerCase(),
+                        adultos: numAdultos,
+                        ninos: numNinos,
+                        totalPases: totalPases,
+                        pasesAsignados: maxPasesAsignados || totalPases,
+                        folio: folio,
+                        fecha: serverTimestamp() 
+                    });
+                }
 
-                    const resultDiv = document.createElement('div');
-                    resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+                document.getElementById('rsvpTitleText').classList.add('hidden');
+                document.getElementById('rsvpSubtitleText').classList.add('hidden');
+                if (rsvpNoteText) rsvpNoteText.classList.add('hidden');
+                if (rsvpAssignedText) rsvpAssignedText.classList.add('hidden');
+
+                const seccionRsvp = document.getElementById('rsvpForm').parentElement;
+                const numeroWhatsApp = "523931008446"; 
+                const mensajeWa = `¡Hola! Confirmo nuestra asistencia a los XV años de Krista Aidé.%0A%0A🎟️ Familia / Invitado: ${name}%0A👤 Adultos confirmados: ${numAdultos}%0A👧 Niños confirmados: ${numNinos}%0A✨ Total de pases: ${totalPases}%0A🔖 Folio: ${folio}`;
+                const waLink = `https://wa.me/${numeroWhatsApp}?text=${mensajeWa}`;
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = "mt-4 flex flex-col items-center w-full relative z-10 mx-auto"; 
+                
+                resultDiv.innerHTML = `
+                    ${construirPaseMinimalistaHTML('tarjetaPaseDigitalGenerado', name, numAdultos, numNinos, totalPases, folio)}
+                    <p class="text-[9px] uppercase text-gray-500 font-bold tracking-widest mt-3">Muestra este pase en la entrada del evento</p>
+                    
+                    <div class="flex flex-col gap-3 w-full max-w-sm mt-5">
+                        <button id="btnDescargarImagenRSVP" class="bg-rosa-elegante text-white font-bold py-4 px-8 uppercase text-xs hover:bg-rosa-elegante/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Descargar Pase
+                        </button>
+                        
+                        <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
+                            Confirmar por WhatsApp
+                        </a>
+                    </div>
+                `;
+                seccionRsvp.appendChild(resultDiv);
+
+                // ====================================================
+                // LÓGICA DE DESCARGA SEGURA
+                // ====================================================
+                document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
+                    const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
+                    const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
+                    const originalText = btnDescargar.innerHTML;
+                    btnDescargar.innerText = "Generando...";
+                    
+                    const clone = tarjeta.cloneNode(true);
+                    clone.style.width = "380px";
+                    clone.style.height = "215px";
+                    clone.style.position = "fixed";
+                    clone.style.top = "-9999px";
+                    clone.style.left = "-9999px";
+                    clone.style.zIndex = "-9999";
+                    document.body.appendChild(clone);
+                    
+                    window.html2canvas(clone, { 
+                        backgroundColor: "#FCF9F9", 
+                        scale: 3, 
+                        useCORS: true, 
+                        allowTaint: false,
+                        scrollX: 0, 
+                        scrollY: 0 
+                    }).then(canvas => {
+                        document.body.removeChild(clone);
+                        
+                        const base64 = canvas.toDataURL('image/png');
+                        
+                        canvas.toBlob(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const enlace = document.createElement('a');
+                            enlace.style.display = 'none';
+                            enlace.href = url;
+                            enlace.download = 'Pase_XV_Krista_Aide.png';
+                            document.body.appendChild(enlace);
+                            enlace.click();
+                            document.body.removeChild(enlace);
+                            setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+                        }, 'image/png');
+
+                        tarjeta.outerHTML = `
+                            <div id="tarjetaPaseDigitalGenerado" class="w-full max-w-[380px] mx-auto">
+                                <img src="${base64}" alt="Pase XV Krista Aidé" class="w-full shadow-2xl rounded-xl" />
+                                <p class="text-[10px] uppercase text-[#2C2A2A] font-bold mt-3 drop-shadow-sm text-center px-2 tracking-widest">Si la descarga no inició automáticamente, mantén presionado el pase y selecciona "Guardar en Fotos".</p>
+                            </div>
+                        `;
+
+                        btnDescargar.innerHTML = "¡Descarga iniciada!";
+                        setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+
+                    }).catch(err => {
+                        if(document.body.contains(clone)) document.body.removeChild(clone);
+                        console.error("Error", err);
+                        btnDescargar.innerHTML = originalText;
+                    });
+                });
+
+            } catch(error) {
+                console.error("Error al guardar:", error);
+                mostrarAlerta("No pudimos guardar tu pase. Revisa tu internet e intenta de nuevo.");
+                form.style.display = 'block';
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+            }
+        });
+    }
+
+    // ==========================================
+    // BUSCADOR / RECUPERAR PASE
+    // ==========================================
+    const searchPassFormElement = document.getElementById('searchPassForm');
+    if (searchPassFormElement) {
+        searchPassFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const searchName = document.getElementById('searchName').value.trim();
+            const resultDiv = document.getElementById('searchResultMessage');
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            
+            btnSubmit.innerText = "Buscando...";
+            btnSubmit.disabled = true;
+            resultDiv.classList.add('hidden');
+
+            try {
+                if(!db) throw new Error("Firebase no inicializado");
+
+                const confirmacionesRef = collection(db, dbCollectionName);
+                const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
+                const querySnapshot = await getDocs(q);
+
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+
+                if (!querySnapshot.empty) {
+                    const docData = querySnapshot.docs[0].data();
+                    const adultos = docData.adultos ?? docData.totalPases;
+                    const ninos = docData.ninos ?? 0;
                     
                     resultDiv.innerHTML = `
-                        ${construirTicketMinimalistaHTML('tarjetaPaseDigitalGenerado', name, numAdultos, numNinos, totalPases, folio)}
-                        <p class="text-[9px] uppercase text-gray-500 font-bold tracking-widest mt-3">Muestra este boleto en la entrada del evento</p>
-                        
-                        <div class="flex flex-col gap-3 w-full max-w-sm mt-5">
-                            <button id="btnDescargarImagenRSVP" class="bg-rosa-elegante text-white font-bold py-4 px-8 uppercase text-xs hover:bg-rosa-elegante/90 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Descargar Ticket
-                            </button>
+                        <div class="mt-4 flex flex-col items-center w-full">
+                            ${construirPaseMinimalistaHTML('tarjetaPaseDigital', docData.nombre, adultos, ninos, docData.totalPases, docData.folio)}
                             
-                            <a href="${waLink}" target="_blank" class="bg-[#25D366] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full active:scale-95 tracking-wider">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.418-.099.824z"/></svg>
-                                Confirmar por WhatsApp
-                            </a>
+                            <button id="btnDescargarPaseBuscado" class="mt-6 bg-white text-[#2C2A2A] font-bold py-4 px-8 uppercase text-xs hover:bg-gray-100 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full max-w-sm mx-auto active:scale-95 tracking-wider z-10">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar Pase
+                            </button>
                         </div>
                     `;
-                    seccionRsvp.appendChild(resultDiv);
 
                     // ====================================================
-                    // LÓGICA DE DESCARGA SEGURA
+                    // LÓGICA DE DESCARGA SEGURA 
                     // ====================================================
-                    document.getElementById('btnDescargarImagenRSVP').addEventListener('click', () => {
-                        const tarjeta = document.getElementById('tarjetaPaseDigitalGenerado');
-                        const btnDescargar = document.getElementById('btnDescargarImagenRSVP');
-                        const originalText = btnDescargar.innerHTML;
-                        btnDescargar.innerText = "Generando...";
+                    const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
+                    btnDescargarPase.addEventListener('click', () => {
+                        const tarjeta = document.getElementById('tarjetaPaseDigital');
+                        const originalText = btnDescargarPase.innerHTML;
+                        btnDescargarPase.innerText = "Generando imagen...";
                         
                         const clone = tarjeta.cloneNode(true);
                         clone.style.width = "380px";
@@ -1213,7 +1324,7 @@
                             scrollY: 0 
                         }).then(canvas => {
                             document.body.removeChild(clone);
-                            
+
                             const base64 = canvas.toDataURL('image/png');
                             
                             canvas.toBlob(blob => {
@@ -1221,7 +1332,7 @@
                                 const enlace = document.createElement('a');
                                 enlace.style.display = 'none';
                                 enlace.href = url;
-                                enlace.download = 'Ticket_XV_Krista_Aide.png';
+                                enlace.download = 'Pase_XV_Krista_Aide.png';
                                 document.body.appendChild(enlace);
                                 enlace.click();
                                 document.body.removeChild(enlace);
@@ -1229,156 +1340,47 @@
                             }, 'image/png');
 
                             tarjeta.outerHTML = `
-                                <div id="tarjetaPaseDigitalGenerado" class="w-full max-w-[380px] mx-auto">
-                                    <img src="${base64}" alt="Ticket XV Krista Aidé" class="w-full shadow-2xl rounded-xl" />
-                                    <p class="text-[10px] uppercase text-[#2C2A2A] font-bold mt-3 drop-shadow-sm text-center px-2 tracking-widest">Si la descarga no inició automáticamente, mantén presionado el ticket y selecciona "Guardar en Fotos".</p>
+                                <div id="tarjetaPaseDigital" class="w-full max-w-[380px] mx-auto">
+                                    <img src="${base64}" alt="Pase XV Krista Aidé" class="w-full shadow-2xl rounded-xl" />
+                                    <p class="text-[10px] uppercase text-white font-bold mt-4 text-center px-2 tracking-widest drop-shadow-md">Si la descarga falló, mantén presionado el pase superior y selecciona "Guardar en Fotos".</p>
                                 </div>
                             `;
 
-                            btnDescargar.innerHTML = "¡Descarga iniciada!";
-                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
+                            btnDescargarPase.innerHTML = "¡Descarga iniciada!";
+                            setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
 
-                        }).catch(err => {
+                        }).catch(error => {
                             if(document.body.contains(clone)) document.body.removeChild(clone);
-                            console.error("Error", err);
-                            btnDescargar.innerHTML = originalText;
+                            console.error("Error al generar la imagen: ", error);
+                            btnDescargarPase.innerHTML = "Error al descargar";
+                            setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
                         });
                     });
 
-                } catch(error) {
-                    console.error("Error al guardar:", error);
-                    mostrarAlerta("No pudimos guardar tu pase. Revisa tu internet e intenta de nuevo.");
-                    form.style.display = 'block';
-                    loader.classList.add('hidden');
-                    loader.classList.remove('flex');
-                }
-            });
-        }
-
-        // ==========================================
-        // BUSCADOR / RECUPERAR PASE
-        // ==========================================
-        const searchPassFormElement = document.getElementById('searchPassForm');
-        if (searchPassFormElement) {
-            searchPassFormElement.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const searchName = document.getElementById('searchName').value.trim();
-                const resultDiv = document.getElementById('searchResultMessage');
-                const btnSubmit = e.target.querySelector('button[type="submit"]');
-                
-                btnSubmit.innerText = "Buscando...";
-                btnSubmit.disabled = true;
-                resultDiv.classList.add('hidden');
-
-                try {
-                    if(!db) throw new Error("Firebase no inicializado");
-
-                    const confirmacionesRef = collection(db, dbCollectionName);
-                    const q = query(confirmacionesRef, where("nombre_lower", "==", searchName.toLowerCase()));
-                    const querySnapshot = await getDocs(q);
-
-                    resultDiv.classList.remove('hidden');
-                    resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
-
-                    if (!querySnapshot.empty) {
-                        const docData = querySnapshot.docs[0].data();
-                        const adultos = docData.adultos ?? docData.totalPases;
-                        const ninos = docData.ninos ?? 0;
-                        
-                        resultDiv.innerHTML = `
-                            <div class="mt-4 flex flex-col items-center w-full">
-                                ${construirTicketMinimalistaHTML('tarjetaPaseDigital', docData.nombre, adultos, ninos, docData.totalPases, docData.folio)}
-                                
-                                <button id="btnDescargarPaseBuscado" class="mt-6 bg-white text-[#2C2A2A] font-bold py-4 px-8 uppercase text-xs hover:bg-gray-100 transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full max-w-sm mx-auto active:scale-95 tracking-wider z-10">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                    Descargar Ticket
-                                </button>
-                            </div>
-                        `;
-
-                        // ====================================================
-                        // LÓGICA DE DESCARGA SEGURA 
-                        // ====================================================
-                        const btnDescargarPase = document.getElementById('btnDescargarPaseBuscado');
-                        btnDescargarPase.addEventListener('click', () => {
-                            const tarjeta = document.getElementById('tarjetaPaseDigital');
-                            const originalText = btnDescargarPase.innerHTML;
-                            btnDescargarPase.innerText = "Generando imagen...";
-                            
-                            const clone = tarjeta.cloneNode(true);
-                            clone.style.width = "380px";
-                            clone.style.height = "215px";
-                            clone.style.position = "fixed";
-                            clone.style.top = "-9999px";
-                            clone.style.left = "-9999px";
-                            clone.style.zIndex = "-9999";
-                            document.body.appendChild(clone);
-                            
-                            window.html2canvas(clone, { 
-                                backgroundColor: "#FCF9F9", 
-                                scale: 3, 
-                                useCORS: true, 
-                                allowTaint: false,
-                                scrollX: 0, 
-                                scrollY: 0 
-                            }).then(canvas => {
-                                document.body.removeChild(clone);
-
-                                const base64 = canvas.toDataURL('image/png');
-                                
-                                canvas.toBlob(blob => {
-                                    const url = window.URL.createObjectURL(blob);
-                                    const enlace = document.createElement('a');
-                                    enlace.style.display = 'none';
-                                    enlace.href = url;
-                                    enlace.download = 'Ticket_XV_Krista_Aide.png';
-                                    document.body.appendChild(enlace);
-                                    enlace.click();
-                                    document.body.removeChild(enlace);
-                                    setTimeout(() => window.URL.revokeObjectURL(url), 5000);
-                                }, 'image/png');
-
-                                tarjeta.outerHTML = `
-                                    <div id="tarjetaPaseDigital" class="w-full max-w-[380px] mx-auto">
-                                        <img src="${base64}" alt="Ticket XV Krista Aidé" class="w-full shadow-2xl rounded-xl" />
-                                        <p class="text-[10px] uppercase text-white font-bold mt-4 text-center px-2 tracking-widest drop-shadow-md">Si la descarga falló, mantén presionada la imagen superior y selecciona "Guardar en Fotos".</p>
-                                    </div>
-                                `;
-
-                                btnDescargarPase.innerHTML = "¡Descarga iniciada!";
-                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 4000);
-
-                            }).catch(error => {
-                                if(document.body.contains(clone)) document.body.removeChild(clone);
-                                console.error("Error al generar la imagen: ", error);
-                                btnDescargarPase.innerHTML = "Error al descargar";
-                                setTimeout(() => btnDescargarPase.innerHTML = originalText, 2000);
-                            });
-                        });
-
-                    } else {
-                        resultDiv.innerHTML = `
-                            <div class="bg-white/10 backdrop-blur-md border-[3px] border-white/50 p-10 rounded-3xl shadow-xl z-10 w-full text-center">
-                                <p class="text-white font-bold mb-2 uppercase tracking-widest drop-shadow-md">Reserva no encontrada</p>
-                                <p class="text-white/90 text-xs font-bold uppercase tracking-wider">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
-                            </div>
-                        `;
-                    }
-                } catch (error) {
-                    console.error("Error al buscar:", error);
+                } else {
                     resultDiv.innerHTML = `
-                        <div class="bg-white/10 backdrop-blur-md border-[3px] border-red-400 p-10 rounded-3xl shadow-xl z-10 w-full text-center">
-                            <p class="text-red-500 font-bold mb-2 uppercase tracking-widest">Error de conexión</p>
-                            <p class="text-white/90 text-xs font-bold uppercase tracking-wider">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
+                        <div class="bg-white/10 backdrop-blur-md border-[3px] border-white/50 p-10 rounded-3xl shadow-xl z-10 w-full text-center">
+                            <p class="text-white font-bold mb-2 uppercase tracking-widest drop-shadow-md">Reserva no encontrada</p>
+                            <p class="text-white/90 text-xs font-bold uppercase tracking-wider">Asegúrate de escribir tu nombre exactamente igual a como confirmaste tu asistencia.</p>
                         </div>
                     `;
-                } finally {
-                    btnSubmit.innerText = "Buscar";
-                    btnSubmit.disabled = false;
                 }
-            });
-        }
-    </script>
+            } catch (error) {
+                console.error("Error al buscar:", error);
+                resultDiv.innerHTML = `
+                    <div class="bg-white/10 backdrop-blur-md border-[3px] border-red-400 p-10 rounded-3xl shadow-xl z-10 w-full text-center">
+                        <p class="text-red-500 font-bold mb-2 uppercase tracking-widest">Error de conexión</p>
+                        <p class="text-white/90 text-xs font-bold uppercase tracking-wider">No pudimos conectar con la base de datos. Intenta nuevamente más tarde.</p>
+                    </div>
+                `;
+            } finally {
+                btnSubmit.innerText = "Buscar";
+                btnSubmit.disabled = false;
+            }
+        });
+    }
+</script>
+
     
     <script>
     function descargarCalendarioApple() {
