@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" style="color-scheme: only light;">
+<html lang="es" style="color-scheme: only dark;">
 <head>
     <meta charset="UTF-8">
-    <!-- AJUSTE: evita que Chrome/Samsung oscurezca los colores (debe ir arriba, antes de links y styles) -->
-    <meta name="color-scheme" content="only light">
-    <meta name="supported-color-schemes" content="light">
+    <!-- AJUSTE: declara que el diseño YA es oscuro para evitar que Android/Samsung invierta colores y filtros -->
+    <meta name="color-scheme" content="only dark">
+    <meta name="supported-color-schemes" content="dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV Regina</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
@@ -44,7 +44,7 @@
     
     <style>
         :root {
-            color-scheme: only light;
+            color-scheme: only dark;
             --terracota: #7F1D1D; 
             --blanco-perla: transparent;
             --font-elegant: 'Unna', serif;
@@ -52,9 +52,10 @@
             --font-numbers: 'Unna', serif; 
         }
 
-        /* AJUSTE: refuerzo contra el modo oscuro forzado */
-        html, body, #mobile-wrapper {
-            color-scheme: only light;
+        /* AJUSTE: bloqueo de inversión automática en Samsung Internet, Chrome y WebViews de Android */
+        html, body, #mobile-wrapper, * {
+            color-scheme: only dark;
+            forced-color-adjust: none;
             -webkit-text-size-adjust: 100%;
             text-size-adjust: 100%;
         }
@@ -109,13 +110,15 @@
         .font-bold, h3, label { font-weight: 700; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        /* Estilo para todos los títulos completos en dorado champagne cálido degradado */
+        /* Estilo blindado para todos los títulos completos en dorado champagne cálido degradado */
         .gold-text {
-            background: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: #D5B878;
+            background-image: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
             filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.65));
+            forced-color-adjust: none;
         }
 
         .glass-card {
@@ -157,7 +160,12 @@
         .text-shadow-dark { text-shadow: 0px 4px 15px rgba(0,0,0,0.5), 0px 0px 5px rgba(0,0,0,0.3); }
         .text-shadow-light { text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5); }
 
-        .filtro-blanco { filter: brightness(0) invert(1); }
+        /* Blindaje para que Android no revierta el filtro blanco de los íconos PNG */
+        .filtro-blanco { 
+            filter: brightness(0) invert(1) !important; 
+            -webkit-filter: brightness(0) invert(1) !important;
+            isolation: isolate;
+        }
 
         #envelope-wrapper {
             position: absolute; inset: 0; z-index: 100;
