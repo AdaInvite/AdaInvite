@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" style="color-scheme: only dark;">
+<html lang="es" class="dark" style="color-scheme: light dark;">
 <head>
     <meta charset="UTF-8">
-    <!-- AJUSTE: declara que el diseño YA es oscuro para evitar que Android/Samsung invierta colores y filtros -->
-    <meta name="color-scheme" content="only dark">
-    <meta name="supported-color-schemes" content="dark">
+    <!-- AJUSTE: Sintaxis estándar reconocida por Chrome/WebView/Samsung para respetar el diseño original -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV Regina</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
@@ -19,6 +19,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontSize: {
@@ -44,34 +45,41 @@
     
     <style>
         :root {
-            color-scheme: only dark;
+            color-scheme: light dark;
             --terracota: #7F1D1D; 
             --blanco-perla: transparent;
+            --beige: #D8C3A5;
+            --dorado: #D5B878;
             --font-elegant: 'Unna', serif;
             --font-script: 'Imperial Script', cursive;
             --font-numbers: 'Unna', serif; 
         }
 
-        /* AJUSTE: bloqueo de inversión automática en Samsung Internet, Chrome y WebViews de Android */
-        html, body, #mobile-wrapper, * {
-            color-scheme: only dark;
-            forced-color-adjust: none;
+        /* 1. Bloqueo de inversión automática en Samsung Internet, Chrome, Xiaomi y WebViews de Android */
+        html, body, #mobile-wrapper, *, *::before, *::after {
+            color-scheme: light dark !important;
+            forced-color-adjust: none !important;
+            -webkit-forced-color-adjust: none !important;
+            -moz-forced-color-adjust: none !important;
             -webkit-text-size-adjust: 100%;
             text-size-adjust: 100%;
         }
 
+        /* 2. Blindaje de fondos oscuros con linear-gradient para evitar que Force Dark los toque */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             font-family: var(--font-elegant);
-            background-color: #050505;
+            background-color: #050505 !important;
+            background-image: linear-gradient(0deg, #050505, #050505) !important;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: #FFFFFF;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF;
         }
 
         #mobile-wrapper {
@@ -79,7 +87,8 @@
             max-width: 450px; 
             height: 100svh;
             position: relative;
-            background-color: #000000;
+            background-color: #000000 !important;
+            background-image: linear-gradient(0deg, #000000, #000000) !important;
             overflow: hidden;
             box-shadow: 0 0 35px rgba(185, 28, 28, 0.25); 
         }
@@ -97,6 +106,65 @@
         }
         #scroll-area::-webkit-scrollbar { display: none; }
 
+        /* 3. Blindaje de colores sólidos (Beige, Blanco, Negro) mediante gradientes e inyección Webkit */
+        .bg-beige {
+            background-color: #D8C3A5 !important;
+            background-image: linear-gradient(0deg, #D8C3A5 0%, #D8C3A5 100%) !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+
+        a.bg-beige:hover, button.bg-beige:hover {
+            background-image: none !important;
+            background-color: transparent !important;
+            color: #D8C3A5 !important;
+            -webkit-text-fill-color: #D8C3A5 !important;
+        }
+
+        .bg-white {
+            background-color: #FFFFFF !important;
+            background-image: linear-gradient(0deg, #FFFFFF 0%, #FFFFFF 100%) !important;
+        }
+
+        .bg-black {
+            background-color: #000000 !important;
+            background-image: linear-gradient(0deg, #000000 0%, #000000 100%) !important;
+        }
+
+        .text-beige {
+            color: #D8C3A5 !important;
+            -webkit-text-fill-color: #D8C3A5 !important;
+        }
+
+        .text-beige\/80 {
+            color: rgba(216, 195, 165, 0.8) !important;
+            -webkit-text-fill-color: rgba(216, 195, 165, 0.8) !important;
+        }
+
+        .text-white {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        .text-white\/90 {
+            color: rgba(255, 255, 255, 0.9) !important;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .text-white\/80 {
+            color: rgba(255, 255, 255, 0.8) !important;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .text-black {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+
+        .border-beige {
+            border-color: #D8C3A5 !important;
+        }
+
         h1, h2, h3, h4, .serif, label, input, select, button, span, p { 
             font-family: var(--font-elegant); 
         }
@@ -110,19 +178,23 @@
         .font-bold, h3, label { font-weight: 700; }
         .font-script { font-family: var(--font-script) !important; font-weight: 400; }
 
-        /* Estilo blindado para todos los títulos completos en dorado champagne cálido degradado */
+        /* 4. Estilo blindado para todos los títulos completos en dorado champagne cálido degradado */
         .gold-text {
-            background-image: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%) !important;
+            background: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%) !important;
             -webkit-background-clip: text !important;
             background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             color: transparent !important;
             filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.65));
-            forced-color-adjust: none;
+            display: inline-block;
+            isolation: isolate;
+            forced-color-adjust: none !important;
+            -webkit-forced-color-adjust: none !important;
         }
 
         .glass-card {
-            background-color: rgba(127, 29, 29, 0.18); 
+            background-color: rgba(127, 29, 29, 0.18) !important; 
+            background-image: linear-gradient(0deg, rgba(127, 29, 29, 0.18), rgba(127, 29, 29, 0.18)) !important;
             backdrop-filter: blur(12px); 
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(216, 195, 165, 0.35);
@@ -134,7 +206,8 @@
         }
 
         .forma-ovalada {
-            background-color: rgba(127, 29, 29, 0.15); 
+            background-color: rgba(127, 29, 29, 0.15) !important; 
+            background-image: linear-gradient(0deg, rgba(127, 29, 29, 0.15), rgba(127, 29, 29, 0.15)) !important;
             backdrop-filter: blur(12px); 
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(216, 195, 165, 0.35);
@@ -271,7 +344,8 @@
             width: 100%;
             height: auto;
             display: block;
-            background-color: #000000;
+            background-color: #000000 !important;
+            background-image: linear-gradient(0deg, #000000, #000000) !important;
         }
         .separador-img { 
             width: 100%; 
@@ -315,7 +389,26 @@
         }
         
         input[type=range] { -webkit-appearance: none; background: rgba(255, 255, 255, 0.3); border-radius: 8px; height: 4px; outline: none; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #B91C1C; border: 2px solid #D8C3A5; cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            appearance: none; 
+            width: 14px; 
+            height: 14px; 
+            border-radius: 50%; 
+            background-color: #B91C1C !important; 
+            background-image: linear-gradient(0deg, #B91C1C, #B91C1C) !important;
+            border: 2px solid #D8C3A5 !important; 
+            cursor: pointer; 
+        }
+
+        #rsvpName {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+        #rsvpName::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.4) !important;
+        }
 
         .timeline-line {
             position: absolute; left: 50%; transform: translateX(-50%);
@@ -374,7 +467,7 @@
                 </div>
                 
                 <div class="relative z-10 w-full pb-4 flex flex-col items-center reveal-scale active delay-100 text-center mt-6">
-                    <svg class="w-8 h-8 text-beige animate-bounce opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-beige animate-bounce opacity-80" fill="none" stroke="#D8C3A5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
@@ -397,18 +490,18 @@
                     <div class="w-full max-w-[280px] mx-auto glass-card p-2 reveal-scale border-beige/40">
                        
                         <div class="flex items-center gap-2 mb-4">
-                            <span id="current-time" class="text-xs font-numbers font-light w-10 text-left opacity-80">0:00</span>
+                            <span id="current-time" class="text-xs font-numbers font-light w-10 text-left opacity-80 text-white">0:00</span>
                             <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
-                            <span id="duration-time" class="text-xs font-numbers font-light w-10 text-right opacity-80">-0:00</span>
+                            <span id="duration-time" class="text-xs font-numbers font-light w-10 text-right opacity-80 text-white">-0:00</span>
                         </div>
 
                         <div class="flex items-center justify-center gap-6">
-                            <button class="text-white hover:text-beige transition-colors opacity-80 focus:outline-none"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+                            <button class="text-white hover:text-beige transition-colors opacity-80 focus:outline-none"><svg class="w-6 h-6" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
                             <button onclick="toggleAudio()" class="w-10 h-10 bg-beige text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
-                                <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                <svg id="icon-play" class="w-5 h-5 ml-1 hidden" fill="#000000" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                <svg id="icon-pause" class="w-5 h-5" fill="#000000" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                             </button>
-                            <button class="text-white hover:text-beige transition-colors opacity-80 focus:outline-none"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                            <button class="text-white hover:text-beige transition-colors opacity-80 focus:outline-none"><svg class="w-6 h-6" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
                         </div>
                     </div>
                     
@@ -422,17 +515,17 @@
                                 <p class="text-lg italic mb-3 text-beige leading-relaxed">
                                     Agradezco profundamente a mis padres, por su amor, apoyo y compañía.
                                 </p>
-                                <p class="text-xl font-bold mb-1 tracking-wide">Abraham Benavides</p>
+                                <p class="text-xl font-bold mb-1 tracking-wide text-white">Abraham Benavides</p>
                                 <p class="text-xl font-script text-beige/80">&</p>
-                                <p class="text-xl font-bold mt-1 tracking-wide">Magdalena García</p>
+                                <p class="text-xl font-bold mt-1 tracking-wide text-white">Magdalena García</p>
                             </div>
                             <div class="glass-card p-2 border-beige/40">
                                 <p class="text-lg italic mb-3 text-beige leading-relaxed">
                                     Y a mis padrinos por su cariño y su apoyo incondicional.
                                 </p>
-                                <p class="text-xl font-bold mb-1 tracking-wide">Jesús Carbajal</p>
+                                <p class="text-xl font-bold mb-1 tracking-wide text-white">Jesús Carbajal</p>
                                 <p class="text-xl font-script text-beige/80">&</p>
-                                <p class="text-xl font-bold mt-1 tracking-wide">Ana García</p>
+                                <p class="text-xl font-bold mt-1 tracking-wide text-white">Ana García</p>
                             </div>
                         </div>
                     </div>
@@ -601,7 +694,6 @@
                             <div class="w-5/12"></div>
                             <div class="bg-black p-2 rounded-full border-2 border-beige shadow-lg reveal-scale delay-200 flex items-center justify-center">
                                 <img src="https://i.imgur.com/2LKvYWk.png" class="w-14 h-14 object-contain" alt="Baile">
-                     
                             </div>
                             <div class="w-5/12 text-left pl-2">
                                 <span class="text-lg text-beige font-numbers font-bold">9:30 PM</span>
@@ -617,7 +709,6 @@
                             </div>
                             <div class="bg-black p-2 rounded-full border-2 border-beige shadow-lg reveal-scale delay-200 flex items-center justify-center">
                                 <img src="https://i.imgur.com/8LbTz6j.png" class="w-14 h-14 object-contain" alt="Fin">
-                   
                             </div>
                             <div class="w-5/12"></div>
                         </div>
@@ -642,6 +733,7 @@
                         <img src="https://i.imgur.com/GhZKpR1.png" class="w-28 object-contain" alt="Código de Vestimenta">
                     </div>
                     <h2 class="text-5xl mb-4 font-script gold-text py-1">Código de <br>Vestimenta</h2>
+                    <br>
                     <p class="text-[14px] uppercase text-black mb-6 font-bold bg-beige inline-block px-8 py-3 shadow-sm rounded-full tracking-widest">Ponte guap@</p>
                     <p class="text-base font-bold uppercase text-white mb-8 leading-relaxed px-4 tracking-wide">
                         Te pedimos reservar el color dorado para la Quinceañera
@@ -649,7 +741,7 @@
                     
                     <div class="flex justify-center gap-8 mb-6">
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 rounded-full shadow-xl border-2 border-white/40 transition-transform hover:scale-110" style="background: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%);" title="Dorado"></div>
+                            <div class="w-12 h-12 rounded-full shadow-xl border-2 border-white/40 transition-transform hover:scale-110" style="background: linear-gradient(135deg, #CFAF6E 0%, #FDF3D7 50%, #A68446 100%) !important;" title="Dorado"></div>
                             <span class="text-xs uppercase tracking-widest mt-4 text-beige font-bold">Dorado</span>
                         </div>
                     </div>
@@ -734,7 +826,7 @@
                     <h1 class="text-5xl mb-6 gold-text font-script reveal-scale py-1">Sugerencia <br>de Regalos</h1>
                     
                     <div class="mt-6 glass-card p-6 border-beige/40 flex flex-col items-center justify-center gap-2 reveal-scale delay-200 w-full max-w-[340px] mx-auto">
-                        <svg class="w-16 h-16 text-beige shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-16 h-16 text-beige shrink-0" fill="none" stroke="#D8C3A5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
                         <h3 class="text-4xl font-script gold-text py-1">Lluvia de Sobres</h3>
@@ -775,7 +867,9 @@
             <footer class="min-h-[100svh] flex flex-col justify-center px-6 text-center relative overflow-hidden z-10 bg-cover bg-center" style="background-image: url('https://i.imgur.com/1Flyqn2.jpeg');">
                 <div class="absolute inset-0 bg-black/50 z-0"></div>
                 
-                <p class="text-7xl font-script mb-4 gold-text drop-shadow-lg relative z-10 py-2">¡No faltes!</p>
+                <div class="relative z-10">
+                    <p class="text-7xl font-script mb-4 gold-text drop-shadow-lg py-2">¡No faltes!</p>
+                </div>
               
                 <p class="text-xs mb-60 text-white uppercase tracking-widest font-bold font-numbers drop-shadow-md relative z-10">28 • Noviembre • 2026</p>
             </footer>
