@@ -59,7 +59,7 @@
     <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
         
         <div id="form-header" class="text-center mb-12">
-            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-14 mx-auto mb-6">
+            <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite Logo" class="h-14 mx-auto mb-6">
             <h1 class="text-5xl md:text-6xl text-[#9B8AA5] mb-4">Paquete Premium</h1>
             <p class="text-sm font-medium max-w-2xl mx-auto text-[#3D3542] leading-relaxed">
                 Gracias por adquirir nuestro paquete premium, a continuación te pediremos los datos necesarios para iniciar con la elaboración de tu invitación, por favor, si tienes alguna duda o información adicional avísanos.
@@ -67,7 +67,7 @@
         </div>
 
         <div id="success-screen" class="hidden text-center py-10">
-            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite Logo" class="h-16 mx-auto mb-8">
+            <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite Logo" class="h-16 mx-auto mb-8">
             <h2 class="text-4xl md:text-5xl text-[#9B8AA5] mb-4">¡Datos enviados con exito!</h2>
             <p class="text-base text-[#3D3542] mb-10 max-w-lg mx-auto leading-relaxed">
                 Hemos recibido toda tu información y fotografías correctamente en nuestro sistema. Estamos listos para comenzar a crear la magia de tu invitación Premium.
@@ -317,7 +317,7 @@
             </div>
 
             <div>
-                <h3 class="text-xl font-semibold mb-4 text-[#9B8AA5]">9. Confirmación y Accesos</h3>
+                <h3 class="text-xl font-semibold mb-4 text-[#9B8AA5]">9. Confirmación, Álbum y Accesos</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-medium">Fecha límite para confirmar asistencia</label>
@@ -342,6 +342,26 @@
                         <input type="url" id="evento_musica" name="evento_musica" data-name="Canción de fondo (Link YouTube)" class="form-input" placeholder="Ej. https://www.youtube.com/watch?v=..." required>
                     </div>
                     
+                    <!-- BLOQUE DE ÁLBUM COMPARTIDO OBLIGATORIO -->
+                    <div class="md:col-span-2 section-group !mt-2 !mb-0">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm font-bold text-[#3D3542]">¿Deseas activar el Álbum Compartido (con QR)? *</label>
+                                <p class="text-[11px] opacity-70 mb-1">Es indispensable responder esta opción.</p>
+                                <select id="activar_album" name="activar_album" data-name="Activar Álbum Compartido" class="form-input strict-required" required>
+                                    <option value="" disabled selected>Selecciona Sí o No</option>
+                                    <option value="si">Sí, activar álbum compartido</option>
+                                    <option value="no">No, no lo necesito</option>
+                                </select>
+                            </div>
+                            <div id="contenedor_album_titulo">
+                                <label class="text-sm font-medium">Título del Álbum Compartido (con QR) *</label>
+                                <p class="text-[11px] opacity-70 mb-1">Indispensable si activas el álbum.</p>
+                                <input type="text" id="album_titulo" name="album_titulo" data-name="Título del Álbum Compartido" class="form-input strict-required" placeholder="Ej. #XVdeAna" required>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-2 section-group !mt-4 !mb-0">
                         <label class="text-sm font-bold text-[#3D3542]">Pases Individuales</label>
                         <p class="text-xs opacity-80 mb-2">¿Cómo prefieres manejar la entrega de los pases para tus invitados?</p>
@@ -514,6 +534,29 @@
         const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
         const missingFieldsList = document.getElementById('missing-fields-list');
 
+        // --- LÓGICA CONDICIONAL DEL ÁLBUM COMPARTIDO ---
+        const selectActivarAlbum = document.getElementById('activar_album');
+        const inputAlbumTitulo = document.getElementById('album_titulo');
+        const contenedorAlbumTitulo = document.getElementById('contenedor_album_titulo');
+
+        function actualizarEstadoAlbum() {
+            if (!selectActivarAlbum) return;
+            if (selectActivarAlbum.value === 'no') {
+                contenedorAlbumTitulo.classList.add('hidden');
+                inputAlbumTitulo.removeAttribute('required');
+                inputAlbumTitulo.classList.remove('strict-required', 'border-red-500', 'bg-red-50');
+                inputAlbumTitulo.value = '';
+            } else {
+                contenedorAlbumTitulo.classList.remove('hidden');
+                inputAlbumTitulo.setAttribute('required', 'required');
+                inputAlbumTitulo.classList.add('strict-required');
+            }
+        }
+
+        if (selectActivarAlbum) {
+            selectActivarAlbum.addEventListener('change', actualizarEstadoAlbum);
+        }
+
         // --- SISTEMA DE AUTO-GUARDADO (Local Storage) ---
         let isDirty = false;
         
@@ -545,6 +588,7 @@
                     }
                 }
             }
+            actualizarEstadoAlbum();
         }
 
         formPremium.addEventListener('input', saveToLocal);
@@ -574,6 +618,9 @@
         formPremium.addEventListener('submit', (e) => {
             e.preventDefault(); 
             
+            // Asegurar estado actualizado del álbum antes de validar
+            actualizarEstadoAlbum();
+
             // 1. Validar Filtro de YouTube
             const inputMusica = document.getElementById('evento_musica');
             if (inputMusica && inputMusica.value.trim() !== '') {
@@ -614,7 +661,8 @@
                         if (!firstStrictInput) firstStrictInput = input;
                         
                         input.classList.add('border-red-500', 'bg-red-50');
-                        input.addEventListener('input', function() {
+                        const eventType = input.tagName === 'SELECT' ? 'change' : 'input';
+                        input.addEventListener(eventType, function() {
                             this.classList.remove('border-red-500', 'bg-red-50');
                         }, { once: true });
                     } else {
@@ -625,7 +673,7 @@
 
             // 3. Mostrar Modal si faltan datos o enviar directamente si todo está lleno
             if (missingStrictNames.length > 0) {
-                alert('Por favor completa los siguientes datos obligatorios de contacto:\n\n- ' + missingStrictNames.join('\n- '));
+                alert('Por favor completa los siguientes datos indispensables:\n\n- ' + missingStrictNames.join('\n- '));
                 firstStrictInput.focus();
                 return; 
             } else if (missingSoftNames.length > 0) {
@@ -641,10 +689,11 @@
             }
         });
 
-        // Configuración para que comprima a máximo 1MB
+        // Configuración para compresión ligera
         const compOptions = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1920,
+            maxSizeMB: 0.3,
+            maxWidthOrHeight: 1600,
+            fileType: 'image/jpeg',
             useWebWorker: true
         };
 
