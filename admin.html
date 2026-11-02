@@ -77,8 +77,19 @@
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-x-hidden md:overflow-hidden bg-gray-50">
 
+    <!-- MODAL DE MENSAJES (REEMPLAZO SEGURO DE ALERT) -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-gray-100 text-center">
+            <h3 id="modal-title" class="text-base font-bold text-[#3D3542] mb-2">Aviso</h3>
+            <p id="modal-message" class="text-xs text-gray-600 mb-5 whitespace-pre-line"></p>
+            <button onclick="cerrarModal()" class="w-full bg-[#9B8AA5] text-white py-2.5 rounded-lg font-bold text-xs shadow-sm hover:opacity-90">
+                Aceptar
+            </button>
+        </div>
+    </div>
+
     <!-- PANTALLA DE LOGIN (BLOQUEO) -->
-    <div id="login-screen" class="fixed inset-0 bg-[#FAF9FB] z-50 flex items-center justify-center p-4">
+    <div id="login-screen" class="fixed inset-0 bg-[#FAF9FB] z-40 flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-sm w-full text-center">
             <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite" class="h-12 mx-auto mb-6">
             <h2 class="text-xl font-bold text-[#3D3542] mb-2">Acceso Admin</h2>
@@ -175,21 +186,36 @@
                 <p class="text-xs mt-1">Aquí aparecerán los datos del cliente, las fotos y el generador de prompt.</p>
             </div>
 
-            <!-- PANEL DE VENTAS (CON CÁLCULO DE IVA E ISR) -->
+            <!-- PANEL DE VENTAS (CON CÁLCULO DE IVA, ISR Y PERIODO PERSONALIZADO) -->
             <div id="ventas-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-5 max-w-4xl w-full mx-auto">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-gray-100 pb-4">
-                    <div>
-                        <h3 class="text-base font-bold text-[#3D3542] uppercase tracking-wider">Reporte de Ventas y Ganancia Neta</h3>
-                        <p class="text-xs text-gray-400">Calculado según la fecha de recepción del formulario.</p>
+                <div class="flex flex-col gap-3 border-b border-gray-100 pb-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h3 class="text-base font-bold text-[#3D3542] uppercase tracking-wider">Reporte de Ventas y Ganancia Neta</h3>
+                            <p class="text-xs text-gray-400">Calculado según la fecha de recepción del formulario.</p>
+                        </div>
+                        <select id="ventas-periodo" onchange="cambiarPeriodoVentas()" class="w-full sm:w-auto border border-gray-200 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-50 text-[#3D3542] focus:outline-none focus:border-[#9B8AA5]">
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Últimos 7 días</option>
+                            <option value="mes" selected>Este mes</option>
+                            <option value="30">Últimos 30 días</option>
+                            <option value="anio">Este año</option>
+                            <option value="todo">Todo el historial</option>
+                            <option value="personalizado">Periodo personalizado...</option>
+                        </select>
                     </div>
-                    <select id="ventas-periodo" onchange="renderVentas()" class="w-full sm:w-auto border border-gray-200 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-50 text-[#3D3542] focus:outline-none focus:border-[#9B8AA5]">
-                        <option value="hoy">Hoy</option>
-                        <option value="semana">Últimos 7 días</option>
-                        <option value="mes" selected>Este mes</option>
-                        <option value="30">Últimos 30 días</option>
-                        <option value="anio">Este año</option>
-                        <option value="todo">Todo el historial</option>
-                    </select>
+
+                    <!-- SELECTOR DE RANGO DE FECHAS PERSONALIZADO -->
+                    <div id="ventas-rango-custom" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 bg-purple-50/40 p-3.5 rounded-xl border border-purple-100">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-bold text-gray-500 text-[10px] uppercase">Fecha de inicio (Desde)</label>
+                            <input type="date" id="ventas-desde" onchange="renderVentas()" class="border border-gray-200 rounded-lg p-2 bg-white text-xs font-semibold text-[#3D3542] focus:outline-none focus:border-[#9B8AA5]">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-bold text-gray-500 text-[10px] uppercase">Fecha de fin (Hasta)</label>
+                            <input type="date" id="ventas-hasta" onchange="renderVentas()" class="border border-gray-200 rounded-lg p-2 bg-white text-xs font-semibold text-[#3D3542] focus:outline-none focus:border-[#9B8AA5]">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- CONFIGURACIÓN DE IMPUESTOS (IVA / ISR) -->
@@ -344,7 +370,20 @@
         let vistaActual = 'todos';
         window.clienteSeleccionado = null;
 
-        window.showModal = window.showModal || (async ({ title, message }) => alert(`${title ? title + ':\n' : ''}${message}`));
+        // Función de Modal personalizada para evitar alert()
+        window.showModal = async ({ title = 'Aviso', message = '' }) => {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.cerrarModal = () => {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
 
         function inicializarConfigImpuestos() {
             const modo = localStorage.getItem('adainvite_tax_modo') || 'incluido';
@@ -353,6 +392,13 @@
             document.getElementById('tax-modo').value = modo;
             document.getElementById('tax-iva').value = iva;
             document.getElementById('tax-isr').value = isr;
+
+            // Inicializar fechas personalizadas por defecto (inicio de este mes a hoy)
+            const hoy = new Date();
+            const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+            const fmtDateInput = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            document.getElementById('ventas-desde').value = fmtDateInput(inicioMes);
+            document.getElementById('ventas-hasta').value = fmtDateInput(hoy);
         }
         inicializarConfigImpuestos();
 
@@ -360,6 +406,17 @@
             localStorage.setItem('adainvite_tax_modo', document.getElementById('tax-modo').value);
             localStorage.setItem('adainvite_tax_iva', document.getElementById('tax-iva').value);
             localStorage.setItem('adainvite_tax_isr', document.getElementById('tax-isr').value);
+            renderVentas();
+        };
+
+        window.cambiarPeriodoVentas = () => {
+            const per = document.getElementById('ventas-periodo').value;
+            const customContainer = document.getElementById('ventas-rango-custom');
+            if (per === 'personalizado') {
+                customContainer.classList.remove('hidden');
+            } else {
+                customContainer.classList.add('hidden');
+            }
             renderVentas();
         };
 
@@ -709,7 +766,7 @@
             const c = window.clienteSeleccionado;
             const fotos = c ? listarFotos(c.imagenes) : [];
             if (!fotos.length) {
-                await showModal({ type: 'info', title: 'Sin fotos', message: 'Este pedido no tiene fotos para descargar.' });
+                await showModal({ title: 'Sin fotos', message: 'Este pedido no tiene fotos para descargar.' });
                 return;
             }
             const btn = document.getElementById('btn-zip');
@@ -735,7 +792,7 @@
                 setTimeout(() => URL.revokeObjectURL(a.href), 1000);
             } catch (e) {
                 console.error(e);
-                await showModal({ type: 'warning', title: 'No se pudo descargar', message: 'Revisa que CORS esté activo en el bucket de este proyecto. Falló: ' + e.message });
+                await showModal({ title: 'No se pudo descargar', message: 'Revisa que CORS esté activo en el bucket de este proyecto. Falló: ' + e.message });
             } finally {
                 btn.disabled = false;
                 btn.innerText = textoOriginal;
@@ -812,9 +869,6 @@
 
             let subtotal, iva, isr, neto;
             if (modo === 'incluido') {
-                // Si el precio ya incluye IVA e ISR:
-                // El total bruto se divide entre (1 + tasa_iva) para aislar el subtotal base.
-                // Del subtotal se retiene el ISR correspondiente.
                 subtotal = montoBruto / (1 + ivaPct);
                 iva = montoBruto - subtotal;
                 isr = subtotal * isrPct;
@@ -827,36 +881,79 @@
             }
             return { bruto: montoBruto, subtotal, iva, isr, neto };
         }
+
+        // Suma N días hábiles ignorando los domingos (getDay() === 0)
+        // Además, si el pedido se realizó en domingo, el conteo arranca a partir del lunes
         function sumarDiasHabiles(fecha, n) {
-            const d = new Date(fecha);
-            while (n > 0) {
+            const d = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+            let restantes = n;
+            while (restantes > 0) {
                 d.setDate(d.getDate() + 1);
-                if (d.getDay() !== 0) n--;
+                if (d.getDay() !== 0) { // 0 es Domingo
+                    restantes--;
+                }
             }
             return d;
         }
+
+        // Calcula la diferencia de días hábiles entre dos fechas (sin contar domingos)
+        function calcularDiasHabilesEntre(inicio, fin) {
+            const d1 = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
+            const d2 = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+            if (d1.getTime() === d2.getTime()) return 0;
+
+            const signo = d2 > d1 ? 1 : -1;
+            const cur = new Date(d1);
+            let diasHabiles = 0;
+
+            while ((signo > 0 && cur < d2) || (signo < 0 && cur > d2)) {
+                cur.setDate(cur.getDate() + signo);
+                if (cur.getDay() !== 0) { // No contar domingo como día hábil restante ni de atraso
+                    diasHabiles += signo;
+                }
+            }
+            return diasHabiles;
+        }
+
         function fechaEntrega(d) {
             return d.fechaRegistro ? sumarDiasHabiles(d.fechaRegistro.toDate(), DIAS_ENTREGA[tipoPaquete(d)]) : null;
         }
+
         function estadoEntrega(d) {
             const fe = fechaEntrega(d);
             if (!fe) return null;
-            const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
             fe.setHours(0, 0, 0, 0);
-            return { dias: Math.round((fe - hoy) / 86400000), fe };
+            const dias = calcularDiasHabilesEntre(hoy, fe);
+            return { dias, fe };
         }
+
         function badgeEntrega(d) {
             if (d.estatus === 'completado' || d.estatus === 'en_proceso') return '';
             const e = estadoEntrega(d);
             if (!e) return '';
             const fecha = e.fe.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
             let texto, clase;
-            if (e.dias < 0) { texto = `Atrasado ${-e.dias} día${e.dias < -1 ? 's' : ''} (${fecha})`; clase = 'bg-red-100 text-red-700'; }
-            else if (e.dias === 0) { texto = 'Entrega HOY'; clase = 'bg-orange-100 text-orange-700'; }
-            else if (e.dias === 1) { texto = 'Entrega mañana'; clase = 'bg-orange-50 text-orange-600'; }
-            else { texto = `Entrega ${fecha} (${e.dias} días)`; clase = 'bg-gray-100 text-gray-600'; }
+            if (e.dias < 0) { 
+                texto = `Atrasado ${-e.dias} día${e.dias < -1 ? 's' : ''} hábil${e.dias < -1 ? 'es' : ''} (${fecha})`; 
+                clase = 'bg-red-100 text-red-700'; 
+            }
+            else if (e.dias === 0) { 
+                texto = 'Entrega HOY'; 
+                clase = 'bg-orange-100 text-orange-700'; 
+            }
+            else if (e.dias === 1) { 
+                texto = `Entrega ${fecha} (1 día hábil)`; 
+                clase = 'bg-orange-50 text-orange-600'; 
+            }
+            else { 
+                texto = `Entrega ${fecha} (${e.dias} días hábiles)`; 
+                clase = 'bg-gray-100 text-gray-600'; 
+            }
             return `<div class="mt-2"><span class="px-2 py-1 rounded text-[10px] font-bold ${clase}">${texto}</span></div>`;
         }
+
         function actualizarAlertas() {
             let atras = 0, hoy = 0, man = 0;
             datosActuales.forEach(d => {
@@ -868,7 +965,7 @@
             const partes = [];
             if (atras) partes.push(`${atras} atrasado${atras > 1 ? 's' : ''}`);
             if (hoy) partes.push(`${hoy} vence${hoy > 1 ? 'n' : ''} hoy`);
-            if (man) partes.push(`${man} vence${man > 1 ? 'n' : ''} mañana`);
+            if (man) partes.push(`${man} a 1 día hábil`);
             const el = document.getElementById('alertas-entrega');
             el.classList.toggle('hidden', !partes.length);
             el.innerText = 'Entregas pendientes: ' + partes.join(' | ');
@@ -900,17 +997,41 @@
             const per = document.getElementById('ventas-periodo').value;
             const a = new Date();
             const hoy = new Date(a.getFullYear(), a.getMonth(), a.getDate());
-            const desde = {
-                hoy: hoy,
-                semana: new Date(hoy.getTime() - 6 * 864e5),
-                30: new Date(hoy.getTime() - 29 * 864e5),
-                mes: new Date(a.getFullYear(), a.getMonth(), 1),
-                anio: new Date(a.getFullYear(), 0, 1),
-                todo: null
-            }[per];
+            
+            let desde = null;
+            let hasta = null;
+
+            if (per === 'personalizado') {
+                const valDesde = document.getElementById('ventas-desde').value;
+                const valHasta = document.getElementById('ventas-hasta').value;
+                if (valDesde) {
+                    const [y, m, d] = valDesde.split('-').map(Number);
+                    desde = new Date(y, m - 1, d, 0, 0, 0, 0);
+                }
+                if (valHasta) {
+                    const [y, m, d] = valHasta.split('-').map(Number);
+                    hasta = new Date(y, m - 1, d, 23, 59, 59, 999);
+                }
+            } else {
+                desde = {
+                    hoy: hoy,
+                    semana: new Date(hoy.getTime() - 6 * 864e5),
+                    30: new Date(hoy.getTime() - 29 * 864e5),
+                    mes: new Date(a.getFullYear(), a.getMonth(), 1),
+                    anio: new Date(a.getFullYear(), 0, 1),
+                    todo: null
+                }[per];
+            }
 
             const base = cacheGlobal || datosActuales;
-            const pedidos = base.filter(d => d.fechaRegistro && (!desde || d.fechaRegistro.toDate() >= desde));
+            const pedidos = base.filter(d => {
+                if (!d.fechaRegistro) return false;
+                const f = d.fechaRegistro.toDate();
+                if (desde && f < desde) return false;
+                if (hasta && f > hasta) return false;
+                return true;
+            });
+
             const totalBruto = pedidos.reduce((s, d) => s + precioDe(d), 0);
             const t = desgloseImpuestos(totalBruto);
 
@@ -936,7 +1057,10 @@
                     </div>`;
             }).join('');
 
-            const porMes = per === 'anio' || per === 'todo';
+            // Si el rango personalizado supera los 62 días, agrupamos por mes para mantener la gráfica legible
+            const rangoLargoPersonalizado = (per === 'personalizado' && desde && hasta && ((hasta - desde) / 864e5 > 62));
+            const porMes = per === 'anio' || per === 'todo' || rangoLargoPersonalizado;
+            
             const cubos = {};
             pedidos.forEach(d => {
                 const f = d.fechaRegistro.toDate();
@@ -984,7 +1108,7 @@
             textoDatosCliente += `Paquete adquirido: ${data.paquete || data._coleccionOrigen || 'N/A'}`;
 
             const fe = fechaEntrega(data);
-            textoDatosCliente += `\nPrecio: ${fmt(precioDe(data))}` + (fe ? `\nEntrega estimada: ${fe.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short' })}` : '');
+            textoDatosCliente += `\nPrecio: ${fmt(precioDe(data))}` + (fe ? `\nEntrega estimada (sin contar domingos): ${fe.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short' })}` : '');
 
             datosClienteTexto.innerText = textoDatosCliente;
             datosClienteContainer.classList.remove('hidden');
@@ -1011,9 +1135,35 @@
             actualizarBotonesEstatus(data.estatus || 'pendiente');
         };
 
+        function copiarTextoPortapapeles(texto, callbackExito) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(texto).then(callbackExito).catch(() => {
+                    fallbackCopy(texto, callbackExito);
+                });
+            } else {
+                fallbackCopy(texto, callbackExito);
+            }
+        }
+
+        function fallbackCopy(texto, callbackExito) {
+            const ta = document.createElement('textarea');
+            ta.value = texto;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                callbackExito();
+            } catch (e) {
+                console.error('Error al copiar:', e);
+            }
+            document.body.removeChild(ta);
+        }
+
         window.copiarDatosCliente = function() {
             const texto = document.getElementById('datos-cliente-texto').innerText;
-            navigator.clipboard.writeText(texto).then(() => {
+            copiarTextoPortapapeles(texto, () => {
                 const btn = document.getElementById('btn-copiar-datos');
                 const textoOriginal = btn.innerHTML;
                 btn.innerHTML = 'Copiado';
@@ -1028,7 +1178,7 @@
 
         window.copiarPrompt = function() {
             const texto = document.getElementById('prompt-container').innerText;
-            navigator.clipboard.writeText(texto).then(() => {
+            copiarTextoPortapapeles(texto, () => {
                 const btn = document.getElementById('btn-copiar');
                 const textoOriginal = btn.innerHTML;
                 btn.innerHTML = 'Copiado';
@@ -1074,7 +1224,7 @@
 
             } catch (error) {
                 console.error("Error al actualizar estado:", error);
-                alert("Hubo un error al guardar en la base de datos.");
+                await showModal({ title: 'Error', message: 'Hubo un error al guardar en la base de datos.' });
             } finally {
                 btn.innerText = textoOriginal;
             }
@@ -1104,7 +1254,7 @@
             const val = document.getElementById('admin-precio').value.trim();
             const precio = val === '' ? null : Number(val);
             if (precio !== null && (!Number.isFinite(precio) || precio < 0)) {
-                await showModal({ type: 'warning', title: 'Precio inválido', message: 'Escribe un número válido.' });
+                await showModal({ title: 'Precio inválido', message: 'Escribe un número válido.' });
                 return;
             }
             const btn = document.getElementById('btn-guardar-precio');
@@ -1119,7 +1269,7 @@
                 btn.innerText = 'Guardado';
             } catch (e) {
                 console.error(e);
-                await showModal({ type: 'warning', title: 'Error', message: 'No se pudo guardar el precio.' });
+                await showModal({ title: 'Error', message: 'No se pudo guardar el precio.' });
                 btn.innerText = 'Guardar Precio';
             } finally {
                 btn.disabled = false;
@@ -1154,7 +1304,7 @@
 
             } catch (error) {
                 console.error("Error al guardar comentario:", error);
-                alert("Hubo un error al guardar la nota.");
+                await showModal({ title: 'Error', message: 'Hubo un error al guardar la nota.' });
                 btn.innerText = "Guardar Nota";
             } finally {
                 btn.disabled = false;
