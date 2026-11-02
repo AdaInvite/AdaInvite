@@ -2,21 +2,22 @@
 <html lang="es" class="h-full">
 <head> 
     <!-- 1. Icono para la pestaña del navegador (PC y Android) -->
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Logo%20AdaInvite.png">
-      <!-- 2. Icono para Pantalla de Inicio en iPhone/iPad (iOS) -->
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Logo%20AdaInvite.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Logo%20AdaInvite.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Logo%20AdaInvite.png">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/YtiCNIL.png">
+    <!-- 2. Icono para Pantalla de Inicio en iPhone/iPad (iOS) -->
+    <link rel="apple-touch-icon" href="https://i.imgur.com/YtiCNIL.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://i.imgur.com/YtiCNIL.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/YtiCNIL.png">
 
-  <!-- 3. Configuración para que se comporte como una Aplicación Web -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="AdaInvite">
+    <!-- 3. Configuración para que se comporte como una Aplicación Web -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AdaInvite">
 
     <meta name="theme-color" content="#9B8AA5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | AdaInvite</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -72,7 +73,7 @@
     <!-- PANTALLA DE LOGIN (BLOQUEO) -->
     <div id="login-screen" class="fixed inset-0 bg-[#FAF9FB] z-50 flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-sm w-full text-center">
-            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-12 mx-auto mb-6">
+            <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite" class="h-12 mx-auto mb-6">
             <h2 class="text-xl font-bold text-[#3D3542] mb-2">Acceso Admin</h2>
             
            <form onsubmit="event.preventDefault(); verificarPassword(event);">
@@ -88,7 +89,7 @@
     <!-- BARRA LATERAL (MENÚ DE PAQUETES) -->
     <aside class="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col shrink-0 hidden-until-login opacity-0 transition-opacity duration-500">
         <div class="p-6 border-b border-gray-200 text-center">
-            <img src="https://i.imgur.com/NyEstKd.png" alt="AdaInvite" class="h-10 mx-auto mb-2">
+            <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite" class="h-10 mx-auto mb-2">
             <span class="text-base font-bold tracking-widest text-[#9B8AA5] uppercase">Admin Panel</span>
         </div>
 
@@ -101,13 +102,16 @@
                 <span>Paquete Básico</span>
                 <span id="badge-basico" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
             </button>
-            <button onclick="cargarDatosMultiples(['solicitudes_premium', 'premium'], this, 'premium')" class="tab-btn w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors text-gray-600 hover:bg-gray-100">
+            <button onclick="cargarDatosMultiples(['solicitudes_premium', 'premium'], this, 'premium')" id="btn-premium" class="tab-btn w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors text-gray-600 hover:bg-gray-100">
                 <span>Paquete Premium</span>
                 <span id="badge-premium" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
             </button>
-            <button onclick="cargarDatosMultiples(['solicitudes_vip', 'vip'], this, 'vip')" class="tab-btn w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors text-gray-600 hover:bg-gray-100">
+            <button onclick="cargarDatosMultiples(['solicitudes_vip', 'vip'], this, 'vip')" id="btn-vip" class="tab-btn w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors text-gray-600 hover:bg-gray-100">
                 <span>Paquete VIP</span>
                 <span id="badge-vip" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="mostrarVentas(this)" class="tab-btn w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium text-base transition-colors text-gray-600 hover:bg-gray-100">
+                <span>Ventas</span>
             </button>
         </div>
     </aside>
@@ -135,6 +139,7 @@
                     <span class="block text-[10px] text-gray-500 uppercase font-semibold">Listos</span>
                 </button>
             </div>
+            <div id="alertas-entrega" class="hidden text-[11px] font-bold text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2"></div>
         </div>
 
         <div id="lista-solicitudes" class="p-4 flex flex-col gap-3">
@@ -142,12 +147,34 @@
         </div>
     </div>
 
-  <!-- ÁREA PRINCIPAL -->
+    <!-- ÁREA PRINCIPAL -->
     <main id="main-content" class="w-full flex-1 bg-white flex flex-col min-h-screen md:min-h-0 overflow-hidden hidden-until-login opacity-0 transition-opacity duration-500">
         
         <!-- CONTENEDOR CON SCROLL (Completamente limpio hasta seleccionar un cliente) -->
         <div class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-50 flex flex-col gap-6">
             
+            <!-- PANEL DE VENTAS -->
+            <div id="ventas-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-4">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <h3 class="text-sm font-bold text-[#3D3542] uppercase tracking-wider">Ventas</h3>
+                    <select id="ventas-periodo" onchange="renderVentas()" class="border border-gray-200 rounded-lg px-3 py-2 text-xs bg-gray-50">
+                        <option value="hoy">Hoy</option>
+                        <option value="semana">Últimos 7 días</option>
+                        <option value="mes" selected>Este mes</option>
+                        <option value="30">Últimos 30 días</option>
+                        <option value="anio">Este año</option>
+                        <option value="todo">Todo</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-gray-50 rounded-xl p-3"><p class="text-[10px] uppercase font-bold text-gray-400">Ingresos</p><p id="v-ingresos" class="text-xl font-bold text-[#9B8AA5]">$0</p></div>
+                    <div class="bg-gray-50 rounded-xl p-3"><p class="text-[10px] uppercase font-bold text-gray-400">Pedidos</p><p id="v-pedidos" class="text-xl font-bold text-[#9B8AA5]">0</p></div>
+                    <div class="bg-gray-50 rounded-xl p-3"><p class="text-[10px] uppercase font-bold text-gray-400">Ticket prom.</p><p id="v-ticket" class="text-xl font-bold text-[#9B8AA5]">$0</p></div>
+                </div>
+                <div id="v-paquetes" class="flex flex-col gap-2 text-xs"></div>
+                <div id="v-grafica" class="flex items-end gap-1 h-40 border-b border-gray-100 overflow-x-auto"></div>
+            </div>
+
             <!-- CUADRITO INDEPENDIENTE: DATOS DEL CLIENTE -->
             <div id="datos-cliente-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3">
                 <div class="flex justify-between items-center">
@@ -157,6 +184,7 @@
                     </button>
                 </div>
                 <div id="datos-cliente-texto" class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-xs text-gray-800 whitespace-pre-wrap"></div>
+                <div id="fotos-descarga" class="flex flex-col gap-1 text-xs"></div>
             </div>
             
             <!-- CUADRITO: GENERADOR DE PROMPT -->
@@ -189,6 +217,15 @@
                             Completado
                         </button>
                     </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-[#3D3542]">Precio del pedido (MXN)</label>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="admin-precio" min="0" class="flex-1 p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-[#9B8AA5] focus:bg-white">
+                        <button onclick="guardarPrecio()" id="btn-guardar-precio" class="px-5 py-3 bg-[#3D3542] text-white rounded-lg text-xs font-bold hover:bg-gray-800 transition-all shadow-sm">Guardar Precio</button>
+                    </div>
+                    <p id="precio-hint" class="text-[11px] text-gray-400"></p>
                 </div>
 
                 <div class="flex flex-col gap-2">
@@ -225,6 +262,9 @@
         let datosActuales = [];
         let filtroActual = 'pendiente'; 
         window.clienteSeleccionado = null;
+
+        // Fallback en caso de que showModal no esté definido globalmente
+        window.showModal = window.showModal || (async ({ title, message }) => alert(`${title ? title + ':\n' : ''}${message}`));
 
         const configuracionPaquetes = {
             'basico': ['solicitudes_basico', 'basico'],
@@ -301,6 +341,7 @@
             listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">Cargando...</p>';
 
             document.getElementById('prompt-wrapper').classList.add('hidden');
+            document.getElementById('ventas-container').classList.add('hidden');
             document.getElementById('datos-cliente-container').classList.add('hidden');
             document.getElementById('estado-container').classList.add('hidden');
 
@@ -348,6 +389,7 @@
             listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">Cargando...</p>';
             
             document.getElementById('prompt-wrapper').classList.add('hidden');
+            document.getElementById('ventas-container').classList.add('hidden');
             document.getElementById('datos-cliente-container').classList.add('hidden');
             document.getElementById('estado-container').classList.add('hidden');
 
@@ -417,6 +459,7 @@
                     badge.classList.add('hidden');
                 }
             });
+            actualizarAlertas();
         };
 
         window.filtrarPedidos = function(estatusFiltro) {
@@ -513,13 +556,217 @@
                     </div>
                 `;
                 
+                card.insertAdjacentHTML('beforeend', badgeEntrega(data));
                 card.onclick = () => seleccionarCliente(data, card);
                 listaEl.appendChild(card);
             });
         };
 
+        // Fotos del pedido con el nombre que deben tener en la carpeta img/
+        function listarFotos(img = {}) {
+            const f = [];
+            const add = (nombre, url) => { if (url) f.push([nombre, url]); };
+            add('portada.jpg', img.portada);
+            for (let i = 1; i <= 5; i++) add(`separador${i}.jpg`, img[`separador${i}`]);
+            for (let i = 1; i <= 6; i++) add(`historia${i}.jpg`, img[`historia${i}`]);
+            (img.corteHonor || []).forEach((u, i) => add(`corte${i + 1}.jpg`, u));
+            return f;
+        }
+
+        window.descargarZip = async () => {
+            const c = window.clienteSeleccionado;
+            const fotos = c ? listarFotos(c.imagenes) : [];
+            if (!fotos.length) {
+                await showModal({ type: 'info', title: 'Sin fotos', message: 'Este pedido no tiene fotos para descargar.' });
+                return;
+            }
+            const btn = document.getElementById('btn-zip');
+            const textoOriginal = btn.innerText;
+            btn.disabled = true;
+            try {
+                const zip = new JSZip();
+                let n = 0;
+                for (const [nombre, url] of fotos) {
+                    btn.innerText = `Descargando ${++n}/${fotos.length}...`;
+                    const r = await fetch(url);
+                    if (!r.ok) throw new Error(nombre);
+                    zip.file(`img/${nombre}`, await r.blob());
+                }
+                btn.innerText = 'Comprimiendo...';
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `fotos_${(c.festejado_nombre || 'pedido').replace(/\s+/g, '_')}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            } catch (e) {
+                console.error(e);
+                await showModal({ type: 'warning', title: 'No se pudo descargar', message: 'Revisa que CORS esté activo en el bucket de este proyecto. Falló: ' + e.message });
+            } finally {
+                btn.disabled = false;
+                btn.innerText = textoOriginal;
+            }
+        };
+
+        function construirPrompt(d) {
+            const origen = (d.paquete || d._coleccionOrigen || '').toLowerCase();
+            const vip = origen.includes('vip');
+            const premium = vip || origen.includes('premium');
+            const img = d.imagenes || {};
+            const req = (k, v) => `${k}: ${v || 'N/A'}\n`;
+            const opt = (k, v) => v ? `${k}: ${v}\n` : '';
+            let t = `Adapta la invitación web ${d.tematica || d.modelo_base || 'estilo estándar'} (Paquete ${vip ? 'VIP' : premium ? 'Premium' : 'Básico'}) con lo siguiente:\n\n`;
+
+            // --- BASE (todos los paquetes) ---
+            t += req('Festejado/a', d.festejado_nombre) + req('Tipo de evento', d.tipo_evento) + req('Fecha del evento', d.evento_fecha);
+            t += `Frase de bienvenida: "${d.festejado_frase || 'N/A'}"\n` + req('Padres', d.familia_papas) + req('Padrinos', d.familia_padrinos) + '\n';
+            if (d.ceremonia_lugar) t += req('Templo', d.ceremonia_lugar) + req('Dirección del templo', d.ceremonia_direccion) + req('Ubicación templo', d.ceremonia_maps) + req('Hora de ceremonia', d.ceremonia_hora) + '\n';
+            t += req('Salón', d.recepcion_lugar) + req('Dirección del salón', d.recepcion_direccion) + req('Ubicación salón', d.recepcion_maps) + req('Hora de recepción', d.recepcion_hora) + '\n';
+            t += req('Código de vestimenta (Estilo)', d.vestimenta_estilo) + req('Colores reservados', d.vestimenta_reservados) + '\n';
+            const conf = { adultos_y_ninos: 'Cantidad de adultos y niños', solo_adultos: 'Solo adultos', sin_ninos: 'No se admitirán niños' }[d.tipo_confirmacion] || d.tipo_confirmacion;
+            t += req('Fecha límite RSVP', d.fecha_limite) + req('Tipo de confirmación', conf);
+            t += premium
+                ? `Confirmaciones: se guardan en el panel de confirmaciones del cliente. WhatsApp de contacto: ${d.evento_whatsapp || 'N/A'}\n\n`
+                : `Confirmaciones: por WhatsApp al número ${d.evento_whatsapp || 'N/A'}\n\n`;
+            t += req('Canción (YouTube)', d.evento_musica) + req('Paleta de colores', d.colores) + req('Modelo base solicitado', d.modelo_base) + '\n';
+
+            // --- PREMIUM (y VIP) ---
+            if (premium) {
+                t += `--- PREMIUM ---\n`;
+                t += `Invitación personalizada: muestra el nombre del invitado o familia y sus pases desde el link (?n= nombre y &p= pases)\n`;
+                for (let i = 1; i <= 6; i++) if (d[`historia_frase_${i}`] || img[`historia${i}`]) t += `Historia - Tarjeta ${i}: "${d[`historia_frase_${i}`] || 'N/A'}" | Foto: ${img[`historia${i}`] || 'N/A'}\n`;
+                t += `Itinerario:\n${d.itinerario || 'N/A'}\n`;
+                t += opt('Mesa de regalos Amazon', d.regalos_amazon) + opt('Mesa de regalos Liverpool', d.regalos_liverpool) + `Lluvia de sobres: ${d.lluvia_sobres ? 'Sí' : 'No'}\n`;
+                t += req('Álbum compartido con QR (título)', d.album_titulo);
+                t += `Entrega de pases: ${d.entrega_pases === 'enviar_con_invitacion' ? 'Con la invitación' : 'Al confirmar asistencia'}\n`;
+                t += `Control de accesos QR (extra): ${d.add_on_qr ? 'SÍ ACTIVAR' : 'No'}\n\n`;
+            }
+
+            // --- VIP ---
+            if (vip) {
+                t += `--- VIP ---\nMini juego (Trivia):\n`;
+                for (let i = 1; i <= 3; i++) t += `Pregunta ${i}: ${d[`trivia_p${i}`] || 'N/A'} | Respuesta: ${d[`trivia_r${i}`] || 'N/A'}\n`;
+                t += req('Clima del día (ciudad del evento)', d.evento_ciudad) + opt('Guía de estilo - tablero de Pinterest', d.tablero_pinterest);
+                if (d.corte_nombres || (img.corteHonor || []).length) {
+                    t += req('Corte de honor - Nombres', d.corte_nombres);
+                    (img.corteHonor || []).forEach((u, i) => { t += `Foto corte de honor ${i + 1}: ${u}\n`; });
+                }
+                [1, 2].forEach(n => {
+                    if (d[`hospedaje_${n}_nombre`]) t += `Hospedaje sugerido ${n}: ${d[`hospedaje_${n}_nombre`]} | Link: ${d[`hospedaje_${n}_link`] || 'N/A'} | Nota: ${d[`hospedaje_${n}_nota`] || 'N/A'}\n`;
+                });
+                t += '\n';
+            }
+
+            // --- FOTOS (todos) ---
+            t += `--- FOTOGRAFÍAS ---\n` + req('Portada (Hero)', img.portada);
+            for (let i = 1; i <= 5; i++) if (i <= 3 || img[`separador${i}`]) t += req(`Separador ${i}`, img[`separador${i}`]);
+            t += `\nObservaciones del cliente:\n${d.observaciones_finales || 'N/A'}\n`;
+            return t;
+        }
+
+        const DIAS_ENTREGA = { basico: 3, premium: 5, vip: 7 };
+        const PRECIOS = { basico: 399, premium: 699, vip: 999 };
+        const fmt = (n) => '$' + Math.round(n).toLocaleString('es-MX');
+
+        function tipoPaquete(d) {
+            const o = (d.paquete || d._coleccionOrigen || '').toLowerCase();
+            return o.includes('vip') ? 'vip' : o.includes('premium') ? 'premium' : 'basico';
+        }
+        function precioDe(d) {
+            return (d.precio == null || d.precio === '') ? PRECIOS[tipoPaquete(d)] : Number(d.precio);
+        }
+        function sumarDiasHabiles(fecha, n) {
+            const d = new Date(fecha);
+            while (n > 0) {
+                d.setDate(d.getDate() + 1);
+                if (d.getDay() !== 0) n--; // solo el domingo no cuenta
+            }
+            return d;
+        }
+        function fechaEntrega(d) {
+            return d.fechaRegistro ? sumarDiasHabiles(d.fechaRegistro.toDate(), DIAS_ENTREGA[tipoPaquete(d)]) : null;
+        }
+        function estadoEntrega(d) {
+            const fe = fechaEntrega(d);
+            if (!fe) return null;
+            const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+            fe.setHours(0, 0, 0, 0);
+            return { dias: Math.round((fe - hoy) / 86400000), fe };
+        }
+        function badgeEntrega(d) {
+            if (d.estatus === 'completado') return '';
+            const e = estadoEntrega(d);
+            if (!e) return '';
+            const fecha = e.fe.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+            let texto, clase;
+            if (e.dias < 0) { texto = `Atrasado ${-e.dias} día${e.dias < -1 ? 's' : ''} (${fecha})`; clase = 'bg-red-100 text-red-700'; }
+            else if (e.dias === 0) { texto = 'Entrega HOY'; clase = 'bg-orange-100 text-orange-700'; }
+            else if (e.dias === 1) { texto = 'Entrega mañana'; clase = 'bg-orange-50 text-orange-600'; }
+            else { texto = `Entrega ${fecha} (${e.dias} días)`; clase = 'bg-gray-100 text-gray-600'; }
+            return `<div class="mt-2"><span class="px-2 py-1 rounded text-[10px] font-bold ${clase}">${texto}</span></div>`;
+        }
+        function actualizarAlertas() {
+            let atras = 0, hoy = 0, man = 0;
+            datosActuales.forEach(d => {
+                if (d.estatus === 'completado') return;
+                const e = estadoEntrega(d);
+                if (!e) return;
+                if (e.dias < 0) atras++; else if (e.dias === 0) hoy++; else if (e.dias === 1) man++;
+            });
+            const partes = [];
+            if (atras) partes.push(`${atras} atrasado${atras > 1 ? 's' : ''}`);
+            if (hoy) partes.push(`${hoy} vence${hoy > 1 ? 'n' : ''} hoy`);
+            if (man) partes.push(`${man} mañana`);
+            const el = document.getElementById('alertas-entrega');
+            el.classList.toggle('hidden', !partes.length);
+            el.innerText = '⏰ ' + partes.join(' • ');
+        }
+
+        window.mostrarVentas = async (btn) => {
+            await cargarTodosGeneral(btn);
+            ['prompt-wrapper', 'datos-cliente-container', 'estado-container'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('ventas-container').classList.remove('hidden');
+            renderVentas();
+        };
+
+        window.renderVentas = () => {
+            const per = document.getElementById('ventas-periodo').value;
+            const a = new Date();
+            const hoy = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+            const desde = { hoy: hoy, semana: new Date(hoy.getTime() - 6 * 864e5), 30: new Date(hoy.getTime() - 29 * 864e5),
+                mes: new Date(a.getFullYear(), a.getMonth(), 1), anio: new Date(a.getFullYear(), 0, 1), todo: null }[per];
+            const pedidos = datosActuales.filter(d => d.fechaRegistro && (!desde || d.fechaRegistro.toDate() >= desde));
+            const total = pedidos.reduce((s, d) => s + precioDe(d), 0);
+            document.getElementById('v-ingresos').innerText = fmt(total);
+            document.getElementById('v-pedidos').innerText = pedidos.length;
+            document.getElementById('v-ticket').innerText = fmt(pedidos.length ? total / pedidos.length : 0);
+
+            const nombres = { basico: 'Básico', premium: 'Premium', vip: 'VIP' };
+            document.getElementById('v-paquetes').innerHTML = Object.keys(nombres).map(k => {
+                const g = pedidos.filter(d => tipoPaquete(d) === k);
+                return `<div class="flex justify-between bg-gray-50 rounded-lg px-3 py-2"><span class="font-bold text-gray-600">${nombres[k]} (${g.length})</span><span class="text-[#9B8AA5] font-bold">${fmt(g.reduce((s, d) => s + precioDe(d), 0))}</span></div>`;
+            }).join('');
+
+            const porMes = per === 'anio' || per === 'todo';
+            const cubos = {};
+            pedidos.forEach(d => {
+                const f = d.fechaRegistro.toDate();
+                const m = `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}`;
+                const k = porMes ? m : `${m}-${String(f.getDate()).padStart(2, '0')}`;
+                cubos[k] = (cubos[k] || 0) + precioDe(d);
+            });
+            const claves = Object.keys(cubos).sort();
+            const max = Math.max(1, ...Object.values(cubos));
+            document.getElementById('v-grafica').innerHTML = claves.length
+                ? claves.map(k => `<div class="flex flex-col items-center justify-end h-full min-w-[32px] flex-1" title="${k}: ${fmt(cubos[k])}"><span class="text-[9px] text-gray-400">${fmt(cubos[k])}</span><div class="w-full bg-[#9B8AA5] rounded-t" style="height:${Math.max(4, cubos[k] / max * 70)}%"></div><span class="text-[9px] text-gray-400 mt-1">${porMes ? k.slice(2) : k.slice(8) + '/' + k.slice(5, 7)}</span></div>`).join('')
+                : '<p class="text-xs text-gray-400 m-auto">Sin ventas en este periodo.</p>';
+        };
+
         window.seleccionarCliente = function(data, cardElement) {
             window.clienteSeleccionado = data;
+            document.getElementById('ventas-container').classList.add('hidden');
             document.querySelectorAll('.order-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
 
@@ -537,129 +784,31 @@
             textoDatosCliente += `Fecha del evento: ${data.evento_fecha || 'N/A'}\n`;
             textoDatosCliente += `Paquete adquirido: ${data.paquete || data._coleccionOrigen || 'N/A'}`;
 
+            const fe = fechaEntrega(data);
+            textoDatosCliente += `\nPrecio: ${fmt(precioDe(data))}` + (fe ? `\nEntrega estimada: ${fe.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short' })}` : '');
+
             datosClienteTexto.innerText = textoDatosCliente;
             datosClienteContainer.classList.remove('hidden');
 
-            // --- 2. PROMPT CON CONTROL DE CAMPOS VACÍOS Y CÓDIGO DE VESTIMENTA ---
-            let promptText = `Adapta la invitación web ${data.tematica || data.modelo_base || 'estilo estándar'} con lo siguiente:\n\n`;
-            
-            promptText += `Festejado/a: ${data.festejado_nombre || 'N/A'}\n`;
-            promptText += `Tipo de evento: ${data.tipo_evento || 'N/A'}\n`;
-            promptText += `Fecha del evento: ${data.evento_fecha || 'N/A'}\n\n`;
-            
-            promptText += `Frase de bienvenida: "${data.festejado_frase || 'N/A'}"\n\n`;
-            
-            promptText += `Padres: ${data.familia_papas || 'N/A'}\n`;
-            promptText += `Padrinos: ${data.familia_padrinos || 'N/A'}\n\n`;
+            let promptText = construirPrompt(data);
 
-            if(data.ceremonia_lugar) {
-                promptText += `Templo: ${data.ceremonia_lugar}\n`;
-                promptText += `Dirección del templo: ${data.ceremonia_direccion || 'N/A'}\n`;
-                promptText += `Ubicación templo: ${data.ceremonia_maps || 'N/A'}\n`;
-                promptText += `Hora de ceremonia: ${data.ceremonia_hora || 'N/A'}\n\n`;
-            } else {
-                promptText += `Templo: N/A\n\n`;
-            }
-
-            promptText += `Salón: ${data.recepcion_lugar || 'N/A'}\n`;
-            promptText += `Dirección del salón: ${data.recepcion_direccion || 'N/A'}\n`;
-            promptText += `Ubicación salón: ${data.recepcion_maps || 'N/A'}\n`;
-            promptText += `Hora de recepción: ${data.recepcion_hora || 'N/A'}\n\n`;
-
-            if(data.imagenes && data.imagenes.historia1) {
-                for(let i=1; i<=6; i++) {
-                    if(data[`historia_frase_${i}`] || (data.imagenes && data.imagenes[`historia${i}`])) {
-                        promptText += `Historia - Tarjeta ${i}: "${data[`historia_frase_${i}`] || 'N/A'}"\n`;
-                        promptText += `Foto: ${data.imagenes[`historia${i}`] || 'N/A'}\n\n`;
-                    }
-                }
-            } else {
-                promptText += `Historias / Tarjetas: N/A\n\n`;
-            }
-
-            promptText += `Itinerario:\n${data.itinerario || 'N/A'}\n\n`;
-
-            promptText += `Código de vestimenta (Estilo): ${data.vestimenta_estilo || 'N/A'}\n`;
-            promptText += `Colores reservados (Vestimenta): ${data.vestimenta_reservados || 'N/A'}\n`;
-            promptText += `Imagen Style Guide: ${(data.imagenes && data.imagenes.vestimenta) ? data.imagenes.vestimenta : 'N/A'}\n\n`;
-
-            promptText += `Mesa de regalos Amazon: ${data.regalos_amazon || 'N/A'}\n`;
-            promptText += `Mesa de regalos Liverpool: ${data.regalos_liverpool || 'N/A'}\n`;
-            promptText += `Lluvia de sobres: ${data.lluvia_sobres === 'on' ? 'Sí' : 'No'}\n\n`;
-
-            promptText += `Fecha límite RSVP: ${data.fecha_limite || 'N/A'}\n`;
-            promptText += `Confirmaciones: Al número de WhatsApp ${data.evento_whatsapp || 'N/A'}\n`;
-            
-            let tipoConfTexto = data.tipo_confirmacion || 'N/A';
-            if(tipoConfTexto === 'adultos_y_ninos') tipoConfTexto = 'Cantidad de adultos y niños';
-            if(tipoConfTexto === 'solo_adultos') tipoConfTexto = 'Solo adultos';
-            if(tipoConfTexto === 'sin_ninos') tipoConfTexto = 'No se admitirán niños';
-            promptText += `Tipo de confirmación: ${tipoConfTexto}\n\n`;
-
-            if(data.activar_qr) {
-                promptText += `Control de Accesos QR: ${data.activar_qr === 'si' ? 'SÍ ACTIVAR' : 'No'}\n`;
-                promptText += `Entrega de Pases: ${data.entrega_pases === 'enviar_con_invitacion' ? 'Con la invitación' : 'Al confirmar asistencia'}\n\n`;
-            } else {
-                promptText += `Control de Accesos QR: N/A\n\n`;
-            }
-
-            promptText += `Canción: ${data.evento_musica || 'N/A'}\n`;
-            promptText += `Paleta de colores: ${data.colores || 'N/A'}\n`;
-            promptText += `Modelo Base Solicitado: ${data.modelo_base || 'N/A'}\n\n`;
-
-            if(data.album_titulo) {
-                promptText += `Álbum compartido interactivo: SÍ (Título sugerido: ${data.album_titulo})\n\n`;
-            } else {
-                promptText += `Álbum compartido interactivo: N/A\n\n`;
-            }
-
-            if(data.trivia_p1) {
-                promptText += `Sección - Trivia:\n`;
-                promptText += `Pregunta 1: ${data.trivia_p1} | Respuesta: ${data.trivia_r1 || 'N/A'}\n`;
-                promptText += `Pregunta 2: ${data.trivia_p2 || 'N/A'} | Respuesta: ${data.trivia_r2 || 'N/A'}\n`;
-                promptText += `Pregunta 3: ${data.trivia_p3 || 'N/A'} | Respuesta: ${data.trivia_r3 || 'N/A'}\n\n`;
-            } else {
-                promptText += `Sección - Trivia: N/A\n\n`;
-            }
-
-            promptText += `--- FOTOGRAFÍAS PARA LA INVITACIÓN ---\n`;
-            if(data.imagenes) {
-                promptText += `Foto de Hero (Portada):\n${data.imagenes.portada || 'N/A'}\n\n`;
-                
-                promptText += `Fotos para incluir como separadores entre secciones:\n`;
-                promptText += `Separador 1: ${data.imagenes.separador1 || 'N/A'}\n`;
-                promptText += `Separador 2: ${data.imagenes.separador2 || 'N/A'}\n`;
-                promptText += `Separador 3: ${data.imagenes.separador3 || 'N/A'}\n`;
-                promptText += `Separador 4: ${data.imagenes.separador4 || 'N/A'}\n`;
-                promptText += `Separador 5: ${data.imagenes.separador5 || 'N/A'}\n\n`;
-
-                if(data.imagenes.galeria && data.imagenes.galeria.length > 0) {
-                    promptText += `Fotos para la Galería:\n`;
-                    data.imagenes.galeria.forEach((url, idx) => { promptText += `Foto ${idx+1}: ${url}\n`; });
-                    promptText += `\n`;
-                } else {
-                    promptText += `Fotos para la Galería: N/A\n\n`;
-                }
-                
-                if(data.imagenes.corteHonor && data.imagenes.corteHonor.length > 0) {
-                    promptText += `Corte de Honor - Nombres: ${data.corte_nombres || 'N/A'}\n`;
-                    promptText += `Fotos Corte de Honor:\n`;
-                    data.imagenes.corteHonor.forEach((url, idx) => { promptText += `Foto ${idx+1}: ${url}\n`; });
-                    promptText += `\n`;
-                } else {
-                    promptText += `Corte de Honor: N/A\n\n`;
-                }
-            } else {
-                promptText += `Fotografías: N/A\n\n`;
-            }
-
-            promptText += `Observaciones del cliente:\n${data.observaciones_finales || 'N/A'}\n`;
+            // URLs de Firebase -> rutas del repo (img/portada.jpg...) + lista de descarga
+            const fotos = listarFotos(data.imagenes);
+            fotos.forEach(([nombre, url]) => { promptText = promptText.split(url).join('img/' + nombre); });
+            document.getElementById('fotos-descarga').innerHTML = fotos.length
+                ? '<button id="btn-zip" onclick="descargarZip()" class="self-start mt-2 px-4 py-2 bg-[#9B8AA5] text-white rounded-lg font-bold text-xs shadow-sm">Descargar fotos (ZIP)</button><p class="font-bold text-gray-500 uppercase text-[10px] mt-2">O una por una (nombre que debe llevar):</p>'
+                  + fotos.map(([n, u]) => `<a href="${u}" target="_blank" class="text-[#9B8AA5] underline">${n}</a>`).join('')
+                : '';
 
             promptContainer.innerText = promptText;
             promptWrapper.classList.remove('hidden');
             document.getElementById('estado-container').classList.remove('hidden');
 
             document.getElementById('admin-comentario').value = data.comentario_admin || '';
+            document.getElementById('admin-precio').value = precioDe(data);
+            const porDefecto = PRECIOS[tipoPaquete(data)];
+            document.getElementById('precio-hint').innerText = `Precio del paquete: ${fmt(porDefecto)}` + (precioDe(data) !== porDefecto ? ' • precio personalizado' : '');
+
             document.getElementById('btn-guardar-comentario').innerText = 'Guardar Nota';
             actualizarBotonesEstatus(data.estatus || 'pendiente');
 
@@ -753,6 +902,35 @@
                 btnProceso.className = "flex-1 sm:flex-none px-4 py-2 rounded-md text-xs font-bold transition-all bg-amber-100 text-amber-800 shadow-sm";
             } else {
                 btnPendiente.className = "flex-1 sm:flex-none px-4 py-2 rounded-md text-xs font-bold transition-all bg-white text-gray-800 shadow-sm";
+            }
+        };
+
+        window.guardarPrecio = async () => {
+            const c = window.clienteSeleccionado;
+            if (!c) return;
+            const val = document.getElementById('admin-precio').value.trim();
+            const precio = val === '' ? null : Number(val);
+            if (precio !== null && (!Number.isFinite(precio) || precio < 0)) {
+                await showModal({ type: 'warning', title: 'Precio inválido', message: 'Escribe un número válido.' });
+                return;
+            }
+            const btn = document.getElementById('btn-guardar-precio');
+            btn.disabled = true;
+            btn.innerText = 'Guardando...';
+            try {
+                await updateDoc(doc(db, c._coleccionOrigen, c.id), { precio });
+                c.precio = precio;
+                document.getElementById('admin-precio').value = precioDe(c);
+                const porDefecto = PRECIOS[tipoPaquete(c)];
+                document.getElementById('precio-hint').innerText = `Precio del paquete: ${fmt(porDefecto)}` + (precioDe(c) !== porDefecto ? ' • precio personalizado' : '');
+                btn.innerText = '¡Guardado!';
+            } catch (e) {
+                console.error(e);
+                await showModal({ type: 'warning', title: 'Error', message: 'No se pudo guardar el precio.' });
+                btn.innerText = 'Guardar Precio';
+            } finally {
+                btn.disabled = false;
+                setTimeout(() => { btn.innerText = 'Guardar Precio'; }, 2000);
             }
         };
 
