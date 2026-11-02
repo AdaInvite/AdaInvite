@@ -197,7 +197,7 @@
                     <div class="flex flex-col gap-1">
                         <label class="font-bold text-gray-500 text-[10px] uppercase">Esquema de precios</label>
                         <select id="tax-modo" onchange="guardarConfigImpuestos()" class="border border-gray-200 rounded-lg p-2 bg-white text-xs font-medium text-[#3D3542]">
-                            <option value="incluido">Precios ya incluyen IVA</option>
+                            <option value="incluido" selected>Precios ya incluyen IVA e ISR</option>
                             <option value="directo">Restar % directo del total</option>
                         </select>
                     </div>
@@ -338,23 +338,21 @@
 
         const TODAS_LAS_COLECCIONES = ['solicitudes_basico', 'basico', 'solicitudes_premium', 'premium', 'solicitudes_vip', 'vip'];
         
-        // Caché en memoria para no descargar varias veces lo mismo
         let cacheGlobal = null;
         let datosActuales = [];
         let filtroActual = 'pendiente'; 
-        let vistaActual = 'todos'; // 'todos' | 'basico' | 'premium' | 'vip' | 'ventas'
+        let vistaActual = 'todos';
         window.clienteSeleccionado = null;
 
         window.showModal = window.showModal || (async ({ title, message }) => alert(`${title ? title + ':\n' : ''}${message}`));
 
-        // Cargar preferencias guardadas de IVA e ISR
         function inicializarConfigImpuestos() {
-            const modo = localStorage.getItem('adainvite_tax_modo');
-            const iva = localStorage.getItem('adainvite_tax_iva');
-            const isr = localStorage.getItem('adainvite_tax_isr');
-            if (modo) document.getElementById('tax-modo').value = modo;
-            if (iva !== null) document.getElementById('tax-iva').value = iva;
-            if (isr !== null) document.getElementById('tax-isr').value = isr;
+            const modo = localStorage.getItem('adainvite_tax_modo') || 'incluido';
+            const iva = localStorage.getItem('adainvite_tax_iva') || '16';
+            const isr = localStorage.getItem('adainvite_tax_isr') || '1.25';
+            document.getElementById('tax-modo').value = modo;
+            document.getElementById('tax-iva').value = iva;
+            document.getElementById('tax-isr').value = isr;
         }
         inicializarConfigImpuestos();
 
@@ -365,7 +363,6 @@
             renderVentas();
         };
 
-        // Descarga en PARALELO (mucho más rápido que el ciclo for anterior)
         async function obtenerTodosLosPedidos(forzar = false) {
             if (cacheGlobal && !forzar) return cacheGlobal;
 
@@ -437,7 +434,6 @@
             }
         }
 
-        // Control de columnas responsivo (Lista vs Detalle vs Ventas)
         function mostrarModoListaPedidos() {
             document.getElementById('ventas-container').classList.add('hidden');
             document.getElementById('prompt-wrapper').classList.add('hidden');
@@ -575,7 +571,6 @@
             document.getElementById('count-proceso').innerText = proceso;
             document.getElementById('count-completados').innerText = completados;
 
-            // Los badges del menú lateral siempre reflejan los pendientes globales
             const baseGlobal = cacheGlobal || datosActuales;
             let contadoresPaquetes = { basico: 0, premium: 0, vip: 0 };
             baseGlobal.forEach(d => {
@@ -700,7 +695,6 @@
             });
         };
 
-        // Fotos del pedido con el nombre que deben tener en la carpeta img/
         function listarFotos(img = {}) {
             const f = [];
             const add = (nombre, url) => { if (url) f.push([nombre, url]); };
@@ -757,7 +751,6 @@
             const opt = (k, v) => v ? `${k}: ${v}\n` : '';
             let t = `Adapta la invitación web ${d.tematica || d.modelo_base || 'estilo estándar'} (Paquete ${vip ? 'VIP' : premium ? 'Premium' : 'Básico'}) con lo siguiente:\n\n`;
 
-            // --- BASE (todos los paquetes) ---
             t += req('Festejado/a', d.festejado_nombre) + req('Tipo de evento', d.tipo_evento) + req('Fecha del evento', d.evento_fecha);
             t += `Frase de bienvenida: "${d.festejado_frase || 'N/A'}"\n` + req('Padres', d.familia_papas) + req('Padrinos', d.familia_padrinos) + '\n';
             if (d.ceremonia_lugar) t += req('Templo', d.ceremonia_lugar) + req('Dirección del templo', d.ceremonia_direccion) + req('Ubicación templo', d.ceremonia_maps) + req('Hora de ceremonia', d.ceremonia_hora) + '\n';
@@ -770,7 +763,6 @@
                 : `Confirmaciones: por WhatsApp al número ${d.evento_whatsapp || 'N/A'}\n\n`;
             t += req('Canción (YouTube)', d.evento_musica) + req('Paleta de colores', d.colores) + req('Modelo base solicitado', d.modelo_base) + '\n';
 
-            // --- PREMIUM (y VIP) ---
             if (premium) {
                 t += `--- PREMIUM ---\n`;
                 t += `Invitación personalizada: muestra el nombre del invitado o familia y sus pases desde el link (?n= nombre y &p= pases)\n`;
@@ -782,7 +774,6 @@
                 t += `Control de accesos QR (extra): ${d.add_on_qr ? 'SÍ ACTIVAR' : 'No'}\n\n`;
             }
 
-            // --- VIP ---
             if (vip) {
                 t += `--- VIP ---\nMini juego (Trivia):\n`;
                 for (let i = 1; i <= 3; i++) t += `Pregunta ${i}: ${d[`trivia_p${i}`] || 'N/A'} | Respuesta: ${d[`trivia_r${i}`] || 'N/A'}\n`;
@@ -797,7 +788,6 @@
                 t += '\n';
             }
 
-            // --- FOTOS (todos) ---
             t += `--- FOTOGRAFÍAS ---\n` + req('Portada (Hero)', img.portada);
             for (let i = 1; i <= 5; i++) if (i <= 3 || img[`separador${i}`]) t += req(`Separador ${i}`, img[`separador${i}`]);
             t += `\nObservaciones del cliente:\n${d.observaciones_finales || 'N/A'}\n`;
@@ -822,6 +812,9 @@
 
             let subtotal, iva, isr, neto;
             if (modo === 'incluido') {
+                // Si el precio ya incluye IVA e ISR:
+                // El total bruto se divide entre (1 + tasa_iva) para aislar el subtotal base.
+                // Del subtotal se retiene el ISR correspondiente.
                 subtotal = montoBruto / (1 + ivaPct);
                 iva = montoBruto - subtotal;
                 isr = subtotal * isrPct;
@@ -838,7 +831,7 @@
             const d = new Date(fecha);
             while (n > 0) {
                 d.setDate(d.getDate() + 1);
-                if (d.getDay() !== 0) n--; // solo el domingo no cuenta
+                if (d.getDay() !== 0) n--;
             }
             return d;
         }
@@ -853,7 +846,6 @@
             return { dias: Math.round((fe - hoy) / 86400000), fe };
         }
         function badgeEntrega(d) {
-            // Si ya está completado o en proceso, NO muestra etiqueta de atrasado
             if (d.estatus === 'completado' || d.estatus === 'en_proceso') return '';
             const e = estadoEntrega(d);
             if (!e) return '';
@@ -868,7 +860,6 @@
         function actualizarAlertas() {
             let atras = 0, hoy = 0, man = 0;
             datosActuales.forEach(d => {
-                // Ignorar pedidos completados o que ya están en proceso
                 if (d.estatus === 'completado' || d.estatus === 'en_proceso') return;
                 const e = estadoEntrega(d);
                 if (!e) return;
@@ -887,7 +878,6 @@
             vistaActual = 'ventas';
             activarBotonMenu(btn);
 
-            // Ocultar la columna de pedidos y mostrar el área principal al 100%
             document.getElementById('pedidos-panel').classList.add('hidden');
             const mainContent = document.getElementById('main-content');
             mainContent.classList.remove('hidden');
@@ -968,7 +958,6 @@
             const emptyState = document.getElementById('empty-state');
             if (emptyState) emptyState.classList.add('md:hidden');
 
-            // En móvil: ocultar lista y mostrar vista de detalle con botón de regreso
             if (window.innerWidth < 768) {
                 document.getElementById('pedidos-panel').classList.add('hidden');
                 const mainContent = document.getElementById('main-content');
@@ -988,7 +977,6 @@
             
             document.getElementById('vista-cliente-nombre').innerText = `Información del Cliente (${data.festejado_nombre || 'Cliente'})`;
 
-            // --- 1. DATOS DEL CLIENTE ---
             let textoDatosCliente = `Nombre del cliente: ${data.contacto_nombre || 'N/A'}\n`;
             textoDatosCliente += `Contacto (Teléfono): ${data.contacto_telefono || data.evento_whatsapp || 'N/A'}\n`;
             textoDatosCliente += `Evento: ${data.tipo_evento || 'N/A'} de ${data.festejado_nombre || 'N/A'}\n`;
@@ -1003,7 +991,6 @@
 
             let promptText = construirPrompt(data);
 
-            // URLs de Firebase -> rutas del repo (img/portada.jpg...) + lista de descarga
             const fotos = listarFotos(data.imagenes);
             fotos.forEach(([nombre, url]) => { promptText = promptText.split(url).join('img/' + nombre); });
             document.getElementById('fotos-descarga').innerHTML = fotos.length
