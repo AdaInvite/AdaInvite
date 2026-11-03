@@ -956,10 +956,13 @@
             document.getElementById('datos-cliente-texto').innerText = textoDatosCliente;
             document.getElementById('datos-cliente-container').classList.remove('hidden');
 
-            let promptText = construirPrompt(data);
+           let promptText = construirPrompt(data);
             
             // Filtro de limpieza para eliminar emojis
             promptText = promptText.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '');
+
+            // NUEVO: Eliminar dobles diagonales en las URLs (respetando el https://)
+            promptText = promptText.replace(/([^:])\/\//g, '$1/');
 
             document.getElementById('fotos-descarga').innerHTML = ''; // Se eliminó el botón del ZIP
             document.getElementById('prompt-container').innerText = promptText;
