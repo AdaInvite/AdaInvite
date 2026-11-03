@@ -17,7 +17,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | AdaInvite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -132,6 +131,10 @@
                 <span>VIP</span>
                 <span id="badge-vip" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
             </button>
+            <button onclick="cargarVencidas(this)" id="btn-vencidas" class="tab-btn shrink-0 md:w-full flex items-center justify-between gap-2 px-3.5 py-2 md:px-4 md:py-3 rounded-lg font-medium text-xs md:text-sm transition-colors text-red-600 hover:bg-red-50">
+                <span>Vencidas</span>
+                <span id="badge-vencidas" class="badge hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+            </button>
             <button onclick="mostrarVentas(this)" id="btn-ventas" class="tab-btn shrink-0 md:w-full flex items-center justify-between gap-2 px-3.5 py-2 md:px-4 md:py-3 rounded-lg font-medium text-xs md:text-sm transition-colors text-gray-600 hover:bg-gray-100">
                 <span>Ventas</span>
             </button>
@@ -184,12 +187,9 @@
                     <span>⚠️ Invitación Expirada</span>
                 </h3>
                 <p id="expiracion-texto" class="text-xs text-red-700 leading-relaxed"></p>
-                <div class="flex flex-col sm:flex-row gap-2 mt-2">
-                    <button onclick="descargarZip()" class="flex-1 px-4 py-3 bg-red-700 text-white rounded-lg font-bold text-xs shadow-sm hover:bg-red-800 transition-all text-center">
-                        1. Respaldar Fotos (ZIP)
-                    </button>
-                    <button onclick="darDeBaja()" class="flex-1 px-4 py-3 bg-white text-red-700 border border-red-300 rounded-lg font-bold text-xs shadow-sm hover:bg-red-100 transition-all text-center">
-                        2. Archivar y Limpiar Datos
+                <div class="flex flex-col gap-2 mt-2">
+                    <button onclick="darDeBaja()" class="w-full px-4 py-3 bg-white text-red-700 border border-red-300 rounded-lg font-bold text-xs shadow-sm hover:bg-red-100 transition-all text-center">
+                        Archivar y Limpiar Datos
                     </button>
                 </div>
             </div>
@@ -432,6 +432,8 @@
                     renderVentas();
                 } else if (vistaActual === 'todos') {
                     await cargarTodosGeneral(document.getElementById('btn-todos'));
+                } else if (vistaActual === 'vencidas') {
+                    await cargarVencidas(document.getElementById('btn-vencidas'));
                 } else {
                     const mapaCols = { basico: ['solicitudes_basico', 'basico'], premium: ['solicitudes_premium', 'premium'], vip: ['solicitudes_vip', 'vip'] };
                     await cargarDatosMultiples(mapaCols[vistaActual], document.getElementById(`btn-${vistaActual}`), vistaActual);
@@ -445,11 +447,20 @@
         function activarBotonMenu(btnElement) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-[#9B8AA5]', 'text-white');
-                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+                if (btn.id === 'btn-vencidas') {
+                    btn.classList.add('text-red-600', 'hover:bg-red-50');
+                } else {
+                    btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+                }
             });
             if (btnElement) {
-                btnElement.classList.remove('text-gray-600', 'hover:bg-gray-100');
-                btnElement.classList.add('active', 'bg-[#9B8AA5]', 'text-white');
+                if (btnElement.id === 'btn-vencidas') {
+                    btnElement.classList.remove('text-red-600', 'hover:bg-red-50');
+                    btnElement.classList.add('active', 'bg-red-600', 'text-white');
+                } else {
+                    btnElement.classList.remove('text-gray-600', 'hover:bg-gray-100');
+                    btnElement.classList.add('active', 'bg-[#9B8AA5]', 'text-white');
+                }
             }
         }
 
@@ -470,6 +481,10 @@
             mainContent.classList.remove('flex');
             mainContent.classList.add('md:flex');
             if (emptyState) emptyState.classList.remove('md:hidden');
+
+            // Oculta los botones de filtro si estamos en la vista de vencidas
+            const contenedorFiltros = document.getElementById('filter-pendiente').parentElement;
+            contenedorFiltros.style.display = vistaActual === 'vencidas' ? 'none' : 'grid';
         }
 
         window.volverALista = () => {
@@ -514,6 +529,27 @@
             }
         };
 
+        window.esVencida = function(data) {
+            if (!data.evento_fecha || data.estatus === 'archivado') return false;
+            const [y, m, d] = data.evento_fecha.split('-');
+            const fe = new Date(y, m - 1, d);
+            const diffDays = Math.floor((new Date() - fe) / (1000 * 60 * 60 * 24));
+            return diffDays > 30; // Más de 30 días de transcurrido el evento
+        };
+
+        window.cargarVencidas = async function(btnElement) {
+            vistaActual = 'vencidas';
+            activarBotonMenu(btnElement);
+            mostrarModoListaPedidos();
+            document.getElementById('titulo-seccion-lista').innerText = "Vencidas (+30 días)";
+            
+            const listaEl = document.getElementById('lista-solicitudes');
+            if (!cacheGlobal) listaEl.innerHTML = '<p class="text-sm text-gray-500 text-center mt-4">Cargando...</p>';
+            datosActuales = await obtenerTodosLosPedidos();
+            actualizarResumenDashboardGlobal();
+            renderizarLista();
+        };
+
         window.cargarTodosGeneral = async function(btnElement) {
             vistaActual = 'todos';
             activarBotonMenu(btnElement);
@@ -546,6 +582,7 @@
         window.actualizarResumenDashboardGlobal = function() {
             let nuevos = 0, proceso = 0, completados = 0;
             datosActuales.forEach(d => {
+                if (window.esVencida(d)) return; // No sumarlas en los contadores superiores
                 const estatus = d.estatus || 'pendiente';
                 if (estatus === 'completado') completados++;
                 else if (estatus === 'en_proceso') proceso++;
@@ -556,15 +593,17 @@
             document.getElementById('count-completados').innerText = completados;
 
             const baseGlobal = cacheGlobal || datosActuales;
-            let contadores = { basico: 0, premium: 0, vip: 0 };
+            let contadores = { basico: 0, premium: 0, vip: 0, vencidas: 0 };
             baseGlobal.forEach(d => {
-                if ((d.estatus || 'pendiente') === 'pendiente' && d._coleccionOrigen) {
+                if (window.esVencida(d)) {
+                    contadores.vencidas++;
+                } else if ((d.estatus || 'pendiente') === 'pendiente' && d._coleccionOrigen) {
                     if (d._coleccionOrigen.includes('basico')) contadores.basico++;
                     if (d._coleccionOrigen.includes('premium')) contadores.premium++;
                     if (d._coleccionOrigen.includes('vip')) contadores.vip++;
                 }
             });
-            ['basico', 'premium', 'vip'].forEach(p => {
+            ['basico', 'premium', 'vip', 'vencidas'].forEach(p => {
                 const badge = document.getElementById(`badge-${p}`);
                 if (badge && contadores[p] > 0) { badge.innerText = contadores[p]; badge.classList.remove('hidden'); } 
                 else if (badge) { badge.classList.add('hidden'); }
@@ -587,7 +626,14 @@
             const listaEl = document.getElementById('lista-solicitudes');
             listaEl.innerHTML = '';
             
-            const docs = datosActuales.filter(d => (d.estatus || 'pendiente') === filtroActual);
+            let docs = [];
+            if (vistaActual === 'vencidas') {
+                docs = datosActuales.filter(d => window.esVencida(d));
+            } else {
+                // Excluye las vencidas de las vistas normales
+                docs = datosActuales.filter(d => (d.estatus || 'pendiente') === filtroActual && !window.esVencida(d));
+            }
+            
             document.getElementById('total-solicitudes').innerText = `${docs.length} pedidos`;
 
             if (docs.length === 0) {
@@ -611,14 +657,7 @@
                     else diasPasados = `Hace ${diffDays} días`;
                 }
 
-                let expirado = false;
-                if (data.evento_fecha) {
-                    const [y, m, d] = data.evento_fecha.split('-');
-                    const fe = new Date(y, m - 1, d);
-                    const diffDaysEvent = Math.floor((hoy - fe) / (1000 * 60 * 60 * 24));
-                    if (diffDaysEvent > 30) expirado = true;
-                }
-
+                let expirado = window.esVencida(data);
                 let estatusBadge = '';
                 let etiquetaDerecha = '';
 
@@ -656,43 +695,6 @@
             (img.corteHonor || []).forEach((u, i) => add(`corte${i + 1}.jpg`, u));
             return f;
         }
-
-        window.descargarZip = async () => {
-            const c = window.clienteSeleccionado;
-            const fotos = c ? listarFotos(c.imagenes) : [];
-            if (!fotos.length) {
-                await showModal({ title: 'Sin fotos', message: 'Este pedido no tiene fotos para descargar.' });
-                return;
-            }
-            const btn = document.getElementById('btn-zip') || event.target;
-            const textoOriginal = btn.innerText;
-            btn.disabled = true;
-            try {
-                const zip = new JSZip();
-                let n = 0;
-                for (const [nombre, url] of fotos) {
-                    btn.innerText = `Descargando ${++n}/${fotos.length}...`;
-                    const r = await fetch(url);
-                    if (!r.ok) throw new Error(nombre);
-                    zip.file(`img/${nombre}`, await r.blob());
-                }
-                btn.innerText = 'Comprimiendo...';
-                const blob = await zip.generateAsync({ type: 'blob' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `fotos_${(c.festejado_nombre || 'pedido').replace(/\s+/g, '_')}.zip`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-            } catch (e) {
-                console.error(e);
-                await showModal({ title: 'Error', message: 'No se pudieron descargar las fotos: ' + e.message });
-            } finally {
-                btn.disabled = false;
-                btn.innerText = textoOriginal;
-            }
-        };
 
         function construirPrompt(d) {
             const origen = (d.paquete || d._coleccionOrigen || '').toLowerCase();
@@ -823,7 +825,7 @@
         function actualizarAlertas() {
             let atras = 0, hoy = 0, man = 0;
             datosActuales.forEach(d => {
-                if (d.estatus === 'completado' || d.estatus === 'en_proceso' || d.estatus === 'archivado') return;
+                if (d.estatus === 'completado' || d.estatus === 'en_proceso' || d.estatus === 'archivado' || window.esVencida(d)) return;
                 const e = estadoEntrega(d);
                 if (!e) return;
                 if (e.dias < 0) atras++; else if (e.dias === 0) hoy++; else if (e.dias === 1) man++;
@@ -939,7 +941,7 @@
             const expContainer = document.getElementById('expiracion-container');
             const expTexto = document.getElementById('expiracion-texto');
             if (diasTranscurridos > 30 && data.estatus !== 'archivado') {
-                expTexto.innerText = `Han pasado ${diasTranscurridos} días desde el evento (${data.evento_fecha}). Respalda el ZIP si el cliente lo pidió y presiona archivar para limpiar sus fotos.`;
+                expTexto.innerText = `Han pasado ${diasTranscurridos} días desde el evento (${data.evento_fecha}). Presiona archivar para ocultarla y ve a R2 a limpiar sus fotos.`;
                 expContainer.classList.remove('hidden');
             } else {
                 expContainer.classList.add('hidden');
@@ -955,13 +957,13 @@
             document.getElementById('datos-cliente-container').classList.remove('hidden');
 
             let promptText = construirPrompt(data);
-            const fotos = listarFotos(data.imagenes);
-            fotos.forEach(([nombre, url]) => { promptText = promptText.split(url).join('img/' + nombre); });
-            document.getElementById('fotos-descarga').innerHTML = fotos.length
-                ? '<button id="btn-zip" onclick="descargarZip()" class="self-start mt-2 px-4 py-2 bg-[#9B8AA5] text-white rounded-lg font-bold text-xs shadow-sm">Descargar fotos (ZIP)</button>'
-                : '';
+            
+            // Filtro de limpieza para eliminar emojis
+            promptText = promptText.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '');
 
+            document.getElementById('fotos-descarga').innerHTML = ''; // Se eliminó el botón del ZIP
             document.getElementById('prompt-container').innerText = promptText;
+            
             document.getElementById('prompt-wrapper').classList.remove('hidden');
             document.getElementById('estado-container').classList.remove('hidden');
             document.getElementById('admin-comentario').value = data.comentario_admin || '';
