@@ -12,7 +12,7 @@ export async function onRequestPost({ request, env }) {
 
   const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
   const key = `${folder}/${crypto.randomUUID()}.${ext}`;
-  await env.FOTOS.put(key, file.stream(), {
+  await env.BUCKET_FOTOS.put(key, file.stream(), {
     httpMetadata: { contentType: file.type, cacheControl: "public, max-age=31536000, immutable" },
   });
   return Response.json({ url: `${env.PUBLIC_URL}/${key}` });
