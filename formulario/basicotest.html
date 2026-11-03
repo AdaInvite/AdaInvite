@@ -458,38 +458,46 @@
             }
 
             try {
-                // Función mejorada para subir a Cloudflare R2 con manejo de errores profundos
+               // Función para subir foto compatible con tu nuevo backend (FormData seguro)
                 const uploadSingleFile = async (inputId) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         let file = fileInput.files[0];
+                        
                         if (file.type.startsWith('image/') && window.imageCompression) {
-                            try { file = await window.imageCompression(file, compOptions); } catch (e) { }
+                            try { file = await window.imageCompression(file, compOptions); } 
+                            catch (e) { console.warn("Error comprimiendo"); }
                         }
                         
+                        const uploadData = new FormData();
+                        
+                        // 🟢 Generamos un nombre seguro para evitar el error de iPhone
                         const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
+                        const nombreSeguro = `foto_${Date.now()}.${extension}`;
+                        
+                        uploadData.append('file', file, nombreSeguro);
+                        
+                        // 🟢 Tu nuevo backend exige que le enviemos el nombre de una carpeta
+                        uploadData.append('folder', 'PaqueteBasico'); 
 
-                        // Enviamos a nuestra ruta de Cloudflare
-                        const response = await fetch(`/upload?ext=${extension}`, {
+                        // Cambia '/api-fotos' por '/upload' si no renombraste el archivo en GitHub
+                        const response = await fetch('/api-fotos', {
                             method: 'POST',
-                            headers: { 'Content-Type': file.type || 'image/jpeg' },
-                            body: file
+                            body: uploadData
                         });
 
-                        // Leemos primero como texto para evitar el error "Unexpected end of JSON"
                         const textData = await response.text();
                         
                         if (!response.ok) {
-                            throw new Error(`Cloudflare rechazó la foto (${response.status}): ${textData.substring(0, 100)}`);
+                            throw new Error(`Error ${response.status}: ${textData.substring(0, 100)}`);
                         }
 
-                        // Si pasó, parseamos a JSON
                         try {
                             const data = JSON.parse(textData);
                             actualizarProgreso();
                             return data.url; 
                         } catch (err) {
-                            throw new Error(`La respuesta no era JSON válida. Respuesta del servidor: ${textData.substring(0, 100)}`);
+                            throw new Error(`Respuesta inválida: ${textData.substring(0, 100)}`);
                         }
                     }
                     return null;
