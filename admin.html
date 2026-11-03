@@ -178,7 +178,7 @@
                 <p class="text-xs mt-1">Aquí aparecerán los datos del cliente, las fotos y el generador de prompt.</p>
             </div>
 
-            <!-- NUEVO: PANEL DE EXPIRACIÓN (>30 DÍAS) -->
+            <!-- PANEL DE EXPIRACIÓN (>30 DÍAS) -->
             <div id="expiracion-container" class="hidden bg-red-50 p-4 md:p-6 rounded-xl border border-red-200 shadow-sm flex flex-col gap-3">
                 <h3 class="text-sm font-bold text-red-800 uppercase tracking-wider flex items-center gap-2">
                     <span>⚠️ Invitación Expirada</span>
@@ -189,11 +189,12 @@
                         1. Respaldar Fotos (ZIP)
                     </button>
                     <button onclick="darDeBaja()" class="flex-1 px-4 py-3 bg-white text-red-700 border border-red-300 rounded-lg font-bold text-xs shadow-sm hover:bg-red-100 transition-all text-center">
-                        2. Eliminar de Base de Datos
+                        2. Archivar y Limpiar Datos
                     </button>
                 </div>
             </div>
 
+            <!-- PANEL DE VENTAS -->
             <div id="ventas-container" class="hidden bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-5 max-w-4xl w-full mx-auto">
                 <div class="flex flex-col gap-3 border-b border-gray-100 pb-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -323,9 +324,8 @@
     </main>
 
     <script type="module">
-        // Se añade deleteDoc a los imports de Firestore
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -549,7 +549,7 @@
                 const estatus = d.estatus || 'pendiente';
                 if (estatus === 'completado') completados++;
                 else if (estatus === 'en_proceso') proceso++;
-                else nuevos++;
+                else if (estatus === 'pendiente') nuevos++;
             });
             document.getElementById('count-nuevos').innerText = nuevos;
             document.getElementById('count-proceso').innerText = proceso;
@@ -586,6 +586,7 @@
         window.renderizarLista = function() {
             const listaEl = document.getElementById('lista-solicitudes');
             listaEl.innerHTML = '';
+            
             const docs = datosActuales.filter(d => (d.estatus || 'pendiente') === filtroActual);
             document.getElementById('total-solicitudes').innerText = `${docs.length} pedidos`;
 
@@ -610,7 +611,6 @@
                     else diasPasados = `Hace ${diffDays} días`;
                 }
 
-                // CÁLCULO DE EXPIRACIÓN (>30 DÍAS)
                 let expirado = false;
                 if (data.evento_fecha) {
                     const [y, m, d] = data.evento_fecha.split('-');
@@ -753,6 +753,7 @@
             return o.includes('vip') ? 'vip' : o.includes('premium') ? 'premium' : 'basico';
         }
         function precioDe(d) { return (d.precio == null || d.precio === '') ? PRECIOS[tipoPaquete(d)] : Number(d.precio); }
+        
         function desgloseImpuestos(montoBruto) {
             const ivaPct = Math.max(0, Number(document.getElementById('tax-iva')?.value || 0)) / 100;
             const isrPct = Math.max(0, Number(document.getElementById('tax-isr')?.value || 0)) / 100;
@@ -808,7 +809,7 @@
         }
 
         function badgeEntrega(d) {
-            if (d.estatus === 'completado' || d.estatus === 'en_proceso') return '';
+            if (d.estatus === 'completado' || d.estatus === 'en_proceso' || d.estatus === 'archivado') return '';
             const e = estadoEntrega(d);
             if (!e) return '';
             const fecha = e.fe.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
@@ -822,7 +823,7 @@
         function actualizarAlertas() {
             let atras = 0, hoy = 0, man = 0;
             datosActuales.forEach(d => {
-                if (d.estatus === 'completado' || d.estatus === 'en_proceso') return;
+                if (d.estatus === 'completado' || d.estatus === 'en_proceso' || d.estatus === 'archivado') return;
                 const e = estadoEntrega(d);
                 if (!e) return;
                 if (e.dias < 0) atras++; else if (e.dias === 0) hoy++; else if (e.dias === 1) man++;
@@ -937,8 +938,8 @@
             
             const expContainer = document.getElementById('expiracion-container');
             const expTexto = document.getElementById('expiracion-texto');
-            if (diasTranscurridos > 30) {
-                expTexto.innerText = `Han pasado ${diasTranscurridos} días desde el evento (${data.evento_fecha}). Respalda el ZIP si el cliente lo pidió y presiona eliminar para borrar sus datos del sistema (Firebase).`;
+            if (diasTranscurridos > 30 && data.estatus !== 'archivado') {
+                expTexto.innerText = `Han pasado ${diasTranscurridos} días desde el evento (${data.evento_fecha}). Respalda el ZIP si el cliente lo pidió y presiona archivar para limpiar sus fotos.`;
                 expContainer.classList.remove('hidden');
             } else {
                 expContainer.classList.add('hidden');
@@ -1050,35 +1051,33 @@
             } catch (error) { btn.innerText = "Guardar Nota"; } finally { btn.disabled = false; }
         };
 
-        // NUEVA FUNCIÓN PARA ELIMINAR INVITACIÓN (DAR DE BAJA)
+        // NUEVA FUNCIÓN PARA ARCHIVAR INVITACIÓN
         window.darDeBaja = async function() {
             if (!window.clienteSeleccionado) return;
             const c = window.clienteSeleccionado;
             
-            // 1. Confirmación de seguridad
-            const confirmacion = confirm(`¿Estás segura de ELIMINAR DEFINITIVAMENTE la invitación de ${c.festejado_nombre}?\n\nEsta acción borrará toda su información de la base de datos y no se puede deshacer.`);
+            const confirmacion = confirm(`¿Estás segura de ARCHIVAR la invitación de ${c.festejado_nombre}?\n\n- Se ocultará de la lista de pedidos.\n- Se mantendrá el costo en tu reporte de Ventas.\n- Recuerda ir después a Cloudflare R2 a borrar sus fotos.`);
             if (!confirmacion) return;
 
             try {
-                // 2. Eliminar documento de Firebase
-                await deleteDoc(doc(db, c._coleccionOrigen, c.id));
+                await updateDoc(doc(db, c._coleccionOrigen, c.id), {
+                    estatus: 'archivado',
+                    imagenes: {},         
+                    datos_baja: "Invitación archivada por antigüedad (+30 días)"
+                });
                 
-                // (Opcional) Si en el futuro agregas un backend para borrar en Cloudflare R2, la llamada iría aquí
-                // await fetch(`/api-delete-fotos?folder=PaqueteBasico`, { method: 'DELETE' });
-
-                await showModal({ title: 'Éxito', message: 'Invitación eliminada correctamente de Firebase. Recuerda borrar manualmente su carpeta de fotos en Cloudflare R2 para liberar el espacio.' });
+                await showModal({ title: 'Éxito', message: 'Invitación archivada correctamente. Sus ingresos siguen registrados en Ventas. Recuerda ir a Cloudflare R2 y eliminar su carpeta de fotos para liberar espacio.' });
                 
-                // 3. Actualizar la lista en pantalla
-                if (cacheGlobal) cacheGlobal = cacheGlobal.filter(doc => doc.id !== c.id);
-                datosActuales = datosActuales.filter(doc => doc.id !== c.id);
+                c.estatus = 'archivado';
+                c.imagenes = {};
                 
                 volverALista();
                 actualizarResumenDashboardGlobal();
                 renderizarLista();
 
             } catch (error) {
-                console.error("Error al eliminar:", error);
-                await showModal({ title: 'Error', message: 'No se pudo eliminar la invitación: ' + error.message });
+                console.error("Error al archivar:", error);
+                await showModal({ title: 'Error', message: 'No se pudo archivar la invitación: ' + error.message });
             }
         };
 
