@@ -1,26 +1,53 @@
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  // Manejo de preflight CORS si es necesario
+  if (context.request.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "*",
+      },
+    });
+  }
+
+  if (context.request.method !== "POST") {
+    return new Response("Método no permitido", { status: 405 });
+  }
+
   try {
-    const request = context.request;
-    const env = context.env; 
+    const formData = await context.request.formData();
+    const file = formData.get("file");
 
-    const formData = await request.formData();
-    const file = formData.get('file');
-
-    if (!file) return new Response('No se encontró el archivo', { status: 400 });
+    if (!file) {
+      return new Response(JSON.stringify({ error: "No se encontró el archivo" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     const filename = `${Date.now()}-${file.name}`;
 
-    // Guarda en R2 usando el binding que configuraremos en Cloudflare
-    await env.BUCKET_FOTOS.put(filename, file.stream(), {
-      httpMetadata: { contentType: file.type },
+    // Guarda en R2 usando el binding BUCKET_FOTOS
+    await context.env.BUCKET_FOTOS.put(filename, file.stream(), {
+      httpMetadata: { contentType: file.type || "image/webp" },
     });
 
     const publicUrl = `https://fotos.adainvite.com/${filename}`;
-    
+
     return new Response(JSON.stringify({ url: publicUrl }), {
-      headers: { 'Content-Type': 'application/json' }
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
     });
   } catch (error) {
-    return new Response(error.message, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
+    });
   }
-} 
+}
