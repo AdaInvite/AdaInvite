@@ -578,7 +578,7 @@
             }
 
             try {
-                // Función para subir una sola foto a Cloudflare Pages Functions (/upload)
+               // Función para subir una sola foto a Cloudflare Pages Functions (/upload)
                 const uploadSingleFile = async (inputId) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
@@ -591,9 +591,16 @@
                         }
                         
                         const uploadData = new FormData();
-                        uploadData.append('file', file);
+                        
+                        // 🟢 SOLUCIÓN: Generar un nombre 100% seguro (sin espacios ni acentos)
+                        // Esto evita que Cloudflare rechace el archivo por caracteres especiales
+                        const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
+                        const nombreSeguro = `${inputId}_${Date.now()}.${extension}`;
+                        
+                        // Agregamos el nombreSeguro como tercer parámetro para forzarlo
+                        uploadData.append('file', file, nombreSeguro);
 
-                        // Enviar a Cloudflare R2 a través de nuestra función /upload
+                        // Enviar a Cloudflare R2
                         const response = await fetch('/upload', {
                             method: 'POST',
                             body: uploadData
@@ -603,7 +610,7 @@
                         
                         if (response.ok) {
                             actualizarProgreso();
-                            return data.url; // Retorna el enlace público de fotos.adainvite.com
+                            return data.url; 
                         } else {
                             throw new Error(data.error || "Error al subir la imagen a R2");
                         }
