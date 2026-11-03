@@ -459,7 +459,7 @@
 
             try {
                // Función para subir foto compatible con tu nuevo backend (FormData seguro)
-                const uploadSingleFile = async (inputId) => {
+                const uploadSingleFile = async (inputId, nombreCarpetaCliente) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         let file = fileInput.files[0];
@@ -478,7 +478,9 @@
                         uploadData.append('file', file, nombreSeguro);
                         
                         // 🟢 Tu nuevo backend exige que le enviemos el nombre de una carpeta
-                        uploadData.append('folder', 'PaqueteBasico'); 
+                        // Unimos el paquete y la subcarpeta del cliente, eliminando espacios
+                        const subCarpetaLimpia = nombreCarpetaCliente.replace(/\s+/g, '').replace(/[^a-zA-Z0-9_]/g, '');
+                        uploadData.append('folder', `PaqueteBasico/${subCarpetaLimpia}`); 
 
                         // Cambia '/api-fotos' por '/upload' si no renombraste el archivo en GitHub
                         const response = await fetch('/api-fotos', {
@@ -503,13 +505,20 @@
                     return null;
                 };
 
+                // Obtenemos el tipo de evento y el nombre del festejado
+                const tipoEvento = document.getElementById('tipo_evento').value || 'Evento';
+                const nombreFestejado = document.getElementById('festejado_nombre').value || Date.now();
+
+                // Los unimos para formar la carpeta (ej. "XV" + "Ana" = "XVAna")
+                const nombreCarpeta = `${tipoEvento}${nombreFestejado}`;
+
                 // 1. SUBIR FOTOS A R2
-                const urlPortada = await uploadSingleFile('foto_portada');
-                const urlSep1 = await uploadSingleFile('foto_separador_1');
-                const urlSep2 = await uploadSingleFile('foto_separador_2');
-                const urlSep3 = await uploadSingleFile('foto_separador_3');
-                const urlSep4 = await uploadSingleFile('foto_separador_4');
-                const urlSep5 = await uploadSingleFile('foto_separador_5');
+                const urlPortada = await uploadSingleFile('foto_portada', nombreCarpeta);
+                const urlSep1 = await uploadSingleFile('foto_separador_1', nombreCarpeta);
+                const urlSep2 = await uploadSingleFile('foto_separador_2', nombreCarpeta);
+                const urlSep3 = await uploadSingleFile('foto_separador_3', nombreCarpeta);
+                const urlSep4 = await uploadSingleFile('foto_separador_4', nombreCarpeta);
+                const urlSep5 = await uploadSingleFile('foto_separador_5', nombreCarpeta);
 
                 // 2. RECOPILAR TEXTOS
                 document.getElementById('progress-status-text').innerText = "Guardando información en la base de datos...";
