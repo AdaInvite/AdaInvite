@@ -53,6 +53,25 @@
             display: none !important;
         }
     </style>
+    <script>
+        // Función para mostrar/ocultar el campo "Otro"
+        function toggleOtroEvento() {
+            const select = document.getElementById('tipo_evento');
+            const inputOtro = document.getElementById('tipo_evento_otro');
+            if (!select || !inputOtro) return;
+            if (select.value === 'Otro') {
+                inputOtro.classList.remove('hidden');
+                inputOtro.setAttribute('required', 'true');
+                inputOtro.classList.add('strict-required');
+            } else {
+                inputOtro.classList.add('hidden');
+                inputOtro.removeAttribute('required');
+                inputOtro.classList.remove('strict-required');
+                inputOtro.classList.remove('border-red-500', 'bg-red-50');
+                inputOtro.value = '';
+            }
+        }
+    </script>
 </head>
 <body class="h-full py-12 px-4 md:px-8">
     
@@ -67,16 +86,17 @@
             </p>
         </div>
 
-        <!-- PANTALLA DE ÉXITO (Oculta por defecto) -->
+       <!-- PANTALLA DE ÉXITO -->
         <div id="success-screen" class="hidden text-center py-10">
             <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite Logo" class="h-16 mx-auto mb-8">
-            <h2 class="text-4xl md:text-5xl text-[#9B8AA5] mb-4">¡Datos enviados con exito!</h2>
+            <h2 class="text-5xl text-[#9B8AA5] mb-10">¡Ya tenemos tu información!</h2>
             <p class="text-base text-[#3D3542] mb-10 max-w-lg mx-auto leading-relaxed">
-                Hemos recibido toda tu información y fotografías correctamente en nuestro sistema. Estamos listos para comenzar a crear la magia de tu invitación VIP.
+                Hemos recibido tu información y fotografías correctamente. Estamos listos para comenzar con el diseño de tu invitación.
             </p>
-            <p class="text-sm font-medium text-[#3D3542] mb-6">Por favor, avísanos por WhatsApp para confirmar la recepción:</p>
-            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20VIP." target="_blank" class="inline-block text-white font-semibold py-4 px-10 rounded-full transition-all hover:opacity-90 shadow-md text-base" style="background-color: var(--whatsapp-green); text-decoration: none;">
-                Informar por WhatsApp
+            <p class="text-sm font-semibold text-gray-500 mb-4">Por favor, avísanos que ya terminaste presionando el botón de abajo:</p>
+            
+            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20VIP." target="_blank" class="inline-flex items-center justify-center gap-2 text-white font-bold py-4 px-6 rounded-full transition-transform transform hover:scale-105 hover:opacity-90 shadow-xl text-lg w-full md:w-auto" style="background-color: var(--whatsapp-green); text-decoration: none;">
+                Avisar por WhatsApp
             </a>
         </div>
 
@@ -109,7 +129,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="text-sm font-medium">Tipo de evento</label>
-                        <input type="text" id="tipo_evento" name="tipo_evento" data-name="Tipo de evento" class="form-input strict-required" placeholder="Ej. XV Años, Boda, Bautizo..." required>
+                        <select id="tipo_evento" name="tipo_evento" data-name="Tipo de evento" class="form-input strict-required" required onchange="toggleOtroEvento()">
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="Boda">Boda</option>
+                            <option value="XV">XV</option>
+                            <option value="Bautizo">Bautizo</option>
+                            <option value="Primera Comunion">Primera Comunión</option>
+                            <option value="Cumpleanos">Cumpleaños</option>
+                            <option value="Baby Shower">Baby Shower</option>
+                            <option value="Despedida">Despedida de Soltera</option>
+                            <option value="Otro">Otro (Especificar)</option>
+                        </select>
+                        <input type="text" id="tipo_evento_otro" name="tipo_evento_otro" data-name="Especificar otro evento" class="form-input hidden mt-2" placeholder="Ej. Graduación, Aniversario...">
                     </div>
                     <div>
                         <label class="text-sm font-medium">Nombre completo (Cliente)</label>
@@ -483,10 +514,10 @@
                 </div>
             </div>
             
-            <!-- BARRA DE PROGRESO (Oculta por defecto) -->
+            <!-- BARRA DE PROGRESO -->
             <div id="progress-container" class="hidden mt-4 mb-4">
                 <div class="flex justify-between text-sm font-bold text-[#9B8AA5] mb-2">
-                    <span>Optimizando y subiendo archivos, por favor no cierres la ventana...</span>
+                    <span id="progress-status-text">Estamos finalizando los últimos detalles...</span>
                     <span id="progress-text">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
@@ -537,7 +568,7 @@
                                 img.className = 'w-24 h-24 object-cover rounded-lg border border-gray-200 shadow-sm';
                                 const btn = document.createElement('button');
                                 btn.type = 'button';
-                                btn.innerHTML = 'X';
+                                btn.innerHTML = '✖';
                                 btn.className = 'absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-md hover:bg-red-600 transition-colors z-10 cursor-pointer';
                                 btn.onclick = function(e) {
                                     e.preventDefault(); 
@@ -567,11 +598,10 @@
         });
     </script>
 
-    <!-- SCRIPT DE INTEGRACIÓN CON FIREBASE, AUTO-SAVE Y COMPRESIÓN -->
+    <!-- SCRIPT DE INTEGRACIÓN FIREBASE + CLOUDFLARE R2 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwgiUaie7pWejMKkEA0w-hi8eqs8eheXM",
@@ -584,7 +614,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         const formVIP = document.getElementById('form-vip');
         const submitBtn = document.getElementById('btn-submit');
@@ -625,6 +654,11 @@
                         else if(input.type !== 'file') input.value = data[key];
                     }
                 }
+                if (typeof toggleOtroEvento === 'function') toggleOtroEvento();
+                if (data.tipo_evento_otro) {
+                    const inputOtro = document.getElementById('tipo_evento_otro');
+                    if (inputOtro) inputOtro.value = data.tipo_evento_otro;
+                }
             }
         }
 
@@ -632,23 +666,19 @@
         formVIP.addEventListener('change', saveToLocal);
         document.addEventListener('DOMContentLoaded', restoreFromLocal);
 
-        // Prevención de cierre accidental de pestaña
         window.addEventListener('beforeunload', (e) => {
             if(isDirty) {
                 e.preventDefault();
                 e.returnValue = ''; 
             }
         });
-        // -----------------------------------------------
 
-        // Manejar modal
         btnCancelSubmit.addEventListener('click', () => { warningModal.classList.add('hidden'); });
         btnConfirmSubmit.addEventListener('click', () => {
             warningModal.classList.add('hidden');
-            ejecutarEnvioFirebase();
+            ejecutarEnvioFinal();
         });
 
-        // Validaciones al enviar
         formVIP.addEventListener('submit', (e) => {
             e.preventDefault(); 
             
@@ -690,7 +720,8 @@
                         if (!firstStrictInput) firstStrictInput = input;
                         
                         input.classList.add('border-red-500', 'bg-red-50');
-                        input.addEventListener('input', function() { this.classList.remove('border-red-500', 'bg-red-50'); }, { once: true });
+                        const eventType = input.tagName === 'SELECT' ? 'change' : 'input';
+                        input.addEventListener(eventType, function() { this.classList.remove('border-red-500', 'bg-red-50'); }, { once: true });
                     } else {
                         missingSoftNames.push(fieldName);
                     }
@@ -711,11 +742,10 @@
                 });
                 warningModal.classList.remove('hidden');
             } else {
-                ejecutarEnvioFirebase();
+                ejecutarEnvioFinal();
             }
         });
 
-        // Configuración para compresión ligera
         const compOptions = {
             maxSizeMB: 0.3,
             maxWidthOrHeight: 1600,
@@ -723,8 +753,7 @@
             useWebWorker: true
         };
 
-        async function ejecutarEnvioFirebase() {
-            // Quitamos la advertencia de cierre accidental porque sí quieren enviar
+        async function ejecutarEnvioFinal() {
             isDirty = false;
             
             submitBtn.disabled = true;
@@ -747,57 +776,56 @@
             function actualizarProgreso() {
                 if(totalArchivos === 0) return;
                 archivosSubidos++;
-                let porcentaje = Math.floor((archivosSubidos / totalArchivos) * 95);
-                if (porcentaje > 95) porcentaje = 95;
+                let porcentaje = Math.floor((archivosSubidos / totalArchivos) * 90);
+                if (porcentaje > 90) porcentaje = 90;
                 progressBar.style.width = porcentaje + '%';
                 progressText.innerText = porcentaje + '%';
             }
 
             try {
-                let clienteNombre = "Sin_Nombre";
-                const inputNombre = document.getElementById('contacto_nombre');
-                if(inputNombre && inputNombre.value.trim() !== ''){
-                    clienteNombre = inputNombre.value.replace(/\s+/g, '_');
-                }
-                const folderName = `VIP_${clienteNombre}_${Date.now()}`;
-
-                const uploadSingleFile = async (inputId, storagePath) => {
+                // Función para subir 1 archivo a Cloudflare R2
+                const uploadSingleFile = async (inputId, nombreCarpetaCliente) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         let file = fileInput.files[0];
                         
-                        // Compresión de imagen antes de subir a Firebase
                         if (file.type.startsWith('image/') && window.imageCompression) {
                             try { file = await window.imageCompression(file, compOptions); } 
-                            catch (e) { console.warn("Error comprimiendo, subiendo original"); }
+                            catch (e) { console.warn("Error comprimiendo"); }
                         }
 
-                        const fileRef = ref(storage, `${storagePath}/${inputId}_${file.name}`);
-                        await uploadBytes(fileRef, file);
+                        const uploadData = new FormData();
+                        const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
+                        const nombreSeguro = `foto_${Date.now()}.${extension}`;
+                        
+                        uploadData.append('file', file, nombreSeguro);
+                        
+                        const subCarpetaLimpia = nombreCarpetaCliente.replace(/\s+/g, '').replace(/[^a-zA-Z0-9_]/g, '');
+                        uploadData.append('folder', `PaqueteVIP/${subCarpetaLimpia}`);
+
+                        const response = await fetch('/api-fotos', {
+                            method: 'POST',
+                            body: uploadData
+                        });
+
+                        const textData = await response.text();
+                        if (!response.ok) {
+                            throw new Error(`Error ${response.status}: ${textData.substring(0, 100)}`);
+                        }
+
+                        const data = JSON.parse(textData);
                         actualizarProgreso();
-                        return await getDownloadURL(fileRef);
+                        return data.url;
                     }
                     return null;
                 };
 
-                // Subir fotos
-                const urlPortada = await uploadSingleFile('foto_portada', folderName);
-                const urlSep1 = await uploadSingleFile('foto_separador_1', folderName);
-                const urlSep2 = await uploadSingleFile('foto_separador_2', folderName);
-                const urlSep3 = await uploadSingleFile('foto_separador_3', folderName);
-                const urlSep4 = await uploadSingleFile('foto_separador_4', folderName);
-                const urlSep5 = await uploadSingleFile('foto_separador_5', folderName);
-                const urlHistoria1 = await uploadSingleFile('historia_foto_1', folderName);
-                const urlHistoria2 = await uploadSingleFile('historia_foto_2', folderName);
-                const urlHistoria3 = await uploadSingleFile('historia_foto_3', folderName);
-                const urlHistoria4 = await uploadSingleFile('historia_foto_4', folderName);
-                const urlHistoria5 = await uploadSingleFile('historia_foto_5', folderName);
-                const urlHistoria6 = await uploadSingleFile('historia_foto_6', folderName);
-
-                const uploadMultipleFiles = async (inputId, subFolder) => {
+                // Función para subir múltiples archivos (Corte de Honor / Galería)
+                const uploadMultipleFiles = async (inputId, nombreCarpetaCliente) => {
                     const urls = [];
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
+                        const subCarpetaLimpia = nombreCarpetaCliente.replace(/\s+/g, '').replace(/[^a-zA-Z0-9_]/g, '');
                         for (let i = 0; i < fileInput.files.length; i++) {
                             let file = fileInput.files[i];
                             
@@ -806,19 +834,58 @@
                                 catch (e) {}
                             }
 
-                            const fileRef = ref(storage, `${folderName}/${subFolder}/foto_${i}_${file.name}`);
-                            await uploadBytes(fileRef, file);
+                            const uploadData = new FormData();
+                            const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
+                            const nombreSeguro = `foto_${i}_${Date.now()}.${extension}`;
+                            
+                            uploadData.append('file', file, nombreSeguro);
+                            uploadData.append('folder', `PaqueteVIP/${subCarpetaLimpia}`);
+
+                            const response = await fetch('/api-fotos', {
+                                method: 'POST',
+                                body: uploadData
+                            });
+
+                            const textData = await response.text();
+                            if (!response.ok) {
+                                throw new Error(`Error ${response.status}: ${textData.substring(0, 100)}`);
+                            }
+
+                            const data = JSON.parse(textData);
                             actualizarProgreso();
-                            urls.push(await getDownloadURL(fileRef));
+                            urls.push(data.url);
                         }
                     }
                     return urls;
                 };
 
-                const urlsGaleria = await uploadMultipleFiles('fotos_galeria', 'galeria');
-                const urlsCorte = await uploadMultipleFiles('fotos_corte', 'corte_honor');
+                // Obtenemos el tipo de evento y si es "Otro", usamos lo que el cliente especificó
+                let tipoEvento = document.getElementById('tipo_evento').value || 'Evento';
+                if (tipoEvento === 'Otro') {
+                    tipoEvento = document.getElementById('tipo_evento_otro').value || 'Evento';
+                }
+                const nombreFestejado = document.getElementById('festejado_nombre').value || Date.now();
+                const nombreCarpeta = `${tipoEvento}${nombreFestejado}`;
 
-                // Recopilar textos
+                // 1. SUBIR FOTOS A R2
+                const urlPortada = await uploadSingleFile('foto_portada', nombreCarpeta);
+                const urlSep1 = await uploadSingleFile('foto_separador_1', nombreCarpeta);
+                const urlSep2 = await uploadSingleFile('foto_separador_2', nombreCarpeta);
+                const urlSep3 = await uploadSingleFile('foto_separador_3', nombreCarpeta);
+                const urlSep4 = await uploadSingleFile('foto_separador_4', nombreCarpeta);
+                const urlSep5 = await uploadSingleFile('foto_separador_5', nombreCarpeta);
+                const urlHistoria1 = await uploadSingleFile('historia_foto_1', nombreCarpeta);
+                const urlHistoria2 = await uploadSingleFile('historia_foto_2', nombreCarpeta);
+                const urlHistoria3 = await uploadSingleFile('historia_foto_3', nombreCarpeta);
+                const urlHistoria4 = await uploadSingleFile('historia_foto_4', nombreCarpeta);
+                const urlHistoria5 = await uploadSingleFile('historia_foto_5', nombreCarpeta);
+                const urlHistoria6 = await uploadSingleFile('historia_foto_6', nombreCarpeta);
+
+                const urlsGaleria = await uploadMultipleFiles('fotos_galeria', nombreCarpeta);
+                const urlsCorte = await uploadMultipleFiles('fotos_corte', nombreCarpeta);
+
+                // 2. RECOPILAR TEXTOS
+                document.getElementById('progress-status-text').innerText = "Estamos finalizando los últimos detalles...";
                 const formData = new FormData(formVIP);
                 const datosCliente = {};
                 for (let [key, value] of formData.entries()) {
@@ -830,6 +897,13 @@
                     datosCliente[cb.name] = cb.checked;
                 });
 
+                // Aseguramos que Firebase guarde lo que especificó en "Otro" y limpiamos el duplicado
+                if (datosCliente.tipo_evento === 'Otro' && datosCliente.tipo_evento_otro) {
+                    datosCliente.tipo_evento = datosCliente.tipo_evento_otro;
+                }
+                delete datosCliente.tipo_evento_otro;
+
+                // 3. ENVIAR TODO A FIREBASE FIRESTORE
                 const documentoFinal = {
                     ...datosCliente, 
                     paquete: "VIP",
@@ -849,8 +923,6 @@
 
                 progressBar.style.width = '100%';
                 progressText.innerText = '100%';
-                submitBtn.innerHTML = '¡Datos enviados con éxito!';
-                submitBtn.style.backgroundColor = '#4CAF50';
                 
                 // Limpiar auto-guardado
                 localStorage.removeItem('vip_form_autosave_single');
@@ -864,8 +936,8 @@
                 }, 1500);
 
             } catch (error) {
-                console.error("Error al subir los datos: ", error);
-                alert("Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.");
+                console.error("Error interno reportado:", error);
+                alert("¡Ups! Tuvimos un pequeño inconveniente de nuestro lado al guardar tu información.\n\nPor favor, toma una captura de pantalla si puedes y comunícate con nosotros por WhatsApp para ayudarte de inmediato. No te preocupes, tus datos no se han perdido.");
                 
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
@@ -873,7 +945,7 @@
                 submitBtn.classList.remove('hidden');
                 progressContainer.classList.add('hidden');
                 
-                isDirty = true; // Reactivamos el candado por si intentan cerrar
+                isDirty = true; 
             }
         }
     </script>
