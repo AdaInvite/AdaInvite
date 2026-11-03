@@ -70,12 +70,16 @@
         <!-- PANTALLA DE ÉXITO -->
         <div id="success-screen" class="hidden text-center py-10">
             <img src="https://i.imgur.com/YtiCNIL.png" alt="AdaInvite Logo" class="h-16 mx-auto mb-8">
-            <h2 class="text-4xl md:text-5xl text-[#9B8AA5] mb-4">¡Datos enviados con exito!</h2>
+            <h2 class="text-4xl md:text-5xl text-[#9B8AA5] mb-4">¡Todo listo!</h2>
             <p class="text-base text-[#3D3542] mb-10 max-w-lg mx-auto leading-relaxed">
-                Hemos recibido toda tu información y fotografías correctamente en nuestro sistema.
+                Hemos recibido tu información y fotografías correctamente. Estamos listos para comenzar con el diseño de tu invitación.
             </p>
-            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20Básico." target="_blank" class="inline-block text-white font-semibold py-4 px-10 rounded-full transition-all hover:opacity-90 shadow-md text-base" style="background-color: var(--whatsapp-green); text-decoration: none;">
-                Informar por WhatsApp
+            <p class="text-sm font-semibold text-gray-500 mb-4">Por favor, avísanos que ya terminaste presionando el botón de abajo:</p>
+            
+            <a href="https://wa.me/524492867153?text=Hola,%20ya%20terminé%20de%20llenar%20el%20formulario%20de%20mi%20paquete%20Básico." target="_blank" class="inline-flex items-center justify-center gap-2 text-white font-bold py-5 px-12 rounded-full transition-transform transform hover:scale-105 hover:opacity-90 shadow-xl text-lg w-full md:w-auto" style="background-color: var(--whatsapp-green); text-decoration: none;">
+                <!-- Icono SVG de WhatsApp para hacerlo más visual -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Avísanos por WhatsApp
             </a>
         </div>
 
@@ -290,7 +294,7 @@
             <!-- BARRA DE PROGRESO -->
             <div id="progress-container" class="hidden mt-4 mb-4">
                 <div class="flex justify-between text-sm font-bold text-[#9B8AA5] mb-2">
-                    <span id="progress-status-text">Subiendo fotografías (R2) y guardando información (Firebase)...</span>
+                    <span id="progress-status-text">Estamos finalizando los últimos detalles...</span>
                     <span id="progress-text">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
@@ -471,13 +475,13 @@
                         
                         const uploadData = new FormData();
                         
-                        // 🟢 Generamos un nombre seguro para evitar el error de iPhone
+                        // Generamos un nombre seguro para evitar el error de iPhone
                         const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
                         const nombreSeguro = `foto_${Date.now()}.${extension}`;
                         
                         uploadData.append('file', file, nombreSeguro);
                         
-                        // 🟢 Tu nuevo backend exige que le enviemos el nombre de una carpeta
+                        // Tu nuevo backend exige que le enviemos el nombre de una carpeta
                         // Unimos el paquete y la subcarpeta del cliente, eliminando espacios
                         const subCarpetaLimpia = nombreCarpetaCliente.replace(/\s+/g, '').replace(/[^a-zA-Z0-9_]/g, '');
                         uploadData.append('folder', `PaqueteBasico/${subCarpetaLimpia}`); 
@@ -521,7 +525,7 @@
                 const urlSep5 = await uploadSingleFile('foto_separador_5', nombreCarpeta);
 
                 // 2. RECOPILAR TEXTOS
-                document.getElementById('progress-status-text').innerText = "Guardando información en la base de datos...";
+                document.getElementById('progress-status-text').innerText = "Estamos finalizando los últimos detalles...";
                 const formData = new FormData(formBasico);
                 const datosCliente = {};
                 for (let [key, value] of formData.entries()) {
@@ -561,8 +565,10 @@
                 }, 1500);
 
             } catch (error) {
-                console.error("Error al procesar el envío: ", error);
-                alert("Detalle del error:\n" + error.message);
+                console.error("Error interno reportado:", error);
+                
+                // Mensaje amigable para el cliente en lugar del error técnico
+                alert("¡Ups! Tuvimos un pequeño inconveniente de nuestro lado al guardar tu información.\n\nPor favor, toma una captura de pantalla si puedes y comunícate con nosotros por WhatsApp para ayudarte de inmediato. No te preocupes, tus datos no se han perdido.");
                 
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
