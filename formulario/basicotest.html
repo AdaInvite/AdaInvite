@@ -578,32 +578,26 @@
             }
 
             try {
-               // Función para subir una sola foto a Cloudflare Pages Functions (/upload)
+                // Función para subir foto enviando el archivo puro (Raw Body)
                 const uploadSingleFile = async (inputId) => {
                     const fileInput = document.getElementById(inputId);
                     if (fileInput && fileInput.files.length > 0) {
                         let file = fileInput.files[0];
                         
-                        // Compresión de imagen local
                         if (file.type.startsWith('image/') && window.imageCompression) {
                             try { file = await window.imageCompression(file, compOptions); } 
-                            catch (e) { console.warn("Error comprimiendo, subiendo original"); }
+                            catch (e) { console.warn("Error comprimiendo"); }
                         }
                         
-                        const uploadData = new FormData();
-                        
-                        // 🟢 SOLUCIÓN: Generar un nombre 100% seguro (sin espacios ni acentos)
-                        // Esto evita que Cloudflare rechace el archivo por caracteres especiales
                         const extension = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
-                        const nombreSeguro = `${inputId}_${Date.now()}.${extension}`;
-                        
-                        // Agregamos el nombreSeguro como tercer parámetro para forzarlo
-                        uploadData.append('file', file, nombreSeguro);
 
-                        // Enviar a Cloudflare R2
-                        const response = await fetch('/upload', {
+                        // 🟢 SOLUCIÓN DEFINITIVA: Enviar archivo puro en el "body" sin usar FormData
+                        const response = await fetch(`/upload?ext=${extension}`, {
                             method: 'POST',
-                            body: uploadData
+                            headers: {
+                                'Content-Type': file.type || 'image/jpeg'
+                            },
+                            body: file
                         });
 
                         const data = await response.json();
@@ -612,7 +606,7 @@
                             actualizarProgreso();
                             return data.url; 
                         } else {
-                            throw new Error(data.error || "Error al subir la imagen a R2");
+                            throw new Error(data.error || "Error al subir a R2");
                         }
                     }
                     return null;
@@ -635,7 +629,7 @@
                     }
                 }
 
-                // 3. Crear el documento final (por ahora se muestra en consola, aquí podrías integrar tu base de datos si usas una)
+                // 3. Crear el documento final (por ahora se muestra en consola)
                 const documentoFinal = {
                     ...datosCliente, 
                     paquete: "Básico",
