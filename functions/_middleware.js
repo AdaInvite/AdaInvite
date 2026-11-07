@@ -3,41 +3,48 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const userAgent = (request.headers.get("User-Agent") || "").toLowerCase();
 
-  // Detecta únicamente adainvite.com/XVRegina (sin importar mayúsculas o minúsculas)
+  // 1. Detecta únicamente adainvite.com/XVRegina
   const isReginaInvite = 
     url.pathname.toLowerCase() === "/xvregina" || 
     url.pathname.toLowerCase().startsWith("/xvregina/");
 
-  // Si es cualquier otra invitación de AdaInvite, pasa directo sin tocar nada
   if (!isReginaInvite) {
     return context.next();
   }
 
-  // Detecta si quien pide la vista previa es Instagram / Meta (y NO WhatsApp)
-  const isInstagramOrMetaBot = 
+  // 2. Detecta únicamente el crawler de vista previa de Instagram / Meta (NO el navegador interno ni WhatsApp)
+  const isInstagramPreviewBot = 
     (userAgent.includes("facebookexternalhit") || 
      userAgent.includes("facebot") || 
-     userAgent.includes("instagram")) && 
+     userAgent.includes("meta-externalagent")) && 
     !userAgent.includes("whatsapp");
 
   const response = await context.next();
 
-  // Si es XVRegina en Instagram, elimina la imagen de vista previa
-  if (isInstagramOrMetaBot) {
+  // 3. Si es el bot de vista previa de Instagram:
+  if (isInstagramPreviewBot) {
     return new HTMLRewriter()
-      .on('meta[property="og:image"]', {
+      // Quitamos el og:image original, el apple-touch-icon y el favicon para que no los use de respaldo
+      .on('meta[property="og:image"], link[rel="apple-touch-icon"], link[rel="icon"]', {
         element(element) {
           element.remove();
         }
       })
+      // Inyectamos un og:image vacío/inválido para que el bot NO escanee las fotos del <body> (sello, corona, separadores)
       .on('head', {
         element(element) {
-          element.append('<meta name="robots" content="max-image-preview:none">', { html: true });
+          element.append(
+            '<meta name="robots" content="max-image-preview:none">' +
+            '<meta property="og:image" content="https://adainvite.com/no-preview.png">' +
+            '<meta property="og:image:width" content="0">' +
+            '<meta property="og:image:height" content="0">',
+            { html: true }
+          );
         }
       })
       .transform(response);
   }
 
-  // En WhatsApp y navegadores normales, entrega el HTML original con su foto
+  // En WhatsApp y navegadores normales, entrega todo intacto
   return response;
 }
