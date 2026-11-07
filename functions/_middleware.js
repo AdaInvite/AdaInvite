@@ -19,24 +19,12 @@ export async function onRequest(context) {
      userAgent.includes("meta-externalagent")) && 
     !userAgent.includes("whatsapp");
 
-  const response = await context.next();
-
-  // 3. Si es el bot de vista previa de Instagram, quitamos título, metas og:, íconos e imágenes:
+  // 3. Si es el bot de vista previa de Instagram, devolvemos respuesta vacía (204)
+  // Esto evita cualquier cuadro gris, imagen, texto suelto o icono de carga
   if (isInstagramPreviewBot) {
-    return new HTMLRewriter()
-      .on('title, meta[property^="og:"], link[rel="apple-touch-icon"], link[rel="icon"], img', {
-        element(element) {
-          element.remove();
-        }
-      })
-      .on('head', {
-        element(element) {
-          element.append('<meta name="robots" content="max-image-preview:none, noindex">', { html: true });
-        }
-      })
-      .transform(response);
+    return new Response(null, { status: 204 });
   }
 
-  // En WhatsApp y cuando cualquier invitado abre el link, todo carga intacto
-  return response;
+  // En WhatsApp y cuando cualquier persona abre el link, carga la invitación intacta
+  return context.next();
 }
