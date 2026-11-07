@@ -21,18 +21,17 @@ export async function onRequest(context) {
 
   const response = await context.next();
 
-  // 3. Si es el bot de vista previa de Instagram, borramos toda referencia a imágenes:
+  // 3. Si es el bot de vista previa de Instagram, quitamos título, metas og:, íconos e imágenes:
   if (isInstagramPreviewBot) {
     return new HTMLRewriter()
-      // Quitamos og:image, favicons e imágenes del body para que no tenga de dónde agarrar fotos ni reserve el cuadro gris
-      .on('meta[property^="og:image"], link[rel="apple-touch-icon"], link[rel="icon"], img', {
+      .on('title, meta[property^="og:"], link[rel="apple-touch-icon"], link[rel="icon"], img', {
         element(element) {
           element.remove();
         }
       })
       .on('head', {
         element(element) {
-          element.append('<meta name="robots" content="max-image-preview:none">', { html: true });
+          element.append('<meta name="robots" content="max-image-preview:none, noindex">', { html: true });
         }
       })
       .transform(response);
