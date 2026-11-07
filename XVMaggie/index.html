@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="XV Maggie">
     <meta name="theme-color" content="#000000">
-    <meta property="og:title" content="Mis XV Maggie">
+    <meta property="og:title" content="Mis XV • Maggie">
     <meta property="og:description" content="Con el corazón lleno de ilusión te invito a celebrar mis XV años, un sueño hecho realidad.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://fotos.adainvite.com/PaqueteBasico/XVMaggiebautista/3270f340-3b5d-4d8e-8339-c955efd85eaa.jpg">
@@ -102,24 +102,30 @@
         body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 600; }
 
-        /* VIDEO ÚNICO FIJO EN EL FONDO (Optimizado para GPU y RAM) */
-        #global-video-bg {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%) translateZ(0);
-            width: 100%;
-            max-width: 480px;
-            height: 100svh;
-            object-fit: cover;
-            z-index: 0;
-            pointer-events: none;
-            will-change: transform;
+        /* Contenedor de sección con video que se mueve con el scroll (NO parallax) */
+        .con-video-fondo {
+            position: relative;
+            overflow: hidden;
+            background-color: #000000;
         }
 
-        /* Las secciones con video ahora son transparentes para dejar ver el video único fijo */
-        .con-video-fondo, .bg-padres, .bg-intercalado, .fondo-perla { 
-            background-color: transparent !important;
+        /* Video de fondo pegado a cada sección */
+        .section-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 1 !important;
+            pointer-events: none;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .bg-padres, .bg-intercalado, .fondo-perla { 
+            background-color: #000000;
             color: #FFFFFF;
             width: 100%;
             position: relative;
@@ -279,7 +285,6 @@
             pointer-events: none;
         }
 
-        /* Los separadores tienen fondo negro sólido y z-index mayor para cubrir el video al pasar */
         .separador-wrapper {
             width: 100%;
             min-height: 100svh;
@@ -288,7 +293,7 @@
             align-items: center;
             background-color: #000000;
             position: relative;
-            z-index: 3;
+            z-index: 2;
             overflow: hidden;
         }
         .separador-img { 
@@ -406,7 +411,7 @@
                                 <p class="text-sm font-bold mb-1">José Tomás Bautista Hernández</p>
                             </div>
                             <div>
-                                <h3 class="text-5xl mb-2 font-script titulo-beige text-shadow-light">Mis padrinos</h3>
+                                <h3 class="text-5xl mb-2 font-script titulo-beige text-shadow-light">Mis madrinas</h3>
                                 <p class="text-sm font-bold mb-1">Nancy Vanesa Bautista Hernández</p>
                                 <p class="text-sm mb-6 font-bold">Michelle Bautista Hernández</p>
                             </div>
@@ -455,10 +460,10 @@
                     </div>
                     
                     <div class="w-[90%] max-w-[420px] h-[200px] relative mx-auto overflow-hidden border border-beige/30 mb-6 shadow-xl rounded-lg bg-black/10 flex items-center justify-center">                
-                        <img src="https://i.imgur.com/UD9ttcu.jpeg" alt="Ubicación Recepción" class="absolute top-0 left-0 w-full h-full object-cover" loading="lazy" decoding="async">
+                        <img src="https://i.imgur.com/DHrzjBG.jpeg" alt="Ubicación Recepción" class="absolute top-0 left-0 w-full h-full object-cover" loading="lazy" decoding="async">
                     </div>
 
-                    <a href="https://maps.app.goo.gl/z7XSh5eRncVTAcDw8?g_st=ic" target="_blank" class="w-[180px] block mx-auto text-center bg-beige border border-beige text-terracota font-bold px-4 py-4 text-xs uppercase hover:bg-transparent hover:text-beige transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mb-2">Abrir en Maps</a>
+                    <a href="https://maps.app.goo.gl/wFg9DZzKWuT5SPQw6?g_st=ic" target="_blank" class="w-[180px] block mx-auto text-center bg-beige border border-beige text-terracota font-bold px-4 py-4 text-xs uppercase hover:bg-transparent hover:text-beige transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mb-2">Abrir en Maps</a>
                 </div>
             </section>
 
@@ -606,41 +611,54 @@
     </div>
 
     <script>
-        // INYECCIÓN DE UN ÚNICO VIDEO DE FONDO FIJO (Reduce consumo de RAM y GPU en un 85%)
+        // INYECCIÓN DEL VIDEO EN CADA SECCIÓN PERO SIN AUTOPLAY GLOBAL (Controlado por visibilidad)
         const rawVideoUrl = getComputedStyle(document.documentElement).getPropertyValue('--video-bg-url').trim().replace(/^['"]|['"]$/g, '');
-        const singleVid = document.createElement('video');
-        singleVid.id = 'global-video-bg';
-        singleVid.autoplay = true;
-        singleVid.loop = true;
-        singleVid.muted = true;
-        singleVid.playsInline = true;
-        singleVid.setAttribute('playsinline', '');
-        singleVid.setAttribute('preload', 'auto');
-        singleVid.innerHTML = `<source src="${rawVideoUrl}" type="video/mp4">`;
-        document.getElementById('mobile-wrapper').prepend(singleVid);
+        const allVideos = [];
 
-        // Pausar video si el usuario cambia de pestaña o bloquea el celular para ahorrar batería/recursos
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                singleVid.pause();
-            } else if (document.getElementById('section-main').style.display === 'block') {
-                singleVid.play().catch(() => {});
-            }
+        document.querySelectorAll('.con-video-fondo').forEach((section, index) => {
+            const vid = document.createElement('video');
+            vid.className = 'section-video-bg';
+            vid.autoplay = false; // Solo se reproduce cuando entra en pantalla
+            vid.loop = true;
+            vid.muted = true;
+            vid.playsInline = true;
+            vid.setAttribute('playsinline', '');
+            // Solo precargamos el primer video; los demás cargan metadatos ligeros
+            vid.setAttribute('preload', index === 0 ? 'auto' : 'metadata');
+            vid.src = rawVideoUrl;
+            section.prepend(vid);
+            allVideos.push(vid);
         });
+
+        // OBSERVADOR INTELIGENTE DE VIDEO: Reproduce solo el que está en pantalla y pausa el resto
+        let videoObserver;
+        function initVideoObserver() {
+            videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const vid = entry.target;
+                    if (entry.isIntersecting) {
+                        vid.play().catch(() => {});
+                    } else {
+                        vid.pause();
+                    }
+                });
+            }, { rootMargin: '100px 0px', threshold: 0.01 });
+
+            allVideos.forEach(vid => videoObserver.observe(vid));
+        }
 
         // MANEJO DEL SOBRE
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             initObserver();
+            initVideoObserver(); // Activa reproducción inteligente por sección
             playAudio(); 
-            
-            singleVid.play().catch(() => {});
 
             document.getElementById('envelope-wrapper').classList.add('open');
 
             setTimeout(() => {
                 const env = document.getElementById('envelope-wrapper');
-                if (env) env.remove(); // Elimina el sobre del DOM una vez abierto para liberar memoria gráfica
+                if (env) env.remove(); // Libera memoria gráfica del sobre al terminar de abrir
             }, 1800);
         }
 
@@ -737,7 +755,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // ANIMACIONES SCROLL (Desconecta cada elemento una vez animado para ahorrar CPU)
+        // ANIMACIONES SCROLL
         function initObserver() {
             const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
