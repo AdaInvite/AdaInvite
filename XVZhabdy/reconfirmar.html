@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconfirmar Asistencia • XV Zhabdy</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Reconfirmación • Mis XV Zhabdy">
+    <meta property="og:description" content="Faltan 10 días para mis XV años. Por favor ayúdame reconfirmando tu asistencia.">
+    <meta property="og:image" content="https://i.imgur.com/vQFOIEt.jpeg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracota: '#1A1A1A',
+                        beige: '#D8C3A5'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-elegant: 'Unna', serif;
+            --font-script: 'Pinyon Script', cursive;
+            --beige: #D8C3A5;
+        }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-elegant);
+            background-color: #111111; color: #FFFFFF;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #app-wrapper {
+            width: 100%; max-width: 480px; height: 100dvh;
+            position: relative; background-color: #000000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow-y: auto; overflow-x: hidden;
+        }
+        .font-script { font-family: var(--font-script) !important; }
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(216, 195, 165, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        .video-background-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 1; pointer-events: none;
+        }
+        .video-background-container video {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.45;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-wrapper">
+        <div class="video-background-container">
+            <video autoplay loop muted playsinline>
+                <source src="https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FFondoazulfloresnegro.MP4?alt=media&token=e46ba342-15ab-4c2a-9781-3383dce31410" type="video/mp4">
+            </video>
+        </div>
+
+        <main class="relative z-10 min-h-full flex flex-col justify-center items-center px-5 py-10 text-center">
+            <img src="https://i.imgur.com/Tytmpkd.png" alt="Corona" class="w-24 mb-2 drop-shadow-md">
+            <p class="text-sm uppercase tracking-widest text-beige font-bold">Mis XV Años</p>
+            <h1 class="text-6xl font-script text-white mb-2">Zhabdy</h1>
+            <p class="text-xs uppercase tracking-widest text-white/80 font-bold mb-6">04 • Diciembre • 2026 | 5:00 PM</p>
+
+            <div class="glass-card w-full p-6 text-center">
+                <h2 class="text-4xl font-script text-beige mb-2">Reconfirmar Asistencia</h2>
+                <p class="text-sm text-white/90 mb-6 leading-relaxed">
+                    ¡Faltan solo unos días para celebrar juntos! Por favor ayúdame reconfirmando tu asistencia y los pases que utilizarás.
+                </p>
+
+                <!-- Cargando -->
+                <div id="loader" class="py-8 flex flex-col items-center justify-center">
+                    <div class="w-10 h-10 border-4 border-beige border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p class="text-xs uppercase tracking-widest text-beige font-bold">Cargando tu invitación...</p>
+                </div>
+
+                <!-- Formulario automático con el nombre leído de la URL -->
+                <div id="formReconfirmar" class="hidden space-y-6 text-left">
+                    
+                    <div id="alertaLimite" class="hidden bg-black/80 border border-beige/60 rounded-xl p-3 text-center">
+                        <p id="alertaLimiteTexto" class="text-beige text-sm font-bold"></p>
+                    </div>
+
+                    <div class="border-b border-beige/50 pb-2">
+                        <label class="text-xs uppercase text-beige font-bold tracking-widest block text-center">Invitado / Familia</label>
+                        <input type="text" id="recName" required class="w-full bg-transparent py-2 outline-none text-2xl text-white font-bold text-center capitalize">
+                    </div>
+
+                    <div>
+                        <p class="text-xs uppercase text-beige/90 font-bold tracking-widest text-center mb-3">Confirma cuántos asistirán:</p>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="border-b border-beige/50 pb-2 text-center">
+                                <label class="text-xs uppercase text-beige font-bold tracking-widest">Adultos</label>
+                                <input type="number" id="recAdults" min="0" value="0" class="w-full bg-transparent py-1 outline-none text-2xl text-white font-bold text-center">
+                            </div>
+                            <div class="border-b border-beige/50 pb-2 text-center">
+                                <label class="text-xs uppercase text-beige font-bold tracking-widest">Niños</label>
+                                <input type="number" id="recKids" min="0" value="0" class="w-full bg-transparent py-1 outline-none text-2xl text-white font-bold text-center">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <button type="button" onclick="guardarReconfirmacion('reconfirmado')" class="w-full bg-beige text-black font-bold py-3.5 px-6 uppercase text-xs rounded-xl tracking-widest shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                           ¡Sí, reconfirmo que asistiremos!
+                        </button>
+                        <button type="button" onclick="guardarReconfirmacion('cancelado')" class="w-full bg-transparent border border-red-400/40 text-red-300 font-bold py-3 px-6 uppercase text-xs rounded-xl tracking-widest hover:bg-red-500/10 active:scale-95 transition-all">
+                            No podremos asistir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mensaje Final -->
+                <div id="resultadoFinal" class="hidden mt-4"></div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBfOoalLZWJmJtIqOXT28djcf2sJWWhTTE",
+          authDomain: "xv-marcela.firebaseapp.com",
+          projectId: "xv-marcela",
+          storageBucket: "xv-marcela.firebasestorage.app",
+          messagingSenderId: "378572984549",
+          appId: "1:378572984549:web:75d1ad755acfbe0354440c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let docIdExistente = null;
+        let folioExistente = null;
+        let maxPasesPermitidos = undefined;
+
+        const params = new URLSearchParams(window.location.search);
+        const nombreUrl = params.get('n');
+        const pasesUrl = params.get('pases');
+
+        const inputName = document.getElementById('recName');
+        const inputAdults = document.getElementById('recAdults');
+        const inputKids = document.getElementById('recKids');
+
+        if (pasesUrl) {
+            maxPasesPermitidos = parseInt(pasesUrl, 10);
+        }
+
+        // Validación en tiempo real para que no pongan más pases de los asignados
+        function validarLimite(e) {
+            if (maxPasesPermitidos !== undefined && !isNaN(maxPasesPermitidos)) {
+                const ad = parseInt(inputAdults.value) || 0;
+                const ni = parseInt(inputKids.value) || 0;
+                const alerta = document.getElementById('alertaLimite');
+                const alertaTxt = document.getElementById('alertaLimiteTexto');
+
+                if (ad + ni > maxPasesPermitidos) {
+                    alertaTxt.innerText = `Cuentas con un máximo de ${maxPasesPermitidos} pases asignados.`;
+                    alerta.classList.remove('hidden');
+                    if (e.target.id === 'recAdults') {
+                        inputAdults.value = Math.max(0, maxPasesPermitidos - ni);
+                    } else {
+                        inputKids.value = Math.max(0, maxPasesPermitidos - ad);
+                    }
+                } else {
+                    alerta.classList.add('hidden');
+                }
+            }
+        }
+
+        inputAdults.addEventListener('input', validarLimite);
+        inputKids.addEventListener('input', validarLimite);
+
+        // Al abrir la página, lee automáticamente el nombre de la URL y busca sus datos en Firebase
+        async function inicializarAutomatico() {
+            const loader = document.getElementById('loader');
+            const form = document.getElementById('formReconfirmar');
+
+            if (nombreUrl) {
+                inputName.value = nombreUrl;
+                inputName.readOnly = true;
+                inputName.classList.add('cursor-not-allowed', 'opacity-90');
+
+                try {
+                    const q = query(collection(db, "confirmaciones_zhabdy"), where("nombre_lower", "==", nombreUrl.trim().toLowerCase()));
+                    const snap = await getDocs(q);
+
+                    if (!snap.empty) {
+                        const docSnap = snap.docs[0];
+                        docIdExistente = docSnap.id;
+                        const data = docSnap.data();
+                        folioExistente = data.folio;
+
+                        // Precargamos los adultos y niños que había puesto en su 1ra confirmación
+                        inputAdults.value = data.adultos || 0;
+                        inputKids.value = data.ninos || 0;
+
+                        if (!maxPasesPermitidos && data.totalPases) {
+                            maxPasesPermitidos = data.totalPases;
+                        }
+                    } else if (maxPasesPermitidos) {
+                        inputAdults.value = maxPasesPermitidos;
+                        inputKids.value = 0;
+                    }
+                } catch (e) {
+                    console.error("Error leyendo datos previos:", e);
+                }
+            }
+
+            loader.classList.add('hidden');
+            form.classList.remove('hidden');
+        }
+
+        inicializarAutomatico();
+
+        window.guardarReconfirmacion = async (estado) => {
+            const nombreFinal = inputName.value.trim();
+            if (!nombreFinal) {
+                alert("Por favor ingresa tu nombre.");
+                return;
+            }
+
+            const adultos = parseInt(inputAdults.value) || 0;
+            const ninos = parseInt(inputKids.value) || 0;
+            const nuevoTotal = estado === 'cancelado' ? 0 : (adultos + ninos);
+
+            if (estado === 'reconfirmado' && nuevoTotal === 0) {
+                alert("Por favor indica al menos 1 asistente para reconfirmar.");
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            const form = document.getElementById('formReconfirmar');
+            form.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            try {
+                // Si no teníamos el ID cargado (porque entró sin URL), verificamos por nombre
+                if (!docIdExistente) {
+                    const q = query(collection(db, "confirmaciones_zhabdy"), where("nombre_lower", "==", nombreFinal.toLowerCase()));
+                    const snap = await getDocs(q);
+                    if (!snap.empty) {
+                        docIdExistente = snap.docs[0].id;
+                        folioExistente = snap.docs[0].data().folio;
+                    }
+                }
+
+                if (docIdExistente) {
+                    // Actualiza el registro existente marcándolo como Reconfirmado
+                    await updateDoc(doc(db, "confirmaciones_zhabdy", docIdExistente), {
+                        adultos: estado === 'cancelado' ? 0 : adultos,
+                        ninos: estado === 'cancelado' ? 0 : ninos,
+                        totalPases: nuevoTotal,
+                        reconfirmado: estado === 'reconfirmado',
+                        estado_reconfirmacion: estado,
+                        fecha_reconfirmacion: serverTimestamp()
+                    });
+                } else {
+                    // Si por algo no había confirmado la primera vez, lo crea y ya lo deja reconfirmado
+                    folioExistente = "XV-ZHABDY-" + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                    await addDoc(collection(db, "confirmaciones_zhabdy"), {
+                        nombre: nombreFinal,
+                        nombre_lower: nombreFinal.toLowerCase(),
+                        adultos: estado === 'cancelado' ? 0 : adultos,
+                        ninos: estado === 'cancelado' ? 0 : ninos,
+                        totalPases: nuevoTotal,
+                        folio: folioExistente,
+                        reconfirmado: estado === 'reconfirmado',
+                        estado_reconfirmacion: estado,
+                        fecha: serverTimestamp(),
+                        fecha_reconfirmacion: serverTimestamp()
+                    });
+                }
+
+                loader.classList.add('hidden');
+                const resDiv = document.getElementById('resultadoFinal');
+                resDiv.classList.remove('hidden');
+
+                if (estado === 'reconfirmado') {
+                    resDiv.innerHTML = `
+                        <div class="p-6 bg-black/70 border border-beige/40 rounded-3xl text-center space-y-3">
+                            <p class="text-beige font-bold text-2xl">¡Asistencia Reconfirmada!</p>
+                            <p class="text-white/90 text-base">Muchas gracias, <b class="capitalize">${nombreFinal}</b>. Tus <b>${nuevoTotal} pases</b> han quedado reconfirmados para el 04 de Diciembre.</p>
+                            <div class="pt-3 border-t border-beige/20">
+                                <p class="text-xs uppercase text-beige tracking-widest font-bold">Folio de acceso: ${folioExistente || '-'}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resDiv.innerHTML = `
+                        <div class="p-6 bg-black/70 border border-white/20 rounded-3xl text-center">
+                            <p class="text-beige font-bold text-xl mb-2">Registro Actualizado</p>
+                            <p class="text-white/80 text-sm">Gracias por avisarnos con tiempo. Hemos actualizado tu registro en el sistema.</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Ocurrió un error al guardar tu confirmación. Intenta nuevamente.");
+                loader.classList.add('hidden');
+                form.classList.remove('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
