@@ -6,7 +6,7 @@
     <title>Panel • XV Zhabdy</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/Logo%20AdaInvite%20Negro.png">
     <meta name="theme-color" content="#9B8AA5">
-     <link rel="apple-touch-icon" href="https://i.imgur.com/bV9bZLx.png">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/bV9bZLx.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,8 +37,6 @@
         :root { --primary-color: #9B8AA5; --surface-color: #FAF9FB; --text-color: #3D3542; --white: #FFFFFF; }
         input:focus, textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(155, 138, 165, 0.2); }
         .info-label { color: var(--primary-color); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Ocultar barra de scroll para vista más limpia en móvil */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
@@ -59,112 +57,211 @@
             </div>
         </nav>
 
-        <section class="pt-20 pb-12 px-4 max-w-lg mx-auto space-y-8">
+        <section class="pt-20 pb-12 px-4 max-w-lg mx-auto space-y-6">
             
-            <div class="text-center mt-4">
+            <div class="text-center mt-2">
                 <h2 class="font-dancing text-5xl mb-2 text-primary">Panel de Control</h2>
                 <p class="text-xs uppercase tracking-widest font-bold text-gray-500">XV Años • Zhabdy</p>
             </div>
 
-            <!-- SECCIÓN 1: GENERADOR DE PASES -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                <h3 class="info-label mb-4 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4"></i> Generar Enlace de Invitado</h3>
+            <!-- PESTAÑAS SUPERIORES PARA CAMBIAR DE PANTALLA -->
+            <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-gray-200 flex gap-1">
+                <button id="btn-vista-normal" onclick="cambiarPantalla('normal')" class="flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all bg-primary text-white shadow-sm flex items-center justify-center gap-1.5">
+                    <i data-lucide="users" class="w-4 h-4"></i> Confirmados
+                </button>
+                <button id="btn-vista-reconf" onclick="cambiarPantalla('reconfirmacion')" class="flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all text-gray-500 hover:bg-gray-50 flex items-center justify-center gap-1.5">
+                    <i data-lucide="list-checks" class="w-4 h-4"></i> Ir a Reconfirmación
+                </button>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- PANTALLA 1: VISTA ORIGINAL (IDÉNTICA AL INICIO)                     -->
+            <!-- =================================================================== -->
+            <div id="pantalla-normal" class="space-y-8">
                 
-                <div class="space-y-4">
-                    <div>
-                        <input type="text" id="inputFamilia" placeholder="Nombre (Ej. Familia Perez)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                <!-- SECCIÓN 1: GENERADOR DE PASES -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <h3 class="info-label mb-4 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4"></i> Generar Enlace de Invitado</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <input type="text" id="inputFamilia" placeholder="Nombre (Ej. Familia Perez)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                        </div>
+                        <div>
+                            <input type="tel" id="inputPases" placeholder="Cantidad de Pases (Ej. 4)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                        </div>
+                        <button onclick="generarLink()" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95">
+                            Generar Enlace
+                        </button>
                     </div>
-                    <div>
-                        <input type="tel" id="inputPases" placeholder="Cantidad de Pases (Ej. 4)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
-                    </div>
-                    <button onclick="generarLink()" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95">
-                        Generar Enlace
-                    </button>
-                </div>
 
-                <!-- Resultado Generador -->
-                <div id="resultadoContainer" class="hidden mt-5 pt-5 border-t border-gray-100">
-                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-2">Mensaje generado:</p>
-                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-3 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto" id="linkGenerado"></div>
-                    <button onclick="copiarLink()" id="btnCopiar" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors active:scale-95">
-                        <i data-lucide="copy" class="w-4 h-4"></i>Copia y pega en WhatsApp
-                    </button>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 2: ESTADÍSTICAS -->
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-3 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Confirmados</p>
-                    <p class="text-4xl font-bold text-primary" id="stat-total">-</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-1 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Adultos</p>
-                    <p class="text-2xl font-bold text-gray-800" id="stat-adultos">-</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-2 sm:col-span-1">
-                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Niños</p>
-                    <p class="text-2xl font-bold text-gray-800" id="stat-ninos">-</p>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 3: LISTA DE ASISTENCIA (Estilo Tarjetas App) -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                <div class="flex justify-between items-center mb-5">
-                    <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Asistencia</h3>
-                    <div class="flex items-center gap-2">
-                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 listados</span>
-                        <button onclick="descargarCSV()" class="p-1.5 bg-gray-50 rounded-full text-primary hover:bg-gray-100 transition-colors" title="Descargar Lista">
-                            <i data-lucide="download" class="w-4 h-4"></i>
+                    <div id="resultadoContainer" class="hidden mt-5 pt-5 border-t border-gray-100">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-2">Mensaje generado:</p>
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-3 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto" id="linkGenerado"></div>
+                        <button onclick="copiarLink()" id="btnCopiar" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors active:scale-95">
+                            <i data-lucide="copy" class="w-4 h-4"></i>Copia y pega en WhatsApp
                         </button>
                     </div>
                 </div>
 
-                <!-- Buscador -->
-                <div class="mb-4 relative">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" id="buscador" placeholder="Buscar por nombre o folio..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm transition-all text-gray-700 focus:bg-white focus:border-primary">
-                </div>
-
-                <div id="listaAsistencia" class="space-y-3">
-                    <!-- Esqueleto de Carga -->
-                    <div class="py-10 text-center text-gray-400">
-                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-primary"></i>
-                        <p class="text-xs uppercase tracking-widest font-bold">Cargando datos...</p>
+                <!-- SECCIÓN 2: ESTADÍSTICAS ORIGINALES -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-3 sm:col-span-1">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Total Confirmados</p>
+                        <p class="text-4xl font-bold text-primary" id="stat-total">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-1 sm:col-span-1">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Adultos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="stat-adultos">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center col-span-2 sm:col-span-1">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Niños</p>
+                        <p class="text-2xl font-bold text-gray-800" id="stat-ninos">-</p>
                     </div>
                 </div>
+
+                <!-- SECCIÓN 3: LISTA DE ASISTENCIA ORIGINAL -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-5">
+                        <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Asistencia</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 listados</span>
+                            <button onclick="descargarCSV()" class="p-1.5 bg-gray-50 rounded-full text-primary hover:bg-gray-100 transition-colors" title="Descargar Lista">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="buscador" placeholder="Buscar por nombre o folio..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm transition-all text-gray-700 focus:bg-white focus:border-primary">
+                    </div>
+
+                    <div id="listaAsistencia" class="space-y-3">
+                        <div class="py-10 text-center text-gray-400">
+                            <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-primary"></i>
+                            <p class="text-xs uppercase tracking-widest font-bold">Cargando datos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- PANTALLA 2: PESTAÑA DE RECONFIRMACIÓN (LIMPIA SIN MEMORIA LOCAL)     -->
+            <!-- =================================================================== -->
+            <div id="pantalla-reconfirmacion" class="hidden space-y-6">
+
+                <!-- TARJETA DE PROGRESO Y ESTADÍSTICAS DE RECONFIRMACIÓN -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 space-y-4">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-widest text-primary font-bold">Avance de Reconfirmación</p>
+                            <h3 class="text-lg font-bold text-gray-800 mt-0.5" id="texto-progreso-familias">0 de 0 familias</h3>
+                        </div>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full" id="porcentaje-progreso">0%</span>
+                    </div>
+
+                    <!-- Barra de progreso -->
+                    <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+                        <div id="barra-progreso-reconf" class="bg-green-500 h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+
+                    <!-- Contadores de pases reconfirmados -->
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100 text-center">
+                        <div class="bg-green-50/60 p-3 rounded-2xl border border-green-100">
+                            <p class="text-[9px] uppercase tracking-wider text-green-700 font-bold">Pases Reconf.</p>
+                            <p class="text-2xl font-bold text-green-600 mt-0.5" id="stat-reconf-total">0</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <p class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Adultos</p>
+                            <p class="text-xl font-bold text-gray-800 mt-0.5" id="stat-reconf-adultos">0</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <p class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Niños</p>
+                            <p class="text-xl font-bold text-gray-800 mt-0.5" id="stat-reconf-ninos">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PASO 1: ENVIAR ENLACE POR INVITADO -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="info-label flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i> 1. Enviar enlace por invitado
+                        </h3>
+                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full" id="contador-por-enviar">0 pendientes</span>
+                    </div>
+
+                    <p class="text-xs text-gray-500 mb-4 leading-relaxed">
+                        Toca el botón de cada invitado para ver su mensaje personalizado y copiarlo para enviarlo por WhatsApp.
+                    </p>
+
+                    <div class="mb-4 relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="buscadorReconf" placeholder="Buscar invitado..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm transition-all text-gray-700 focus:bg-white focus:border-primary">
+                    </div>
+
+                    <!-- Lista de tarjetas pendientes de reconfirmar -->
+                    <div id="listaUnoPorUno" class="space-y-3"></div>
+                </div>
+
+                <!-- PASO 2: LISTA DE LOS YA RECONFIRMARON -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-green-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-green-700 flex items-center gap-2">
+                            <i data-lucide="check-check" class="w-4 h-4"></i> 2. Invitados que ya Reconfirmaron
+                        </h3>
+                        <span class="bg-green-50 text-green-700 border border-green-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full" id="contador-ya-reconf">0 listos</span>
+                    </div>
+                    <div id="listaYaReconfirmados" class="space-y-2.5"></div>
+                </div>
+
             </div>
             
         </section>
     </div>
 
-    <!-- MODAL PERSONALIZADO (POPUP) -->
+    <!-- MODAL PERSONALIZADO -->
     <div id="customModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-        <!-- Overlay oscuro borroso -->
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeModal(false)"></div>
-        <!-- Contenido Modal -->
         <div class="relative bg-white p-6 rounded-3xl shadow-2xl w-[85%] max-w-sm transform scale-95 transition-transform duration-300" id="modalContentBox">
-            <div id="modalIconContainer" class="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4">
-                <!-- Icono dinámico aquí -->
-            </div>
+            <div id="modalIconContainer" class="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4"></div>
             <h3 id="modalTitle" class="text-lg font-bold text-center text-gray-800 mb-2 font-sans">Título</h3>
             <p id="modalMessage" class="text-sm text-center text-gray-500 mb-6 font-sans leading-relaxed">Mensaje descriptivo</p>
-            <div id="modalButtons" class="flex gap-3 justify-center">
-                <!-- Botones dinámicos aquí -->
-            </div>
+            <div id="modalButtons" class="flex gap-3 justify-center"></div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        // --- SISTEMA DE MODALES PERSONALIZADOS ---
+        // --- CAMBIAR ENTRE PANTALLA 1 Y PANTALLA 2 ---
+        window.cambiarPantalla = (modo) => {
+            const pNormal = document.getElementById('pantalla-normal');
+            const pReconf = document.getElementById('pantalla-reconfirmacion');
+            const btnNormal = document.getElementById('btn-vista-normal');
+            const btnReconf = document.getElementById('btn-vista-reconf');
+
+            if (modo === 'normal') {
+                pNormal.classList.remove('hidden');
+                pReconf.classList.add('hidden');
+                btnNormal.className = "flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all bg-primary text-white shadow-sm flex items-center justify-center gap-1.5";
+                btnReconf.className = "flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all text-gray-500 hover:bg-gray-50 flex items-center justify-center gap-1.5";
+            } else {
+                pNormal.classList.add('hidden');
+                pReconf.classList.remove('hidden');
+                btnReconf.className = "flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all bg-primary text-white shadow-sm flex items-center justify-center gap-1.5";
+                btnNormal.className = "flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all text-gray-500 hover:bg-gray-50 flex items-center justify-center gap-1.5";
+            }
+            lucide.createIcons();
+        };
+
+        // --- MODALES ---
         let modalResolve = null;
 
         function showModal({ type = 'info', title, message, showCancel = false, confirmText = 'Aceptar' }) {
             return new Promise((resolve) => {
                 modalResolve = resolve;
-                
                 const modal = document.getElementById('customModal');
                 const box = document.getElementById('modalContentBox');
                 const titleEl = document.getElementById('modalTitle');
@@ -175,7 +272,6 @@
                 titleEl.textContent = title;
                 messageEl.textContent = message;
                 
-                // Configurar el ícono y colores según el tipo de modal
                 if (type === 'danger') {
                     iconEl.className = 'mx-auto w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4 text-red-500';
                     iconEl.innerHTML = '<i data-lucide="trash-2" class="w-7 h-7"></i>';
@@ -187,18 +283,14 @@
                     iconEl.innerHTML = '<i data-lucide="info" class="w-7 h-7"></i>';
                 }
                 
-                // Generar los botones
                 buttonsEl.innerHTML = '';
                 if (showCancel) {
                     buttonsEl.innerHTML += `<button onclick="closeModal(false)" class="flex-1 px-4 py-3 bg-gray-100 text-gray-600 rounded-xl font-bold text-[11px] uppercase tracking-wider hover:bg-gray-200 transition-colors active:scale-95">Cancelar</button>`;
                 }
-                
                 const btnColorClass = type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-opacity-90';
                 buttonsEl.innerHTML += `<button onclick="closeModal(true)" class="flex-1 px-4 py-3 ${btnColorClass} text-white rounded-xl font-bold text-[11px] uppercase tracking-wider transition-colors active:scale-95">${confirmText}</button>`;
                 
                 lucide.createIcons();
-                
-                // Animación de entrada
                 modal.classList.remove('hidden');
                 setTimeout(() => {
                     modal.classList.remove('opacity-0');
@@ -210,24 +302,20 @@
         function closeModal(result) {
             const modal = document.getElementById('customModal');
             const box = document.getElementById('modalContentBox');
-            
-            // Animación de salida
             modal.classList.add('opacity-0');
             box.classList.add('scale-95');
-            
             setTimeout(() => {
                 modal.classList.add('hidden');
                 if (modalResolve) {
                     modalResolve(result);
-                    modalResolve = null; // Limpiar para el siguiente uso
+                    modalResolve = null;
                 }
-            }, 300); // Tiempo de la transición CSS
+            }, 300);
         }
 
-
-        // --- LÓGICA DEL GENERADOR DE PASES ---
-        // Ajusta esta URL a la ruta final de tu invitación de Zhabdy
+        // --- ENLACES ---
         const URL_BASE_INVITACION = "https://adainvite.com/XVZhabdy/"; 
+        const URL_RECONFIRMACION = "https://adainvite.com/XVZhabdy/reconfirmar";
         let textoCompleto = "";
 
         async function generarLink() {
@@ -244,8 +332,7 @@
             }
             
             const linkFinal = `${URL_BASE_INVITACION}?n=${encodeURIComponent(familia)}&pases=${pases}`;
-            textoCompleto = `${linkFinal}
-¡Hola! Se acerca mi gran día y me haría muchísima ilusión que me acompañaras a celebrar mis XV Años.\n\nTe comparto el enlace con todos los detalles de mi fiesta. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
+            textoCompleto = `${linkFinal}\n¡Hola! Se acerca mi gran día y me haría muchísima ilusión que me acompañaras a celebrar mis XV Años.\n\nTe comparto el enlace con todos los detalles de mi fiesta. Por favor ayúdame a confirmar tu asistencia en el botón que viene ahí mismo.`;
             
             document.getElementById('linkGenerado').innerText = textoCompleto;
             document.getElementById('resultadoContainer').classList.remove('hidden');
@@ -260,7 +347,6 @@
             textArea.value = textoCompleto;
             document.body.appendChild(textArea);
             textArea.select();
-            
             try {
                 document.execCommand('copy');
                 const btn = document.getElementById('btnCopiar');
@@ -268,25 +354,62 @@
                 btn.classList.replace('text-primary', 'text-green-600');
                 btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado con éxito`;
                 lucide.createIcons();
-                
                 setTimeout(() => {
                     btn.classList.replace('border-green-500', 'border-primary');
                     btn.classList.replace('text-green-600', 'text-primary');
                     btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
                     lucide.createIcons();
                 }, 3000);
-            } catch (err) {
-                await showModal({ 
-                    type: 'warning', 
-                    title: 'Error al copiar', 
-                    message: 'No se pudo copiar el texto a tu portapapeles.' 
-                });
-            }
+            } catch (err) {}
             document.body.removeChild(textArea);
         }
+
+        // --- ABRIR Y COPIAR MENSAJE (SIN ALMACENAR ESTADO EN LOCALSTORAGE) ---
+        window.abrirMensajeReconfirmar = (id, nombre, pases) => {
+            const linkRec = `${URL_RECONFIRMACION}?n=${encodeURIComponent(nombre)}&pases=${pases}`;
+            const mensaje = `${linkRec}\n¡Hola ${nombre}!\nFaltan solo unos días para mis XV Años y estamos afinando los últimos detalles de recepción.\n\n¿Me ayudas entrando al enlace de arriba para reconfirmar tu asistencia? ¡Muchas gracias!`;
+
+            const container = document.getElementById(`reconf-box-${id}`);
+            const textDiv = document.getElementById(`reconf-msg-${id}`);
+            const btnAbrir = document.getElementById(`btn-abrir-reconf-${id}`);
+
+            if (container && textDiv) {
+                textDiv.innerText = mensaje;
+                container.classList.remove('hidden');
+                if (btnAbrir) btnAbrir.classList.add('hidden');
+                lucide.createIcons();
+            }
+        };
+
+        window.copiarMensajeLimpio = async (id) => {
+            const textDiv = document.getElementById(`reconf-msg-${id}`);
+            const btn = document.getElementById(`btn-copy-reconf-${id}`);
+            if (!textDiv || !btn) return;
+
+            const textArea = document.createElement("textarea");
+            textArea.value = textDiv.innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+
+                btn.classList.replace('border-primary', 'border-green-500');
+                btn.classList.replace('text-primary', 'text-green-600');
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado con éxito`;
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    btn.classList.replace('border-green-500', 'border-primary');
+                    btn.classList.replace('text-green-600', 'text-primary');
+                    btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp`;
+                    lucide.createIcons();
+                }, 3000);
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        };
     </script>
 
-    <!-- --- LÓGICA DE FIREBASE PARA TARJETAS EN TIEMPO REAL --- -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -303,8 +426,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 1. ESCUCHAR CONFIRMACIONES EN VIVO ---
-        // Conectado a la colección de la invitación de Zhabdy
         const confirmacionesRef = collection(db, "confirmaciones_zhabdy");
         const q = query(confirmacionesRef, orderBy("fecha", "desc"));
 
@@ -314,7 +435,8 @@
             listaInvitadosGlobal = [];
             
             if(snapshot.empty) {
-                renderizarLista([]);
+                renderizarListaOriginal([]);
+                renderizarPestanaReconfirmacion([]);
                 return;
             }
 
@@ -327,32 +449,37 @@
                     adultos: parseInt(data.adultos) || 0,
                     ninos: parseInt(data.ninos) || 0,
                     totalPersona: parseInt(data.totalPases) || (parseInt(data.adultos) || 0) + (parseInt(data.ninos) || 0),
-                    fecha: data.fecha ? data.fecha.toDate() : null
+                    reconfirmado: data.reconfirmado === true || data.estado_reconfirmacion === 'reconfirmado',
+                    estadoReconfirmacion: data.estado_reconfirmacion || 'pendiente',
+                    fecha: data.fecha ? data.fecha.toDate() : null,
+                    fechaReconfirmacion: data.fecha_reconfirmacion ? data.fecha_reconfirmacion.toDate() : null
                 });
             });
 
-            renderizarLista(listaInvitadosGlobal);
-        }, (error) => {
-            console.error("Error cargando asistencias:", error);
-            document.getElementById('listaAsistencia').innerHTML = `
-                <div class="py-8 text-center text-red-400">
-                    <p class="text-sm font-bold">Error al conectar con la base de datos.</p>
-                </div>
-            `;
+            renderizarListaOriginal(listaInvitadosGlobal);
+            renderizarPestanaReconfirmacion(listaInvitadosGlobal);
         });
 
-        // --- FUNCIONES DE LA TABLA Y BUSCADOR ---
-        const inputBuscador = document.getElementById('buscador');
-        inputBuscador.addEventListener('input', (e) => {
+        document.getElementById('buscador').addEventListener('input', (e) => {
             const termino = e.target.value.toLowerCase();
             const filtrados = listaInvitadosGlobal.filter(inv => 
                 inv.nombre.toLowerCase().includes(termino) || 
                 inv.folio.toLowerCase().includes(termino)
             );
-            renderizarLista(filtrados, false);
+            renderizarListaOriginal(filtrados, false);
         });
 
-        function renderizarLista(lista, actualizarStats = true) {
+        document.getElementById('buscadorReconf').addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const filtrados = listaInvitadosGlobal.filter(inv => 
+                inv.nombre.toLowerCase().includes(termino) || 
+                inv.folio.toLowerCase().includes(termino)
+            );
+            renderizarPestanaReconfirmacion(filtrados, false);
+        });
+
+        // --- PANTALLA 1: ORIGINAL ---
+        function renderizarListaOriginal(lista, actualizarStats = true) {
             let totalFamilias = 0;
             let totalAdultos = 0;
             let totalNinos = 0;
@@ -385,21 +512,21 @@
                     fechaFormateada = inv.fecha.toLocaleDateString('es-MX', opciones);
                 }
 
+                const nombreEscapado = inv.nombre.replace(/'/g, "\\'");
+
                 htmlTarjetas += `
                     <div class="p-4 border border-gray-100 rounded-2xl bg-white flex flex-col gap-2 relative overflow-hidden group hover:shadow-md transition-shadow" id="tarjeta-${inv.id}">
                         <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
                         
-                        <!-- Acciones: Editar y Eliminar -->
                         <div class="absolute top-2 right-2 flex gap-1 z-10" id="acciones-${inv.id}">
                             <button onclick="toggleEdicion('${inv.id}')" class="bg-blue-50 text-blue-500 p-1.5 rounded-lg hover:bg-blue-100 transition-colors shadow-sm" title="Editar pases">
                                 <i data-lucide="pencil" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="eliminarRegistro('${inv.id}', '${inv.nombre}')" class="bg-red-50 text-red-500 p-1.5 rounded-lg hover:bg-red-100 transition-colors shadow-sm" title="Eliminar registro">
+                            <button onclick="eliminarRegistro('${inv.id}', '${nombreEscapado}')" class="bg-red-50 text-red-500 p-1.5 rounded-lg hover:bg-red-100 transition-colors shadow-sm" title="Eliminar registro">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
 
-                        <!-- VISTA NORMAL -->
                         <div id="vista-${inv.id}">
                             <div class="flex justify-between items-start pl-2 pr-16">
                                 <div>
@@ -420,10 +547,8 @@
                             </div>
                         </div>
 
-                        <!-- VISTA EDICIÓN (Oculta por defecto) -->
                         <div id="edicion-${inv.id}" class="hidden pl-2 pr-2">
                             <p class="font-bold text-gray-800 text-sm capitalize leading-tight mb-3">${inv.nombre}</p>
-                            
                             <div class="flex gap-3 mb-3">
                                 <div class="flex-1">
                                     <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Adultos</label>
@@ -434,7 +559,6 @@
                                     <input type="number" id="edit-ni-${inv.id}" value="${inv.ninos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
                                 </div>
                             </div>
-
                             <div class="flex justify-end gap-2 border-t border-gray-50 pt-3">
                                 <button onclick="toggleEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancelar</button>
                                 <button onclick="guardarEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-white bg-primary rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-1">
@@ -451,6 +575,105 @@
             lucide.createIcons();
         }
 
+        // --- PANTALLA 2: RECONFIRMACIÓN LIMPIA ---
+        function renderizarPestanaReconfirmacion(lista, actualizarStats = true) {
+            let reconfFamilias = 0;
+            let reconfPases = 0;
+            let reconfAdultos = 0;
+            let reconfNinos = 0;
+            let pendientesPorReconfirmar = 0;
+
+            let htmlYaReconfirmados = '';
+            let htmlPendientes = '';
+
+            lista.forEach(inv => {
+                const nombreEscapado = inv.nombre.replace(/'/g, "\\'");
+
+                if (inv.reconfirmado) {
+                    reconfFamilias++;
+                    reconfPases += inv.totalPersona;
+                    reconfAdultos += inv.adultos;
+                    reconfNinos += inv.ninos;
+
+                    htmlYaReconfirmados += `
+                        <div class="p-3.5 border border-green-200 rounded-2xl bg-green-50/40 flex justify-between items-center relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-green-500"></div>
+                            <div class="pl-2">
+                                <p class="font-bold text-gray-800 text-sm capitalize flex items-center gap-1.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-600"></i> ${inv.nombre}
+                                </p>
+                                <p class="text-[10px] font-bold text-gray-500 uppercase mt-0.5 pl-5">${inv.adultos} Adultos | ${inv.ninos} Niños</p>
+                            </div>
+                            <div class="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-sm">
+                                ${inv.totalPersona}
+                            </div>
+                        </div>
+                    `;
+                } else if (inv.estadoReconfirmacion !== 'cancelado') {
+                    pendientesPorReconfirmar++;
+
+                    htmlPendientes += `
+                        <div class="p-4 border border-gray-100 rounded-2xl bg-white relative overflow-hidden shadow-sm transition-all">
+                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+                            
+                            <div class="flex justify-between items-start pl-2">
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm capitalize">${inv.nombre}</p>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-0.5">${inv.adultos} Adultos | ${inv.ninos} Niños</p>
+                                </div>
+                                <div class="bg-primary text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs">
+                                    ${inv.totalPersona}
+                                </div>
+                            </div>
+
+                            <div class="mt-3 pt-2.5 border-t border-gray-100 pl-2">
+                                <button id="btn-abrir-reconf-${inv.id}" onclick="abrirMensajeReconfirmar('${inv.id}', '${nombreEscapado}', ${inv.totalPersona})" class="w-full bg-primary text-white font-bold py-2.5 px-3 rounded-xl uppercase tracking-wider text-[10px] hover:bg-opacity-90 transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
+                                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar enlace para reconfirmar
+                                </button>
+
+                                <div id="reconf-box-${inv.id}" class="hidden mt-2">
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-1.5">Mensaje generado para ${inv.nombre}:</p>
+                                    <div id="reconf-msg-${inv.id}" class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-2.5 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto"></div>
+                                    <button id="btn-copy-reconf-${inv.id}" onclick="copiarMensajeLimpio('${inv.id}')" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors active:scale-95">
+                                        <i data-lucide="copy" class="w-4 h-4"></i> Copia y pega en WhatsApp
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('listaUnoPorUno').innerHTML = htmlPendientes || `
+                <div class="py-6 text-center text-gray-400">
+                    <p class="text-xs uppercase tracking-widest font-bold">¡Todos los invitados ya reconfirmaron!</p>
+                </div>
+            `;
+
+            document.getElementById('listaYaReconfirmados').innerHTML = htmlYaReconfirmados || `
+                <div class="py-6 text-center text-gray-400">
+                    <p class="text-xs uppercase tracking-widest font-bold">Aún nadie ha reconfirmado</p>
+                </div>
+            `;
+
+            if (actualizarStats) {
+                const totalActivos = listaInvitadosGlobal.filter(i => i.estadoReconfirmacion !== 'cancelado').length;
+                const porcentaje = totalActivos > 0 ? Math.round((reconfFamilias / totalActivos) * 100) : 0;
+
+                document.getElementById('texto-progreso-familias').innerText = `${reconfFamilias} de ${totalActivos} familias reconfirmadas`;
+                document.getElementById('porcentaje-progreso').innerText = `${porcentaje}%`;
+                document.getElementById('barra-progreso-reconf').style.width = `${porcentaje}%`;
+
+                document.getElementById('stat-reconf-total').innerText = reconfPases;
+                document.getElementById('stat-reconf-adultos').innerText = reconfAdultos;
+                document.getElementById('stat-reconf-ninos').innerText = reconfNinos;
+                document.getElementById('contador-por-enviar').innerText = `${pendientesPorReconfirmar} pendientes`;
+                document.getElementById('contador-ya-reconf').innerText = `${reconfFamilias} listos`;
+            }
+
+            lucide.createIcons();
+        }
+
         function actualizarEstadisticas(fam, ad, ni, tot) {
             document.getElementById('stat-total').innerText = tot;
             document.getElementById('stat-adultos').innerText = ad;
@@ -458,24 +681,16 @@
             document.getElementById('contador-tarjetas').innerText = fam + " confirmados";
         }
 
-        // --- 3. EXPORTAR A CSV ---
         window.descargarCSV = async () => {
-            if(listaInvitadosGlobal.length === 0) {
-                await showModal({ 
-                    type: 'info', 
-                    title: 'Lista vacía', 
-                    message: 'Aún no hay invitados confirmados para exportar.' 
-                });
-                return;
-            }
-            
+            if(listaInvitadosGlobal.length === 0) return;
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Folio,Nombre,Adultos,Ninos,Total Asistentes,Fecha\n";
+            csvContent += "Folio,Nombre,Adultos,Ninos,Total Asistentes,Reconfirmado,Fecha\n";
             
             listaInvitadosGlobal.forEach(inv => {
                 let fecha = inv.fecha ? inv.fecha.toLocaleString('es-MX') : "";
                 let nombreLimpio = inv.nombre.replace(/,/g, " "); 
-                csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${fecha}\n`;
+                let reconfTxt = inv.reconfirmado ? "Si" : "Pendiente";
+                csvContent += `${inv.folio},${nombreLimpio},${inv.adultos},${inv.ninos},${inv.totalPersona},${reconfTxt},${fecha}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
@@ -487,73 +702,34 @@
             document.body.removeChild(link);
         };
 
-        // --- 4. FUNCIONES DE EDICIÓN Y ELIMINACIÓN ---
-        
         window.toggleEdicion = (id) => {
-            const vista = document.getElementById(`vista-${id}`);
-            const edicion = document.getElementById(`edicion-${id}`);
-            const acciones = document.getElementById(`acciones-${id}`);
-            
-            if (vista.classList.contains('hidden')) {
-                vista.classList.remove('hidden');
-                edicion.classList.add('hidden');
-                acciones.classList.remove('hidden');
-            } else {
-                vista.classList.add('hidden');
-                edicion.classList.remove('hidden');
-                acciones.classList.add('hidden');
-            }
+            document.getElementById(`vista-${id}`).classList.toggle('hidden');
+            document.getElementById(`edicion-${id}`).classList.toggle('hidden');
+            document.getElementById(`acciones-${id}`).classList.toggle('hidden');
         };
 
         window.guardarEdicion = async (id) => {
-            const adInput = document.getElementById(`edit-ad-${id}`).value;
-            const niInput = document.getElementById(`edit-ni-${id}`).value;
-            
-            const adultosNum = parseInt(adInput) || 0;
-            const ninosNum = parseInt(niInput) || 0;
-            const total = adultosNum + ninosNum;
-
-            try {
-                // Actualizado para apuntar a la colección de Zhabdy
-                await updateDoc(doc(db, "confirmaciones_zhabdy", id), {
-                    adultos: adultosNum,
-                    ninos: ninosNum,
-                    totalPases: total
-                });
-            } catch (error) {
-                console.error("Error actualizando documento: ", error);
-                await showModal({ 
-                    type: 'warning', 
-                    title: 'Error de conexión', 
-                    message: 'Ocurrió un error al intentar guardar los cambios.' 
-                });
-            }
+            const adultosNum = parseInt(document.getElementById(`edit-ad-${id}`).value) || 0;
+            const ninosNum = parseInt(document.getElementById(`edit-ni-${id}`).value) || 0;
+            await updateDoc(doc(db, "confirmaciones_zhabdy", id), {
+                adultos: adultosNum,
+                ninos: ninosNum,
+                totalPases: adultosNum + ninosNum
+            });
         };
 
         window.eliminarRegistro = async (id, nombre) => {
             const confirmacion = await showModal({
                 type: 'danger',
                 title: 'Eliminar Registro',
-                message: `¿Estás seguro de que deseas eliminar la asistencia de: ${nombre}? \nEsta acción no se puede deshacer.`,
+                message: `¿Estás seguro de que deseas eliminar la asistencia de: ${nombre}?`,
                 showCancel: true,
                 confirmText: 'Sí, eliminar'
             });
-
             if (confirmacion) {
-                try {
-                    // Actualizado para apuntar a la colección de Zhabdy
-                    await deleteDoc(doc(db, "confirmaciones_zhabdy", id));
-                } catch (error) {
-                    console.error("Error eliminando documento: ", error);
-                    await showModal({ 
-                        type: 'warning', 
-                        title: 'Error', 
-                        message: 'Ocurrió un error al intentar eliminar el registro.' 
-                    });
-                }
+                await deleteDoc(doc(db, "confirmaciones_zhabdy", id));
             }
         };
-
     </script>
 </body>
 </html>
