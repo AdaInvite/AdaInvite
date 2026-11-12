@@ -81,30 +81,40 @@
         body, p, span, input, select { font-weight: 400; }
         .font-bold, h3, label { font-weight: 600; }
 
-        /* VIDEO POR SECCIÓN Y DIFUMINADO BEIGE */
-        .seccion-con-video {
-            position: relative;
-            overflow: hidden;
-            background-color: var(--beige-fondo);
-        }
-
-        .section-video-bg {
-            position: absolute;
+        /* VIDEO GLOBAL OPTIMIZADO Y DIFUMINADO BEIGE POR SECCIÓN */
+        #global-video-container {
+            position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100lvh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background-color: var(--beige-fondo);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        #global-video-bg {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 0;
-            pointer-events: none;
+            transform: translateZ(0);
         }
 
-        .section-video-overlay {
+        .global-video-overlay {
             position: absolute;
             inset: 0;
             background: rgba(255, 250, 240, 0.25);
             z-index: 1;
             pointer-events: none;
+        }
+
+        .seccion-con-video {
+            position: relative;
+            overflow: hidden;
+            background-color: transparent;
         }
 
         .section-fade-top {
@@ -145,6 +155,7 @@
             color: var(--terracota);
             position: relative;
             z-index: 10;
+            transform: translateZ(0);
         }
 
         /* FORMA OVALADA CON EFECTO GLASSMORPHISM CLARO/DORADO */
@@ -170,6 +181,7 @@
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: none;
+            transform: translateZ(0);
         }
         .forma-ovalada::-webkit-scrollbar { display: none; }
 
@@ -283,8 +295,9 @@
             background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(139, 101, 8, 0.35);
             backdrop-filter: blur(8px); border-radius: 16px; overflow: hidden;
             transition: transform 0.4s ease; margin-bottom: 10px;
+            transform: translateZ(0);
         }
-        .chambelan-card:hover { transform: translateY(-5px); }
+        .chambelan-card:hover { transform: translateY(-5px) translateZ(0); }
 
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -321,6 +334,7 @@
             border: 2px dashed rgba(139, 101, 8, 0.45);
             background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-radius: 24px;
             display: flex;
             flex-direction: column;
@@ -331,6 +345,7 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            transform: translateZ(0);
         }
         
         input[type=range] {
@@ -619,7 +634,6 @@
                     <div class="relative inline-block w-full max-w-[260px] mx-auto">
                         <button onclick="toggleCalendarMenu()" class="w-full bg-terracota text-white px-8 py-4 rounded-xl text-[11px] uppercase font-bold shadow-md hover:bg-transparent hover:text-terracota border border-terracota transition-all duration-300 flex items-center justify-center gap-2 active:scale-95">
                             Agendar en Calendario
-                         
                         </button>
                         
                         <div id="calendar-dropdown" class="hidden flex-col gap-2 mt-2 w-full glass-card p-2 shadow-xl border border-terracota/30 transition-all duration-300">
@@ -879,8 +893,6 @@
                             Ir a Mesa de Regalos
                         </a>
                     </div>
-
-                  
                 </div>
             </div>
         </section>
@@ -968,15 +980,17 @@
         // VARIABLE GLOBAL DE PASES
         window.maxPasesGlobal = undefined;
 
-        // INYECTAR VIDEO DE FONDO Y DIFUMINADO BEIGE EN CADA SECCIÓN
+        // INYECTAR UN SOLO VIDEO GLOBAL Y DIFUMINADOS EN CADA SECCIÓN
         const VIDEO_URL = "https://firebasestorage.googleapis.com/v0/b/adainvite-app.firebasestorage.app/o/assets%2Ffondos%2FDORADO.MP4?alt=media&token=81e8d155-dd42-403b-b6db-44c243f418d6";
 
         function initSectionVideos() {
-            const sections = document.querySelectorAll('.seccion-con-video');
-            sections.forEach(sec => {
-                if (sec.querySelector('.section-video-bg')) return;
+            // 1. Crear el video único de fondo si no existe
+            if (!document.getElementById('global-video-container')) {
+                const videoContainer = document.createElement('div');
+                videoContainer.id = 'global-video-container';
 
                 const video = document.createElement('video');
+                video.id = 'global-video-bg';
                 video.src = VIDEO_URL;
                 video.autoplay = true;
                 video.loop = true;
@@ -985,10 +999,20 @@
                 video.setAttribute('playsinline', '');
                 video.setAttribute('webkit-playsinline', '');
                 video.preload = "auto";
-                video.className = "section-video-bg";
+                video.disablePictureInPicture = true;
 
                 const overlay = document.createElement('div');
-                overlay.className = "section-video-overlay";
+                overlay.className = 'global-video-overlay';
+
+                videoContainer.appendChild(video);
+                videoContainer.appendChild(overlay);
+                document.body.insertBefore(videoContainer, document.body.firstChild);
+            }
+
+            // 2. Agregar solo los difuminados beige a cada sección (sin duplicar videos)
+            const sections = document.querySelectorAll('.seccion-con-video');
+            sections.forEach(sec => {
+                if (sec.querySelector('.section-fade-top')) return;
 
                 const fadeTop = document.createElement('div');
                 fadeTop.className = "section-fade-top";
@@ -998,30 +1022,12 @@
 
                 sec.insertBefore(fadeBottom, sec.firstChild);
                 sec.insertBefore(fadeTop, sec.firstChild);
-                sec.insertBefore(overlay, sec.firstChild);
-                sec.insertBefore(video, sec.firstChild);
             });
-
-            // Reproducir/pausar según visibilidad para fluidez en móviles
-            const videoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const vid = entry.target.querySelector('.section-video-bg');
-                    if (vid) {
-                        if (entry.isIntersecting) {
-                            vid.play().catch(() => {});
-                        } else {
-                            vid.pause();
-                        }
-                    }
-                });
-            }, { threshold: 0.05 });
-
-            sections.forEach(sec => videoObserver.observe(sec));
         }
 
         document.addEventListener('DOMContentLoaded', initSectionVideos);
 
-        // MANEJO DEL SOBRE
+        // MANEJO DEL SOBRE OPTIMIZADO
         function openEnvelope() {
             document.getElementById('section-main').style.display = 'block';
             initSectionVideos();
@@ -1030,9 +1036,11 @@
             loadQuestion();
             playAudio(); 
 
-            document.querySelectorAll('.section-video-bg').forEach(vid => {
-                vid.play().catch(() => {});
-            });
+            // Reproducir únicamente el video global
+            const globalVid = document.getElementById('global-video-bg');
+            if (globalVid && globalVid.paused) {
+                globalVid.play().catch(() => {});
+            }
 
             document.getElementById('envelope-wrapper').classList.add('open');
 
@@ -1139,18 +1147,18 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // MENÚ DESPLEGABLE DE CALENDARIO
+        // MENÚ DESPLEGABLE DE CALENDARIO (CORREGIDO)
         function toggleCalendarMenu() {
             const dropdown = document.getElementById('calendar-dropdown');
             const chevron = document.getElementById('calendar-chevron');
             if (dropdown.classList.contains('hidden')) {
                 dropdown.classList.remove('hidden');
                 dropdown.classList.add('flex');
-                chevron.classList.add('rotate-180');
+                if (chevron) chevron.classList.add('rotate-180');
             } else {
                 dropdown.classList.add('hidden');
                 dropdown.classList.remove('flex');
-                chevron.classList.remove('rotate-180');
+                if (chevron) chevron.classList.remove('rotate-180');
             }
         }
 
