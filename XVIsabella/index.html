@@ -11,10 +11,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="XV Isabella">
     <meta name="theme-color" content="#D4AF37">
-    <meta property="og:title" content="Mis XV Isabella">
+    <meta property="og:title" content="Mis • XV Isabella">
     <meta property="og:description" content="Hay sueños que florecen, momentos que se vuelven eternos y recuerdos que vivirán por siempre en el corazón.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://i.imgur.com/4L3718P.jpeg">
    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -144,7 +144,7 @@
             width: 100%;
         }
 
-        /* EFECTO REPRODUCTOR DE MÚSICA Y TARJETAS */
+        /* EFECTO TARJETAS */
         .glass-card {
             background-color: rgba(255, 255, 255, 0.15); 
             backdrop-filter: blur(12px); 
@@ -156,6 +156,20 @@
             position: relative;
             z-index: 10;
             transform: translateZ(0);
+        }
+
+        /* REPRODUCTOR DISCO DE VINILO GIRATORIO */
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .vinyl-Record {
+            animation: spinVinyl 9s linear infinite;
+            animation-play-state: paused;
+            will-change: transform;
+        }
+        .vinyl-Record.spinning {
+            animation-play-state: running;
         }
 
         /* FORMA OVALADA CON EFECTO GLASSMORPHISM CLARO/DORADO */
@@ -187,6 +201,7 @@
 
         .text-shadow-dark { text-shadow: 0px 2px 10px rgba(255,255,255,0.9); }
         .text-shadow-light { text-shadow: 0px 2px 8px rgba(255, 255, 255, 0.85); }
+        .text-shadow-footer { text-shadow: 0px 4px 14px rgba(0, 0, 0, 0.85); }
         .text-shadow-none { text-shadow: none; }
 
         /* SOBRE INICIAL */
@@ -247,7 +262,7 @@
         }
 
         /* Sliders */
-        .slider-historia, .chambelanes-slider { 
+        .slider-historia { 
             display: flex; 
             overflow-x: auto; 
             scroll-snap-type: x mandatory; 
@@ -258,7 +273,7 @@
             width: 95%; 
             align-self: stretch;
         }
-        .slider-historia::-webkit-scrollbar, .chambelanes-slider::-webkit-scrollbar { display: none; }
+        .slider-historia::-webkit-scrollbar { display: none; }
         
         .tarjeta-nueva {
             flex: 0 0 85%; 
@@ -290,15 +305,6 @@
       
         .info-historia { width: 100%; text-align: center; margin-top: 8px; color: var(--terracota); }
 
-        .chambelan-card {
-            flex: 0 0 300px; scroll-snap-align: center;
-            background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(139, 101, 8, 0.35);
-            backdrop-filter: blur(8px); border-radius: 16px; overflow: hidden;
-            transition: transform 0.4s ease; margin-bottom: 10px;
-            transform: translateZ(0);
-        }
-        .chambelan-card:hover { transform: translateY(-5px) translateZ(0); }
-
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -319,40 +325,22 @@
             z-index: 15 !important;
         }
 
+        /* SEPARADORES FIJOS A ANCHO DE PANTALLA Y SIN BORDES */
         .separador-wrapper {
             width: 100%;
-            min-height: 60svh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 1rem;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            border: none;
         }
-        .separador-placeholder {
-            width: 90%;
-            max-width: 480px;
-            min-height: 55svh;
-            border: 2px dashed rgba(139, 101, 8, 0.45);
-            background: rgba(255, 255, 255, 0.45);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--terracota);
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-            transform: translateZ(0);
-        }
-        
-        input[type=range] {
-            -webkit-appearance: none; background: rgba(61, 43, 31, 0.25); border-radius: 8px; height: 4px; outline: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--terracota); cursor: pointer;
+        .separador-img {
+            width: 100%;
+            height: auto;
+            max-height: 85svh;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            border: none;
         }
 
         input[type=number]::-webkit-inner-spin-button, 
@@ -399,15 +387,15 @@
 
             <div class="relative z-10 w-full flex-grow flex flex-col justify-center items-center px-4 text-center mt-12 md:mt-20">
                 <div class="reveal-scale active text-center flex flex-col items-center justify-center relative w-full">
-                    <h2 class="font-bold text-3xl text-terracota mb-2 text-shadow-light">Mis XV</h2>
-                    <img src="https://i.imgur.com/ICDnWXq.png" alt="Corona" class="w-28 mb-4 relative z-10 drop-shadow-sm">
-                    <h1 class="font-script text-8xl text-terracota mb-8 relative z-10 text-shadow-light">Isabella</h1>
+                    <h2 class="font-bold text-2xl text-terracota mb-2 text-shadow-light">Mis XV</h2>
+                    <img src="https://i.imgur.com/ICDnWXq.png" alt="Corona" class="w-32 mb-4 relative z-10 drop-shadow-sm">
+                    <h1 class="font-script text-8xl text-terracota mb-6 relative z-10 text-shadow-light">Isabella</h1>
                     
                     <div class="flex items-center justify-center w-full max-w-[320px] mx-auto mt-6 px-2 relative z-10">
                         <div class="flex-1 flex justify-center items-center border-t border-b border-terracota/50 py-2">
                             <span class="text-lg md:text-xl font-bold font-elegant uppercase text-terracota">Dic</span>
                         </div>
-                        <span class="text-[4rem] md:text-[4.5rem] leading-none font-numbers font-bold text-terracota mx-4 text-shadow-light">05</span>
+                        <span class="text-[4rem] md:text-[4.5rem] leading-none font-numbers font-bold text-terracota mx-4">05</span>
                         <div class="flex-1 flex justify-center items-center border-t border-b border-terracota/50 py-2">
                             <span class="text-lg md:text-xl font-bold font-elegant text-terracota">2026</span>
                         </div>
@@ -434,112 +422,175 @@
             </div>
         </header>
 
-        <!-- SEPARADOR 1 (PENDIENTE - SIN CORONA) -->
-        <div class="separador-wrapper seccion-con-video reveal-scale">
-            <div class="separador-placeholder">
-                <p class="text-sm font-bold uppercase tracking-widest opacity-80">Fotografía Separador 1</p>
-                <p class="text-xs opacity-60 mt-1">(Espacio reservado)</p>
-            </div>
+        <!-- SEPARADOR 1 (FIJO SIN EFECTO DE APARICIÓN) -->
+        <div class="separador-wrapper seccion-con-video">
+            <img src="https://i.imgur.com/yRAU8ty.jpeg" alt="Separador 1" class="separador-img">
         </div>
 
-        <!-- PADRES Y MÚSICA -->
+        <!-- PADRES Y MÚSICA (CON REPRODUCTOR ESTILO VINILO GIRATORIO) -->
         <section class="seccion-con-video min-h-[100svh] flex flex-col justify-center py-12 px-6 text-center relative bg-padres">
             <img src="https://i.imgur.com/xrVu4iE.png" class="absolute top-0 right-0 w-36 md:w-36 z-0 pointer-events-none transform rotate-180" alt="deco">
             <img src="https://i.imgur.com/xrVu4iE.png" class="absolute bottom-0 left-0 w-36 md:w-36 z-0 pointer-events-none" alt="deco">
 
             <div class="max-w-4xl mx-auto reveal relative z-10 text-terracota w-full flex flex-col h-full flex-grow justify-center">
                 
-                <div class="w-full max-w-[260px] z-100 mx-auto glass-card p-3 mb-8 reveal-scale">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span id="current-time" class="text-xs font-numbers font-bold w-8 text-left opacity-80">0:00</span>
-                        <input type="range" id="progress-bar" class="w-full flex-grow cursor-pointer" value="0" min="0" max="100" step="1">
-                        <span id="duration-time" class="text-xs font-numbers font-bold w-8 text-right opacity-80">-0:00</span>
-                    </div>
+             <!-- REPRODUCTOR VINILO DORADO ANTIGUO (TONO HOJAS) -->
+<div class="mx-auto mb-8 flex flex-col items-center justify-center relative z-20">
+    <button onclick="toggleAudio()" aria-label="Reproducir o pausar música" class="relative w-40 h-40 md:w-44 md:h-44 rounded-full flex items-center justify-center focus:outline-none group active:scale-95 transition-transform duration-300 shadow-[0_12px_30px_rgba(61,43,31,0.35)]">
+        
+        <!-- Disco que gira -->
+        <div id="vinyl-disc" class="w-full h-full rounded-full vinyl-Record">
+            <svg viewBox="0 0 200 200" class="w-full h-full overflow-visible">
+                <defs>
+                    <!-- Gradiente Dorado Antiguo / Champaña (Idéntico a las hojas) -->
+                    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#E8D39E"/>
+                        <stop offset="28%" stop-color="#B8934A"/>
+                        <stop offset="52%" stop-color="#856322"/>
+                        <stop offset="78%" stop-color="#C9A862"/>
+                        <stop offset="100%" stop-color="#5E4312"/>
+                    </linearGradient>
+                    <!-- Gradiente Cuerpo del Vinilo (Bronce/Café Oscuro) -->
+                    <radialGradient id="vinylSurface" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#3E3222"/>
+                        <stop offset="65%" stop-color="#2B2216"/>
+                        <stop offset="95%" stop-color="#1C160E"/>
+                        <stop offset="100%" stop-color="#140F0A"/>
+                    </radialGradient>
+                    <!-- Brillo diagonal suave en tono champaña -->
+                    <linearGradient id="vinylSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+                        <stop offset="45%" stop-color="rgba(232,211,158,0.03)"/>
+                        <stop offset="50%" stop-color="rgba(232,211,158,0.16)"/>
+                        <stop offset="55%" stop-color="rgba(232,211,158,0.03)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </linearGradient>
+                    <filter id="goldShadow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#000000" flood-opacity="0.55"/>
+                    </filter>
+                </defs>
 
-                    <div class="flex items-center justify-center gap-6">
-                        <button class="text-terracota hover:opacity-70 transition-colors opacity-80 focus:outline-none"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-                        <button onclick="toggleAudio()" class="w-9 h-9 bg-terracota text-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-md focus:outline-none">
-                            <svg id="icon-play" class="w-5 h-5 ml-0.5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            <svg id="icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                        </button>
-                        <button class="text-terracota hover:opacity-70 transition-colors opacity-80 focus:outline-none"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-                    </div>
-                </div>
+                <!-- Aro exterior dorado hoja y fondo del vinilo -->
+                <circle cx="100" cy="100" r="96" fill="url(#vinylSurface)" stroke="url(#goldBorder)" stroke-width="5"/>
+                <circle cx="100" cy="100" r="93" fill="url(#vinylSheen)"/>
+
+                <!-- Surcos del vinilo en tono bronce tenue -->
+                <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(184,147,74,0.16)" stroke-width="0.7"/>
+                <circle cx="100" cy="100" r="83" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="1"/>
+                <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(184,147,74,0.14)" stroke-width="0.6"/>
+                <circle cx="100" cy="100" r="73" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="0.9"/>
+                <circle cx="100" cy="100" r="68" fill="none" stroke="rgba(184,147,74,0.18)" stroke-width="0.6"/>
+                <circle cx="100" cy="100" r="63" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="0.8"/>
+                <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(184,147,74,0.15)" stroke-width="0.6"/>
+                <circle cx="100" cy="100" r="53" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"/>
+
+                <!-- Pentagrama ondulado -->
+                <g stroke="url(#goldBorder)" stroke-width="1.1" fill="none" opacity="0.9" filter="url(#goldShadow)">
+                    <path d="M 12 96 Q 55 72, 100 96 T 188 96" />
+                    <path d="M 10 103 Q 55 79, 100 103 T 190 103" />
+                    <path d="M 10 110 Q 55 86, 100 110 T 190 110" />
+                    <path d="M 12 117 Q 55 93, 100 117 T 188 117" />
+                </g>
+
+                <!-- Clave de Sol y notas izquierda -->
+                <g filter="url(#goldShadow)" fill="url(#goldBorder)">
+                    <text x="20" y="122" font-size="52" font-family="serif" fill="url(#goldBorder)">&#119070;</text>
+                    <ellipse cx="62" cy="88" rx="4.5" ry="3.2" transform="rotate(-20 62 88)"/>
+                    <path d="M 65.5 88 L 65.5 71 Q 71 74, 72 80" stroke="url(#goldBorder)" stroke-width="1.8" fill="none"/>
+                </g>
+
+                <!-- Notas musicales derecha -->
+                <g filter="url(#goldShadow)">
+                    <ellipse cx="142" cy="122" rx="5" ry="3.6" transform="rotate(-18 142 122)" fill="url(#goldBorder)"/>
+                    <ellipse cx="156" cy="117" rx="5" ry="3.6" transform="rotate(-18 156 117)" fill="url(#goldBorder)"/>
+                    <path d="M 146 121 L 146 100 L 160 95 L 160 116" stroke="url(#goldBorder)" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+                    <path d="M 146 105 L 160 100" stroke="url(#goldBorder)" stroke-width="2" fill="none"/>
+                    
+                    <ellipse cx="166" cy="136" rx="4.2" ry="3" transform="rotate(-18 166 136)" fill="url(#goldBorder)"/>
+                    <path d="M 169.5 135 L 169.5 119 Q 175 122, 175 128" stroke="url(#goldBorder)" stroke-width="1.6" fill="none"/>
+                </g>
+
+                <!-- Etiqueta central color perla con doble anillo dorado antiguo -->
+                <circle cx="100" cy="100" r="39" fill="#F8F3E6" stroke="url(#goldBorder)" stroke-width="4" filter="url(#goldShadow)"/>
+                <circle cx="100" cy="100" r="34" fill="none" stroke="url(#goldBorder)" stroke-width="1" opacity="0.75"/>
+            </svg>
+        </div>
+
+        <!-- Botón Play / Pause fijo en el centro con borde dorado hoja -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <!-- Ícono Play -->
+            <svg id="icon-play" class="w-9 h-9 ml-1.5 hidden drop-shadow" viewBox="0 0 24 24">
+                <polygon points="6,4 20,12 6,20" fill="#3D2B1F" stroke="#B8934A" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <!-- Ícono Pause -->
+            <svg id="icon-pause" class="w-9 h-9 drop-shadow" viewBox="0 0 24 24">
+                <rect x="6" y="5" width="4.5" height="14" rx="1" fill="#3D2B1F" stroke="#B8934A" stroke-width="1.3"/>
+                <rect x="13.5" y="5" width="4.5" height="14" rx="1" fill="#3D2B1F" stroke="#B8934A" stroke-width="1.3"/>
+            </svg>
+        </div>
+    </button>
+</div>
+
                 
-                <div class="glass-card p-6 md:p-10 max-w-xl mx-auto">
-                    <p class="text-base text-terracota leading-relaxed font-bold mb-8 px-2">
+                <div class="glass-card p-4 max-w-xl mx-auto">
+                    <p class="text-lg text-terracota leading-relaxed font-bold mb-8 px-2">
                         “Hay sueños que florecen, momentos que se vuelven eternos y recuerdos que vivirán por siempre en el corazón.”
                     </p>
                     
-                    <div class="grid gap-8 text-terracota">
+                    <div class="grid gap-6 text-terracota">
                         <div>
                             <h3 class="text-5xl mb-2 font-script text-terracota">Mis Padres</h3>
-                            <p class="text-sm font-bold mb-1">César González</p>
-                            <p class="text-sm font-bold">Angeles Flores</p>
+                            <p class="text-base font-bold mb-1">César González</p>
+                            
+                             <h3 class="text-2xl mb-2 font-script text-terracota">&</h3>   <p class="text-base font-bold">Angeles Flores</p>
                         </div>
                         <div>
                             <h3 class="text-5xl mb-2 font-script text-terracota">Mis Padrinos</h3>
-                            <p class="text-sm font-bold mb-1">Jair González</p>
-                            <p class="text-sm font-bold">Paola Medina</p>
+                            <p class="text-base font-bold mb-1">Jair González</p>  <h3 class="text-2xl mb-2 font-script text-terracota">&</h3>
+                            <p class="text-base font-bold">Paola Medina</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CORTE DE HONOR (PENDIENTE - SIN CORONA) -->
-        <section class="seccion-con-video min-h-[85svh] flex flex-col justify-center px-6 fondo-perla overflow-hidden relative">
-            <div class="max-w-6xl mx-auto w-full reveal relative z-10 py-10">
-                <div class="text-center mb-4">
-                    <h2 class="text-6xl font-script text-terracota text-shadow-light">Corte de Honor</h2>
-                </div>
-                
-                <div class="chambelanes-slider px-2 justify-center">
-                    <div class="chambelan-card shadow-xl">
-                        <div class="h-[340px] overflow-hidden relative flex flex-col items-center justify-center bg-white/50 border-b border-terracota/20 p-6 text-center">
-                            <span class="text-xs font-bold uppercase opacity-70">Fotografía Pendiente</span>
-                        </div>
-                        <div class="p-4 text-center">
-                            <h4 class="text-xl text-terracota font-bold">Por confirmar</h4>
-                            <p class="text-[10px] text-terracota/70 uppercase mt-1 font-bold">Corte de Honor</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-center text-terracota/80 text-[10px] uppercase font-bold mt-2">Espacio reservado para Corte de Honor</p>
-            </div>
-        </section>
-
-        <!-- HISTORIA / TARJETAS (PENDIENTE - SIN CORONA) -->
+        <!-- HISTORIA / TARJETAS -->
         <section class="seccion-con-video min-h-[100svh] flex flex-col justify-center items-center py-12 px-2 fondo-perla relative overflow-hidden">
             <div class="forma-ovalada w-full mx-auto relative z-10 text-center">
                 <div class="text-center reveal w-full">
                     <h2 class="text-6xl mb-1 font-script text-terracota reveal-scale text-shadow-light">Mi Historia</h2>
-                    <p class="text-sm uppercase font-bold opacity-90 text-terracota mt-2">Un viaje inolvidable</p>
+                    <p class="text-sm uppercase font-bold opacity-90 text-terracota">Un viaje inolvidable</p>
                 </div>
 
                 <div id="historia-container" class="slider-historia"> 
                     <div class="tarjeta-nueva">
-                        <div class="img-historia flex flex-col items-center justify-center bg-white/60 border border-dashed border-terracota/30">
-                            <span class="text-xs font-bold opacity-70">Foto 1 Pendiente</span>
-                        </div>
+                        <img src="https://i.imgur.com/zCFzz76.jpeg" alt="Historia 1" class="img-historia">
                         <div class="info-historia">
-                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">Historia pendiente por agregar.</p>
+                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">Once upon a dream...</p>
                         </div>
                     </div>
                     <div class="tarjeta-nueva">
-                        <div class="img-historia flex flex-col items-center justify-center bg-white/60 border border-dashed border-terracota/30">
-                            <span class="text-xs font-bold opacity-70">Foto 2 Pendiente</span>
-                        </div>
+                        <img src="https://i.imgur.com/XgP7WbR.jpeg" alt="Historia 2" class="img-historia">
                         <div class="info-historia">
-                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">Historia pendiente por agregar.</p>
+                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">A little girl, a beautiful story.</p>
                         </div>
                     </div>
                     <div class="tarjeta-nueva">
-                        <div class="img-historia flex flex-col items-center justify-center bg-white/60 border border-dashed border-terracota/30">
-                            <span class="text-xs font-bold opacity-70">Foto 3 Pendiente</span>
-                        </div>
+                        <img src="https://i.imgur.com/0d3VzLo.jpeg" alt="Historia 3" class="img-historia">
                         <div class="info-historia">
-                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">Historia pendiente por agregar.</p>
+                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">And suddenly, fifteen.</p>
+                        </div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/0YZuL5f.jpeg" alt="Historia 4" class="img-historia">
+                        <div class="info-historia">
+                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">A night made of magic. A dream I will cherish forever.</p>
+                        </div>
+                    </div>
+                    <div class="tarjeta-nueva">
+                        <img src="https://i.imgur.com/9ayXOVz.jpeg" alt="Historia 5" class="img-historia">
+                        <div class="info-historia">
+                            <p class="text-[13px] mt-2 font-bold leading-relaxed px-2">Will you be part of my story?</p>
                         </div>
                     </div>
                 </div>
@@ -547,12 +598,9 @@
             </div>
         </section>
         
-        <!-- SEPARADOR 2 (PENDIENTE - SIN CORONA) -->
-        <div class="separador-wrapper seccion-con-video reveal-scale">
-            <div class="separador-placeholder">
-                <p class="text-sm font-bold uppercase tracking-widest opacity-80">Fotografía Separador 2</p>
-                <p class="text-xs opacity-60 mt-1">(Espacio reservado)</p>
-            </div>
+        <!-- SEPARADOR 2 (FIJO SIN EFECTO DE APARICIÓN) -->
+        <div class="separador-wrapper seccion-con-video">
+            <img src="https://i.imgur.com/5cGvMBd.jpeg" alt="Separador 2" class="separador-img">
         </div>
 
         <!-- CEREMONIA (Ovalado - ÍCONO SIN FILTRO) -->
@@ -566,8 +614,8 @@
                     <p class="text-terracota font-bold text-base">Parroquia de Nuestra Señora del Refugio</p>
                 </div>
                 
-                <div class="w-[90%] max-w-[420px] h-[220px] relative mx-auto overflow-hidden border border-terracota/30 mb-6 shadow-xl rounded-lg bg-black/10 flex items-center justify-center">
-                    <img src="https://i.imgur.com/cVnsUjz.jpeg" alt="Ubicación Ceremonia" class="absolute top-0 left-0 w-full h-full object-cover">
+                <div class="w-[90%] max-w-[420px] h-[280px] relative mx-auto overflow-hidden border border-terracota/30 mb-6 shadow-xl rounded-lg bg-black/10 flex items-center justify-center">
+                    <img src="https://i.imgur.com/u8CeEbu.jpeg" alt="Ubicación Ceremonia" class="absolute top-0 left-0 w-full h-full object-cover">
                 </div>
                 
                 <a href="https://maps.app.goo.gl/CCAqKSHjMy7WfZoF9?g_st=iw" target="_blank" class="w-[180px] md:w-[220px] block mx-auto text-center bg-terracota border border-terracota text-white font-bold px-4 py-4 text-xs uppercase hover:bg-transparent hover:text-terracota transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mb-2">Abrir en Maps</a>
@@ -585,8 +633,8 @@
                     <p class="text-terracota font-bold text-base">Finca Santa Isabel</p>
                 </div>
                 
-                <div class="w-[90%] max-w-[420px] h-[220px] relative mx-auto overflow-hidden border border-terracota/30 mb-6 shadow-xl rounded-lg bg-black/10 flex items-center justify-center">                
-                    <img src="https://i.imgur.com/jqRobnx.jpeg" alt="Ubicación Recepción" class="absolute top-0 left-0 w-full h-full object-cover">
+                <div class="w-[90%] max-w-[420px] h-[280px] relative mx-auto overflow-hidden border border-terracota/30 mb-6 shadow-xl rounded-lg bg-black/10 flex items-center justify-center">                
+                    <img src="https://i.imgur.com/gcDB4ws.jpeg" alt="Ubicación Recepción" class="absolute top-0 left-0 w-full h-full object-cover">
                 </div>
 
                 <a href="https://maps.app.goo.gl/UgVn6SdQmQumrnM56?g_st=iw" target="_blank" class="w-[180px] md:w-[220px] block mx-auto text-center bg-terracota border border-terracota text-white font-bold px-4 py-4 text-xs uppercase hover:bg-transparent hover:text-terracota transition-all hover:-translate-y-1 active:scale-95 duration-300 rounded-xl mb-2">Abrir en Maps</a>
@@ -649,12 +697,9 @@
             </div>
         </section>
         
-        <!-- SEPARADOR 3 (PENDIENTE - SIN CORONA) -->
-        <div class="separador-wrapper seccion-con-video reveal-scale">
-            <div class="separador-placeholder">
-                <p class="text-sm font-bold uppercase tracking-widest opacity-80">Fotografía Separador 3</p>
-                <p class="text-xs opacity-60 mt-1">(Espacio reservado)</p>
-            </div>
+        <!-- SEPARADOR 3 (FIJO SIN EFECTO DE APARICIÓN) -->
+        <div class="separador-wrapper seccion-con-video">
+            <img src="https://i.imgur.com/XrTNSfG.jpeg" alt="Separador 3" class="separador-img">
         </div>
 
         <!-- CLIMA (Ovalado) -->
@@ -746,12 +791,9 @@
             </div>
         </section>
 
-        <!-- SEPARADOR 4 (PENDIENTE - SIN CORONA) -->
-        <div class="separador-wrapper seccion-con-video reveal-scale">
-            <div class="separador-placeholder">
-                <p class="text-sm font-bold uppercase tracking-widest opacity-80">Fotografía Separador 4</p>
-                <p class="text-xs opacity-60 mt-1">(Espacio reservado)</p>
-            </div>
+        <!-- SEPARADOR 4 (FIJO SIN EFECTO DE APARICIÓN) -->
+        <div class="separador-wrapper seccion-con-video">
+            <img src="https://i.imgur.com/U2bwCLu.jpeg" alt="Separador 4" class="separador-img">
         </div>
 
         <!-- TRIVIA (Ovalado) -->
@@ -809,21 +851,18 @@
                     <p class="text-xs uppercase text-terracota/80 font-bold mb-4">Inspiración para tu outfit</p>
                     
                     <div class="w-full flex justify-center overflow-hidden rounded-2xl mb-2">
-                        <img src="https://i.imgur.com/HDEkzZr.png" alt="Style Guide" class="w-full max-w-md object-cover rounded-xl shadow-md">
+                        <img src="https://i.imgur.com/5cu0LgN.png" alt="Style Guide" class="w-full max-w-md object-cover rounded-xl shadow-md">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEPARADOR 5 (PENDIENTE - SIN CORONA) -->
-        <div class="separador-wrapper seccion-con-video reveal-scale">
-            <div class="separador-placeholder">
-                <p class="text-sm font-bold uppercase tracking-widest opacity-80">Fotografía Separador 5</p>
-                <p class="text-xs opacity-60 mt-1">(Espacio reservado)</p>
-            </div>
+        <!-- SEPARADOR 5 (FIJO SIN EFECTO DE APARICIÓN) -->
+        <div class="separador-wrapper seccion-con-video">
+            <img src="https://i.imgur.com/xMASV3W.jpeg" alt="Separador 5" class="separador-img">
         </div>
         
-        <!-- GALERÍA (PENDIENTE - SIN CORONA) -->
+        <!-- GALERÍA (FOTOS SIN MARCO Y CON SOMBRA) -->
         <section class="seccion-con-video min-h-[85svh] flex flex-col justify-center py-12 px-4 md:px-16 bg-intercalado overflow-hidden relative">
             <img src="https://i.imgur.com/xrVu4iE.png" class="absolute top-0 right-0 w-36 md:w-36 z-0 pointer-events-none transform rotate-180" alt="deco">
             <img src="https://i.imgur.com/xrVu4iE.png" class="absolute bottom-0 left-0 w-36 md:w-36 z-0 pointer-events-none" alt="deco">
@@ -833,21 +872,15 @@
                     <h2 class="text-6xl font-script text-terracota text-shadow-light mb-2">Galería</h2>
                 </div>
                 
-                <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 hide-scrollbar items-center justify-center px-4">
-                    <div class="flex-none w-[280px] md:w-[320px] h-[380px] bg-white/60 backdrop-blur-md snap-center drop-shadow-lg rounded-xl border-2 border-dashed border-terracota/40 flex flex-col items-center justify-center p-6 text-center">
-                        <p class="text-xs font-bold uppercase text-terracota">Foto Galería 1</p>
-                        <p class="text-[10px] opacity-70 mt-1">(Pendiente)</p>
-                    </div>
-                    <div class="flex-none w-[280px] md:w-[320px] h-[380px] bg-white/60 backdrop-blur-md snap-center drop-shadow-lg rounded-xl border-2 border-dashed border-terracota/40 flex flex-col items-center justify-center p-6 text-center">
-                        <p class="text-xs font-bold uppercase text-terracota">Foto Galería 2</p>
-                        <p class="text-[10px] opacity-70 mt-1">(Pendiente)</p>
-                    </div>
-                    <div class="flex-none w-[280px] md:w-[320px] h-[380px] bg-white/60 backdrop-blur-md snap-center drop-shadow-lg rounded-xl border-2 border-dashed border-terracota/40 flex flex-col items-center justify-center p-6 text-center">
-                        <p class="text-xs font-bold uppercase text-terracota">Foto Galería 3</p>
-                        <p class="text-[10px] opacity-70 mt-1">(Pendiente)</p>
-                    </div>
+                <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 pt-2 hide-scrollbar items-center px-4">
+                    <img src="https://i.imgur.com/qC9zzAA.jpeg" alt="Galería 1" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
+                    <img src="https://i.imgur.com/tjGrDcg.jpeg" alt="Galería 2" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
+                    <img src="https://i.imgur.com/DLrtKjV.jpeg" alt="Galería 3" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
+                    <img src="https://i.imgur.com/Uayc8df.jpeg" alt="Galería 4" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
+                    <img src="https://i.imgur.com/Q8iVL04.jpeg" alt="Galería 5" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
+                    <img src="https://i.imgur.com/mwAtnlH.jpeg" alt="Galería 6" class="flex-none w-[280px] md:w-[320px] h-[380px] object-cover rounded-2xl shadow-lg snap-center">
                 </div>
-                <p class="text-center text-terracota/80 text-xs mt-4 uppercase font-bold">Desliza para ver más →</p>
+                <p class="text-center text-terracota/80 text-xs mt-2 uppercase font-bold">Desliza para ver más →</p>
             </div>
         </section>
         
@@ -881,7 +914,7 @@
                 <h1 class="text-6xl mb-4 text-terracota font-script reveal-scale text-shadow-light">Mesa de Regalos</h1>
                 <p class="text-sm uppercase mb-4 text-terracota/90 font-bold max-w-lg mx-auto">Tu presencia es mi mayor regalo, pero si gustas tener un detalle conmigo, puedes hacerlo mediante:</p>
                 
-                <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto items-stretch">
+                <div class="grid md:grid-cols-1 gap-6 max-w-md mx-auto items-stretch">
                     <!-- Liverpool -->
                     <div class="glass-card p-6 flex flex-col items-center justify-between text-center">
                         <div>
@@ -966,11 +999,16 @@
             </div>
         </section>
 
-        <!-- FOOTER (SIN CORONA) -->
-        <footer class="seccion-con-video min-h-[80svh] flex flex-col justify-between py-10 px-4 text-center relative z-10">
+        <!-- FOOTER CON FILTRO OSCURO, DIFUMINADO ARRIBA Y TEXTO BLANCO SIN CUADRO -->
+        <footer class="min-h-[100svh] flex flex-col justify-between py-10 px-4 text-center relative z-10 overflow-hidden bg-cover bg-center" style="background-image: url('https://i.imgur.com/m8hNImy.jpeg');">
+            <!-- Efecto oscuro sobre la foto -->
+            <div class="absolute inset-0 bg-black/50 z-0 pointer-events-none"></div>
+            <!-- Difuminado arriba -->
+            <div class="section-fade-top"></div>
+            
             <div class="flex-grow flex flex-col justify-center items-center relative z-10 mx-auto w-full">
-                <p class="text-7xl font-script mb-6 text-terracota text-shadow-light">¡No faltes!</p>
-                <p class="text-2xl font-elegant font-bold text-terracota uppercase">Isabella</p>
+                <p class="text-7xl font-script mt-40 mb-2 text-white text-shadow-footer">¡No faltes!</p>
+                <p class="text-2xl font-elegant font-bold text-white uppercase">Isabella</p>
             </div>
         </footer>
 
@@ -1049,71 +1087,48 @@
             }, 1800);
         }
 
-        // AUDIO
+        // AUDIO Y GIRO DEL DISCO DE VINILO
         const audio = document.getElementById("bg-music");
         let isPlaying = false;
 
-        function playAudio() {
+        function updateVinylUI(playing) {
             const playIcon = document.getElementById("icon-play");
             const pauseIcon = document.getElementById("icon-pause");
-            
-            audio.play().then(() => {
-                isPlaying = true;
+            const vinylDisc = document.getElementById("vinyl-disc");
+
+            if (playing) {
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
+                if (vinylDisc) vinylDisc.classList.add('spinning');
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                if (vinylDisc) vinylDisc.classList.remove('spinning');
+            }
+        }
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                updateVinylUI(true);
             }).catch(error => {
                 console.log("Autoplay bloqueado. El usuario debe tocar el botón.");
                 isPlaying = false;
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+                updateVinylUI(false);
             });
         }
 
         function toggleAudio() {
-            const playIcon = document.getElementById("icon-play");
-            const pauseIcon = document.getElementById("icon-pause");
-
             if (isPlaying) {
                 audio.pause();
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+                isPlaying = false;
+                updateVinylUI(false);
             } else {
                 audio.play();
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
+                isPlaying = true;
+                updateVinylUI(true);
             }
-            isPlaying = !isPlaying;
         }
-
-        const progressBar = document.getElementById("progress-bar");
-        const currentTimeEl = document.getElementById("current-time");
-        const durationTimeEl = document.getElementById("duration-time");
-
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60);
-            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        }
-
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const progressPercent = (audio.currentTime / audio.duration) * 100;
-                progressBar.value = progressPercent;
-                currentTimeEl.textContent = formatTime(audio.currentTime);
-                const remaining = audio.duration - audio.currentTime;
-                durationTimeEl.textContent = "-" + formatTime(remaining);
-            }
-        });
-
-        audio.addEventListener('loadedmetadata', () => {
-            durationTimeEl.textContent = "-" + formatTime(audio.duration);
-        });
-
-        progressBar.addEventListener('input', (e) => {
-            const seekTime = (e.target.value / 100) * audio.duration;
-            audio.currentTime = seekTime;
-        });
 
         // COUNTDOWN (5 de Diciembre 2026 - 16:45 hrs)
         const targetDate = new Date("Dec 05, 2026 16:45:00").getTime();
@@ -1147,7 +1162,7 @@
             document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
         }
 
-        // MENÚ DESPLEGABLE DE CALENDARIO (CORREGIDO)
+        // MENÚ DESPLEGABLE DE CALENDARIO
         function toggleCalendarMenu() {
             const dropdown = document.getElementById('calendar-dropdown');
             const chevron = document.getElementById('calendar-chevron');
@@ -1195,8 +1210,8 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
             setTimeout(() => window.URL.revokeObjectURL(url), 100);
         }
         
-        // SLIDERS AUTOMÁTICOS
-        const sliders = document.querySelectorAll('.slider-historia, .chambelanes-slider');
+        // SLIDER AUTOMÁTICO (HISTORIA)
+        const sliders = document.querySelectorAll('.slider-historia');
         let scrollIntervals = [];
 
         sliders.forEach((slider, index) => {
@@ -1225,10 +1240,10 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
             observer.observe(slider);
         });
 
-        // CLIMA
+        // CLIMA (Coordenadas de PQ24+P2 San Mateo Xoloc, Estado de México)
         async function fetchWeather() {
-            const lat = 19.4326; 
-            const lon = -99.1332; 
+            const lat = 19.7018; 
+            const lon = -99.2424; 
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=America%2FMexico_City&forecast_days=2`;
             
             try {
@@ -1303,7 +1318,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                 <div class="bg-transparent rounded-none p-2 text-terracota text-left mx-auto font-sans w-full">
                     <div class="flex justify-between items-start mb-8 border-b border-terracota/20 pb-6">
                         <div>
-                            <h3 class="text-xl md:text-2xl font-bold flex items-center gap-2">Pronóstico Local<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg></h3>
+                            <h3 class="text-xl md:text-2xl font-bold flex items-center gap-2">San Mateo Xoloc<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg></h3>
                             <div class="text-[60px] md:text-[80px] font-light leading-none mt-2 font-numbers">${currentTemp}°</div>
                         </div>
                         <div class="text-right flex flex-col items-end pt-1">
