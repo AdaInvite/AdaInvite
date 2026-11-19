@@ -17,13 +17,15 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/e9d64235-c253-49fc-a589-6bbc81f48b1c.jpg">
         
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Librería para descargar la imagen del pase en HD -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+    <link rel="preconnect" href="https://fotos.adainvite.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://i.imgur.com">
+    <link rel="dns-prefetch" href="https://media.adainvite.com">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=Pinyon+Script&family=Inria+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -111,9 +113,8 @@
             margin-top: -23px; position: relative; z-index: 10;
         }
 
-        /* --- FONDOS Y TEXTURAS --- */
+        /* --- FONDOS Y TEXTURAS (CARGA DIFERIDA AL ABRIR SOBRE) --- */
         .bg-texture-main {
-            background-image: url('https://i.imgur.com/YTkmEcq.jpeg');
             background-size: cover;
             background-position: center;
             opacity: 0.45;
@@ -123,10 +124,17 @@
             pointer-events: none;
             z-index: 0;
         }
+        body.textures-ready .bg-texture-main {
+            background-image: url('https://i.imgur.com/YTkmEcq.jpeg');
+        }
 
         .bg-floral-section {
+            background-color: #3B2B20;
+            background-size: cover;
+            background-position: center;
+        }
+        .bg-floral-section.bg-floral-loaded {
             background-image: linear-gradient(rgba(59, 43, 32, 0.55), rgba(59, 43, 32, 0.55)), var(--bg-floral);
-            background-size: cover; background-position: center;
         }
 
         /* --- SOBRE INICIAL --- */
@@ -159,6 +167,7 @@
         /* --- HERO INICIAL --- */
         .hero-section {
             min-height: 100svh;
+            background-color: #3B2B20;
             background-image: linear-gradient(to bottom, rgba(59,43,32,0.5), rgba(0,0,0,0.2), rgba(59,43,32,0.85)), var(--bg-hero);
             background-size: cover;
             background-position: center;
@@ -202,7 +211,7 @@
 
         /* --- CONTADOR (TEXTOS BLANCOS SOBRE FONDO GIF) --- */
         #countdown { display: flex; justify-content: center; align-items: center; }
-        #countdown span { font-family: var(--font-body); font-weight: 300; color: #FFFFFF; line-height: 1; }
+        #countdown span { font-family: var(--font-body); font-weight: 400; color: #FFFFFF; line-height: 1; }
         #countdown .text-label { color: #FFFFFF; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3em; margin-top: 8px; }
 
         /* --- SLIDER HISTORIA --- */
@@ -238,28 +247,11 @@
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-
-        /* --- TICKET / PASE DIGITAL ESTILO KRISTA EN TONOS TIERRA/DORADO --- */
-        .minimal-ticket {
-            position: relative;
-            background-color: #FAF9F6;
-            border: 2px solid #C8A97E;
-            border-radius: 14px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            width: 360px;
-            max-width: 100%;
-            height: 225px;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-            margin: 0 auto;
-            box-sizing: border-box;
-        }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop preload="none">
         <source src="https://media.adainvite.com/Musica/ABBADancingQueen.mp3" type="audio/mpeg">
     </audio>
 
@@ -268,7 +260,7 @@
 
         <!-- Botón de Audio Flotante -->
         <div id="audio-btn" class="audio-btn hidden" onclick="toggleAudio()">
-            <img id="audio-icon" src="https://i.imgur.com/6Ckheyd.png" class="w-full h-full object-cover" alt="Música">
+            <img id="audio-icon" src="https://i.imgur.com/6Ckheyd.png" class="w-full h-full object-cover" alt="Música" loading="lazy" decoding="async">
         </div>
 
         <!-- SOBRE INICIAL -->
@@ -279,7 +271,7 @@
                 <div class="flap-wrapper flap-right-wrapper"><div class="flap flap-right"></div></div>
                 <div class="seal-wrapper" onclick="openEnvelope()">
                     <div class="font-body text-sm uppercase mb-4 animate-bounce text-black font-semibold text-center whitespace-nowrap">Toca para abrir</div>
-                    <img src="https://i.imgur.com/cQb7AAR.png" class="w-[160px] drop-shadow-md" style="animation: floating 6s infinite ease-in-out;" alt="Sello">
+                    <img src="https://i.imgur.com/cQb7AAR.png" class="w-[160px] drop-shadow-md" style="animation: floating 6s infinite ease-in-out;" alt="Sello" fetchpriority="high" decoding="async">
                 </div>
             </div>
         </div>
@@ -308,7 +300,7 @@
                             </div>
                         </div>
 
-                        <!-- TARJETA PASES INICIALES ESTILO KRISTA -->
+                        <!-- TARJETA PASES INICIALES -->
                         <div id="seccion-pases-inicio" class="w-full max-w-xs mx-auto hidden mb-2 reveal-scale delay-200">
                             <div class="bg-[#6B4F3A]/85 rounded-xl backdrop-blur-md border border-[#6B4F3A]/50 py-2 px-4 shadow-2xl text-center transition-all">
                                 <p class="text-[11px] uppercase text-[#E6D5B8] font-bold mb-1 tracking-widest">Invitación especial para</p>
@@ -329,7 +321,7 @@
                         <p class="font-bold text-2xl text-[#3B2B20] leading-relaxed mb-6 italic">
                             "Hoy celebramos un sueño, mañana será un hermoso recuerdo gracias por ser parte de mis 15 años"
                         </p>
-                        <img src="https://i.imgur.com/LCcAAhT.png" class="w-36 object-contain mx-auto mb-4 drop-shadow-sm" alt="Decoración frase">
+                        <img src="https://i.imgur.com/LCcAAhT.png" class="w-36 object-contain mx-auto mb-4 drop-shadow-sm" alt="Decoración frase" loading="lazy" decoding="async">
                         
                         <div class="mt-2 pt-6 border-t border-[#6B4F3A]/30 w-full max-w-[280px]">
                             <h3 class="font-script text-4xl text-[#6B4F3A] mb-3">Con la bendición de mis padres</h3>
@@ -350,25 +342,25 @@
 
                         <div class="slider-historia">
                             <div class="tarjeta-nueva">
-                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ce9328e5-8690-4957-9c82-8874edd6c2dd.jpg" class="img-historia" alt="Historia 1">
+                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ce9328e5-8690-4957-9c82-8874edd6c2dd.jpg" class="img-historia" alt="Historia 1" loading="lazy" decoding="async">
                                 <div class="texto-polaroid">
                                     <p class="text-[14px] text-[#3B2B20] leading-tight italic serif text-center">"Sonríe a la vida"</p>
                                 </div>
                             </div>
                             <div class="tarjeta-nueva">
-                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/271b6740-2058-4f2f-a3a8-94b0aeacb587.jpg" class="img-historia" alt="Historia 2">
+                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/271b6740-2058-4f2f-a3a8-94b0aeacb587.jpg" class="img-historia" alt="Historia 2" loading="lazy" decoding="async">
                                 <div class="texto-polaroid">
                                     <p class="text-[14px] text-[#3B2B20] leading-tight italic serif text-center">"Una foto no detiene el tiempo, pero lo hace eterno"</p>
                                 </div>
                             </div>
                             <div class="tarjeta-nueva">
-                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/0d7c1ac5-8289-4d9a-9712-2d8c9b83bb17.jpg" class="img-historia" alt="Historia 3">
+                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/0d7c1ac5-8289-4d9a-9712-2d8c9b83bb17.jpg" class="img-historia" alt="Historia 3" loading="lazy" decoding="async">
                                 <div class="texto-polaroid">
                                     <p class="text-[14px] text-[#3B2B20] leading-tight italic serif text-center">"La vida es una colección de momentos"</p>
                                 </div>
                             </div>
                             <div class="tarjeta-nueva">
-                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ced032c7-7e34-4202-aade-5b39607737ec.jpg" class="img-historia" alt="Historia 4">
+                                <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ced032c7-7e34-4202-aade-5b39607737ec.jpg" class="img-historia" alt="Historia 4" loading="lazy" decoding="async">
                                 <div class="texto-polaroid">
                                     <p class="text-[14px] text-[#3B2B20] leading-tight italic serif text-center">"Dejo atrás mi niñez para comenzar una nueva etapa"</p>
                                 </div>
@@ -384,21 +376,21 @@
                     
                     <div class="w-full mx-auto relative z-10">
                         <div class="text-center mb-6 flex flex-col items-center">
-                            <img src="https://i.imgur.com/vF1gfCb.png" class="w-20 object-contain mx-auto mb-2 drop-shadow-sm" alt="Ubicación">
+                            <img src="https://i.imgur.com/vF1gfCb.png" class="w-20 object-contain mx-auto mb-2 drop-shadow-sm" alt="Ubicación" loading="lazy" decoding="async">
                             <h3 class="text-5xl font-script mb-2 text-[#C8A97E] text-shadow-beige">Recepción</h3>
                             <p class="text-[#3B2B20] uppercase text-xl font-bold mt-1">Salón granja Renata</p>
                             <p class="text-[#3B2B20] font-bold text-lg mt-3 bg-[#E6D5B8] px-4 py-1 rounded-full">4:00 p.m.</p>
                         </div>
                         <div class="flex-grow w-full relative h-[260px] rounded-lg overflow-hidden border-2 border-[#D4AF37]/40 mb-6 bg-[#E6D5B8] shadow-md">
-                            <img src="https://i.imgur.com/Ii0ynMu.jpeg" alt="Salón granja Renata" class="w-full h-full object-cover">
+                            <img src="https://i.imgur.com/Ii0ynMu.jpeg" alt="Salón granja Renata" class="w-full h-full object-cover" loading="lazy" decoding="async">
                         </div>
                         <a href="https://maps.app.goo.gl/Fws4hx5Bg2RQYmMM9?g_st=ic" target="_blank" class="w-full block text-center bg-[#6B4F3A] border border-[#6B4F3A] text-white font-bold px-8 py-4 text-[11px] tracking-widest uppercase hover:bg-[#3B2B20] shadow-md transition-all duration-300 rounded-md">Ver en Maps</a>
                     </div> 
                 </section>
 
                 <!-- SEPARADOR 1 -->
-                <div class="w-full flex justify-center items-center relative corte-valle z-10">
-                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/5be50750-6509-4552-8ac8-c0c133e1b15a.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 1">
+                <div class="w-full flex justify-center items-center relative corte-valle z-10 bg-[#3B2B20]">
+                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/5be50750-6509-4552-8ac8-c0c133e1b15a.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 1" loading="lazy" decoding="async">
                 </div>
                 
                 <!-- 4. ITINERARIO (BEIGE - ZIG ZAG) -->
@@ -417,7 +409,7 @@
                             <!-- 4:00 pm - Llegada a la recepción -->
                             <div class="grid grid-cols-2 items-center relative z-10">
                                 <div class="pr-6 flex justify-end reveal-left">
-                                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Recepción">
+                                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Copas%20negro%20recepci%C3%B3n.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Recepción" loading="lazy" decoding="async">
                                 </div>
                                 <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#6B4F3A] border-2 border-[#E6D5B8] z-20"></div>
                                 <div class="pl-6 text-left reveal-right">
@@ -434,14 +426,14 @@
                                 </div>
                                 <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#6B4F3A] border-2 border-[#E6D5B8] z-20"></div>
                                 <div class="pl-6 flex justify-start reveal-right">
-                                    <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Comida">
+                                    <img src="https://i.imgur.com/AIApde9.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Comida" loading="lazy" decoding="async">
                                 </div>
                             </div>
 
                             <!-- 6:00 pm - Vals -->
                             <div class="grid grid-cols-2 items-center relative z-10">
                                 <div class="pr-6 flex justify-end reveal-left">
-                                    <img src="https://i.imgur.com/tRNwEAy.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Vals">
+                                    <img src="https://i.imgur.com/tRNwEAy.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Vals" loading="lazy" decoding="async">
                                 </div>
                                 <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#6B4F3A] border-2 border-[#E6D5B8] z-20"></div>
                                 <div class="pl-6 text-left reveal-right">
@@ -458,14 +450,14 @@
                                 </div>
                                 <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#6B4F3A] border-2 border-[#E6D5B8] z-20"></div>
                                 <div class="pl-6 flex justify-start reveal-right">
-                                    <img src="https://i.imgur.com/IXWZjtG.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Inicia baile">
+                                    <img src="https://i.imgur.com/IXWZjtG.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Inicia baile" loading="lazy" decoding="async">
                                 </div>
                             </div>
 
                             <!-- 11:00 pm - Fin de la fiesta -->
                             <div class="grid grid-cols-2 items-center relative z-10">
                                 <div class="pr-6 flex justify-end reveal-left">
-                                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Fin de la fiesta">
+                                    <img src="https://raw.githubusercontent.com/AdaInvite/AdaInvite/main/Assets/%C3%8Dtems%20boda%20negro/Baile%20negro.png" class="w-24 h-24 object-contain drop-shadow-sm" alt="Fin de la fiesta" loading="lazy" decoding="async">
                                 </div>
                                 <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#6B4F3A] border-2 border-[#E6D5B8] z-20"></div>
                                 <div class="pl-6 text-left reveal-right">
@@ -509,8 +501,8 @@
                 </section>
 
                 <!-- SEPARADOR 2 -->
-                <div class="w-full flex justify-center items-center relative corte-pico z-10">
-                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ba527a1d-1490-48d2-9346-e57caabb16c1.jpg" class="w-full min-h-[90svh] object-cover object-center" alt="Separador 2">
+                <div class="w-full flex justify-center items-center relative corte-pico z-10 bg-[#3B2B20]">
+                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/ba527a1d-1490-48d2-9346-e57caabb16c1.jpg" class="w-full min-h-[90svh] object-cover object-center" alt="Separador 2" loading="lazy" decoding="async">
                 </div>
 
                 <!-- 6. CÓDIGO DE VESTIMENTA (BLANCA) -->
@@ -518,7 +510,7 @@
                     <div class="bg-texture-main"></div>
                     <div class="w-full mx-auto reveal-scale relative z-10">
                         <div class="mx-auto mb-8 flex items-center justify-center">
-                            <img src="https://i.imgur.com/JrRH3ts.png" class="w-36 object-contain mx-auto drop-shadow-sm" alt="Código de Vestimenta">
+                            <img src="https://i.imgur.com/JrRH3ts.png" class="w-36 object-contain mx-auto drop-shadow-sm" alt="Código de Vestimenta" loading="lazy" decoding="async">
                         </div>
                         <h2 class="text-5xl mb-6 font-script text-[#C8A97E] text-shadow-beige">Código de Vestimenta</h2>
                         <p class="text-base uppercase text-white mb-8 font-bold bg-[#6B4F3A] inline-block px-8 py-3 rounded-sm shadow-sm tracking-widest">Vaquero Informal</p>
@@ -534,15 +526,15 @@
                 </section>
 
                 <!-- SEPARADOR 3 -->
-                <div class="w-full flex justify-center items-center relative corte-pico z-10">
-                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/990e92e3-8c04-4147-95c7-f887f065f3b4.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 3">
+                <div class="w-full flex justify-center items-center relative corte-pico z-10 bg-[#3B2B20]">
+                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/990e92e3-8c04-4147-95c7-f887f065f3b4.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 3" loading="lazy" decoding="async">
                 </div>
 
                 <!-- 7. LLUVIA DE SOBRES (BEIGE) -->
                 <section class="min-h-[80svh] flex flex-col justify-center px-6 bg-[#E6D5B8] text-center relative overflow-hidden corte-valle z-10">
                     <div class="bg-texture-main"></div>
                     <div class="w-full mx-auto reveal relative z-10 flex flex-col items-center">
-                        <img src="https://i.imgur.com/NarGgao.png" class="w-28 object-contain mx-auto mb-4 drop-shadow-sm" alt="Lluvia de Sobres">
+                        <img src="https://i.imgur.com/NarGgao.png" class="w-28 object-contain mx-auto mb-4 drop-shadow-sm" alt="Lluvia de Sobres" loading="lazy" decoding="async">
                         <h2 class="text-5xl mb-6 text-[#3B2B20] font-script reveal-scale">Lluvia de Sobres</h2>
                         <p class="serif text-lg italic text-[#3B2B20] mx-auto leading-relaxed px-4 font-medium">
                             "Mi mejor regalo en esta fecha tan especial es tu presencia, pero si deseas hacerme un obsequio, habrá lluvia de sobres en la recepción."
@@ -551,8 +543,8 @@
                 </section>
 
                 <!-- SEPARADOR 4 -->
-                <div class="w-full flex justify-center items-center relative corte-pico z-10">
-                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/8b4ca361-858f-4fa7-8baa-7a012fb73bc1.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 4">
+                <div class="w-full flex justify-center items-center relative corte-pico z-10 bg-[#3B2B20]">
+                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/8b4ca361-858f-4fa7-8baa-7a012fb73bc1.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 4" loading="lazy" decoding="async">
                 </div>
 
                 <!-- 8. ÁLBUM QR COMPARTIDO (GIF - TEXTOS BLANCOS) -->
@@ -570,6 +562,7 @@
                                 src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3B2B20&bgcolor=FFFFFF&data=https://adainvite.com/XVAidee/recuerdos" 
                                 alt="Código QR Álbum de Recuerdos" 
                                 class="w-44 h-44 object-contain rounded-lg"
+                                loading="lazy" decoding="async"
                             >
                             <span class="text-[10px] uppercase tracking-widest text-[#6B4F3A] font-bold mt-2">Escanea el QR</span>
                         </div>
@@ -630,15 +623,15 @@
                                 <p id="loadingSubtext" class="text-xs text-[#3B2B20] opacity-90 uppercase tracking-wider text-center">Redirigiendo a WhatsApp para notificar al anfitrión</p>
                             </div>
 
-                            <!-- CONTENEDOR AUTOMÁTICO DEL PASE -->
+                            <!-- CONTENEDOR AUTOMÁTICO DEL PASE EN IMAGEN -->
                             <div id="automaticPassContainer" class="hidden flex-col items-center w-full"></div>
                         </div>
                     </div>
                 </section>
 
                 <!-- SEPARADOR 5 -->
-                <div class="w-full flex justify-center items-center relative corte-valle z-10">
-                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/b6daf71f-7782-47a6-b42a-777077704139.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 5">
+                <div class="w-full flex justify-center items-center relative corte-valle z-10 bg-[#3B2B20]">
+                    <img src="https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/b6daf71f-7782-47a6-b42a-777077704139.jpg" class="w-full min-h-[70svh] object-cover object-center" alt="Separador 5" loading="lazy" decoding="async">
                 </div>
                 
                 <!-- 10. FOOTER (BEIGE) -->
@@ -661,12 +654,29 @@
         function openEnvelope() {
             document.getElementById('envelope-wrapper').classList.add('open');
             document.getElementById('scroll-container').classList.remove('locked');
+            document.body.classList.add('textures-ready');
             playAudio();
             document.getElementById('audio-btn').classList.remove('hidden');
             initObserver();
+            initLazyBackgrounds();
             setTimeout(() => {
                 document.getElementById('envelope-wrapper').style.display = 'none';
             }, 1800);
+        }
+
+        // Carga el GIF floral solo cuando el invitado se acerca a esas secciones
+        function initLazyBackgrounds() {
+            const scrollContainer = document.getElementById('scroll-container');
+            const bgObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('bg-floral-loaded');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { root: scrollContainer, rootMargin: '350px 0px' });
+
+            document.querySelectorAll('.bg-floral-section').forEach(el => bgObserver.observe(el));
         }
 
         function toggleCalendarMenu() {
@@ -711,7 +721,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         function playAudio() {
             audio.play().then(() => {
                 isPlaying = true; audioIcon.classList.add('spin-slow');
-            }).catch(error => console.log("Autoplay bloqueado."));
+            }).catch(() => console.log("Autoplay bloqueado."));
         }
 
         function toggleAudio() {
@@ -768,7 +778,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         });
     </script>
 
-    <!-- LÓGICA FIREBASE: CONFIRMACIÓN A WHATSAPP Y PASE AUTOMÁTICO CUANDO SE ASIGNA MESA -->
+    <!-- LÓGICA FIREBASE + GENERADOR DE PASE EN IMAGEN NATIVA (CANVAS HD) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, where, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -784,92 +794,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
 
         const dbCollectionName = "confirmaciones_aidee_gutierrez_romo_xv";
         const rawFotoPase = "https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/e9d64235-c253-49fc-a589-6bbc81f48b1c.jpg";
-        let fotoPaseSrc = rawFotoPase;
-        let fotoPaseBase64 = null;
-        let fotoPasePromise = null;
-
-        // Pre-procesar y recortar la foto en ALTA DEFINICIÓN evitando choque de caché CORS en Safari
-        function obtenerFotoPaseHD() {
-            if (fotoPaseBase64) return Promise.resolve(fotoPaseBase64);
-            if (fotoPasePromise) return fotoPasePromise;
-
-            fotoPasePromise = new Promise((resolve) => {
-                const procesarImagen = (img) => {
-                    try {
-                        const targetW = 548;
-                        const targetH = 900;
-                        const canvas = document.createElement('canvas');
-                        canvas.width = targetW;
-                        canvas.height = targetH;
-                        const ctx = canvas.getContext('2d');
-
-                        const imgRatio = img.naturalWidth / img.naturalHeight;
-                        const targetRatio = targetW / targetH;
-                        let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
-
-                        if (imgRatio > targetRatio) {
-                            sWidth = img.naturalHeight * targetRatio;
-                            sx = (img.naturalWidth - sWidth) / 2;
-                        } else {
-                            sHeight = img.naturalWidth / targetRatio;
-                            sy = (img.naturalHeight - sHeight) / 2;
-                        }
-
-                        ctx.imageSmoothingEnabled = true;
-                        ctx.imageSmoothingQuality = 'high';
-                        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetW, targetH);
-
-                        fotoPaseBase64 = canvas.toDataURL('image/jpeg', 0.92);
-                        fotoPaseSrc = fotoPaseBase64;
-
-                        // Si el pase ya se había pintado en pantalla, actualizar su foto al instante
-                        document.querySelectorAll('.pase-foto-img').forEach(el => {
-                            el.src = fotoPaseBase64;
-                        });
-
-                        resolve(fotoPaseBase64);
-                    } catch (e) {
-                        console.warn("Error procesando foto del pase:", e);
-                        fotoPasePromise = null;
-                        resolve(null);
-                    }
-                };
-
-                const cargarPorImage = () => {
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.onload = () => procesarImagen(img);
-                    img.onerror = () => {
-                        fotoPasePromise = null;
-                        resolve(null);
-                    };
-                    img.src = `${rawFotoPase}?pase_hd=${Date.now()}`;
-                };
-
-                fetch(`${rawFotoPase}?cors=${Date.now()}`, { mode: 'cors', cache: 'no-store' })
-                    .then(res => {
-                        if (!res.ok) throw new Error('Error de red');
-                        return res.blob();
-                    })
-                    .then(blob => {
-                        const blobUrl = URL.createObjectURL(blob);
-                        const img = new Image();
-                        img.onload = () => {
-                            procesarImagen(img);
-                            URL.revokeObjectURL(blobUrl);
-                        };
-                        img.onerror = () => {
-                            URL.revokeObjectURL(blobUrl);
-                            cargarPorImage();
-                        };
-                        img.src = blobUrl;
-                    })
-                    .catch(() => cargarPorImage());
-            });
-
-            return fotoPasePromise;
-        }
-        obtenerFotoPaseHD();
+        let currentPassBlobUrl = null;
 
         let db;
         try {
@@ -880,59 +805,276 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         }
 
         // ==========================================
-        // PLANTILLA HTML DEL PASE MINIMALISTA CON NÚMERO DE MESA
+        // CARGA SEGURA DE LA FOTO SOLO CUANDO HAY PASE QUE DIBUJAR
         // ==========================================
-        function construirPaseMinimalistaHTML(idContenedor, nombre, adultos, ninos, totalPases, folio, mesa) {
-            return `
-                <div id="${idContenedor}" class="minimal-ticket text-left">
-                    <!-- Columna Izquierda: Foto HD -->
-                    <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E6D5B8;">
-                        <img src="${fotoPaseBase64 || fotoPaseSrc}" class="pase-foto-img" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Aideé">
-                        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(59,43,32,0.85) 0%, rgba(0,0,0,0) 60%);"></div>
-                        <div style="position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; padding: 0 6px;">
-                            <p style="font-size: 8px; color: #E6D5B8; text-transform: uppercase; font-weight: 700; margin: 0 0 3px 0; line-height: 1.2;">MIS XV AÑOS</p>
-                            <p class="font-script" style="font-size: 24px; color: #FFFFFF; margin: 0; line-height: 1.1;">Aideé</p>
-                        </div>
-                    </div>
+        function cargarFotoCORS() {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    fetch(`${rawFotoPase}?pase_dl=${Date.now()}`, { mode: 'cors', cache: 'no-store' })
+                        .then(res => res.ok ? res.blob() : Promise.reject())
+                        .then(blob => {
+                            const url = URL.createObjectURL(blob);
+                            const img2 = new Image();
+                            img2.onload = () => {
+                                URL.revokeObjectURL(url);
+                                resolve(img2);
+                            };
+                            img2.onerror = () => {
+                                URL.revokeObjectURL(url);
+                                resolve(null);
+                            };
+                            img2.src = url;
+                        })
+                        .catch(() => resolve(null));
+                };
+                // Parámetro único para evitar que Safari reutilice la caché sin CORS de --bg-hero
+                img.src = `${rawFotoPase}?pase_hd=${Date.now()}`;
+            });
+        }
 
-                    <!-- Columna Derecha: Info Minimalista + Mesa -->
-                    <div style="width: 62%; height: 100%; padding: 14px 14px 12px 16px; display: flex; flex-direction: column; justify-content: space-between; background-color: #FAF9F6; box-sizing: border-box;">
-                        
-                        <div style="text-align: center; border-bottom: 1px solid rgba(200,169,126,0.4); padding-bottom: 8px;">
-                            <p style="font-size: 9px; text-transform: uppercase; color: #6B4F3A; font-weight: 700; margin: 0 0 4px 0; line-height: 1.2;">PASE DE ACCESO</p>
-                            <p style="font-size: 14px; color: #3B2B20; font-weight: 700; text-transform: uppercase; margin: 0; line-height: 1.25; word-break: break-word;">${nombre}</p>
-                        </div>
+        function trazarRectanguloRedondeado(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
 
-                        <div style="background-color: #6B4F3A; color: #FFFFFF; border-radius: 10px; padding: 10px 8px; display: flex; align-items: center; justify-content: space-around;">
-                            <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                <p style="font-size: 7.5px; text-transform: uppercase; font-weight: 700; margin: 0 0 3px 0; color: #E6D5B8; line-height: 1;">PASES</p>
-                                <p class="font-numbers" style="font-size: 22px; font-weight: 700; margin: 0; line-height: 1;">${totalPases}</p>
-                            </div>
-                            <div style="width: 1px; height: 32px; background-color: rgba(255,255,255,0.25);"></div>
-                            <div style="font-size: 8.5px; text-transform: uppercase; font-weight: 700; line-height: 1.5; text-align: left;">
-                                <p style="margin: 0;">ADULTOS: <span class="font-numbers" style="font-size: 11px;">${adultos}</span></p>
-                                <p style="margin: 0;">NIÑOS: <span class="font-numbers" style="font-size: 11px;">${ninos}</span></p>
-                            </div>
-                            <div style="width: 1px; height: 32px; background-color: rgba(255,255,255,0.25);"></div>
-                            <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                <p style="font-size: 7.5px; text-transform: uppercase; font-weight: 700; margin: 0 0 3px 0; color: #E6D5B8; line-height: 1;">MESA</p>
-                                <p class="font-numbers" style="font-size: 22px; font-weight: 700; margin: 0; line-height: 1; text-transform: uppercase;">${mesa}</p>
-                            </div>
-                        </div>
+        function dividirLineasNombre(ctx, texto, maxWidth) {
+            const palabras = texto.split(/\s+/);
+            const lineas = [];
+            let actual = palabras[0] || "";
+            for (let i = 1; i < palabras.length; i++) {
+                const prueba = `${actual} ${palabras[i]}`;
+                if (ctx.measureText(prueba).width <= maxWidth) {
+                    actual = prueba;
+                } else {
+                    lineas.push(actual);
+                    actual = palabras[i];
+                }
+            }
+            if (actual) lineas.push(actual);
+            return lineas;
+        }
 
-                        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(200,169,126,0.4); padding-top: 6px; font-size: 7.5px; text-transform: uppercase; font-weight: 700; color: #3B2B20;">
-                            <div style="line-height: 1.35;">
-                                <p style="color: #6B4F3A; margin: 0;">02 • ENE • 2027</p>
-                                <p style="font-size: 7px; margin: 0; color: #555;">SALÓN GRANJA RENATA</p>
-                            </div>
-                            <div style="line-height: 1.35; text-align: right;">
-                                <span style="color: #3B2B20; font-size: 8px;">${folio}</span>
-                            </div>
-                        </div>
+        // ==========================================
+        // GENERADOR NATIVO DE IMAGEN HD DEL PASE (1080 x 675 px)
+        // ==========================================
+        async function generarImagenPaseHD(nombre, adultos, ninos, totalPases, folio, mesa) {
+            // Asegurar carga de fuentes antes de dibujar
+            if (document.fonts) {
+                try {
+                    await Promise.all([
+                        document.fonts.load('700 42px "Inria Serif"'),
+                        document.fonts.load('400 72px "Pinyon Script"'),
+                        document.fonts.load('400 66px "Forum"'),
+                        document.fonts.ready
+                    ]);
+                } catch (_) {}
+            }
 
-                    </div>
-                </div>
-            `;
+            const foto = await cargarFotoCORS();
+
+            const W = 1080;
+            const H = 675;
+            const R = 42;
+            const leftW = 410; // 38%
+
+            const canvas = document.createElement('canvas');
+            canvas.width = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+
+            // 1. Recorte general redondeado y fondo crema
+            ctx.save();
+            trazarRectanguloRedondeado(ctx, 0, 0, W, H, R);
+            ctx.clip();
+
+            ctx.fillStyle = '#FAF9F6';
+            ctx.fillRect(0, 0, W, H);
+
+            // 2. Columna izquierda: Foto HD recortada (object-fit: cover)
+            ctx.fillStyle = '#E6D5B8';
+            ctx.fillRect(0, 0, leftW, H);
+
+            if (foto && foto.naturalWidth > 0) {
+                const imgRatio = foto.naturalWidth / foto.naturalHeight;
+                const boxRatio = leftW / H;
+                let sx = 0, sy = 0, sWidth = foto.naturalWidth, sHeight = foto.naturalHeight;
+
+                if (imgRatio > boxRatio) {
+                    sWidth = foto.naturalHeight * boxRatio;
+                    sx = (foto.naturalWidth - sWidth) / 2;
+                } else {
+                    sHeight = foto.naturalWidth / boxRatio;
+                    sy = (foto.naturalHeight - sHeight) / 2;
+                }
+                ctx.drawImage(foto, sx, sy, sWidth, sHeight, 0, 0, leftW, H);
+            }
+
+            // Degradado inferior sobre la foto
+            const grad = ctx.createLinearGradient(0, H, 0, H * 0.4);
+            grad.addColorStop(0, 'rgba(59, 43, 32, 0.85)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, H * 0.4, leftW, H * 0.6);
+
+            // Texto inferior izquierdo sobre la foto
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#E6D5B8';
+            ctx.font = '700 24px "Inria Serif", serif';
+            ctx.fillText('MIS XV AÑOS', leftW / 2, 548);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '400 72px "Pinyon Script", cursive';
+            ctx.fillText('Aideé', leftW / 2, 608);
+
+            // 3. Columna derecha: Información del invitado
+            const contentX = leftW + 48; // 458
+            const contentRight = W - 42; // 1038
+            const contentW = contentRight - contentX; // 580
+            const centerX = contentX + contentW / 2; // 748
+
+            // Encabezado: PASE DE ACCESO + Nombre
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#6B4F3A';
+            ctx.font = '700 26px "Inria Serif", serif';
+            ctx.fillText('PASE DE ACCESO', centerX, 68);
+
+            const nombreUpper = String(nombre || '').toUpperCase().trim();
+            ctx.fillStyle = '#3B2B20';
+            let nombreFontSize = 42;
+            ctx.font = `700 ${nombreFontSize}px "Inria Serif", serif`;
+            let lineas = dividirLineasNombre(ctx, nombreUpper, contentW - 12);
+
+            if (lineas.length > 1) {
+                nombreFontSize = 34;
+                ctx.font = `700 ${nombreFontSize}px "Inria Serif", serif`;
+                lineas = dividirLineasNombre(ctx, nombreUpper, contentW - 12);
+                if (lineas.length > 2) {
+                    nombreFontSize = 28;
+                    ctx.font = `700 ${nombreFontSize}px "Inria Serif", serif`;
+                    lineas = dividirLineasNombre(ctx, nombreUpper, contentW - 12).slice(0, 2);
+                }
+            }
+
+            if (lineas.length === 1) {
+                ctx.fillText(lineas[0], centerX, 128, contentW - 12);
+            } else {
+                ctx.fillText(lineas[0], centerX, 112, contentW - 12);
+                ctx.fillText(lineas[1], centerX, 152, contentW - 12);
+            }
+
+            // Línea divisoria superior
+            ctx.strokeStyle = 'rgba(200, 169, 126, 0.45)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(contentX, 186);
+            ctx.lineTo(contentRight, 186);
+            ctx.stroke();
+
+            // 4. Recuadro café central (Pases / Adultos & Niños / Mesa)
+            const boxY = 269;
+            const boxH = 168;
+            trazarRectanguloRedondeado(ctx, contentX, boxY, contentW, boxH, 30);
+            ctx.fillStyle = '#6B4F3A';
+            ctx.fill();
+
+            // Separadores verticales dentro del recuadro café
+            const div1X = contentX + 178; // 636
+            const div2X = contentX + 406; // 864
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(div1X, boxY + 34);
+            ctx.lineTo(div1X, boxY + boxH - 34);
+            ctx.moveTo(div2X, boxY + 34);
+            ctx.lineTo(div2X, boxY + boxH - 34);
+            ctx.stroke();
+
+            // Subcolumna 1: PASES
+            const col1Center = contentX + 89;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#E6D5B8';
+            ctx.font = '700 22px "Inria Serif", serif';
+            ctx.fillText('PASES', col1Center, boxY + 48);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '700 66px "Forum", serif';
+            ctx.fillText(String(totalPases), col1Center, boxY + 112);
+
+            // Subcolumna 2: ADULTOS / NIÑOS
+            const col2X = div1X + 32;
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '700 25px "Inria Serif", serif';
+            ctx.fillText(`ADULTOS: ${adultos}`, col2X, boxY + 62);
+            ctx.fillText(`NIÑOS: ${ninos}`, col2X, boxY + 110);
+
+            // Subcolumna 3: MESA
+            const col3Center = div2X + (contentRight - div2X) / 2;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#E6D5B8';
+            ctx.font = '700 22px "Inria Serif", serif';
+            ctx.fillText('MESA', col3Center, boxY + 48);
+
+            const mesaTexto = String(mesa || '').toUpperCase().trim();
+            let mesaSize = 64;
+            if (mesaTexto.length > 3) mesaSize = 46;
+            if (mesaTexto.length > 6) mesaSize = 34;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = `700 ${mesaSize}px "Forum", serif`;
+            ctx.fillText(mesaTexto, col3Center, boxY + 112, (contentRight - div2X) - 20);
+
+            // 5. Pie de tarjeta (Fecha, Salón y Folio)
+            ctx.strokeStyle = 'rgba(200, 169, 126, 0.45)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(contentX, 524);
+            ctx.lineTo(contentRight, 524);
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#6B4F3A';
+            ctx.font = '700 23px "Inria Serif", serif';
+            ctx.fillText('02 • ENE • 2027', contentX, 568);
+
+            ctx.fillStyle = '#555555';
+            ctx.font = '700 21px "Inria Serif", serif';
+            ctx.fillText('SALÓN GRANJA RENATA', contentX, 604);
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#3B2B20';
+            ctx.font = '700 24px "Inria Serif", serif';
+            ctx.fillText(String(folio || ''), contentRight, 604);
+
+            ctx.restore();
+
+            // 6. Borde exterior dorado/beige sobre el perímetro completo
+            trazarRectanguloRedondeado(ctx, 3, 3, W - 6, H - 6, R - 2);
+            ctx.strokeStyle = '#C8A97E';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+
+            return new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    resolve({ blob, dataUrl });
+                }, 'image/png');
+            });
         }
 
         function mostrarAlerta(mensaje) {
@@ -948,8 +1090,8 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
             }
         }
 
-        // Función para renderizar el pase en automático cuando YA tiene mesa asignada
-        function mostrarPaseAutomatico(docData) {
+        // Función para renderizar el pase YA GENERADO EN IMAGEN cuando tiene mesa asignada
+        async function mostrarPaseAutomatico(docData) {
             const form = document.getElementById('rsvpForm');
             const loader = document.getElementById('loadingMessage');
             const passContainer = document.getElementById('automaticPassContainer');
@@ -981,128 +1123,50 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                 passContainer.classList.remove('hidden');
                 passContainer.classList.add('flex');
                 passContainer.innerHTML = `
-                    ${construirPaseMinimalistaHTML('tarjetaPaseAutomatico', docData.nombre, adultos, ninos, docData.totalPases, docData.folio, docData.mesa)}
-                    <p class="text-[9px] uppercase text-[#6B4F3A] font-bold tracking-widest mt-3">Muestra este pase en la entrada del evento</p>
-                    
-                    <button id="btnDescargarPaseAuto" class="mt-4 bg-[#6B4F3A] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#3B2B20] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full max-w-sm mx-auto active:scale-95 tracking-wider">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        Descargar Pase
-                    </button>
+                    <div class="py-8 flex flex-col items-center justify-center">
+                        <div class="w-10 h-10 border-4 border-[#6B4F3A] border-t-transparent rounded-full animate-spin mb-3"></div>
+                        <p class="text-xs uppercase text-[#6B4F3A] font-bold tracking-widest">Preparando tu pase...</p>
+                    </div>
                 `;
 
-                // Asegurar que la foto en pantalla se actualice en cuanto esté lista en Base64
-                obtenerFotoPaseHD();
+                const { blob, dataUrl } = await generarImagenPaseHD(
+                    docData.nombre,
+                    adultos,
+                    ninos,
+                    docData.totalPases,
+                    docData.folio,
+                    docData.mesa
+                );
+
+                if (currentPassBlobUrl) {
+                    window.URL.revokeObjectURL(currentPassBlobUrl);
+                    currentPassBlobUrl = null;
+                }
+                if (blob) {
+                    currentPassBlobUrl = window.URL.createObjectURL(blob);
+                }
+
+                const fileName = `Pase_XV_Aidee_Mesa_${docData.mesa}.png`;
+
+                passContainer.innerHTML = `
+                    <div class="w-full max-w-[360px] mx-auto">
+                        <img src="${dataUrl}" alt="Pase XV Aideé" class="w-full rounded-xl shadow-2xl block" />
+                    </div>
+                    <p class="text-[9px] uppercase text-[#6B4F3A] font-bold tracking-widest mt-3">Muestra este pase en la entrada del evento</p>
+                    
+                    <a id="btnDescargarPaseAuto" href="${currentPassBlobUrl || dataUrl}" download="${fileName}" class="mt-4 bg-[#6B4F3A] text-white font-bold py-4 px-8 uppercase text-xs hover:bg-[#3B2B20] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full max-w-sm mx-auto active:scale-95 tracking-wider">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Descargar Pase
+                    </a>
+                    <p class="text-[10px] uppercase text-[#3B2B20] font-bold mt-3 text-center px-2 tracking-wider opacity-80">En iPhone también puedes mantener presionado el pase y tocar "Guardar en Fotos".</p>
+                `;
 
                 const btnDescargar = document.getElementById('btnDescargarPaseAuto');
-                let cachedPassDataUrl = null;
-
                 if (btnDescargar) {
-                    btnDescargar.addEventListener('click', async () => {
-                        const originalText = btnDescargar.innerHTML;
-
-                        if (cachedPassDataUrl) {
-                            const enlace = document.createElement('a');
-                            enlace.style.display = 'none';
-                            enlace.href = cachedPassDataUrl;
-                            enlace.download = `Pase_XV_Aidee_Mesa_${docData.mesa}.png`;
-                            document.body.appendChild(enlace);
-                            enlace.click();
-                            document.body.removeChild(enlace);
-                            btnDescargar.innerHTML = "¡Descarga iniciada!";
-                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
-                            return;
-                        }
-
-                        const tarjeta = document.getElementById('tarjetaPaseAutomatico');
-                        btnDescargar.innerText = "Generando imagen...";
-
-                        // 1. Esperar a que la foto HD en Base64 esté 100% lista
-                        const fotoHD = await obtenerFotoPaseHD();
-
-                        // 2. Parche temporal para evitar el desplazamiento vertical de textos por Tailwind sin afectar la foto
-                        const h2cFix = document.createElement('style');
-                        h2cFix.id = 'h2c-tailwind-fix';
-                        h2cFix.innerHTML = `
-                            img:not(.pase-foto-img) { display: inline !important; }
-                            img.pase-foto-img { display: block !important; width: 100% !important; height: 100% !important; }
-                        `;
-                        document.head.appendChild(h2cFix);
-
-                        const clone = tarjeta.cloneNode(true);
-                        clone.style.width = "360px";
-                        clone.style.height = "225px";
-                        clone.style.margin = "0";
-                        clone.style.boxShadow = "none";
-                        clone.style.position = "fixed";
-                        clone.style.top = "0";
-                        clone.style.left = "-9999px";
-                        clone.style.zIndex = "-9999";
-                        document.body.appendChild(clone);
-
-                        try {
-                            // 3. Inyectar la foto Base64 en el clon y esperar a que termine de decodificar
-                            const cloneImg = clone.querySelector('.pase-foto-img');
-                            if (cloneImg) {
-                                const srcFinal = fotoHD || `${rawFotoPase}?dl=${Date.now()}`;
-                                if (!fotoHD) cloneImg.crossOrigin = "anonymous";
-                                cloneImg.src = srcFinal;
-
-                                await new Promise((res) => {
-                                    if (cloneImg.complete && cloneImg.naturalWidth > 0) return res();
-                                    cloneImg.onload = res;
-                                    cloneImg.onerror = res;
-                                });
-                                if (cloneImg.decode) {
-                                    try { await cloneImg.decode(); } catch (_) {}
-                                }
-                            }
-
-                            if (document.fonts && document.fonts.ready) {
-                                await document.fonts.ready;
-                            }
-
-                            const canvas = await window.html2canvas(clone, {
-                                backgroundColor: null,
-                                scale: 3,
-                                width: 360,
-                                height: 225,
-                                useCORS: true,
-                                allowTaint: false,
-                                scrollX: 0,
-                                scrollY: 0
-                            });
-
-                            const base64 = canvas.toDataURL('image/png');
-                            cachedPassDataUrl = base64;
-
-                            canvas.toBlob(blob => {
-                                const url = window.URL.createObjectURL(blob);
-                                const enlace = document.createElement('a');
-                                enlace.style.display = 'none';
-                                enlace.href = url;
-                                enlace.download = `Pase_XV_Aidee_Mesa_${docData.mesa}.png`;
-                                document.body.appendChild(enlace);
-                                enlace.click();
-                                document.body.removeChild(enlace);
-                                setTimeout(() => window.URL.revokeObjectURL(url), 5000);
-                            }, 'image/png');
-
-                            tarjeta.outerHTML = `
-                                <div id="tarjetaPaseAutomatico" class="w-full max-w-[360px] mx-auto">
-                                    <img src="${base64}" alt="Pase XV Aideé" class="w-full shadow-2xl rounded-xl" />
-                                    <p class="text-[10px] uppercase text-[#3B2B20] font-bold mt-3 text-center px-2 tracking-widest">Si la descarga no inició automáticamente, mantén presionado el pase y selecciona "Guardar en Fotos".</p>
-                                </div>
-                            `;
-
-                            btnDescargar.innerHTML = "¡Descarga iniciada!";
-                            setTimeout(() => btnDescargar.innerHTML = originalText, 4000);
-                        } catch (err) {
-                            console.error("Error", err);
-                            btnDescargar.innerHTML = originalText;
-                        } finally {
-                            if (document.body.contains(clone)) document.body.removeChild(clone);
-                            if (document.head.contains(h2cFix)) document.head.removeChild(h2cFix);
-                        }
+                    btnDescargar.addEventListener('click', () => {
+                        const originalHTML = btnDescargar.innerHTML;
+                        btnDescargar.innerText = "¡Descarga iniciada!";
+                        setTimeout(() => { btnDescargar.innerHTML = originalHTML; }, 3500);
                     });
                 }
             } else {
