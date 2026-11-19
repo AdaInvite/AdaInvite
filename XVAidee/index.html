@@ -785,44 +785,91 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         const dbCollectionName = "confirmaciones_aidee_gutierrez_romo_xv";
         const rawFotoPase = "https://fotos.adainvite.com/PaquetePremium/XVAideGutirrezRomo/e9d64235-c253-49fc-a589-6bbc81f48b1c.jpg";
         let fotoPaseSrc = rawFotoPase;
+        let fotoPaseBase64 = null;
+        let fotoPasePromise = null;
 
-        // Pre-procesar y recortar la foto en ALTA DEFINICIÓN (4x)
-        function precargarFotoPase() {
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.onload = () => {
-                try {
-                    const targetW = 548;
-                    const targetH = 900;
-                    const canvas = document.createElement('canvas');
-                    canvas.width = targetW;
-                    canvas.height = targetH;
-                    const ctx = canvas.getContext('2d');
+        // Pre-procesar y recortar la foto en ALTA DEFINICIÓN evitando choque de caché CORS en Safari
+        function obtenerFotoPaseHD() {
+            if (fotoPaseBase64) return Promise.resolve(fotoPaseBase64);
+            if (fotoPasePromise) return fotoPasePromise;
 
-                    const imgRatio = img.naturalWidth / img.naturalHeight;
-                    const targetRatio = targetW / targetH;
-                    let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
+            fotoPasePromise = new Promise((resolve) => {
+                const procesarImagen = (img) => {
+                    try {
+                        const targetW = 548;
+                        const targetH = 900;
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetW;
+                        canvas.height = targetH;
+                        const ctx = canvas.getContext('2d');
 
-                    if (imgRatio > targetRatio) {
-                        sWidth = img.naturalHeight * targetRatio;
-                        sx = (img.naturalWidth - sWidth) / 2;
-                    } else {
-                        sHeight = img.naturalWidth / targetRatio;
-                        sy = (img.naturalHeight - sHeight) / 2;
+                        const imgRatio = img.naturalWidth / img.naturalHeight;
+                        const targetRatio = targetW / targetH;
+                        let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
+
+                        if (imgRatio > targetRatio) {
+                            sWidth = img.naturalHeight * targetRatio;
+                            sx = (img.naturalWidth - sWidth) / 2;
+                        } else {
+                            sHeight = img.naturalWidth / targetRatio;
+                            sy = (img.naturalHeight - sHeight) / 2;
+                        }
+
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetW, targetH);
+
+                        fotoPaseBase64 = canvas.toDataURL('image/jpeg', 0.92);
+                        fotoPaseSrc = fotoPaseBase64;
+
+                        // Si el pase ya se había pintado en pantalla, actualizar su foto al instante
+                        document.querySelectorAll('.pase-foto-img').forEach(el => {
+                            el.src = fotoPaseBase64;
+                        });
+
+                        resolve(fotoPaseBase64);
+                    } catch (e) {
+                        console.warn("Error procesando foto del pase:", e);
+                        fotoPasePromise = null;
+                        resolve(null);
                     }
+                };
 
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetW, targetH);
+                const cargarPorImage = () => {
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => procesarImagen(img);
+                    img.onerror = () => {
+                        fotoPasePromise = null;
+                        resolve(null);
+                    };
+                    img.src = `${rawFotoPase}?pase_hd=${Date.now()}`;
+                };
 
-                    fotoPaseSrc = canvas.toDataURL('image/png');
-                } catch (e) {
-                    console.warn("Usando URL directa para el pase:", e);
-                }
-            };
-            img.src = rawFotoPase + "?v=pase_hd";
+                fetch(`${rawFotoPase}?cors=${Date.now()}`, { mode: 'cors', cache: 'no-store' })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Error de red');
+                        return res.blob();
+                    })
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
+                        const img = new Image();
+                        img.onload = () => {
+                            procesarImagen(img);
+                            URL.revokeObjectURL(blobUrl);
+                        };
+                        img.onerror = () => {
+                            URL.revokeObjectURL(blobUrl);
+                            cargarPorImage();
+                        };
+                        img.src = blobUrl;
+                    })
+                    .catch(() => cargarPorImage());
+            });
+
+            return fotoPasePromise;
         }
-        precargarFotoPase();
+        obtenerFotoPaseHD();
 
         let db;
         try {
@@ -840,7 +887,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                 <div id="${idContenedor}" class="minimal-ticket text-left">
                     <!-- Columna Izquierda: Foto HD -->
                     <div style="width: 38%; height: 100%; position: relative; overflow: hidden; background-color: #E6D5B8;">
-                        <img src="${fotoPaseSrc}" class="pase-foto-img" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Aideé">
+                        <img src="${fotoPaseBase64 || fotoPaseSrc}" class="pase-foto-img" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Aideé">
                         <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(59,43,32,0.85) 0%, rgba(0,0,0,0) 60%);"></div>
                         <div style="position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; padding: 0 6px;">
                             <p style="font-size: 8px; color: #E6D5B8; text-transform: uppercase; font-weight: 700; margin: 0 0 3px 0; line-height: 1.2;">MIS XV AÑOS</p>
@@ -943,6 +990,9 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                     </button>
                 `;
 
+                // Asegurar que la foto en pantalla se actualice en cuanto esté lista en Base64
+                obtenerFotoPaseHD();
+
                 const btnDescargar = document.getElementById('btnDescargarPaseAuto');
                 let cachedPassDataUrl = null;
 
@@ -966,12 +1016,15 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                         const tarjeta = document.getElementById('tarjetaPaseAutomatico');
                         btnDescargar.innerText = "Generando imagen...";
 
-                        // Parche temporal para evitar el desplazamiento vertical por Tailwind CSS
+                        // 1. Esperar a que la foto HD en Base64 esté 100% lista
+                        const fotoHD = await obtenerFotoPaseHD();
+
+                        // 2. Parche temporal para evitar el desplazamiento vertical de textos por Tailwind sin afectar la foto
                         const h2cFix = document.createElement('style');
                         h2cFix.id = 'h2c-tailwind-fix';
                         h2cFix.innerHTML = `
-                            img { display: inline !important; }
-                            .minimal-ticket img.pase-foto-img { display: block !important; }
+                            img:not(.pase-foto-img) { display: inline !important; }
+                            img.pase-foto-img { display: block !important; width: 100% !important; height: 100% !important; }
                         `;
                         document.head.appendChild(h2cFix);
 
@@ -987,6 +1040,23 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                         document.body.appendChild(clone);
 
                         try {
+                            // 3. Inyectar la foto Base64 en el clon y esperar a que termine de decodificar
+                            const cloneImg = clone.querySelector('.pase-foto-img');
+                            if (cloneImg) {
+                                const srcFinal = fotoHD || `${rawFotoPase}?dl=${Date.now()}`;
+                                if (!fotoHD) cloneImg.crossOrigin = "anonymous";
+                                cloneImg.src = srcFinal;
+
+                                await new Promise((res) => {
+                                    if (cloneImg.complete && cloneImg.naturalWidth > 0) return res();
+                                    cloneImg.onload = res;
+                                    cloneImg.onerror = res;
+                                });
+                                if (cloneImg.decode) {
+                                    try { await cloneImg.decode(); } catch (_) {}
+                                }
+                            }
+
                             if (document.fonts && document.fonts.ready) {
                                 await document.fonts.ready;
                             }
