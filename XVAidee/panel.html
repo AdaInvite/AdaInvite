@@ -117,12 +117,12 @@
                 </button>
             </div>
 
-            <!-- SECCIÓN 3: LISTA DE ASISTENCIA (Estilo Tarjetas App) -->
+            <!-- SECCIÓN 3: LISTA DE ASISTENCIA -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-5">
                     <h3 class="info-label flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Asistencia</h3>
                     <div class="flex items-center gap-2">
-                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 listados</span>
+                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full" id="contador-tarjetas">0 confirmados</span>
                         <button onclick="descargarCSV()" class="p-1.5 bg-gray-50 rounded-full text-primary hover:bg-gray-100 transition-colors" title="Descargar Lista">
                             <i data-lucide="download" class="w-4 h-4"></i>
                         </button>
@@ -166,8 +166,89 @@
         </section>
     </div>
 
-    <!-- MODAL PERSONALIZADO (POPUP) -->
-    <div id="customModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <!-- MODAL ASIGNAR MESA (VENTANA EMERGENTE) -->
+    <div id="modalAsignarMesa" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalMesa()"></div>
+        <div class="relative bg-white p-6 rounded-3xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-300" id="boxModalMesa">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <span class="info-label block">Asignar Mesa</span>
+                    <h3 id="mesaModalNombre" class="text-base font-bold text-gray-800 capitalize mt-0.5">Invitado</h3>
+                </div>
+                <button onclick="cerrarModalMesa()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400 block mb-1 ml-1">Número de Mesa</label>
+                    <input type="text" id="inputModalMesa" placeholder="Ej. 4 o Mesa Familiar" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                </div>
+
+                <button onclick="confirmarAsignacionMesaModal()" id="btnGuardarModalMesa" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Guardar Mesa 
+                </button>
+            </div>
+
+            <!-- Mensaje generado al asignar mesa -->
+            <div id="mesaMensajeGeneradoBox" class="hidden mt-5 pt-4 border-t border-gray-100">
+                <p class="text-[10px] text-primary font-bold uppercase mb-2 flex items-center gap-1">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Pase activado • Mensaje listo para enviar:
+                </p>
+                <div id="mesaMensajeTexto" class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-3 text-xs text-gray-600 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto"></div>
+                <button onclick="copiarMensajeModalMesa()" id="btnCopiarModalMesa" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition-colors active:scale-95">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar mensaje para WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR REGISTRO (VENTANA EMERGENTE) -->
+    <div id="modalEditarRegistro" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalEditar()"></div>
+        <div class="relative bg-white p-6 rounded-3xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-300" id="boxModalEditar">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <span class="info-label block">Editar Asistencia</span>
+                    <h3 id="editarModalNombre" class="text-base font-bold text-gray-800 capitalize mt-0.5">Invitado</h3>
+                </div>
+                <button onclick="cerrarModalEditar()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-400 block mb-1 ml-1">Adultos</label>
+                        <input type="number" id="inputModalAdultos" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-400 block mb-1 ml-1">Niños</label>
+                        <input type="number" id="inputModalNinos" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400 block mb-1 ml-1">Mesa Asignada</label>
+                    <input type="text" id="inputModalEditarMesa" placeholder="Ej. 4 o Sin asignar" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm transition-all focus:bg-white">
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button onclick="cerrarModalEditar()" class="flex-1 bg-gray-100 text-gray-600 font-bold py-3 rounded-xl uppercase tracking-wider text-xs hover:bg-gray-200 transition-colors active:scale-95">
+                        Cancelar
+                    </button>
+                    <button onclick="confirmarEdicionModal()" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl uppercase tracking-wider text-xs hover:bg-opacity-90 shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                        <i data-lucide="save" class="w-4 h-4"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PERSONALIZADO (ALERTAS / ELIMINAR) -->
+    <div id="customModal" class="fixed inset-0 z-[110] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeModal(false)"></div>
         <div class="relative bg-white p-6 rounded-3xl shadow-2xl w-[85%] max-w-sm transform scale-95 transition-transform duration-300" id="modalContentBox">
             <div id="modalIconContainer" class="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4">
@@ -320,7 +401,7 @@
         }
     </script>
 
-    <!-- LÓGICA DE FIREBASE PARA TARJETAS Y DISTRIBUCIÓN DE MESAS EN TIEMPO REAL -->
+    <!-- LÓGICA DE FIREBASE PARA TARJETAS, MODALES DE MESA Y EDICIÓN, Y DISTRIBUCIÓN DE MESAS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -342,6 +423,7 @@
         const q = query(confirmacionesRef, orderBy("fecha", "desc"));
 
         let listaInvitadosGlobal = [];
+        let invitadoActivoId = null;
 
         onSnapshot(q, (snapshot) => {
             listaInvitadosGlobal = [];
@@ -476,7 +558,7 @@
             lucide.createIcons();
         };
 
-        // --- FUNCIONES DE LA TABLA Y BUSCADOR ---
+        // --- BUSCADOR ---
         const inputBuscador = document.getElementById('buscador');
         inputBuscador.addEventListener('input', (e) => {
             const termino = e.target.value.toLowerCase();
@@ -488,10 +570,11 @@
             renderizarLista(filtrados, false);
         });
 
-        function construirMensajePaseListo(inv) {
+        function construirMensajePaseListo(inv, mesaOverride) {
+            const mesaUsar = mesaOverride || inv.mesa;
             const pasesUrl = inv.pasesAsignados || inv.totalPersona;
-            const linkPersonalizado = `${window.URL_BASE_INVITACION}?n=${encodeURIComponent(inv.nombre)}&p=${pasesUrl}#seccion-confirmacion`;
-            return `¡Hola *${inv.nombre}*! ✨ Muchas gracias por confirmar tu asistencia a los XV años de Aideé Gutiérrez Romo.\n\nTe compartimos que tu lugar asignado es la *Mesa ${inv.mesa}* 🪑 (${inv.totalPersona} ${inv.totalPersona === 1 ? 'pase confirmado' : 'pases confirmados'}).\n\nYa puedes entrar nuevamente a tu invitación en el siguiente enlace; en la parte final ya aparece disponible en automático tu *Pase de Acceso oficial* con tu número de mesa para que lo descargues:\n${linkPersonalizado}`;
+            const linkPersonalizado = `${window.URL_BASE_INVITACION}?n=${encodeURIComponent(inv.nombre)}&p=${pasesUrl}`;
+            return `¡Hola *${inv.nombre}*! ✨ Gracias por confirmar.\n\nTu lugar asignado es la *Mesa ${mesaUsar}* 🪑. Ya puedes descargar tu pase en la sección donde confirmaste asistencia:\n${linkPersonalizado}`;
         }
 
         function renderizarLista(lista, actualizarStats = true) {
@@ -515,7 +598,7 @@
             }
 
             lista.forEach(inv => {
-                const tieneMesa = inv.mesa && inv.mesa !== "Por asignar" && inv.mesa.toString().trim() !== "";
+                const tieneMesa = inv.mesa && inv.mesa.toString().trim() !== "" && inv.mesa !== "Por asignar";
                 if(actualizarStats) {
                     totalFamilias++;
                     totalPasesGlobal += inv.totalPersona;
@@ -536,29 +619,20 @@
                     : "bg-gray-100 text-gray-500";
                 const textoMesaBadge = tieneMesa ? `Mesa ${inv.mesa} • Pase Activo` : "Sin mesa asignada";
 
-                const bloqueMensajePase = tieneMesa ? `
-                    <div class="mt-3 pt-3 border-t border-gray-100 pl-2 pr-2">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="text-[10px] font-bold uppercase text-primary flex items-center gap-1">
-                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Mensaje de Pase Listo (Mesa ${inv.mesa}):
-                            </span>
-                            <button onclick="toggleVerMensaje('${inv.id}')" class="text-[10px] font-bold text-gray-400 hover:text-primary underline">
-                                Ver / Ocultar
-                            </button>
-                        </div>
-                        <div id="box-msg-${inv.id}" class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 text-[11px] text-gray-600 whitespace-pre-wrap leading-relaxed mb-2 max-h-32 overflow-y-auto">${construirMensajePaseListo(inv)}</div>
-                        <button onclick="copiarMensajePase('${inv.id}')" id="btn-copy-pase-${inv.id}" class="w-full flex items-center justify-center gap-1.5 bg-white border-2 border-primary text-primary py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider hover:bg-gray-50 transition-all active:scale-95">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar mensaje para el invitado
-                        </button>
-                    </div>
-                ` : '';
+                const botonMesaTarjeta = tieneMesa
+                    ? `<button onclick="abrirModalMesa('${inv.id}')" class="w-full mt-2 bg-primary/10 border border-primary/30 text-primary font-bold py-2 px-3 rounded-xl text-[11px] uppercase tracking-wider hover:bg-primary hover:text-white transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                           <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Cambiar mesa
+                       </button>`
+                    : `<button onclick="abrirModalMesa('${inv.id}')" class="w-full mt-2 bg-primary text-white font-bold py-2.5 px-3 rounded-xl text-[11px] uppercase tracking-wider hover:bg-opacity-90 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                           <i data-lucide="armchair" class="w-3.5 h-3.5"></i> Asignar mesa
+                       </button>`;
 
                 htmlTarjetas += `
                     <div class="p-4 border border-gray-100 rounded-2xl bg-white flex flex-col gap-2 relative overflow-hidden group hover:shadow-md transition-shadow" id="tarjeta-${inv.id}">
                         <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
                         
-                        <div class="absolute top-2 right-2 flex gap-1 z-10" id="acciones-${inv.id}">
-                            <button onclick="toggleEdicion('${inv.id}')" class="bg-blue-50 text-blue-500 p-1.5 rounded-lg hover:bg-blue-100 transition-colors shadow-sm" title="Editar registro">
+                        <div class="absolute top-2 right-2 flex gap-1 z-10">
+                            <button onclick="abrirModalEditar('${inv.id}')" class="bg-blue-50 text-blue-500 p-1.5 rounded-lg hover:bg-blue-100 transition-colors shadow-sm" title="Editar registro">
                                 <i data-lucide="pencil" class="w-4 h-4"></i>
                             </button>
                             <button onclick="eliminarRegistro('${inv.id}', '${inv.nombre}')" class="bg-red-50 text-red-500 p-1.5 rounded-lg hover:bg-red-100 transition-colors shadow-sm" title="Eliminar registro">
@@ -566,65 +640,29 @@
                             </button>
                         </div>
 
-                        <!-- VISTA NORMAL -->
-                        <div id="vista-${inv.id}">
-                            <div class="flex justify-between items-start pl-2 pr-16">
-                                <div>
-                                    <p class="font-bold text-gray-800 text-sm capitalize leading-tight">${inv.nombre}</p>
-                                    <div class="flex flex-wrap items-center gap-2 mt-1">
-                                        <p class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Folio: ${inv.folio}</p>
-                                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${badgeMesaClass}">${textoMesaBadge}</span>
-                                    </div>
-                                </div>
-                                <div class="bg-primary text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
-                                    ${inv.totalPersona}
+                        <div class="flex justify-between items-start pl-2 pr-16">
+                            <div>
+                                <p class="font-bold text-gray-800 text-sm capitalize leading-tight">${inv.nombre}</p>
+                                <div class="flex flex-wrap items-center gap-2 mt-1">
+                                    <p class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Folio: ${inv.folio}</p>
+                                    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${badgeMesaClass}">${textoMesaBadge}</span>
                                 </div>
                             </div>
-
-                            <!-- ASIGNACIÓN DE MESA PARA ACTIVAR EL PASE Y GENERAR EL MENSAJE -->
-                            <div class="mt-3 pl-2 pr-2 flex items-center gap-2">
-                                <input type="text" id="quick-mesa-${inv.id}" value="${tieneMesa ? inv.mesa : ''}" placeholder="Asignar N° de mesa (ej. 4)" class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:bg-white">
-                                <button onclick="guardarMesaRapida('${inv.id}')" class="bg-primary text-white px-3.5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-opacity-90 transition-colors shrink-0 shadow-sm active:scale-95">
-                                    ${tieneMesa ? 'Actualizar Mesa' : 'Asignar Mesa'}
-                                </button>
-                            </div>
-
-                            ${bloqueMensajePase}
-                            
-                            <div class="flex justify-between items-end mt-2 border-t border-gray-50 pt-2 pl-2 pr-2">
-                                <div class="text-[10px] uppercase font-bold text-gray-500">
-                                    <span>${inv.adultos} Adultos • ${inv.ninos} Niños${etiquetaAsignados}</span>
-                                </div>
-                                <div class="text-[9px] text-gray-400 flex items-center gap-1">
-                                    <i data-lucide="clock" class="w-3 h-3"></i> ${fechaFormateada}
-                                </div>
+                            <div class="bg-primary text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+                                ${inv.totalPersona}
                             </div>
                         </div>
 
-                        <!-- VISTA EDICIÓN (Oculta por defecto) -->
-                        <div id="edicion-${inv.id}" class="hidden pl-2 pr-2">
-                            <p class="font-bold text-gray-800 text-sm capitalize leading-tight mb-3">Editando: ${inv.nombre}</p>
-                            
-                            <div class="grid grid-cols-3 gap-2 mb-3">
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Adultos</label>
-                                    <input type="number" id="edit-ad-${inv.id}" value="${inv.adultos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Niños</label>
-                                    <input type="number" id="edit-ni-${inv.id}" value="${inv.ninos}" min="0" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-gray-500 block mb-1">Mesa</label>
-                                    <input type="text" id="edit-mesa-${inv.id}" value="${tieneMesa ? inv.mesa : ''}" placeholder="Ej. 4" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
-                                </div>
+                        <div class="pl-2 pr-2">
+                            ${botonMesaTarjeta}
+                        </div>
+                        
+                        <div class="flex justify-between items-end mt-1 border-t border-gray-50 pt-2 pl-2 pr-2">
+                            <div class="text-[10px] uppercase font-bold text-gray-500">
+                                <span>${inv.adultos} Adultos • ${inv.ninos} Niños${etiquetaAsignados}</span>
                             </div>
-
-                            <div class="flex justify-end gap-2 border-t border-gray-50 pt-3">
-                                <button onclick="toggleEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancelar</button>
-                                <button onclick="guardarEdicion('${inv.id}')" class="px-3 py-1.5 text-xs font-bold text-white bg-primary rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-1">
-                                    <i data-lucide="save" class="w-3 h-3"></i> Guardar
-                                </button>
+                            <div class="text-[9px] text-gray-400 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3 h-3"></i> ${fechaFormateada}
                             </div>
                         </div>
                     </div>
@@ -644,16 +682,82 @@
             document.getElementById('contador-tarjetas').innerText = fam + " confirmados";
         }
 
-        window.toggleVerMensaje = (id) => {
-            const box = document.getElementById(`box-msg-${id}`);
-            if (box) box.classList.toggle('hidden');
-        };
-
-        window.copiarMensajePase = async (id) => {
+        // --- VENTANA EMERGENTE: ASIGNAR MESA ---
+        window.abrirModalMesa = (id) => {
             const inv = listaInvitadosGlobal.find(item => item.id === id);
             if (!inv) return;
 
-            const texto = construirMensajePaseListo(inv);
+            invitadoActivoId = id;
+            const tieneMesa = inv.mesa && inv.mesa.toString().trim() !== "" && inv.mesa !== "Por asignar";
+
+            document.getElementById('mesaModalNombre').textContent = inv.nombre;
+            document.getElementById('inputModalMesa').value = tieneMesa ? inv.mesa : '';
+
+            // Siempre oculto al abrir; solo se genera y muestra al guardar la mesa
+            document.getElementById('mesaMensajeGeneradoBox').classList.add('hidden');
+            document.getElementById('mesaMensajeTexto').textContent = '';
+
+            const modal = document.getElementById('modalAsignarMesa');
+            const box = document.getElementById('boxModalMesa');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                document.getElementById('inputModalMesa').focus();
+            }, 10);
+            lucide.createIcons();
+        };
+
+        window.cerrarModalMesa = () => {
+            const modal = document.getElementById('modalAsignarMesa');
+            const box = document.getElementById('boxModalMesa');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                invitadoActivoId = null;
+            }, 300);
+        };
+
+        window.confirmarAsignacionMesaModal = async () => {
+            if (!invitadoActivoId) return;
+            const inv = listaInvitadosGlobal.find(item => item.id === invitadoActivoId);
+            const valorMesa = document.getElementById('inputModalMesa').value.trim();
+
+            if (!valorMesa) {
+                await showModal({
+                    type: 'warning',
+                    title: 'Ingresa un número de mesa',
+                    message: 'Escribe el número o nombre de la mesa para activar el pase del invitado.'
+                });
+                return;
+            }
+
+            const btn = document.getElementById('btnGuardarModalMesa');
+            btn.disabled = true;
+
+            try {
+                await updateDoc(doc(db, dbCollectionName, invitadoActivoId), {
+                    mesa: valorMesa
+                });
+
+                document.getElementById('mesaMensajeTexto').textContent = construirMensajePaseListo(inv, valorMesa);
+                document.getElementById('mesaMensajeGeneradoBox').classList.remove('hidden');
+                lucide.createIcons();
+            } catch (error) {
+                console.error("Error asignando mesa:", error);
+                await showModal({
+                    type: 'warning',
+                    title: 'Error de conexión',
+                    message: 'No se pudo asignar la mesa. Intenta de nuevo.'
+                });
+            } finally {
+                btn.disabled = false;
+            }
+        };
+
+        window.copiarMensajeModalMesa = () => {
+            const texto = document.getElementById('mesaMensajeTexto').textContent;
             const textArea = document.createElement("textarea");
             textArea.value = texto;
             document.body.appendChild(textArea);
@@ -661,27 +765,87 @@
 
             try {
                 document.execCommand('copy');
-                const btn = document.getElementById(`btn-copy-pase-${id}`);
-                if (btn) {
-                    const originalHTML = btn.innerHTML;
-                    btn.classList.replace('border-primary', 'border-green-500');
-                    btn.classList.replace('text-primary', 'text-green-600');
-                    btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i> Copiado con éxito`;
+                const btn = document.getElementById('btnCopiarModalMesa');
+                btn.classList.replace('border-primary', 'border-green-500');
+                btn.classList.replace('text-primary', 'text-green-600');
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copiado con éxito`;
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    btn.classList.replace('border-green-500', 'border-primary');
+                    btn.classList.replace('text-green-600', 'text-primary');
+                    btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> Copiar mensaje para WhatsApp`;
                     lucide.createIcons();
-                    setTimeout(() => {
-                        btn.classList.replace('border-green-500', 'border-primary');
-                        btn.classList.replace('text-green-600', 'text-primary');
-                        btn.innerHTML = originalHTML;
-                        lucide.createIcons();
-                    }, 3000);
-                }
+                }, 3000);
             } catch (err) {
                 console.error("Error al copiar:", err);
             }
             document.body.removeChild(textArea);
         };
 
-        // --- 3. EXPORTAR A CSV ---
+        // --- VENTANA EMERGENTE: EDITAR REGISTRO ---
+        window.abrirModalEditar = (id) => {
+            const inv = listaInvitadosGlobal.find(item => item.id === id);
+            if (!inv) return;
+
+            invitadoActivoId = id;
+            const tieneMesa = inv.mesa && inv.mesa.toString().trim() !== "" && inv.mesa !== "Por asignar";
+
+            document.getElementById('editarModalNombre').textContent = inv.nombre;
+            document.getElementById('inputModalAdultos').value = inv.adultos;
+            document.getElementById('inputModalNinos').value = inv.ninos;
+            document.getElementById('inputModalEditarMesa').value = tieneMesa ? inv.mesa : '';
+
+            const modal = document.getElementById('modalEditarRegistro');
+            const box = document.getElementById('boxModalEditar');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+            }, 10);
+            lucide.createIcons();
+        };
+
+        window.cerrarModalEditar = () => {
+            const modal = document.getElementById('modalEditarRegistro');
+            const box = document.getElementById('boxModalEditar');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                invitadoActivoId = null;
+            }, 300);
+        };
+
+        window.confirmarEdicionModal = async () => {
+            if (!invitadoActivoId) return;
+
+            const adultosNum = parseInt(document.getElementById('inputModalAdultos').value) || 0;
+            const ninosNum = parseInt(document.getElementById('inputModalNinos').value) || 0;
+            const mesaInput = document.getElementById('inputModalEditarMesa').value.trim();
+            const total = adultosNum + ninosNum;
+            const mesaFinal = mesaInput !== "" ? mesaInput : "Por asignar";
+
+            try {
+                await updateDoc(doc(db, dbCollectionName, invitadoActivoId), { 
+                    adultos: adultosNum,
+                    ninos: ninosNum,
+                    totalPases: total,
+                    totalSolicitado: total,
+                    mesa: mesaFinal
+                });
+                cerrarModalEditar();
+            } catch (error) {
+                console.error("Error actualizando documento: ", error);
+                await showModal({ 
+                    type: 'warning', 
+                    title: 'Error de conexión', 
+                    message: 'Ocurrió un error al intentar guardar los cambios.' 
+                });
+            }
+        };
+
+        // --- EXPORTAR A CSV ---
         window.descargarCSV = async () => {
             if(listaInvitadosGlobal.length === 0) {
                 await showModal({ 
@@ -719,79 +883,7 @@
             }, 100);
         };
 
-        // --- ASIGNAR MESA RÁPIDA Y HABILITAR PASE ---
-        window.guardarMesaRapida = async (id) => {
-            const inputMesa = document.getElementById(`quick-mesa-${id}`);
-            const valorMesa = inputMesa.value.trim();
-
-            if (!valorMesa) {
-                await showModal({
-                    type: 'warning',
-                    title: 'Ingresa un número de mesa',
-                    message: 'Escribe el número o nombre de la mesa para generar el pase del invitado.'
-                });
-                return;
-            }
-
-            try {
-                await updateDoc(doc(db, dbCollectionName, id), {
-                    mesa: valorMesa
-                });
-            } catch (error) {
-                console.error("Error asignando mesa:", error);
-                await showModal({
-                    type: 'warning',
-                    title: 'Error al asignar mesa',
-                    message: 'No se pudo guardar el número de mesa. Revisa tu conexión.'
-                });
-            }
-        };
-
-        // --- 4. FUNCIONES DE EDICIÓN Y ELIMINACIÓN ---
-        window.toggleEdicion = (id) => {
-            const vista = document.getElementById(`vista-${id}`);
-            const edicion = document.getElementById(`edicion-${id}`);
-            const acciones = document.getElementById(`acciones-${id}`);
-            
-            if (vista.classList.contains('hidden')) {
-                vista.classList.remove('hidden');
-                edicion.classList.add('hidden');
-                acciones.classList.remove('hidden');
-            } else {
-                vista.classList.add('hidden');
-                edicion.classList.remove('hidden');
-                acciones.classList.add('hidden');
-            }
-        };
-
-        window.guardarEdicion = async (id) => {
-            const adInput = document.getElementById(`edit-ad-${id}`).value;
-            const niInput = document.getElementById(`edit-ni-${id}`).value;
-            const mesaInput = document.getElementById(`edit-mesa-${id}`).value.trim();
-            
-            const adultosNum = parseInt(adInput) || 0;
-            const ninosNum = parseInt(niInput) || 0;
-            const total = adultosNum + ninosNum;
-            const mesaFinal = mesaInput !== "" ? mesaInput : "Por asignar";
-
-            try {
-                await updateDoc(doc(db, dbCollectionName, id), { 
-                    adultos: adultosNum,
-                    ninos: ninosNum,
-                    totalPases: total,
-                    totalSolicitado: total,
-                    mesa: mesaFinal
-                });
-            } catch (error) {
-                console.error("Error actualizando documento: ", error);
-                await showModal({ 
-                    type: 'warning', 
-                    title: 'Error de conexión', 
-                    message: 'Ocurrió un error al intentar guardar los cambios.' 
-                });
-            }
-        };
-
+        // --- ELIMINAR REGISTRO ---
         window.eliminarRegistro = async (id, nombre) => {
             const confirmacion = await showModal({
                 type: 'danger',
