@@ -224,7 +224,6 @@
             </div>
             <div class="seal-wrapper" onclick="openEnvelope()">
                 <div class="text-sm tracking-[0.1em] uppercase mb-4 animate-bounce text-tema-negro drop-shadow-sm font-bold bg-transparent">Toca para abrir</div>
-                <!-- Imagen sin filtros -->
                 <img src="https://i.imgur.com/iumrlFF.png" class="w-44" style="animation: floating 4s infinite ease-in-out;" alt="Sello">
             </div>
         </div>
@@ -242,7 +241,7 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main id="section-main" class="app-container shadow-2xl">
         
-       <!-- SECCIÓN 1: ENCABEZADO -->
+        <!-- SECCIÓN 1: ENCABEZADO -->
         <section class="min-h-[95svh] bg-white textura-papel relative flex flex-col justify-end items-center px-6 pb-12 text-center overflow-hidden">
             
             <!-- Decoración Esquina Superior Izquierda -->
@@ -270,8 +269,8 @@
             <img src="https://i.imgur.com/BepyXXd.png" class="w-full h-auto object-cover block" alt="Nuestra Foto">
         </div>
 
-       <!-- SECCIÓN 2: PADRES Y NOVIOS -->
-       <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center items-center px-6 py-6 text-center overflow-hidden">
+        <!-- SECCIÓN 2: PADRES Y NOVIOS -->
+        <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center items-center px-6 py-6 text-center overflow-hidden">
             <div class="reveal relative z-10 w-full">
                 <p class="text-base uppercase tracking-widest text-tema-gris leading-loose mb-4 px-4 py-2 font-bold max-w-[300px] mx-auto border-b border-tema-amarillo pb-4">
                     CON NUESTRO AMOR, LA BENDICIÓN DE DIOS Y LA DE NUESTROS PADRES
@@ -413,8 +412,8 @@
             <img src="https://i.imgur.com/dWUoGYR.png" class="min-h-[80svh] w-full h-auto object-cover block" alt="Separador 3">
         </div>
 
-       <!-- SECCIÓN UBICACIÓN Y CUENTA REGRESIVA -->
-       <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center px-6 py-12 text-center z-10">
+        <!-- SECCIÓN UBICACIÓN Y CUENTA REGRESIVA -->
+        <section class="min-h-[100svh] bg-white textura-papel relative flex flex-col justify-center px-6 py-12 text-center z-10">
             <div class="reveal max-w-sm mx-auto w-full">
                 
                 <div class="flex flex-col items-center justify-center mb-4 w-full">
@@ -724,7 +723,7 @@
                         <svg class="w-8 h-8 text-tema-negro" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <p class="text-tema-negro font-bold text-xl mb-3">¡Asistencia Confirmada!</p>
-                    <p class="text-tema-gris text-sm leading-relaxed">Tu confirmación fue registrada a tiempo en nuestro sistema.<br><br>Por favor, dirígete a la sección de abajo para <strong>Recuperar tu Pase</strong>.</p>
+                    <p class="text-tema-gris text-sm leading-relaxed">Tu confirmación fue registrada en nuestro sistema.<br><br>Desliza hacia abajo para ver y guardar tu <strong>Pase de Acceso actualizado</strong>.</p>
                 </div>
 
             </div>
@@ -918,11 +917,16 @@
             observer.observe(slider);
         });
 
-        // GENERADOR DE HTML DEL PASE
+        // GENERADOR DE HTML DEL PASE (CON MESA ASIGNADA)
         window.generarHTMLPaseOficial = function(docData, docId, incluirBotonWhatsApp = false, whatsappUrl = "") {
             const folio = "MM-" + docId.substring(0, 6).toUpperCase();
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${docId}`;
-            
+            const mesaLimpia = docData.mesa ? String(docData.mesa).trim().replace(/^mesa\s*/i, '') : "";
+            const tamanoMesa = mesaLimpia.length > 3 ? "text-2xl" : "text-4xl";
+            const mesaHtml = mesaLimpia
+                ? `<span class="font-serif ${tamanoMesa} text-black leading-none">${mesaLimpia}</span>`
+                : `<span class="text-xs uppercase tracking-widest text-gray-400 font-bold">Por asignar</span>`;
+
             let html = `
                 <div id="contenedorPaseCompleto-${docId}" class="mt-4 flex flex-col items-center w-full animate-fade-in">
                     <div id="tarjetaPaseDigital-${docId}" class="relative w-full max-w-sm bg-[#FFFFFF] p-8 shadow-2xl text-center overflow-hidden border border-[#EDD399]">
@@ -932,21 +936,23 @@
                         <div class="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-[#EDD399] m-3"></div>
                         
                         <img src="https://i.imgur.com/74sb7hm.png" alt="Logo Melissa y Miguel" class="w-28 mx-auto mb-2 mt-4 drop-shadow-sm object-contain">
-                        <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-6">Pase de Acceso</p>
+                        <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-5">Pase de Acceso</p>
                         
                         <h4 class="font-serif text-2xl text-black mb-2 capitalize leading-tight px-4">${docData.nombre}</h4>
                         
-                        <div class="flex justify-center items-center gap-6 my-6 border-y border-[#EDD399] py-4 mx-2">
-                            <div class="text-center flex flex-col items-center">
-                                <p class="text-[8px] uppercase tracking-widest text-gray-500 font-bold mb-2">Pases</p>
-                                <div class="w-14 h-14 flex items-center justify-center">
-                                    <span class="font-serif text-5xl text-black leading-none relative mb-4">${docData.pasesAsignados || docData.totalSolicitado}</span>
-                                </div>
+                        <div class="grid grid-cols-2 items-center my-5 border-y border-[#EDD399] py-4 mx-2">
+                            <div class="text-center flex flex-col items-center justify-center border-r border-[#EDD399] pr-2">
+                                <p class="text-[8px] uppercase tracking-widest text-gray-500 font-bold mb-1.5">Pases</p>
+                                <span class="font-serif text-4xl text-black leading-none">${docData.pasesAsignados || docData.totalSolicitado}</span>
                             </div>
-                            <div class="w-px h-16 bg-[#EDD399]"></div>
-                            <div>
-                                <img src="${qrUrl}" class="w-24 h-24" alt="QR">
+                            <div class="text-center flex flex-col items-center justify-center pl-2">
+                                <p class="text-[8px] uppercase tracking-widest text-gray-500 font-bold mb-1.5">Mesa</p>
+                                ${mesaHtml}
                             </div>
+                        </div>
+
+                        <div class="flex justify-center my-4">
+                            <img src="${qrUrl}" class="w-24 h-24" alt="QR">
                         </div>
                         
                         <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-serif mb-1">Folio: ${folio}</p>
@@ -1070,7 +1076,7 @@
         const params = new URLSearchParams(window.location.search);
         const urlName = params.get('n');
 
-        // Si el invitado ingresa con link personalizado (?n=...), verificamos si sí confirmó a tiempo
+        // Si el invitado ingresa con link personalizado (?n=...), verificamos si ya confirmó y cargamos su pase actualizado
         if (urlName) {
             const checkRegistrationStatus = async () => {
                 try {
@@ -1078,10 +1084,18 @@
                     const querySnapshot = await getDocs(q);
                     
                     if (!querySnapshot.empty) {
-                        const docData = querySnapshot.docs[0].data();
+                        const docSnap = querySnapshot.docs[0];
+                        const docData = docSnap.data();
                         if (docData.estado === 'aprobado' && (docData.totalSolicitado > 0 || docData.pasesAsignados > 0)) {
                             document.getElementById('rsvpClosedMessage').classList.add('hidden');
                             document.getElementById('alreadyRegisteredMessage').classList.remove('hidden');
+
+                            // Mostrar automáticamente su pase actualizado con mesa
+                            const resultDiv = document.getElementById('searchResultMessage');
+                            resultDiv.classList.remove('hidden');
+                            resultDiv.classList.add('flex', 'flex-col', 'items-center', 'w-full');
+                            resultDiv.innerHTML = window.generarHTMLPaseOficial(docData, docSnap.id, false, "");
+                            window.bindDownloadLogic(docSnap.id);
                         }
                     }
                 } catch (error) {
