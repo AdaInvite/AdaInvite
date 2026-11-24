@@ -476,6 +476,51 @@
             margin: 0;
         }
         input[type=number] { -moz-appearance: textfield; }
+/* Banner de pases azul con esquinas cóncavas ornamentales */
+.tarjeta-pases-azul {
+    position: relative;
+    background: transparent;
+    z-index: 1;
+    filter: drop-shadow(0 8px 16px rgba(52, 78, 104, 0.22));
+}
+
+.tarjeta-pases-azul::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: -2;
+    background-color: #5B7FA0;
+    -webkit-mask-image:
+        radial-gradient(circle 16px at 0 0, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 100% 0, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 0 100%, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 100% 100%, transparent 15.5px, #000 16px);
+    -webkit-mask-position: top left, top right, bottom left, bottom right;
+    -webkit-mask-size: 51% 51%;
+    -webkit-mask-repeat: no-repeat;
+    mask-image:
+        radial-gradient(circle 16px at 0 0, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 100% 0, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 0 100%, transparent 15.5px, #000 16px),
+        radial-gradient(circle 16px at 100% 100%, transparent 15.5px, #000 16px);
+    mask-position: top left, top right, bottom left, bottom right;
+    mask-size: 51% 51%;
+    mask-repeat: no-repeat;
+}
+
+.tarjeta-pases-azul::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border: 1px solid transparent;
+    border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M 18,2 L 82,2 A 16,16 0 0 0 98,18 L 98,82 A 16,16 0 0 0 82,98 L 18,98 A 16,16 0 0 0 2,82 L 2,18 A 16,16 0 0 0 18,2 Z' fill='none' stroke='%23BFD5E8' stroke-width='1.8'/%3E%3C/svg%3E");
+    border-image-slice: 24;
+    border-image-width: 24px;
+    border-image-repeat: stretch;
+}
+
     </style>
 </head>
 <body class="envelope-locked">
@@ -545,18 +590,19 @@
 
                 <div class="w-56 linea-azul mx-auto mt-2"></div>
 
-                <!-- BANNER DINÁMICO DE INVITADO Y PASES (?n= y &p=) CON FONDO AZUL -->
-                <div id="seccion-pases-inicio" class="hidden mt-8 bg-azul-principal text-white px-2 py-1 border border-azul-medio shadow-md">
-                    <p class="text-xs uppercase tracking-[0.1em] text-azul-hielo font-bold mb-1">
-                        Invitación especial para
-                    </p>
-                    <p id="nombre-invitado-inicio" class="font-script text-4xl text-white leading-tight mb-1 break-words"></p>
-                    <div id="bloque-pases-inicio" class="inline-flex items-center gap-2 bg-white/95 border border-azul-pastel px-2 py-1 shadow-sm">
-                        <span class="text-xs uppercase tracking-[0.1em] text-azul-principal font-bold">Pases asignados:</span>
-                        <span id="pases-invitado-inicio" class="text-lg font-bold text-azul-oscuro"></span>
-                    </div>
-                </div>
-            </div>
+               <!-- BANNER DINÁMICO DE INVITADO Y PASES (?n= y &p=) CON FONDO AZUL -->
+<div id="seccion-pases-inicio" class="hidden mt-8 tarjeta-pases-azul text-white px-6 py-4">
+    <p class="text-xs uppercase tracking-[0.1em] text-azul-hielo font-bold mb-1">
+        Invitación especial para
+    </p>
+    <p id="nombre-invitado-inicio" class="font-script text-4xl text-white leading-tight mb-1 break-words"></p>
+    <div id="bloque-pases-inicio" class="inline-flex items-center gap-2 bg-white/95 border border-azul-pastel px-2 py-1 shadow-sm">
+        <span class="text-xs uppercase tracking-[0.1em] text-azul-principal font-bold">Pases asignados:</span>
+        <span id="pases-invitado-inicio" class="text-lg font-bold text-azul-oscuro"></span>
+    </div>
+</div>
+</div>
+
         </section>
 
         <!-- =====================================================
