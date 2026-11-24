@@ -545,14 +545,14 @@
 
                 <div class="w-56 linea-azul mx-auto mt-2"></div>
 
-                <!-- BANNER DINÁMICO DE INVITADO Y PASES (?n= y &p=) -->
-                <div id="seccion-pases-inicio" class="hidden mt-8 pt-6 border-t border-azul-pastel/70">
-                    <p class="text-sm uppercase tracking-[0.2em] text-azul-principal font-bold mb-1">
+                <!-- BANNER DINÁMICO DE INVITADO Y PASES (?n= y &p=) CON FONDO AZUL -->
+                <div id="seccion-pases-inicio" class="hidden mt-8 bg-azul-principal text-white rounded-2xl px-5 py-6 border border-azul-medio shadow-md">
+                    <p class="text-xs uppercase tracking-[0.1em] text-azul-hielo font-bold mb-1">
                         Invitación especial para
                     </p>
-                    <p id="nombre-invitado-inicio" class="font-script text-5xl text-azul-oscuro leading-tight mb-3 break-words"></p>
-                    <div id="bloque-pases-inicio" class="inline-flex items-center gap-2.5 bg-azul-hielo border border-azul-pastel px-5 py-2 rounded-full">
-                        <span class="text-sm uppercase tracking-[0.16em] text-texto-suave font-bold">Pases asignados:</span>
+                    <p id="nombre-invitado-inicio" class="font-script text-5xl text-white leading-tight mb-4 break-words"></p>
+                    <div id="bloque-pases-inicio" class="inline-flex items-center gap-2.5 bg-white/95 border border-azul-pastel px-5 py-2 rounded-full shadow-sm">
+                        <span class="text-xs uppercase tracking-[0.1em] text-azul-principal font-bold">Pases asignados:</span>
                         <span id="pases-invitado-inicio" class="text-lg font-bold text-azul-oscuro"></span>
                     </div>
                 </div>
@@ -910,6 +910,19 @@
                 <div class="bg-azul-hielo/90 border border-azul-pastel/70 rounded-2xl p-5">
                     <p class="font-script text-4xl text-azul-oscuro mb-1">Guía de estilo</p>
                     <p class="text-xs text-texto-suave mb-4">Encuentra inspiración para tu outfit en nuestro tablero de Pinterest</p>
+
+                    <!-- TABLERO DE PINTEREST EMBEBIDO:
+                         Descomenta el div de abajo y reemplaza el href con la URL COMPLETA (pinterest.com/usuario/tablero/)
+                    <div class="mb-4 flex justify-center overflow-hidden rounded-xl">
+                        <a data-pin-do="embedBoard"
+                           data-pin-board-width="320"
+                           data-pin-scale-height="260"
+                           data-pin-scale-width="80"
+                           href="https://www.pinterest.com/mel_tinaaa/black-tie/">
+                        </a>
+                    </div>
+                    -->
+
                     <a href="https://pin.it/3c7w8oJPL" target="_blank" class="btn-azul inline-flex items-center justify-center gap-2 w-full max-w-[240px] py-3 px-6 rounded-full text-xs uppercase tracking-[0.16em] font-bold active:scale-95">
                         Ver tablero en Pinterest
                     </a>
@@ -1058,6 +1071,9 @@
 
     </main>
 
+    <!-- SCRIPT OFICIAL DE PINTEREST PARA EL TABLERO EMBEBIDO -->
+    <script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+
     <!-- =========================================================
          SCRIPTS DE UI, CLIMA, TRIVIA, CALENDARIO Y SLIDER
          ========================================================= -->
@@ -1075,17 +1091,14 @@
             initObserver();
             playAudio();
 
-            // 1. Sube y desvanece la solapa superior mientras se asoma la portada
             envelope.classList.add('open');
 
-            // 2. Empieza a desvanecer lentamente las solapas inferiores
             setTimeout(() => {
                 envelope.classList.add('fade-all');
                 document.body.classList.remove('envelope-locked');
                 document.getElementById('audio-btn').classList.remove('hidden');
             }, 1200);
 
-            // 3. Oculta el contenedor una vez que terminó el fade de 1.8s
             setTimeout(() => {
                 envelope.style.display = 'none';
             }, 3100);
@@ -1449,7 +1462,6 @@
 
         /* =========================================================
            GENERADOR DE PASE DIGITAL EN CANVAS 2D NATIVO
-           (Fondo floral + recuadro blanco con esquinas ornamentales)
            ========================================================= */
         function traceOrnamentalRect(ctx, x, y, w, h, r) {
             ctx.beginPath();
@@ -1553,7 +1565,6 @@
             canvas.height = H;
             const ctx = canvas.getContext('2d');
 
-            // 1) Fondo floral (object-fit: cover sin deformar)
             ctx.fillStyle = '#DCE9F5';
             ctx.fillRect(0, 0, W, H);
 
@@ -1590,7 +1601,6 @@
                 ctx.fillRect(0, 0, W, H);
             }
 
-            // 2) Cuadro blanco con esquinas cóncavas ornamentales + sombra
             const padX = 68;
             const padY = 74;
             const cardW = W - padX * 2;
@@ -1607,7 +1617,6 @@
             ctx.fill();
             ctx.restore();
 
-            // Textura sutil dentro del cuadro blanco
             ctx.save();
             traceOrnamentalRect(ctx, padX, padY, cardW, cardH, cornerR);
             ctx.clip();
@@ -1618,7 +1627,6 @@
             ctx.fillRect(padX, padY, cardW, cardH);
             ctx.restore();
 
-            // Doble borde ornamental azul pastel
             traceOrnamentalRect(ctx, padX, padY, cardW, cardH, cornerR);
             ctx.strokeStyle = '#88A9C7';
             ctx.lineWidth = 4;
@@ -1630,7 +1638,6 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // 3) Encabezado del pase
             ctx.fillStyle = '#5B7FA0';
             ctx.font = '700 32px "Inria Serif", serif';
             drawTrackedText(ctx, 'NUESTRA BODA', cx, 178, 7);
@@ -1643,7 +1650,6 @@
             ctx.font = '700 28px "Inria Serif", serif';
             drawTrackedText(ctx, '06 • 02 • 2027', cx, 346, 6);
 
-            // Línea divisoria continua sin símbolo
             const lineGrad = ctx.createLinearGradient(cx - 240, 0, cx + 240, 0);
             lineGrad.addColorStop(0, 'rgba(144, 175, 203, 0.1)');
             lineGrad.addColorStop(0.5, 'rgba(127, 163, 194, 0.9)');
@@ -1655,14 +1661,12 @@
             ctx.lineTo(cx + 240, 404);
             ctx.stroke();
 
-            // 4) Invitado
             ctx.fillStyle = '#687E94';
             ctx.font = '700 29px "Inria Serif", serif';
             drawTrackedText(ctx, 'PASE DE ACCESO PARA:', cx, 474, 5);
 
             drawFittedScriptName(ctx, nombre, cx, 578, 740);
 
-            // 5) Recuadro de pases
             const boxW = 680;
             const boxH = 344;
             const boxX = cx - boxW / 2;
@@ -1685,7 +1689,6 @@
             ctx.font = '700 122px "Inria Serif", serif';
             drawCenteredText(ctx, String(totalPases), cx, 846);
 
-            // Pastilla azul con desglose de adultos y niños
             const pillW = 500;
             const pillH = 60;
             const pillX = cx - pillW / 2;
@@ -1699,7 +1702,6 @@
             ctx.font = '700 23px "Inria Serif", serif';
             drawTrackedText(ctx, textoDesglosePases(adultos, ninos).toUpperCase(), cx, pillY + pillH / 2, 3);
 
-            // 6) Folio y pie
             ctx.fillStyle = '#344E68';
             ctx.font = '700 28px "Inria Serif", serif';
             drawTrackedText(ctx, `FOLIO: ${String(folio).toUpperCase()}`, cx, 1122, 4.5);
@@ -1759,7 +1761,6 @@
                 const canvas = await generarCanvasPase(datos);
                 const base64 = canvas.toDataURL('image/png');
 
-                // Descarga automática en navegadores compatibles
                 canvas.toBlob(blob => {
                     if (!blob) return;
                     const url = window.URL.createObjectURL(blob);
@@ -1773,7 +1774,6 @@
                     setTimeout(() => window.URL.revokeObjectURL(url), 5000);
                 }, 'image/png');
 
-                // Muestra la imagen PNG final (ideal para guardar en iPhone/Safari)
                 contenedor.innerHTML = `
                     <div class="relative w-full mx-auto animate-pulse-once">
                         <img src="${base64}" alt="Pase Digital" class="w-full h-auto rounded-[22px] shadow-xl block" style="pointer-events: auto; user-select: none; -webkit-touch-callout: default;" />
@@ -1910,7 +1910,6 @@
                 formName.classList.add('cursor-not-allowed', 'opacity-75');
             }
 
-            // Consultar únicamente en Firebase si este invitado ya confirmó
             verificarConfirmacionPrevia(nombreUrl).then(datosConfirmados => {
                 if (datosConfirmados) {
                     renderizarSeccionConfirmada(datosConfirmados, {
