@@ -628,7 +628,7 @@
                             <div id="loadingMessage" class="hidden mt-4 bg-transparent flex-col items-center justify-center transition-all duration-500 py-4">
                                 <div class="w-12 h-12 border-4 border-[#6B4F3A] border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
                                 <p id="loadingText" class="text-xl font-bold text-[#6B4F3A] mb-2 uppercase tracking-widest text-center">Guardando confirmación...</p>
-                                <p id="loadingSubtext" class="text-xs text-[#3B2B20] opacity-90 uppercase tracking-wider text-center">Redirigiendo a WhatsApp para notificar al anfitrión</p>
+                                <p id="loadingSubtext" class="text-xs text-[#3B2B20] opacity-90 uppercase tracking-wider text-center">Generando tu pase de acceso...</p>
                             </div>
 
                             <!-- CONTENEDOR AUTOMÁTICO DEL PASE EN IMAGEN -->
@@ -1129,6 +1129,9 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
             }
 
             const fileName = `Pase_XV_Aidee_${docData.folio || 'Acceso'}.png`;
+            const numeroWhatsApp = "524492569889";
+            const textoWa = `Hola, confirmo mi asistencia a los XV de Aideé.\n\nInvitado: ${docData.nombre}\nAdultos: ${adultos}\nNiños: ${ninos}\nTotal de pases: ${totalPases}\nFolio: ${docData.folio}`;
+            const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(textoWa)}`;
 
             passContainer.innerHTML = `
                 <div class="w-full max-w-[360px] mx-auto">
@@ -1140,6 +1143,12 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Descargar Pase
                 </a>
+
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="mt-3 bg-[#25D366] text-white font-bold py-4 px-6 uppercase text-xs hover:bg-[#1DA851] transition-all duration-300 rounded-xl shadow-md flex items-center justify-center gap-2 w-full max-w-sm mx-auto active:scale-95 tracking-wider">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                    Por favor, avísanos por WhatsApp
+                </a>
+
                 <p class="text-[10px] uppercase text-[#3B2B20] font-bold mt-3 text-center px-2 tracking-wider opacity-80">En iPhone también puedes mantener presionado el pase y tocar "Guardar en Fotos".</p>
             `;
 
@@ -1248,7 +1257,7 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
         }
 
         // ==========================================
-        // GUARDAR RSVP Y REDIRIGIR AUTOMÁTICAMENTE A WHATSAPP
+        // GUARDAR RSVP Y MOSTRAR PASE DE INMEDIATO
         // ==========================================
         const rsvpFormElement = document.getElementById('rsvpForm');
         if (rsvpFormElement) {
@@ -1310,15 +1319,6 @@ END:VCALENDAR`.replace(/\n/g, "\r\n");
 
                     localStorage.setItem('xv_aidee_invitado_confirmado', name);
                     escucharEstadoInvitado(name);
-
-                    // Redirigir a WhatsApp con mensaje simple y sin emojis
-                    const numeroWhatsApp = "524492569889";
-                    const textoWa = `Hola, confirmo mi asistencia a los XV de Aideé.\n\nInvitado: ${name}\nAdultos: ${numAdultos}\nNiños: ${numNinos}\nTotal de pases: ${totalPases}\nFolio: ${folio}`;
-                    const waLink = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(textoWa)}`;
-
-                    setTimeout(() => {
-                        window.location.href = waLink;
-                    }, 900);
 
                 } catch(error) {
                     console.error("Error al guardar:", error);
